@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/backend/session/auto.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>auto.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script src="../../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../../smithay/index.html'><div class='logo-container'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../../settings.html"><img src="../../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/backend/session/auto.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>auto.rs - source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../../storage.js"></script><script src="../../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../../smithay/index.html'><div class='logo-container rust-logo'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img src="../../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../../settings.html" title="settings"><img src="../../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -237,7 +239,8 @@
 <span id="237">237</span>
 <span id="238">238</span>
 <span id="239">239</span>
-</pre><div class="example-wrap"><pre class="rust ">
+<span id="240">240</span>
+</pre><pre class="rust">
 <span class="doccomment">//! Implementation of the [`Session`] trait through various implementations</span>
 <span class="doccomment">//! automatically choosing the best available interface.</span>
 <span class="doccomment">//!</span>
@@ -245,46 +248,46 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ### Initialization</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! To initialize a session just call [`AutoSession::new`](::backend::session::auto::AutoSession::new).</span>
+<span class="doccomment">//! To initialize a session just call [`AutoSession::new`].</span>
 <span class="doccomment">//! A new session will be opened, if the any available interface is successful and will be closed once the</span>
-<span class="doccomment">//! [`AutoSessionNotifier`](::backend::session::auto::AutoSessionNotifier) is dropped.</span>
+<span class="doccomment">//! [`AutoSessionNotifier`] is dropped.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ### Usage of the session</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! The session may be used to open devices manually through the [`Session`] interface</span>
 <span class="doccomment">//! or be passed to other objects that need it to open devices themselves.</span>
-<span class="doccomment">//! The [`AutoSession`](::backend::session::auto::AutoSession) is clonable</span>
+<span class="doccomment">//! The [`AutoSession`] is clonable</span>
 <span class="doccomment">//! and may be passed to multiple devices easily.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! Examples for those are e.g. the [`LibinputInputBackend`](::backend::libinput::LibinputInputBackend)</span>
-<span class="doccomment">//! (its context might be initialized through a [`Session`] via the [`LibinputSessionInterface`](::backend::libinput::LibinputSessionInterface)).</span>
+<span class="doccomment">//! Examples for those are e.g. the [`LibinputInputBackend`](crate::backend::libinput::LibinputInputBackend)</span>
+<span class="doccomment">//! (its context might be initialized through a [`Session`] via the [`LibinputSessionInterface`](crate::backend::libinput::LibinputSessionInterface)).</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ### Usage of the session notifier</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! The notifier might be used to pause device access, when the session gets paused (e.g. by</span>
-<span class="doccomment">//! switching the tty via [`AutoSession::change_vt`](::backend::session::Session::change_vt))</span>
+<span class="doccomment">//! switching the tty via [`AutoSession::change_vt`](crate::backend::session::Session::change_vt))</span>
 <span class="doccomment">//! and to automatically enable it again, when the session becomes active again.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! It is crucial to avoid errors during that state. Examples for object that might be registered</span>
-<span class="doccomment">//! for notifications are the [`Libinput`](input::Libinput) context or the [`Device`](::backend::drm::Device).</span>
+<span class="doccomment">//! for notifications are the [`Libinput`](input::Libinput) context or the [`DrmDevice`](crate::backend::drm::DrmDevice).</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! The [`AutoSessionNotifier`](::backend::session::auto::AutoSessionNotifier) is to be inserted into</span>
+<span class="doccomment">//! The [`AutoSessionNotifier`] is to be inserted into</span>
 <span class="doccomment">//! a calloop event source to have its events processed.</span>
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_session_logind&quot;</span>)]</span>
-<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">logind</span>::{<span class="self">self</span>, <span class="ident">LogindSession</span>, <span class="ident">LogindSessionNotifier</span>};
+<span class="kw">use</span> <span class="kw">super</span><span class="ident">::logind</span>::{<span class="self">self</span>, <span class="ident">LogindSession</span>, <span class="ident">LogindSessionNotifier</span>};
 <span class="kw">use</span> <span class="kw">super</span>::{
     <span class="ident">direct</span>::{<span class="self">self</span>, <span class="ident">DirectSession</span>, <span class="ident">DirectSessionNotifier</span>},
     <span class="ident">AsErrno</span>, <span class="ident">Session</span>, <span class="ident">Signal</span> <span class="kw">as</span> <span class="ident">SessionSignal</span>,
 };
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">signaling</span>::<span class="ident">Signaler</span>;
-<span class="kw">use</span> <span class="ident">nix</span>::<span class="ident">fcntl</span>::<span class="ident">OFlag</span>;
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cell</span>::<span class="ident">RefCell</span>, <span class="ident">io</span>, <span class="ident">os</span>::<span class="ident">unix</span>::<span class="ident">io</span>::<span class="ident">RawFd</span>, <span class="ident">path</span>::<span class="ident">Path</span>, <span class="ident">rc</span>::<span class="ident">Rc</span>};
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::signaling::Signaler</span>;
+<span class="kw">use</span> <span class="ident">nix::fcntl::OFlag</span>;
+<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cell::RefCell</span>, <span class="ident">io</span>, <span class="ident">os::unix::io::RawFd</span>, <span class="ident">path::Path</span>, <span class="ident">rc::Rc</span>};
 
 <span class="kw">use</span> <span class="ident">calloop</span>::{<span class="ident">EventSource</span>, <span class="ident">Poll</span>, <span class="ident">Readiness</span>, <span class="ident">Token</span>};
 
 <span class="doccomment">/// [`Session`] using the best available interface</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">AutoSession</span> {
     <span class="doccomment">/// Logind session</span>
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_session_logind&quot;</span>)]</span>
@@ -293,7 +296,8 @@
     <span class="ident">Direct</span>(<span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">DirectSession</span><span class="op">&gt;</span><span class="op">&gt;</span>),
 }
 
-<span class="doccomment">/// [`SessionNotifier`] using the best available interface</span>
+<span class="doccomment">/// Notifier using the best available interface</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">AutoSessionNotifier</span> {
     <span class="doccomment">/// Logind session notifier</span>
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_session_logind&quot;</span>)]</span>
@@ -307,28 +311,28 @@
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_session_logind&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>(<span class="ident">logger</span>: <span class="ident">L</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">AutoSession</span>, <span class="ident">AutoSessionNotifier</span>)<span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span>::<span class="ident">slog</span>::<span class="ident">Logger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">::slog::Logger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     {
-        <span class="kw">let</span> <span class="ident">logger</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">slog_or_fallback</span>(<span class="ident">logger</span>)
-            .<span class="ident">new</span>(<span class="macro">o</span><span class="macro">!</span>(<span class="string">&quot;smithay_module&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;backend_session_auto&quot;</span>, <span class="string">&quot;session_type&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;auto&quot;</span>));
+        <span class="kw">let</span> <span class="ident">logger</span> <span class="op">=</span> <span class="kw">crate</span><span class="ident">::slog_or_fallback</span>(<span class="ident">logger</span>)
+            .<span class="ident">new</span>(<span class="macro">o!</span>(<span class="string">&quot;smithay_module&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;backend_session_auto&quot;</span>, <span class="string">&quot;session_type&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;auto&quot;</span>));
 
-        <span class="macro">info</span><span class="macro">!</span>(<span class="ident">logger</span>, <span class="string">&quot;Trying to create logind session&quot;</span>);
-        <span class="kw">match</span> <span class="ident">LogindSession</span>::<span class="ident">new</span>(<span class="ident">logger</span>.<span class="ident">clone</span>()) {
+        <span class="macro">info!</span>(<span class="ident">logger</span>, <span class="string">&quot;Trying to create logind session&quot;</span>);
+        <span class="kw">match</span> <span class="ident">LogindSession::new</span>(<span class="ident">logger</span>.<span class="ident">clone</span>()) {
             <span class="prelude-val">Ok</span>((<span class="ident">session</span>, <span class="ident">notifier</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>((
-                <span class="ident">AutoSession</span>::<span class="ident">Logind</span>(<span class="ident">session</span>),
-                <span class="ident">AutoSessionNotifier</span>::<span class="ident">Logind</span>(<span class="ident">notifier</span>),
+                <span class="ident">AutoSession::Logind</span>(<span class="ident">session</span>),
+                <span class="ident">AutoSessionNotifier::Logind</span>(<span class="ident">notifier</span>),
             )),
             <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="macro">warn</span><span class="macro">!</span>(<span class="ident">logger</span>, <span class="string">&quot;Failed to create logind session: {}&quot;</span>, <span class="ident">err</span>);
-                <span class="macro">info</span><span class="macro">!</span>(<span class="ident">logger</span>, <span class="string">&quot;Falling back to create tty session&quot;</span>);
-                <span class="kw">match</span> <span class="ident">DirectSession</span>::<span class="ident">new</span>(<span class="prelude-val">None</span>, <span class="ident">logger</span>.<span class="ident">clone</span>()) {
+                <span class="macro">warn!</span>(<span class="ident">logger</span>, <span class="string">&quot;Failed to create logind session: {}&quot;</span>, <span class="ident">err</span>);
+                <span class="macro">info!</span>(<span class="ident">logger</span>, <span class="string">&quot;Falling back to create tty session&quot;</span>);
+                <span class="kw">match</span> <span class="ident">DirectSession::new</span>(<span class="prelude-val">None</span>, <span class="ident">logger</span>.<span class="ident">clone</span>()) {
                     <span class="prelude-val">Ok</span>((<span class="ident">session</span>, <span class="ident">notifier</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>((
-                        <span class="ident">AutoSession</span>::<span class="ident">Direct</span>(<span class="ident">Rc</span>::<span class="ident">new</span>(<span class="ident">RefCell</span>::<span class="ident">new</span>(<span class="ident">session</span>))),
-                        <span class="ident">AutoSessionNotifier</span>::<span class="ident">Direct</span>(<span class="ident">notifier</span>),
+                        <span class="ident">AutoSession::Direct</span>(<span class="ident">Rc::new</span>(<span class="ident">RefCell::new</span>(<span class="ident">session</span>))),
+                        <span class="ident">AutoSessionNotifier::Direct</span>(<span class="ident">notifier</span>),
                     )),
                     <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                        <span class="macro">warn</span><span class="macro">!</span>(<span class="ident">logger</span>, <span class="string">&quot;Failed to create direct session: {}&quot;</span>, <span class="ident">err</span>);
-                        <span class="macro">error</span><span class="macro">!</span>(<span class="ident">logger</span>, <span class="string">&quot;Could not create any session, possibilities exhausted&quot;</span>);
+                        <span class="macro">warn!</span>(<span class="ident">logger</span>, <span class="string">&quot;Failed to create direct session: {}&quot;</span>, <span class="ident">err</span>);
+                        <span class="macro">error!</span>(<span class="ident">logger</span>, <span class="string">&quot;Could not create any session, possibilities exhausted&quot;</span>);
                         <span class="prelude-val">None</span>
                     }
                 }
@@ -340,20 +344,20 @@
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_session_logind&quot;</span>))]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>(<span class="ident">logger</span>: <span class="ident">L</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">AutoSession</span>, <span class="ident">AutoSessionNotifier</span>)<span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span>::<span class="ident">slog</span>::<span class="ident">Logger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">::slog::Logger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     {
-        <span class="kw">let</span> <span class="ident">logger</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">slog_or_stdlog</span>(<span class="ident">logger</span>)
-            .<span class="ident">new</span>(<span class="macro">o</span><span class="macro">!</span>(<span class="string">&quot;smithay_module&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;backend_session_auto&quot;</span>, <span class="string">&quot;session_type&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;auto&quot;</span>));
+        <span class="kw">let</span> <span class="ident">logger</span> <span class="op">=</span> <span class="kw">crate</span><span class="ident">::slog_or_fallback</span>(<span class="ident">logger</span>)
+            .<span class="ident">new</span>(<span class="macro">o!</span>(<span class="string">&quot;smithay_module&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;backend_session_auto&quot;</span>, <span class="string">&quot;session_type&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;auto&quot;</span>));
 
-        <span class="macro">info</span><span class="macro">!</span>(<span class="ident">logger</span>, <span class="string">&quot;Trying to create tty session&quot;</span>);
-        <span class="kw">match</span> <span class="ident">DirectSession</span>::<span class="ident">new</span>(<span class="prelude-val">None</span>, <span class="ident">logger</span>.<span class="ident">clone</span>()) {
+        <span class="macro">info!</span>(<span class="ident">logger</span>, <span class="string">&quot;Trying to create tty session&quot;</span>);
+        <span class="kw">match</span> <span class="ident">DirectSession::new</span>(<span class="prelude-val">None</span>, <span class="ident">logger</span>.<span class="ident">clone</span>()) {
             <span class="prelude-val">Ok</span>((<span class="ident">session</span>, <span class="ident">notifier</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>((
-                <span class="ident">AutoSession</span>::<span class="ident">Direct</span>(<span class="ident">Rc</span>::<span class="ident">new</span>(<span class="ident">RefCell</span>::<span class="ident">new</span>(<span class="ident">session</span>))),
-                <span class="ident">AutoSessionNotifier</span>::<span class="ident">Direct</span>(<span class="ident">notifier</span>),
+                <span class="ident">AutoSession::Direct</span>(<span class="ident">Rc::new</span>(<span class="ident">RefCell::new</span>(<span class="ident">session</span>))),
+                <span class="ident">AutoSessionNotifier::Direct</span>(<span class="ident">notifier</span>),
             )),
             <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="macro">warn</span><span class="macro">!</span>(<span class="ident">logger</span>, <span class="string">&quot;Failed to create direct session: {}&quot;</span>, <span class="ident">err</span>);
-                <span class="macro">error</span><span class="macro">!</span>(<span class="ident">logger</span>, <span class="string">&quot;Could not create any session, possibilities exhausted&quot;</span>);
+                <span class="macro">warn!</span>(<span class="ident">logger</span>, <span class="string">&quot;Failed to create direct session: {}&quot;</span>, <span class="ident">err</span>);
+                <span class="macro">error!</span>(<span class="ident">logger</span>, <span class="string">&quot;Could not create any session, possibilities exhausted&quot;</span>);
                 <span class="prelude-val">None</span>
             }
         }
@@ -366,38 +370,38 @@
     <span class="kw">fn</span> <span class="ident">open</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>, <span class="ident">flags</span>: <span class="ident">OFlag</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RawFd</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_session_logind&quot;</span>)]</span>
-            <span class="ident">AutoSession</span>::<span class="ident">Logind</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">logind</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">logind</span>.<span class="ident">open</span>(<span class="ident">path</span>, <span class="ident">flags</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into</span>()),
-            <span class="ident">AutoSession</span>::<span class="ident">Direct</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">direct</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">direct</span>.<span class="ident">open</span>(<span class="ident">path</span>, <span class="ident">flags</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into</span>()),
+            <span class="ident">AutoSession::Logind</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">logind</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">logind</span>.<span class="ident">open</span>(<span class="ident">path</span>, <span class="ident">flags</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into</span>()),
+            <span class="ident">AutoSession::Direct</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">direct</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">direct</span>.<span class="ident">open</span>(<span class="ident">path</span>, <span class="ident">flags</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into</span>()),
         }
     }
     <span class="kw">fn</span> <span class="ident">close</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">fd</span>: <span class="ident">RawFd</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_session_logind&quot;</span>)]</span>
-            <span class="ident">AutoSession</span>::<span class="ident">Logind</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">logind</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">logind</span>.<span class="ident">close</span>(<span class="ident">fd</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into</span>()),
-            <span class="ident">AutoSession</span>::<span class="ident">Direct</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">direct</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">direct</span>.<span class="ident">close</span>(<span class="ident">fd</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into</span>()),
+            <span class="ident">AutoSession::Logind</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">logind</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">logind</span>.<span class="ident">close</span>(<span class="ident">fd</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into</span>()),
+            <span class="ident">AutoSession::Direct</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">direct</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">direct</span>.<span class="ident">close</span>(<span class="ident">fd</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into</span>()),
         }
     }
 
     <span class="kw">fn</span> <span class="ident">change_vt</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">vt</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_session_logind&quot;</span>)]</span>
-            <span class="ident">AutoSession</span>::<span class="ident">Logind</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">logind</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">logind</span>.<span class="ident">change_vt</span>(<span class="ident">vt</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into</span>()),
-            <span class="ident">AutoSession</span>::<span class="ident">Direct</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">direct</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">direct</span>.<span class="ident">change_vt</span>(<span class="ident">vt</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into</span>()),
+            <span class="ident">AutoSession::Logind</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">logind</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">logind</span>.<span class="ident">change_vt</span>(<span class="ident">vt</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into</span>()),
+            <span class="ident">AutoSession::Direct</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">direct</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">direct</span>.<span class="ident">change_vt</span>(<span class="ident">vt</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into</span>()),
         }
     }
 
     <span class="kw">fn</span> <span class="ident">is_active</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_session_logind&quot;</span>)]</span>
-            <span class="ident">AutoSession</span>::<span class="ident">Logind</span>(<span class="kw-2">ref</span> <span class="ident">logind</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">logind</span>.<span class="ident">is_active</span>(),
-            <span class="ident">AutoSession</span>::<span class="ident">Direct</span>(<span class="kw-2">ref</span> <span class="ident">direct</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">direct</span>.<span class="ident">is_active</span>(),
+            <span class="ident">AutoSession::Logind</span>(<span class="kw-2">ref</span> <span class="ident">logind</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">logind</span>.<span class="ident">is_active</span>(),
+            <span class="ident">AutoSession::Direct</span>(<span class="kw-2">ref</span> <span class="ident">direct</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">direct</span>.<span class="ident">is_active</span>(),
         }
     }
     <span class="kw">fn</span> <span class="ident">seat</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_session_logind&quot;</span>)]</span>
-            <span class="ident">AutoSession</span>::<span class="ident">Logind</span>(<span class="kw-2">ref</span> <span class="ident">logind</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">logind</span>.<span class="ident">seat</span>(),
-            <span class="ident">AutoSession</span>::<span class="ident">Direct</span>(<span class="kw-2">ref</span> <span class="ident">direct</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">direct</span>.<span class="ident">seat</span>(),
+            <span class="ident">AutoSession::Logind</span>(<span class="kw-2">ref</span> <span class="ident">logind</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">logind</span>.<span class="ident">seat</span>(),
+            <span class="ident">AutoSession::Direct</span>(<span class="kw-2">ref</span> <span class="ident">direct</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">direct</span>.<span class="ident">seat</span>(),
         }
     }
 }
@@ -409,8 +413,8 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">signaler</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Signaler</span><span class="op">&lt;</span><span class="ident">SessionSignal</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_session_logind&quot;</span>)]</span>
-            <span class="ident">AutoSessionNotifier</span>::<span class="ident">Logind</span>(<span class="kw-2">ref</span> <span class="ident">logind</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">logind</span>.<span class="ident">signaler</span>(),
-            <span class="ident">AutoSessionNotifier</span>::<span class="ident">Direct</span>(<span class="kw-2">ref</span> <span class="ident">direct</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">direct</span>.<span class="ident">signaler</span>(),
+            <span class="ident">AutoSessionNotifier::Logind</span>(<span class="kw-2">ref</span> <span class="ident">logind</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">logind</span>.<span class="ident">signaler</span>(),
+            <span class="ident">AutoSessionNotifier::Direct</span>(<span class="kw-2">ref</span> <span class="ident">direct</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">direct</span>.<span class="ident">signaler</span>(),
         }
     }
 }
@@ -420,55 +424,55 @@
     <span class="kw">type</span> <span class="ident">Metadata</span> <span class="op">=</span> ();
     <span class="kw">type</span> <span class="ident">Ret</span> <span class="op">=</span> ();
 
-    <span class="kw">fn</span> <span class="ident">process_events</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">readiness</span>: <span class="ident">Readiness</span>, <span class="ident">token</span>: <span class="ident">Token</span>, <span class="ident">callback</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">process_events</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">readiness</span>: <span class="ident">Readiness</span>, <span class="ident">token</span>: <span class="ident">Token</span>, <span class="ident">callback</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="ident">FnMut</span>((), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> ()),
     {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_session_logind&quot;</span>)]</span>
-            <span class="ident">AutoSessionNotifier</span>::<span class="ident">Logind</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">s</span>.<span class="ident">process_events</span>(<span class="ident">readiness</span>, <span class="ident">token</span>, <span class="ident">callback</span>),
-            <span class="ident">AutoSessionNotifier</span>::<span class="ident">Direct</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">s</span>.<span class="ident">process_events</span>(<span class="ident">readiness</span>, <span class="ident">token</span>, <span class="ident">callback</span>),
+            <span class="ident">AutoSessionNotifier::Logind</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">s</span>.<span class="ident">process_events</span>(<span class="ident">readiness</span>, <span class="ident">token</span>, <span class="ident">callback</span>),
+            <span class="ident">AutoSessionNotifier::Direct</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">s</span>.<span class="ident">process_events</span>(<span class="ident">readiness</span>, <span class="ident">token</span>, <span class="ident">callback</span>),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">register</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token</span>: <span class="ident">Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">register</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token</span>: <span class="ident">Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_session_logind&quot;</span>)]</span>
-            <span class="ident">AutoSessionNotifier</span>::<span class="ident">Logind</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EventSource</span>::<span class="ident">register</span>(<span class="ident">s</span>, <span class="ident">poll</span>, <span class="ident">token</span>),
-            <span class="ident">AutoSessionNotifier</span>::<span class="ident">Direct</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EventSource</span>::<span class="ident">register</span>(<span class="ident">s</span>, <span class="ident">poll</span>, <span class="ident">token</span>),
+            <span class="ident">AutoSessionNotifier::Logind</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EventSource::register</span>(<span class="ident">s</span>, <span class="ident">poll</span>, <span class="ident">token</span>),
+            <span class="ident">AutoSessionNotifier::Direct</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EventSource::register</span>(<span class="ident">s</span>, <span class="ident">poll</span>, <span class="ident">token</span>),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">reregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token</span>: <span class="ident">Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">reregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token</span>: <span class="ident">Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_session_logind&quot;</span>)]</span>
-            <span class="ident">AutoSessionNotifier</span>::<span class="ident">Logind</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EventSource</span>::<span class="ident">reregister</span>(<span class="ident">s</span>, <span class="ident">poll</span>, <span class="ident">token</span>),
-            <span class="ident">AutoSessionNotifier</span>::<span class="ident">Direct</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EventSource</span>::<span class="ident">reregister</span>(<span class="ident">s</span>, <span class="ident">poll</span>, <span class="ident">token</span>),
+            <span class="ident">AutoSessionNotifier::Logind</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EventSource::reregister</span>(<span class="ident">s</span>, <span class="ident">poll</span>, <span class="ident">token</span>),
+            <span class="ident">AutoSessionNotifier::Direct</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EventSource::reregister</span>(<span class="ident">s</span>, <span class="ident">poll</span>, <span class="ident">token</span>),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">unregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">unregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_session_logind&quot;</span>)]</span>
-            <span class="ident">AutoSessionNotifier</span>::<span class="ident">Logind</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EventSource</span>::<span class="ident">unregister</span>(<span class="ident">s</span>, <span class="ident">poll</span>),
-            <span class="ident">AutoSessionNotifier</span>::<span class="ident">Direct</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EventSource</span>::<span class="ident">unregister</span>(<span class="ident">s</span>, <span class="ident">poll</span>),
+            <span class="ident">AutoSessionNotifier::Logind</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EventSource::unregister</span>(<span class="ident">s</span>, <span class="ident">poll</span>),
+            <span class="ident">AutoSessionNotifier::Direct</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EventSource::unregister</span>(<span class="ident">s</span>, <span class="ident">poll</span>),
         }
     }
 }
 
 <span class="doccomment">/// Errors related to auto sessions</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">thiserror</span>::<span class="ident">Error</span>, <span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">thiserror::Error</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Error</span> {
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_session_logind&quot;</span>)]</span>
     <span class="doccomment">/// Logind session error</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Logind session error: {0}&quot;</span>)]</span>
-    <span class="ident">Logind</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">logind</span>::<span class="ident">Error</span>),
+    <span class="ident">Logind</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">logind::Error</span>),
     <span class="doccomment">/// Direct session error</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Direct session error: {0}&quot;</span>)]</span>
-    <span class="ident">Direct</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">direct</span>::<span class="ident">Error</span>),
+    <span class="ident">Direct</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">direct::Error</span>),
     <span class="doccomment">/// Nix error</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Nix error: {0}&quot;</span>)]</span>
-    <span class="ident">Nix</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">nix</span>::<span class="ident">Error</span>),
+    <span class="ident">Nix</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">nix::Error</span>),
 }
 
 <span class="kw">impl</span> <span class="ident">AsErrno</span> <span class="kw">for</span> <span class="ident">Error</span> {
@@ -478,4 +482,4 @@
     }
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../../";window.currentCrate = "smithay";</script><script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script><script defer src="../../../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-search-index-js="../../../../search-index.js" data-search-js="../../../../search.js"></div><script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script></body></html>

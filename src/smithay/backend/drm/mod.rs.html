@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/backend/drm/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script src="../../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../../smithay/index.html'><div class='logo-container'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../../settings.html"><img src="../../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/backend/drm/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../../storage.js"></script><script src="../../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../../smithay/index.html'><div class='logo-container rust-logo'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img src="../../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../../settings.html" title="settings"><img src="../../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -159,250 +161,12 @@
 <span id="159">159</span>
 <span id="160">160</span>
 <span id="161">161</span>
-<span id="162">162</span>
-<span id="163">163</span>
-<span id="164">164</span>
-<span id="165">165</span>
-<span id="166">166</span>
-<span id="167">167</span>
-<span id="168">168</span>
-<span id="169">169</span>
-<span id="170">170</span>
-<span id="171">171</span>
-<span id="172">172</span>
-<span id="173">173</span>
-<span id="174">174</span>
-<span id="175">175</span>
-<span id="176">176</span>
-<span id="177">177</span>
-<span id="178">178</span>
-<span id="179">179</span>
-<span id="180">180</span>
-<span id="181">181</span>
-<span id="182">182</span>
-<span id="183">183</span>
-<span id="184">184</span>
-<span id="185">185</span>
-<span id="186">186</span>
-<span id="187">187</span>
-<span id="188">188</span>
-<span id="189">189</span>
-<span id="190">190</span>
-<span id="191">191</span>
-<span id="192">192</span>
-<span id="193">193</span>
-<span id="194">194</span>
-<span id="195">195</span>
-<span id="196">196</span>
-<span id="197">197</span>
-<span id="198">198</span>
-<span id="199">199</span>
-<span id="200">200</span>
-<span id="201">201</span>
-<span id="202">202</span>
-<span id="203">203</span>
-<span id="204">204</span>
-<span id="205">205</span>
-<span id="206">206</span>
-<span id="207">207</span>
-<span id="208">208</span>
-<span id="209">209</span>
-<span id="210">210</span>
-<span id="211">211</span>
-<span id="212">212</span>
-<span id="213">213</span>
-<span id="214">214</span>
-<span id="215">215</span>
-<span id="216">216</span>
-<span id="217">217</span>
-<span id="218">218</span>
-<span id="219">219</span>
-<span id="220">220</span>
-<span id="221">221</span>
-<span id="222">222</span>
-<span id="223">223</span>
-<span id="224">224</span>
-<span id="225">225</span>
-<span id="226">226</span>
-<span id="227">227</span>
-<span id="228">228</span>
-<span id="229">229</span>
-<span id="230">230</span>
-<span id="231">231</span>
-<span id="232">232</span>
-<span id="233">233</span>
-<span id="234">234</span>
-<span id="235">235</span>
-<span id="236">236</span>
-<span id="237">237</span>
-<span id="238">238</span>
-<span id="239">239</span>
-<span id="240">240</span>
-<span id="241">241</span>
-<span id="242">242</span>
-<span id="243">243</span>
-<span id="244">244</span>
-<span id="245">245</span>
-<span id="246">246</span>
-<span id="247">247</span>
-<span id="248">248</span>
-<span id="249">249</span>
-<span id="250">250</span>
-<span id="251">251</span>
-<span id="252">252</span>
-<span id="253">253</span>
-<span id="254">254</span>
-<span id="255">255</span>
-<span id="256">256</span>
-<span id="257">257</span>
-<span id="258">258</span>
-<span id="259">259</span>
-<span id="260">260</span>
-<span id="261">261</span>
-<span id="262">262</span>
-<span id="263">263</span>
-<span id="264">264</span>
-<span id="265">265</span>
-<span id="266">266</span>
-<span id="267">267</span>
-<span id="268">268</span>
-<span id="269">269</span>
-<span id="270">270</span>
-<span id="271">271</span>
-<span id="272">272</span>
-<span id="273">273</span>
-<span id="274">274</span>
-<span id="275">275</span>
-<span id="276">276</span>
-<span id="277">277</span>
-<span id="278">278</span>
-<span id="279">279</span>
-<span id="280">280</span>
-<span id="281">281</span>
-<span id="282">282</span>
-<span id="283">283</span>
-<span id="284">284</span>
-<span id="285">285</span>
-<span id="286">286</span>
-<span id="287">287</span>
-<span id="288">288</span>
-<span id="289">289</span>
-<span id="290">290</span>
-<span id="291">291</span>
-<span id="292">292</span>
-<span id="293">293</span>
-<span id="294">294</span>
-<span id="295">295</span>
-<span id="296">296</span>
-<span id="297">297</span>
-<span id="298">298</span>
-<span id="299">299</span>
-<span id="300">300</span>
-<span id="301">301</span>
-<span id="302">302</span>
-<span id="303">303</span>
-<span id="304">304</span>
-<span id="305">305</span>
-<span id="306">306</span>
-<span id="307">307</span>
-<span id="308">308</span>
-<span id="309">309</span>
-<span id="310">310</span>
-<span id="311">311</span>
-<span id="312">312</span>
-<span id="313">313</span>
-<span id="314">314</span>
-<span id="315">315</span>
-<span id="316">316</span>
-<span id="317">317</span>
-<span id="318">318</span>
-<span id="319">319</span>
-<span id="320">320</span>
-<span id="321">321</span>
-<span id="322">322</span>
-<span id="323">323</span>
-<span id="324">324</span>
-<span id="325">325</span>
-<span id="326">326</span>
-<span id="327">327</span>
-<span id="328">328</span>
-<span id="329">329</span>
-<span id="330">330</span>
-<span id="331">331</span>
-<span id="332">332</span>
-<span id="333">333</span>
-<span id="334">334</span>
-<span id="335">335</span>
-<span id="336">336</span>
-<span id="337">337</span>
-<span id="338">338</span>
-<span id="339">339</span>
-<span id="340">340</span>
-<span id="341">341</span>
-<span id="342">342</span>
-<span id="343">343</span>
-<span id="344">344</span>
-<span id="345">345</span>
-<span id="346">346</span>
-<span id="347">347</span>
-<span id="348">348</span>
-<span id="349">349</span>
-<span id="350">350</span>
-<span id="351">351</span>
-<span id="352">352</span>
-<span id="353">353</span>
-<span id="354">354</span>
-<span id="355">355</span>
-<span id="356">356</span>
-<span id="357">357</span>
-<span id="358">358</span>
-<span id="359">359</span>
-<span id="360">360</span>
-<span id="361">361</span>
-<span id="362">362</span>
-<span id="363">363</span>
-<span id="364">364</span>
-<span id="365">365</span>
-<span id="366">366</span>
-<span id="367">367</span>
-<span id="368">368</span>
-<span id="369">369</span>
-<span id="370">370</span>
-<span id="371">371</span>
-<span id="372">372</span>
-<span id="373">373</span>
-<span id="374">374</span>
-<span id="375">375</span>
-<span id="376">376</span>
-<span id="377">377</span>
-<span id="378">378</span>
-<span id="379">379</span>
-<span id="380">380</span>
-<span id="381">381</span>
-<span id="382">382</span>
-<span id="383">383</span>
-<span id="384">384</span>
-<span id="385">385</span>
-<span id="386">386</span>
-<span id="387">387</span>
-<span id="388">388</span>
-<span id="389">389</span>
-<span id="390">390</span>
-<span id="391">391</span>
-</pre><div class="example-wrap"><pre class="rust ">
+</pre><pre class="rust">
+<span class="doccomment">//! This module represents abstraction on top the linux direct rendering manager api (drm).</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! This module provides Traits reprensentating open devices</span>
-<span class="doccomment">//! and their surfaces to render contents.</span>
+<span class="doccomment">//! ## DrmDevice</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! # Abstractions</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! This is a model of what the user typically perceives as a `Device` and a `Surface`.</span>
-<span class="doccomment">//! The meaning of these words is very overloaded in the general computer graphics context,</span>
-<span class="doccomment">//! so let me give you a quick run down, what these mean in the context of smithay&#39;s public api:</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ## Device</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! A device is some sort of rendering device. It exposes certain properties, which are directly derived</span>
+<span class="doccomment">//! A device  exposes certain properties, which are directly derived</span>
 <span class="doccomment">//! from the *device* as perceived by the direct rendering manager api (drm). These resources consists</span>
 <span class="doccomment">//! out of connectors, encoders, framebuffers, planes and crtcs.</span>
 <span class="doccomment">//!</span>
@@ -422,21 +186,22 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! A [`framebuffer`](drm::control::framebuffer) represents a buffer you may be rendering to, see `Surface` below.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! Planes are another layer on top of the crtcs, which allow us to layer multiple images on top of each other more efficiently</span>
-<span class="doccomment">//! then by combining the rendered images in the rendering phase, e.g. via OpenGL. They are internally used by smithay to provide</span>
-<span class="doccomment">//! hardware-accelerated cursors. More features regarding planes may be added in the future, but they are mostly optional and</span>
-<span class="doccomment">//! mainly provide possibilies for optimizations.</span>
+<span class="doccomment">//! A [`plane`](drm::control::plane) adds another layer on top of the crtcs, which allow us to layer multiple images on top of each other more efficiently</span>
+<span class="doccomment">//! then by combining the rendered images in the rendering phase, e.g. via OpenGL. Planes can be explicitly used by the user.</span>
+<span class="doccomment">//! Every device has at least one primary plane used to display an image to the whole crtc. Additionally cursor and overlay planes may be present.</span>
+<span class="doccomment">//! Cursor planes are usually very restricted in size and meant to be used for hardware cursors, while overlay planes may</span>
+<span class="doccomment">//! be used for performance reasons to display any overlay on top of the image, e.g. top-most windows.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! The main functionality of a `Device` in smithay is to give access to all these properties for the user to</span>
 <span class="doccomment">//! choose an appropriate rendering configuration. What that means is defined by the requirements and constraints documented</span>
 <span class="doccomment">//! in the specific device implementations. The second functionality is the creation of a `Surface`.</span>
-<span class="doccomment">//! Surface creation requires a `crtc` (which cannot be the same as another existing `Surface`&#39;s crtc),</span>
+<span class="doccomment">//! Surface creation requires a `crtc` (which cannot be the same as another existing `Surface`&#39;s crtc), a plane,</span>
 <span class="doccomment">//! as well as a `Mode` and a set of `connectors`.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! smithay does not make sure that `connectors` are not already in use by another `Surface`. Overlapping `connector`-Sets may</span>
 <span class="doccomment">//! be an error or result in undefined rendering behavior depending on the `Surface` implementation.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! ## Surface</span>
+<span class="doccomment">//! ## DrmSurface</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! A surface is a part of a `Device` that may output a picture to a number of connectors. It pumps pictures of buffers to outputs.</span>
 <span class="doccomment">//!</span>
@@ -449,337 +214,114 @@
 <span class="doccomment">//! The state of a `Surface` is double-buffered, meaning all operations that chance the set of `connector`s or their `Mode` are stored and</span>
 <span class="doccomment">//! only applied on the next commit. `Surface`s do their best to validate these changes, if possible.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! A commit/page_flip may be triggered by any other method the `Surface` has, but needs to be documented as such.</span>
-<span class="doccomment">//! The most low-level `Surface`s also implement `RawSurface`, which let you trigger a commit explicitly.</span>
+<span class="doccomment">//! A commit/page_flip may be triggered to apply the pending state.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! ## RawDevice</span>
+<span class="doccomment">//! ## Rendering</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! A low-level device that produces not only `Surface`s, but `RawSurface`s.</span>
+<span class="doccomment">//! The drm infrastructure makes no assumptions about the used renderer and does not interface with them directly.</span>
+<span class="doccomment">//! It just provides a way to create framebuffers from various buffer types (mainly `DumbBuffer`s and hardware-backed gbm `BufferObject`s).</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! ## RawSurface</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! RawSurfaces provide two additional functions related to rendering: `commit` and `page_flip`.</span>
-<span class="doccomment">//! Both attach the contents of a framebuffer, resulting in it&#39;s contents being displayed on the set connectors.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! `commit` also applies any pending changes to the current `Mode` and `connector`-Sets.</span>
-<span class="doccomment">//! You can easily check, if there are pending changes and avoid the costly commit by using `commit_pending`,</span>
-<span class="doccomment">//! which compares the current and pending state internally.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! # Rendering</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! To perform actual rendering operations you need to render your image to a framebuffer.</span>
-<span class="doccomment">//! Several types of framebuffers exists.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! The simplest one - the `Dumbbuffer` is a simple bitmap, usually very slow and not hardware-accelerated.</span>
-<span class="doccomment">//! It should be avoided at any cost, but works on all devices and can be used directly with a `RawSurface`.</span>
-<span class="doccomment">//! Rendering to it can be done manually by coping bitmaps around (cpu rendering).</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Accelerated buffers are usually hardware manufacturer dependent. A problem, which is mostly solved by</span>
-<span class="doccomment">//! the General Buffer Manager (gbm-)API. `gbm::Buffer`s can only be rendered to by egl. Appropriate hardware-accelerated</span>
-<span class="doccomment">//! buffers are picked automatically. gbm even may fall back to `Dumbbuffers` on unsupported devices and</span>
-<span class="doccomment">//! egl-support is then provided by Mesa&#39;s software renderer `llvmpipe`.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! An alternative api to `gbm` is the so called `eglstream`-api, proposed (and implemented) by nvidia.</span>
-<span class="doccomment">//! It is currenly only supported by nvidias proprietary driver, which is also not accelerated by gbm, although other</span>
-<span class="doccomment">//! manufacturers could in theory implement the standard, just like nvidia could implement gbm-support in their driver.</span>
-<span class="doccomment">//! Ongoing discussions about these api&#39;s may result in another (but hopefully unified) api in the future.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! # Implementations</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Smithay provided these different functionalities as wrappers around many `Device` and `Surface` implementations.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! At the low-level we have:</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! - [`AtomicDrmDevice`](atomic::AtomicDrmDevice) (and [`AtomicDrmSurface`](atomic::AtomicDrmSurface)), which implement the traits directly using the modern atomic drm-api.</span>
-<span class="doccomment">//! - [`LegacyDrmDevice`](legacy::LegacyDrmDevice) (and [`LegacyDrmSurface`](legacy::LegacyDrmSurface)), which implement the traits directly using the outdated drm-api.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Both of these also implement `RawDevice` and `RawSurface`.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! On top of that the following wrappers add buffer allocation apis:</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! - [`GbmDevice`](gbm::GbmDevice) (and [`GbmSurface`](gbm::Surface)), which replace the direct rendering capabilities of any underlying `RawSurface` with an egl-specific `page_flip` function.</span>
-<span class="doccomment">//! - [`EglStreamDevice`](eglstream::EglStreamDevice) (and [`EglStreamSurface`](eglstream::EglStreamSurface)), which replace the direct rendering capabilities of any underlying `RawSurface` with functionality to create EGLStreams.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! On top of that the [`EglDevice`](egl::EglDevice) (and [`EglSurface`](egl::EglSurface)) replace the manual buffer management</span>
-<span class="doccomment">//! with an implementation of smithays [`GLGraphicsBackend`](::backend::graphics::gl::GLGraphicsBackend) to initialize the OpenGL-API for rendering.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Additionally the [`FallbackDevice`](fallback::FallbackDevice) provides an easy wrapper to automatically pick an appropriate device.</span>
-<span class="doccomment">//! E.g. it can initialize an `AtomicDrmDevice` or fallback to a `LegacyDrmDevice` with the atomic api is not supported by the graphics card.</span>
-<span class="doccomment">//! It can also check for a loaded nvidia-driver for a given device and choose between an `EglStreamDevice` or a `GbmDevice`.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Any layer of this chain can be implemented and therefore extended by the user. All building blocks are exposed to add addtional</span>
-<span class="doccomment">//! buffer management solutions or rendering apis out of tree. Additionally all of these implementations can be excluded from a build</span>
-<span class="doccomment">//! by disabling their corresponding feature.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! The most versatile type currently provided by smithay, that should be able to initialize almost every</span>
-<span class="doccomment">//! common graphics card is</span>
-<span class="doccomment">//! ```rust,ignore</span>
-<span class="doccomment">//! type RenderDevice&lt;A: AsRawFd&gt; = FallbackDevice&lt;</span>
-<span class="doccomment">//!     EglDevice&lt;</span>
-<span class="doccomment">//!         EglGbmBackend&lt;FallbackDevice&lt;AtomicDrmDevice&lt;A&gt;, LegacyDrmDevice&lt;A&gt;&gt;&gt;,</span>
-<span class="doccomment">//!         GbmDevice&lt;FallbackDevice&lt;AtomicDrmDevice&lt;A&gt;, LegacyDrmDevice&lt;A&gt;&gt;&gt;,</span>
-<span class="doccomment">//!     &gt;,</span>
-<span class="doccomment">//!     EglDevice&lt;</span>
-<span class="doccomment">//!         EglStreamDeviceBackend&lt;FallbackDevice&lt;AtomicDrmDevice&lt;A&gt;, LegacyDrmDevice&lt;A&gt;&gt;&gt;,</span>
-<span class="doccomment">//!         EglStreamDevice&lt;FallbackDevice&lt;AtomicDrmDevice&lt;A&gt;, LegacyDrmDevice&lt;A&gt;&gt;&gt;,</span>
-<span class="doccomment">//!     &gt;</span>
-<span class="doccomment">//! &gt;;</span>
-<span class="doccomment">//! ```</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! # Event handling</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Devices can be attached to an eventloop using `device_bind`.</span>
-<span class="doccomment">//! Events triggered by a drm-device correspond to finished page-flips.</span>
-<span class="doccomment">//! After submitting a page_flip (possibly through a high-level api, such as a `EglSurface`)</span>
-<span class="doccomment">//! the GPU may take some time until the new framebuffer is displayed. Rendering the next</span>
-<span class="doccomment">//! frame should be delayed until the flip is done.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Naive implementations should thus be driven by the drm device events to synchronize rendering</span>
-<span class="doccomment">//! with the device. More advanced implementations may take into account that, if no change has occurred,</span>
-<span class="doccomment">//! a page_flip may waste resources and therefore delay rendering until the buffer change from a client</span>
-<span class="doccomment">//! is received or input is registered, etc. Because a flip may fail (which will result in no event),</span>
-<span class="doccomment">//! a robust rescheduling implementation for missed frames or intentionally skipped flips should be</span>
-<span class="doccomment">//! in place.</span>
-<span class="doccomment">//!</span>
+<span class="doccomment">//! Buffer management and details about the various types can be found in the [`allocator`-Module](crate::backend::allocator) and</span>
+<span class="doccomment">//! renderering abstractions, which can target these buffers can be found in the [`renderer`-Module](crate::backend::renderer).</span>
 
-<span class="kw">use</span> <span class="ident">drm</span>::{
-    <span class="ident">control</span>::{<span class="ident">connector</span>, <span class="ident">crtc</span>, <span class="ident">encoder</span>, <span class="ident">framebuffer</span>, <span class="ident">plane</span>, <span class="ident">Device</span> <span class="kw">as</span> <span class="ident">ControlDevice</span>, <span class="ident">Mode</span>, <span class="ident">ResourceHandles</span>},
-    <span class="ident">Device</span> <span class="kw">as</span> <span class="ident">BasicDevice</span>, <span class="ident">SystemError</span> <span class="kw">as</span> <span class="ident">DrmError</span>,
-};
-<span class="kw">use</span> <span class="ident">nix</span>::<span class="ident">libc</span>::<span class="ident">dev_t</span>;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod</span> <span class="ident">device</span>;
+<span class="kw">pub</span>(<span class="self">self</span>) <span class="kw">mod</span> <span class="ident">error</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_gbm&quot;</span>)]</span>
+<span class="kw">mod</span> <span class="ident">render</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_session&quot;</span>)]</span>
+<span class="kw">pub</span>(<span class="self">self</span>) <span class="kw">mod</span> <span class="ident">session</span>;
+<span class="kw">pub</span>(<span class="self">self</span>) <span class="kw">mod</span> <span class="ident">surface</span>;
 
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>::<span class="ident">Error</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">IntoIterator</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">unix</span>::<span class="ident">io</span>::<span class="ident">AsRawFd</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">PathBuf</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">device</span>::{<span class="ident">DevPath</span>, <span class="ident">DrmDevice</span>, <span class="ident">DrmEvent</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">error::Error</span> <span class="kw">as</span> <span class="ident">DrmError</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_gbm&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">render</span>::{<span class="ident">DrmRenderSurface</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">DrmRenderError</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">surface::DrmSurface</span>;
 
-<span class="kw">use</span> <span class="ident">calloop</span>::{<span class="ident">generic</span>::<span class="ident">Generic</span>, <span class="ident">InsertError</span>, <span class="ident">LoopHandle</span>, <span class="ident">Source</span>};
+<span class="kw">use</span> <span class="ident">drm::control</span>::{<span class="ident">crtc</span>, <span class="ident">plane</span>, <span class="ident">Device</span> <span class="kw">as</span> <span class="ident">ControlDevice</span>, <span class="ident">PlaneType</span>};
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_drm_atomic&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">atomic</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_drm&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">common</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_drm_egl&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">egl</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_drm_eglstream&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">eglstream</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_drm_gbm&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">gbm</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_drm_legacy&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">legacy</span>;
-
-<span class="doccomment">/// Trait to receive events of a bound [`Device`]</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// See [`device_bind`]</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">DeviceHandler</span> {
-    <span class="doccomment">/// The [`Device`] type this handler can handle</span>
-    <span class="kw">type</span> <span class="ident">Device</span>: <span class="ident">Device</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span>;
-
-    <span class="doccomment">/// A vblank blank event on the provided crtc has happend</span>
-    <span class="kw">fn</span> <span class="ident">vblank</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">crtc</span>: <span class="ident">crtc</span>::<span class="ident">Handle</span>);
-    <span class="doccomment">/// An error happend while processing events</span>
-    <span class="kw">fn</span> <span class="ident">error</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">error</span>: <span class="op">&lt;</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">DeviceHandler</span><span class="op">&gt;</span>::<span class="ident">Device</span> <span class="kw">as</span> <span class="ident">Device</span><span class="op">&gt;</span>::<span class="ident">Surface</span> <span class="kw">as</span> <span class="ident">Surface</span><span class="op">&gt;</span>::<span class="ident">Error</span>);
+<span class="doccomment">/// A set of planes as supported by a crtc</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Planes</span> {
+    <span class="doccomment">/// The primary plane of the crtc (automatically selected for [DrmDevice::create_surface])</span>
+    <span class="kw">pub</span> <span class="ident">primary</span>: <span class="ident">plane::Handle</span>,
+    <span class="doccomment">/// The cursor plane of the crtc, if available</span>
+    <span class="kw">pub</span> <span class="ident">cursor</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">plane::Handle</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Overlay planes supported by the crtc, if available</span>
+    <span class="kw">pub</span> <span class="ident">overlay</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">plane::Handle</span><span class="op">&gt;</span>,
 }
 
-<span class="doccomment">/// An open drm device</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Device</span>: <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="ident">DevPath</span> {
-    <span class="doccomment">/// Associated [`Surface`] of this [`Device`] type</span>
-    <span class="kw">type</span> <span class="ident">Surface</span>: <span class="ident">Surface</span>;
+<span class="kw">fn</span> <span class="ident">planes</span>(
+    <span class="ident">dev</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">ControlDevice</span>,
+    <span class="ident">crtc</span>: <span class="kw-2">&amp;</span><span class="ident">crtc::Handle</span>,
+    <span class="ident">has_universal_planes</span>: <span class="ident">bool</span>,
+) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Planes</span>, <span class="ident">DrmError</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">primary</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cursor</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">overlay</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
 
-    <span class="doccomment">/// Returns the id of this device node.</span>
-    <span class="kw">fn</span> <span class="ident">device_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">dev_t</span>;
+    <span class="kw">let</span> <span class="ident">planes</span> <span class="op">=</span> <span class="ident">dev</span>.<span class="ident">plane_handles</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">DrmError::Access</span> {
+        <span class="ident">errmsg</span>: <span class="string">&quot;Error loading plane handles&quot;</span>,
+        <span class="ident">dev</span>: <span class="ident">dev</span>.<span class="ident">dev_path</span>(),
+        <span class="ident">source</span>,
+    })<span class="question-mark">?</span>;
 
-    <span class="doccomment">/// Assigns a [`DeviceHandler`] called during event processing.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// See [`device_bind`] and [`DeviceHandler`]</span>
-    <span class="kw">fn</span> <span class="ident">set_handler</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">handler</span>: <span class="kw">impl</span> <span class="ident">DeviceHandler</span><span class="op">&lt;</span><span class="ident">Device</span> <span class="op">=</span> <span class="self">Self</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>);
-    <span class="doccomment">/// Clear a set [`DeviceHandler`](trait.DeviceHandler.html), if any</span>
-    <span class="kw">fn</span> <span class="ident">clear_handler</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>);
+    <span class="kw">let</span> <span class="ident">resources</span> <span class="op">=</span> <span class="ident">dev</span>.<span class="ident">resource_handles</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">DrmError::Access</span> {
+        <span class="ident">errmsg</span>: <span class="string">&quot;Error loading resource handles&quot;</span>,
+        <span class="ident">dev</span>: <span class="ident">dev</span>.<span class="ident">dev_path</span>(),
+        <span class="ident">source</span>,
+    })<span class="question-mark">?</span>;
 
-    <span class="doccomment">/// Creates a new rendering surface.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Arguments</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Initialization of surfaces happens through the types provided by</span>
-    <span class="doccomment">/// [`drm-rs`](drm).</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// - [`crtc`](drm::control::crtc)s represent scanout engines of the device pointing to one framebuffer. \</span>
-    <span class="doccomment">///     Their responsibility is to read the data of the framebuffer and export it into an &quot;Encoder&quot;. \</span>
-    <span class="doccomment">///     The number of crtc&#39;s represent the number of independant output devices the hardware may handle.</span>
-    <span class="doccomment">/// - [`mode`](drm::control::Mode) describes the resolution and rate of images produced by the crtc and \</span>
-    <span class="doccomment">///     has to be compatible with the provided `connectors`.</span>
-    <span class="doccomment">/// - [`connectors`] - List of connectors driven by the crtc. At least one(!) connector needs to be \</span>
-    <span class="doccomment">///     attached to a crtc in smithay.</span>
-    <span class="kw">fn</span> <span class="ident">create_surface</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">crtc</span>: <span class="ident">crtc</span>::<span class="ident">Handle</span>,
-        <span class="ident">mode</span>: <span class="ident">Mode</span>,
-        <span class="ident">connectors</span>: <span class="kw-2">&amp;</span>[<span class="ident">connector</span>::<span class="ident">Handle</span>],
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Surface</span>, <span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Surface</span> <span class="kw">as</span> <span class="ident">Surface</span><span class="op">&gt;</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
-
-    <span class="doccomment">/// Processes any open events of the underlying file descriptor.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// You should not call this function manually, but rather use</span>
-    <span class="doccomment">/// [`device_bind`] to register the device</span>
-    <span class="doccomment">/// to an [`EventLoop`](calloop::EventLoop)</span>
-    <span class="doccomment">/// to synchronize your rendering to the vblank events of the open crtc&#39;s</span>
-    <span class="kw">fn</span> <span class="ident">process_events</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>);
-
-    <span class="doccomment">/// Attempts to acquire a copy of the [`Device`]&#39;s</span>
-    <span class="doccomment">/// [`ResourceHandle`](drm::control::ResourceHandle)</span>
-    <span class="kw">fn</span> <span class="ident">resource_handles</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceHandles</span>, <span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Surface</span> <span class="kw">as</span> <span class="ident">Surface</span><span class="op">&gt;</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
-
-    <span class="doccomment">/// Retrieve the information for a connector</span>
-    <span class="kw">fn</span> <span class="ident">get_connector_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">conn</span>: <span class="ident">connector</span>::<span class="ident">Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">connector</span>::<span class="ident">Info</span>, <span class="ident">DrmError</span><span class="op">&gt;</span>;
-
-    <span class="doccomment">/// Retrieve the information for a crtc</span>
-    <span class="kw">fn</span> <span class="ident">get_crtc_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">crtc</span>: <span class="ident">crtc</span>::<span class="ident">Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">crtc</span>::<span class="ident">Info</span>, <span class="ident">DrmError</span><span class="op">&gt;</span>;
-
-    <span class="doccomment">/// Retrieve the information for an encoder</span>
-    <span class="kw">fn</span> <span class="ident">get_encoder_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">enc</span>: <span class="ident">encoder</span>::<span class="ident">Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">encoder</span>::<span class="ident">Info</span>, <span class="ident">DrmError</span><span class="op">&gt;</span>;
-
-    <span class="doccomment">/// Retrieve the information for a framebuffer</span>
-    <span class="kw">fn</span> <span class="ident">get_framebuffer_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fb</span>: <span class="ident">framebuffer</span>::<span class="ident">Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">framebuffer</span>::<span class="ident">Info</span>, <span class="ident">DrmError</span><span class="op">&gt;</span>;
-
-    <span class="doccomment">/// Retrieve the information for a plane</span>
-    <span class="kw">fn</span> <span class="ident">get_plane_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">plane</span>: <span class="ident">plane</span>::<span class="ident">Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">plane</span>::<span class="ident">Info</span>, <span class="ident">DrmError</span><span class="op">&gt;</span>;
-}
-
-<span class="doccomment">/// Marker trait for [`Device`]s able to provide [`RawSurface`]s</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">RawDevice</span>: <span class="ident">Device</span><span class="op">&lt;</span><span class="ident">Surface</span> <span class="op">=</span> <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">RawDevice</span><span class="op">&gt;</span>::<span class="ident">Surface</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Associated [`RawSurface`] of this [`RawDevice`] type</span>
-    <span class="kw">type</span> <span class="ident">Surface</span>: <span class="ident">RawSurface</span>;
-}
-
-<span class="doccomment">/// An open crtc that can be used for rendering</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Surface</span> {
-    <span class="doccomment">/// Type repesenting a collection of</span>
-    <span class="doccomment">/// [`connector`](drm::control::connector)s</span>
-    <span class="doccomment">/// returned by [`current_connectors`](Surface::current_connectors) and</span>
-    <span class="doccomment">/// [`pending_connectors`](Surface::pending_connectors)</span>
-    <span class="kw">type</span> <span class="ident">Connectors</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">connector</span>::<span class="ident">Handle</span><span class="op">&gt;</span>;
-    <span class="doccomment">/// Error type returned by methods of this trait</span>
-    <span class="kw">type</span> <span class="ident">Error</span>: <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>;
-
-    <span class="doccomment">/// Returns the underlying [`crtc`](drm::control::crtc) of this surface</span>
-    <span class="kw">fn</span> <span class="ident">crtc</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">crtc</span>::<span class="ident">Handle</span>;
-    <span class="doccomment">/// Currently used [`connector`](drm::control::connector)s of this `Surface`</span>
-    <span class="kw">fn</span> <span class="ident">current_connectors</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span>::<span class="ident">Connectors</span>;
-    <span class="doccomment">/// Returns the pending [`connector`](drm::control::connector)s</span>
-    <span class="doccomment">/// used after the next [`commit`](RawSurface::commit) of this [`Surface`]</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// *Note*: Only on a [`RawSurface`] you may directly trigger</span>
-    <span class="doccomment">/// a [`commit`](RawSurface::commit). Other `Surface`s provide their</span>
-    <span class="doccomment">/// own methods that *may* trigger a commit, you will need to read their docs.</span>
-    <span class="kw">fn</span> <span class="ident">pending_connectors</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span>::<span class="ident">Connectors</span>;
-    <span class="doccomment">/// Tries to add a new [`connector`](drm::control::connector)</span>
-    <span class="doccomment">/// to be used after the next commit.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// **Warning**: You need to make sure, that the connector is not used with another surface</span>
-    <span class="doccomment">/// or was properly removed via `remove_connector` + `commit` before adding it to another surface.</span>
-    <span class="doccomment">/// Behavior if failing to do so is undefined, but might result in rendering errors or the connector</span>
-    <span class="doccomment">/// getting removed from the other surface without updating it&#39;s internal state.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Fails if the `connector` is not compatible with the underlying [`crtc`](drm::control::crtc)</span>
-    <span class="doccomment">/// (e.g. no suitable [`encoder`](drm::control::encoder) may be found)</span>
-    <span class="doccomment">/// or is not compatible with the currently pending</span>
-    <span class="doccomment">/// [`Mode`](drm::control::Mode).</span>
-    <span class="kw">fn</span> <span class="ident">add_connector</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">connector</span>: <span class="ident">connector</span>::<span class="ident">Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
-    <span class="doccomment">/// Tries to mark a [`connector`](drm::control::connector)</span>
-    <span class="doccomment">/// for removal on the next commit.</span>
-    <span class="kw">fn</span> <span class="ident">remove_connector</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">connector</span>: <span class="ident">connector</span>::<span class="ident">Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
-    <span class="doccomment">/// Tries to replace the current connector set with the newly provided one on the next commit.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Fails if one new `connector` is not compatible with the underlying [`crtc`](drm::control::crtc)</span>
-    <span class="doccomment">/// (e.g. no suitable [`encoder`](drm::control::encoder) may be found)</span>
-    <span class="doccomment">/// or is not compatible with the currently pending</span>
-    <span class="doccomment">/// [`Mode`](drm::control::Mode).</span>
-    <span class="kw">fn</span> <span class="ident">set_connectors</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">connectors</span>: <span class="kw-2">&amp;</span>[<span class="ident">connector</span>::<span class="ident">Handle</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
-    <span class="doccomment">/// Returns the currently active [`Mode`](drm::control::Mode)</span>
-    <span class="doccomment">/// of the underlying [`crtc`](drm::control::crtc)</span>
-    <span class="kw">fn</span> <span class="ident">current_mode</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Mode</span>;
-    <span class="doccomment">/// Returns the currently pending [`Mode`](drm::control::Mode)</span>
-    <span class="doccomment">/// to be used after the next commit.</span>
-    <span class="kw">fn</span> <span class="ident">pending_mode</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Mode</span>;
-    <span class="doccomment">/// Tries to set a new [`Mode`](drm::control::Mode)</span>
-    <span class="doccomment">/// to be used after the next commit.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Fails if the mode is not compatible with the underlying</span>
-    <span class="doccomment">/// [`crtc`](drm::control::crtc) or any of the</span>
-    <span class="doccomment">/// pending [`connector`](drm::control::connector)s.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// *Note*: Only on a [`RawSurface`] you may directly trigger</span>
-    <span class="doccomment">/// a [`commit`](RawSurface::commit). Other [`Surface`]s provide their</span>
-    <span class="doccomment">/// own methods that *may* trigger a commit, you will need to read their docs.</span>
-    <span class="kw">fn</span> <span class="ident">use_mode</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">mode</span>: <span class="ident">Mode</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
-}
-
-<span class="doccomment">/// An open bare crtc without any rendering abstractions</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">RawSurface</span>: <span class="ident">Surface</span> <span class="op">+</span> <span class="ident">ControlDevice</span> <span class="op">+</span> <span class="ident">BasicDevice</span> {
-    <span class="doccomment">/// Returns true whenever any state changes are pending to be commited</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The following functions may trigger a pending commit:</span>
-    <span class="doccomment">/// - [`add_connector`](Surface::add_connector)</span>
-    <span class="doccomment">/// - [`remove_connector`](Surface::remove_connector)</span>
-    <span class="doccomment">/// - [`use_mode`](Surface::use_mode)</span>
-    <span class="kw">fn</span> <span class="ident">commit_pending</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span>;
-    <span class="doccomment">/// Commit the pending state rendering a given framebuffer.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// *Note*: This will trigger a full modeset on the underlying device,</span>
-    <span class="doccomment">/// potentially causing some flickering. Check before performing this</span>
-    <span class="doccomment">/// operation if a commit really is necessary using [`commit_pending`](RawSurface::commit_pending).</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This operation is not necessarily blocking until the crtc is in the desired state,</span>
-    <span class="doccomment">/// but will trigger a `vblank` event once done.</span>
-    <span class="doccomment">/// Make sure to [set a `DeviceHandler`](Device::set_handler) and</span>
-    <span class="doccomment">/// [register the belonging `Device`](device_bind) before to receive the event in time.</span>
-    <span class="kw">fn</span> <span class="ident">commit</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">framebuffer</span>: <span class="ident">framebuffer</span>::<span class="ident">Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Surface</span><span class="op">&gt;</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
-    <span class="doccomment">/// Page-flip the underlying [`crtc`](drm::control::crtc)</span>
-    <span class="doccomment">/// to a new given [`framebuffer`].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This will not cause the crtc to modeset.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This operation is not blocking and will produce a `vblank` event once swapping is done.</span>
-    <span class="doccomment">/// Make sure to [set a `DeviceHandler`](Device::set_handler) and</span>
-    <span class="doccomment">/// [register the belonging `Device`](device_bind) before to receive the event in time.</span>
-    <span class="kw">fn</span> <span class="ident">page_flip</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">framebuffer</span>: <span class="ident">framebuffer</span>::<span class="ident">Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Surface</span><span class="op">&gt;</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
-}
-
-<span class="doccomment">/// Trait representing open devices that *may* return a `Path`</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">DevPath</span> {
-    <span class="doccomment">/// Returns the path of the open device if possible</span>
-    <span class="kw">fn</span> <span class="ident">dev_path</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span>;
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">AsRawFd</span><span class="op">&gt;</span> <span class="ident">DevPath</span> <span class="kw">for</span> <span class="ident">A</span> {
-    <span class="kw">fn</span> <span class="ident">dev_path</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span> {
-        <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>;
-
-        <span class="ident">fs</span>::<span class="ident">read_link</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;/proc/self/fd/{:?}&quot;</span>, <span class="self">self</span>.<span class="ident">as_raw_fd</span>())).<span class="ident">ok</span>()
+    <span class="kw">for</span> <span class="ident">plane</span> <span class="kw">in</span> <span class="ident">planes</span>.<span class="ident">planes</span>() {
+        <span class="kw">let</span> <span class="ident">info</span> <span class="op">=</span> <span class="ident">dev</span>.<span class="ident">get_plane</span>(<span class="kw-2">*</span><span class="ident">plane</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">DrmError::Access</span> {
+            <span class="ident">errmsg</span>: <span class="string">&quot;Failed to get plane information&quot;</span>,
+            <span class="ident">dev</span>: <span class="ident">dev</span>.<span class="ident">dev_path</span>(),
+            <span class="ident">source</span>,
+        })<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">filter</span> <span class="op">=</span> <span class="ident">info</span>.<span class="ident">possible_crtcs</span>();
+        <span class="kw">if</span> <span class="ident">resources</span>.<span class="ident">filter_crtcs</span>(<span class="ident">filter</span>).<span class="ident">contains</span>(<span class="ident">crtc</span>) {
+            <span class="kw">match</span> <span class="ident">plane_type</span>(<span class="ident">dev</span>, <span class="kw-2">*</span><span class="ident">plane</span>)<span class="question-mark">?</span> {
+                <span class="ident">PlaneType::Primary</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="ident">primary</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="ident">plane</span>);
+                }
+                <span class="ident">PlaneType::Cursor</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="ident">cursor</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="ident">plane</span>);
+                }
+                <span class="ident">PlaneType::Overlay</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="ident">overlay</span>.<span class="ident">push</span>(<span class="kw-2">*</span><span class="ident">plane</span>);
+                }
+            };
+        }
     }
-}
 
-<span class="doccomment">/// calloop source associated with a Device</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">DrmSource</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Generic</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>;
-
-<span class="doccomment">/// Bind a `Device` to an [`EventLoop`](calloop::EventLoop),</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This will cause it to recieve events and feed them into a previously</span>
-<span class="doccomment">/// set [`DeviceHandler`](DeviceHandler).</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">device_bind</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Device</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>, <span class="ident">Data</span><span class="op">&gt;</span>(
-    <span class="ident">handle</span>: <span class="kw-2">&amp;</span><span class="ident">LoopHandle</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&gt;</span>,
-    <span class="ident">device</span>: <span class="ident">D</span>,
-) <span class="op">-</span><span class="op">&gt;</span> ::<span class="ident">std</span>::<span class="ident">result</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Source</span><span class="op">&lt;</span><span class="ident">DrmSource</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">InsertError</span><span class="op">&lt;</span><span class="ident">DrmSource</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">D</span>: <span class="ident">Device</span>,
-    <span class="ident">Data</span>: <span class="lifetime">&#39;static</span>,
-{
-    <span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span> <span class="ident">Generic</span>::<span class="ident">new</span>(<span class="ident">device</span>, <span class="ident">calloop</span>::<span class="ident">Interest</span>::<span class="ident">Readable</span>, <span class="ident">calloop</span>::<span class="ident">Mode</span>::<span class="ident">Level</span>);
-
-    <span class="ident">handle</span>.<span class="ident">insert_source</span>(<span class="ident">source</span>, <span class="op">|</span><span class="kw">_</span>, <span class="ident">source</span>, <span class="kw">_</span><span class="op">|</span> {
-        <span class="ident">source</span>.<span class="ident">process_events</span>();
-        <span class="prelude-val">Ok</span>(())
+    <span class="prelude-val">Ok</span>(<span class="ident">Planes</span> {
+        <span class="ident">primary</span>: <span class="ident">primary</span>.<span class="ident">expect</span>(<span class="string">&quot;Crtc has no primary plane&quot;</span>),
+        <span class="ident">cursor</span>: <span class="kw">if</span> <span class="ident">has_universal_planes</span> { <span class="ident">cursor</span> } <span class="kw">else</span> { <span class="prelude-val">None</span> },
+        <span class="ident">overlay</span>: <span class="kw">if</span> <span class="ident">has_universal_planes</span> { <span class="ident">overlay</span> } <span class="kw">else</span> { <span class="ident">Vec::new</span>() },
     })
 }
+
+<span class="kw">fn</span> <span class="ident">plane_type</span>(<span class="ident">dev</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">ControlDevice</span>, <span class="ident">plane</span>: <span class="ident">plane::Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PlaneType</span>, <span class="ident">DrmError</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">props</span> <span class="op">=</span> <span class="ident">dev</span>.<span class="ident">get_properties</span>(<span class="ident">plane</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">DrmError::Access</span> {
+        <span class="ident">errmsg</span>: <span class="string">&quot;Failed to get properties of plane&quot;</span>,
+        <span class="ident">dev</span>: <span class="ident">dev</span>.<span class="ident">dev_path</span>(),
+        <span class="ident">source</span>,
+    })<span class="question-mark">?</span>;
+    <span class="kw">let</span> (<span class="ident">ids</span>, <span class="ident">vals</span>) <span class="op">=</span> <span class="ident">props</span>.<span class="ident">as_props_and_values</span>();
+    <span class="kw">for</span> (<span class="kw-2">&amp;</span><span class="ident">id</span>, <span class="kw-2">&amp;</span><span class="ident">val</span>) <span class="kw">in</span> <span class="ident">ids</span>.<span class="ident">iter</span>().<span class="ident">zip</span>(<span class="ident">vals</span>.<span class="ident">iter</span>()) {
+        <span class="kw">let</span> <span class="ident">info</span> <span class="op">=</span> <span class="ident">dev</span>.<span class="ident">get_property</span>(<span class="ident">id</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">DrmError::Access</span> {
+            <span class="ident">errmsg</span>: <span class="string">&quot;Failed to get property info&quot;</span>,
+            <span class="ident">dev</span>: <span class="ident">dev</span>.<span class="ident">dev_path</span>(),
+            <span class="ident">source</span>,
+        })<span class="question-mark">?</span>;
+        <span class="kw">if</span> <span class="ident">info</span>.<span class="ident">name</span>().<span class="ident">to_str</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span> <span class="op">=</span><span class="op">=</span> <span class="string">&quot;type&quot;</span>).<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>) {
+            <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="ident">val</span> {
+                <span class="ident">x</span> <span class="kw">if</span> <span class="ident">x</span> <span class="op">=</span><span class="op">=</span> (<span class="ident">PlaneType::Primary</span> <span class="kw">as</span> <span class="ident">u64</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">PlaneType::Primary</span>,
+                <span class="ident">x</span> <span class="kw">if</span> <span class="ident">x</span> <span class="op">=</span><span class="op">=</span> (<span class="ident">PlaneType::Cursor</span> <span class="kw">as</span> <span class="ident">u64</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">PlaneType::Cursor</span>,
+                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">PlaneType::Overlay</span>,
+            });
+        }
+    }
+    <span class="macro">unreachable!</span>()
+}
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../../";window.currentCrate = "smithay";</script><script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script><script defer src="../../../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-search-index-js="../../../../search-index.js" data-search-js="../../../../search.js"></div><script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script></body></html>

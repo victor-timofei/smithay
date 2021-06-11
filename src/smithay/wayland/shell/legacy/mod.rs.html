@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/wayland/shell/legacy/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../../ayu.css" disabled ><script src="../../../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../../../smithay/index.html'><div class='logo-container'><img src='../../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../../../settings.html"><img src="../../../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/wayland/shell/legacy/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="stylesheet" type="text/css" href="../../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../../../storage.js"></script><script src="../../../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../../../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../../../smithay/index.html'><div class='logo-container rust-logo'><img src='../../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img src="../../../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../../../settings.html" title="settings"><img src="../../../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -323,7 +325,13 @@
 <span id="323">323</span>
 <span id="324">324</span>
 <span id="325">325</span>
-</pre><div class="example-wrap"><pre class="rust ">
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+</pre><pre class="rust">
 <span class="doccomment">//! Utilities for handling shell surfaces with the `wl_shell` protocol</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! This module provides automatic handling of shell surfaces objects, by being registered</span>
@@ -349,8 +357,8 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ### Initialization</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! To initialize this handler, simple use the [`wl_shell_init`](::wayland::shell::legacy::wl_shell_init)</span>
-<span class="doccomment">//! function provided in this module. You will need to provide it the [`CompositorToken`](::wayland::compositor::CompositorToken)</span>
+<span class="doccomment">//! To initialize this handler, simple use the [`wl_shell_init`]</span>
+<span class="doccomment">//! function provided in this module. You will need to provide it the [`CompositorToken`](crate::wayland::compositor::CompositorToken)</span>
 <span class="doccomment">//! you retrieved from an instantiation of the compositor handler provided by smithay.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ```no_run</span>
@@ -371,7 +379,7 @@
 <span class="doccomment">//! # let mut display = wayland_server::Display::new();</span>
 <span class="doccomment">//! # let (compositor_token, _, _) = smithay::wayland::compositor::compositor_init::&lt;MyRoles, _, _&gt;(</span>
 <span class="doccomment">//! #     &amp;mut display,</span>
-<span class="doccomment">//! #     |_, _, _| {},</span>
+<span class="doccomment">//! #     |_, _, _, _| {},</span>
 <span class="doccomment">//! #     None</span>
 <span class="doccomment">//! # );</span>
 <span class="doccomment">//! let (shell_state, _) = wl_shell_init(</span>
@@ -387,12 +395,13 @@
 <span class="doccomment">//! ```</span>
 
 <span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">cell</span>::<span class="ident">RefCell</span>,
-    <span class="ident">rc</span>::<span class="ident">Rc</span>,
+    <span class="ident">cell::RefCell</span>,
+    <span class="ident">rc::Rc</span>,
     <span class="ident">sync</span>::{<span class="ident">Arc</span>, <span class="ident">Mutex</span>},
 };
 
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">wayland</span>::<span class="ident">compositor</span>::{<span class="ident">roles</span>::<span class="ident">Role</span>, <span class="ident">CompositorToken</span>};
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland::compositor</span>::{<span class="ident">roles::Role</span>, <span class="ident">CompositorToken</span>};
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland::Serial</span>;
 
 <span class="kw">use</span> <span class="ident">wayland_server</span>::{
     <span class="ident">protocol</span>::{<span class="ident">wl_output</span>, <span class="ident">wl_seat</span>, <span class="ident">wl_shell</span>, <span class="ident">wl_shell_surface</span>, <span class="ident">wl_surface</span>},
@@ -402,18 +411,20 @@
 <span class="kw">mod</span> <span class="ident">wl_handlers</span>;
 
 <span class="doccomment">/// Metadata associated with the `wl_surface` role</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ShellSurfaceRole</span> {
     <span class="doccomment">/// Title of the surface</span>
     <span class="kw">pub</span> <span class="ident">title</span>: <span class="ident">String</span>,
     <span class="doccomment">/// Class of the surface</span>
     <span class="kw">pub</span> <span class="ident">class</span>: <span class="ident">String</span>,
-    <span class="ident">pending_ping</span>: <span class="ident">u32</span>,
+    <span class="ident">pending_ping</span>: <span class="ident">Serial</span>,
 }
 
 <span class="doccomment">/// A handle to a shell surface</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ShellSurface</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="ident">wl_surface</span>: <span class="ident">wl_surface</span>::<span class="ident">WlSurface</span>,
-    <span class="ident">shell_surface</span>: <span class="ident">wl_shell_surface</span>::<span class="ident">WlShellSurface</span>,
+    <span class="ident">wl_surface</span>: <span class="ident">wl_surface::WlSurface</span>,
+    <span class="ident">shell_surface</span>: <span class="ident">wl_shell_surface::WlShellSurface</span>,
     <span class="ident">token</span>: <span class="ident">CompositorToken</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
 }
 
@@ -434,7 +445,7 @@
 {
     <span class="doccomment">/// Is the shell surface referred by this handle still alive?</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">alive</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">shell_surface</span>.<span class="ident">as_ref</span>().<span class="ident">is_alive</span>() <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="self">self</span>.<span class="ident">wl_surface</span>.<span class="ident">as_ref</span>().<span class="ident">is_alive</span>()
+        <span class="self">self</span>.<span class="ident">shell_surface</span>.<span class="ident">as_ref</span>().<span class="ident">is_alive</span>() <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">wl_surface</span>.<span class="ident">as_ref</span>().<span class="ident">is_alive</span>()
     }
 
     <span class="doccomment">/// Do this handle and the other one actually refer to the same shell surface?</span>
@@ -445,7 +456,7 @@
     <span class="doccomment">/// Access the underlying `wl_surface` of this toplevel surface</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Returns `None` if the toplevel surface actually no longer exists.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_surface</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">wl_surface</span>::<span class="ident">WlSurface</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_surface</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">wl_surface::WlSurface</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">alive</span>() {
             <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">wl_surface</span>)
         } <span class="kw">else</span> {
@@ -462,12 +473,12 @@
     <span class="doccomment">/// down to 0 before a pong is received, mark the client as unresponsive.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Fails if this shell client already has a pending ping or is already dead.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send_ping</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">serial</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), ()<span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send_ping</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">serial</span>: <span class="ident">Serial</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), ()<span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">alive</span>() {
             <span class="kw">return</span> <span class="prelude-val">Err</span>(());
         }
         <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">token</span>.<span class="ident">with_role_data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">wl_surface</span>, <span class="op">|</span><span class="ident">data</span><span class="op">|</span> {
-            <span class="kw">if</span> <span class="ident">data</span>.<span class="ident">pending_ping</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
+            <span class="kw">if</span> <span class="ident">data</span>.<span class="ident">pending_ping</span> <span class="op">=</span><span class="op">=</span> <span class="ident">Serial::from</span>(<span class="number">0</span>) {
                 <span class="ident">data</span>.<span class="ident">pending_ping</span> <span class="op">=</span> <span class="ident">serial</span>;
                 <span class="bool-val">true</span>
             } <span class="kw">else</span> {
@@ -475,7 +486,7 @@
             }
         });
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>) <span class="op">=</span> <span class="ident">ret</span> {
-            <span class="self">self</span>.<span class="ident">shell_surface</span>.<span class="ident">ping</span>(<span class="ident">serial</span>);
+            <span class="self">self</span>.<span class="ident">shell_surface</span>.<span class="ident">ping</span>(<span class="ident">serial</span>.<span class="ident">into</span>());
             <span class="prelude-val">Ok</span>(())
         } <span class="kw">else</span> {
             <span class="prelude-val">Err</span>(())
@@ -483,7 +494,7 @@
     }
 
     <span class="doccomment">/// Send a configure event to this toplevel surface to suggest it a new configuration</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send_configure</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">size</span>: (<span class="ident">u32</span>, <span class="ident">u32</span>), <span class="ident">edges</span>: <span class="ident">wl_shell_surface</span>::<span class="ident">Resize</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send_configure</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">size</span>: (<span class="ident">u32</span>, <span class="ident">u32</span>), <span class="ident">edges</span>: <span class="ident">wl_shell_surface::Resize</span>) {
         <span class="self">self</span>.<span class="ident">shell_surface</span>.<span class="ident">configure</span>(<span class="ident">edges</span>, <span class="ident">size</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">i32</span>, <span class="ident">size</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">i32</span>)
     }
 
@@ -494,6 +505,7 @@
 }
 
 <span class="doccomment">/// Possible kinds of shell surface of the `wl_shell` protocol</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ShellSurfaceKind</span> {
     <span class="doccomment">/// Toplevel, a regular window displayed somewhere in the compositor space</span>
     <span class="ident">Toplevel</span>,
@@ -503,7 +515,7 @@
     <span class="doccomment">/// and as such should only be visible in their parent window is, and on top of it.</span>
     <span class="ident">Transient</span> {
         <span class="doccomment">/// The surface considered as parent</span>
-        <span class="ident">parent</span>: <span class="ident">wl_surface</span>::<span class="ident">WlSurface</span>,
+        <span class="ident">parent</span>: <span class="ident">wl_surface::WlSurface</span>,
         <span class="doccomment">/// Location relative to the parent</span>
         <span class="ident">location</span>: (<span class="ident">i32</span>, <span class="ident">i32</span>),
         <span class="doccomment">/// Wether this window should be marked as inactive</span>
@@ -512,11 +524,11 @@
     <span class="doccomment">/// Fullscreen surface, covering an entire output</span>
     <span class="ident">Fullscreen</span> {
         <span class="doccomment">/// Method used for fullscreen</span>
-        <span class="ident">method</span>: <span class="ident">wl_shell_surface</span>::<span class="ident">FullscreenMethod</span>,
+        <span class="ident">method</span>: <span class="ident">wl_shell_surface::FullscreenMethod</span>,
         <span class="doccomment">/// Framerate (relevant only for driver fullscreen)</span>
         <span class="ident">framerate</span>: <span class="ident">u32</span>,
         <span class="doccomment">/// Requested output if any</span>
-        <span class="ident">output</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">wl_output</span>::<span class="ident">WlOutput</span><span class="op">&gt;</span>,
+        <span class="ident">output</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">wl_output::WlOutput</span><span class="op">&gt;</span>,
     },
     <span class="doccomment">/// A popup surface</span>
     <span class="doccomment">///</span>
@@ -524,17 +536,17 @@
     <span class="doccomment">/// contexts.</span>
     <span class="ident">Popup</span> {
         <span class="doccomment">/// The parent surface of this popup</span>
-        <span class="ident">parent</span>: <span class="ident">wl_surface</span>::<span class="ident">WlSurface</span>,
+        <span class="ident">parent</span>: <span class="ident">wl_surface::WlSurface</span>,
         <span class="doccomment">/// The serial of the input event triggering the creation of this</span>
         <span class="doccomment">/// popup</span>
-        <span class="ident">serial</span>: <span class="ident">u32</span>,
+        <span class="ident">serial</span>: <span class="ident">Serial</span>,
         <span class="doccomment">/// Wether this popup should be marked as inactive</span>
         <span class="ident">inactive</span>: <span class="ident">bool</span>,
         <span class="doccomment">/// Location of the popup relative to its parent</span>
         <span class="ident">location</span>: (<span class="ident">i32</span>, <span class="ident">i32</span>),
         <span class="doccomment">/// Seat associated this the input that triggered the creation of the</span>
         <span class="doccomment">/// popup. Used to define when the &quot;popup done&quot; event is sent.</span>
-        <span class="ident">seat</span>: <span class="ident">wl_seat</span>::<span class="ident">WlSeat</span>,
+        <span class="ident">seat</span>: <span class="ident">wl_seat::WlSeat</span>,
     },
     <span class="doccomment">/// A maximized surface</span>
     <span class="doccomment">///</span>
@@ -542,11 +554,12 @@
     <span class="doccomment">/// while keeping any relevant desktop-environment interface visible.</span>
     <span class="ident">Maximized</span> {
         <span class="doccomment">/// Requested output for maximization</span>
-        <span class="ident">output</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">wl_output</span>::<span class="ident">WlOutput</span><span class="op">&gt;</span>,
+        <span class="ident">output</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">wl_output::WlOutput</span><span class="op">&gt;</span>,
     },
 }
 
 <span class="doccomment">/// A request triggered by a `wl_shell_surface`</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ShellRequest</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
     <span class="doccomment">/// A new shell surface was created</span>
     <span class="doccomment">///</span>
@@ -570,9 +583,9 @@
         <span class="doccomment">/// The surface requesting the move</span>
         <span class="ident">surface</span>: <span class="ident">ShellSurface</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
         <span class="doccomment">/// Serial of the implicit grab that initiated the move</span>
-        <span class="ident">serial</span>: <span class="ident">u32</span>,
+        <span class="ident">serial</span>: <span class="ident">Serial</span>,
         <span class="doccomment">/// Seat associated with the move</span>
-        <span class="ident">seat</span>: <span class="ident">wl_seat</span>::<span class="ident">WlSeat</span>,
+        <span class="ident">seat</span>: <span class="ident">wl_seat::WlSeat</span>,
     },
     <span class="doccomment">/// Start of an interactive resize</span>
     <span class="doccomment">///</span>
@@ -581,11 +594,11 @@
         <span class="doccomment">/// The surface requesting the resize</span>
         <span class="ident">surface</span>: <span class="ident">ShellSurface</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
         <span class="doccomment">/// Serial of the implicit grab that initiated the resize</span>
-        <span class="ident">serial</span>: <span class="ident">u32</span>,
+        <span class="ident">serial</span>: <span class="ident">Serial</span>,
         <span class="doccomment">/// Seat associated with the resize</span>
-        <span class="ident">seat</span>: <span class="ident">wl_seat</span>::<span class="ident">WlSeat</span>,
+        <span class="ident">seat</span>: <span class="ident">wl_seat::WlSeat</span>,
         <span class="doccomment">/// Direction of the resize</span>
-        <span class="ident">edges</span>: <span class="ident">wl_shell_surface</span>::<span class="ident">Resize</span>,
+        <span class="ident">edges</span>: <span class="ident">wl_shell_surface::Resize</span>,
     },
     <span class="doccomment">/// The surface changed its kind</span>
     <span class="ident">SetKind</span> {
@@ -600,6 +613,7 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// This state allows you to retrieve a list of surfaces</span>
 <span class="doccomment">/// currently known to the shell global.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ShellState</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
     <span class="ident">known_surfaces</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ShellSurface</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
@@ -625,29 +639,29 @@
     <span class="ident">ctoken</span>: <span class="ident">CompositorToken</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
     <span class="ident">implementation</span>: <span class="ident">Impl</span>,
     <span class="ident">logger</span>: <span class="ident">L</span>,
-) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">ShellState</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Global</span><span class="op">&lt;</span><span class="ident">wl_shell</span>::<span class="ident">WlShell</span><span class="op">&gt;</span>)
+) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">ShellState</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Global</span><span class="op">&lt;</span><span class="ident">wl_shell::WlShell</span><span class="op">&gt;</span>)
 <span class="kw">where</span>
     <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">ShellSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-    <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span>::<span class="ident">slog</span>::<span class="ident">Logger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">::slog::Logger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">Impl</span>: <span class="ident">FnMut</span>(<span class="ident">ShellRequest</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
-    <span class="kw">let</span> <span class="ident">_log</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">slog_or_fallback</span>(<span class="ident">logger</span>);
+    <span class="kw">let</span> <span class="ident">_log</span> <span class="op">=</span> <span class="kw">crate</span><span class="ident">::slog_or_fallback</span>(<span class="ident">logger</span>);
 
-    <span class="kw">let</span> <span class="ident">implementation</span> <span class="op">=</span> <span class="ident">Rc</span>::<span class="ident">new</span>(<span class="ident">RefCell</span>::<span class="ident">new</span>(<span class="ident">implementation</span>));
+    <span class="kw">let</span> <span class="ident">implementation</span> <span class="op">=</span> <span class="ident">Rc::new</span>(<span class="ident">RefCell::new</span>(<span class="ident">implementation</span>));
 
-    <span class="kw">let</span> <span class="ident">state</span> <span class="op">=</span> <span class="ident">Arc</span>::<span class="ident">new</span>(<span class="ident">Mutex</span>::<span class="ident">new</span>(<span class="ident">ShellState</span> {
-        <span class="ident">known_surfaces</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
+    <span class="kw">let</span> <span class="ident">state</span> <span class="op">=</span> <span class="ident">Arc::new</span>(<span class="ident">Mutex::new</span>(<span class="ident">ShellState</span> {
+        <span class="ident">known_surfaces</span>: <span class="ident">Vec::new</span>(),
     }));
     <span class="kw">let</span> <span class="ident">state2</span> <span class="op">=</span> <span class="ident">state</span>.<span class="ident">clone</span>();
 
     <span class="kw">let</span> <span class="ident">global</span> <span class="op">=</span> <span class="ident">display</span>.<span class="ident">create_global</span>(
         <span class="number">1</span>,
-        <span class="ident">Filter</span>::<span class="ident">new</span>(<span class="kw">move</span> <span class="op">|</span>(<span class="ident">shell</span>, <span class="ident">_version</span>), <span class="kw">_</span>, <span class="ident">_data</span><span class="op">|</span> {
-            <span class="self">self</span>::<span class="ident">wl_handlers</span>::<span class="ident">implement_shell</span>(<span class="ident">shell</span>, <span class="ident">ctoken</span>, <span class="ident">implementation</span>.<span class="ident">clone</span>(), <span class="ident">state2</span>.<span class="ident">clone</span>());
+        <span class="ident">Filter::new</span>(<span class="kw">move</span> <span class="op">|</span>(<span class="ident">shell</span>, <span class="ident">_version</span>), <span class="kw">_</span>, <span class="ident">_data</span><span class="op">|</span> {
+            <span class="self">self</span><span class="ident">::wl_handlers::implement_shell</span>(<span class="ident">shell</span>, <span class="ident">ctoken</span>, <span class="ident">implementation</span>.<span class="ident">clone</span>(), <span class="ident">state2</span>.<span class="ident">clone</span>());
         }),
     );
 
     (<span class="ident">state</span>, <span class="ident">global</span>)
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../../../";window.currentCrate = "smithay";</script><script src="../../../../../main.js"></script><script src="../../../../../source-script.js"></script><script src="../../../../../source-files.js"></script><script defer src="../../../../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="smithay" data-search-index-js="../../../../../search-index.js" data-search-js="../../../../../search.js"></div><script src="../../../../../main.js"></script><script src="../../../../../source-script.js"></script><script src="../../../../../source-files.js"></script></body></html>

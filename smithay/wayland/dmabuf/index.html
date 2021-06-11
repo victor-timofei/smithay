@@ -1,67 +1,40 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `dmabuf` mod in crate `smithay`."><meta name="keywords" content="rust, rustlang, rust-lang, dmabuf"><title>smithay::wayland::dmabuf - Rust</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../smithay/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a><p class='location'>Module dmabuf</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#traits">Traits</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'><a href='../../index.html'>smithay</a>::<wbr><a href='../index.html'>wayland</a></p><script>window.sidebarCurrent = {name: 'dmabuf', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../../../src/smithay/wayland/dmabuf/mod.rs.html#1-503' title='goto source code'>[src]</a></span><span class='in-band'>Module <a href='../../index.html'>smithay</a>::<wbr><a href='../index.html'>wayland</a>::<wbr><a class="mod" href=''>dmabuf</a></span></h1><div class='docblock'><p>Linux DMABUF protocol</p>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Linux DMABUF protocol"><meta name="keywords" content="rust, rustlang, rust-lang, dmabuf"><title>smithay::wayland::dmabuf - Rust</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../smithay/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a><p class="location">Module dmabuf</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#enums">Enums</a></li><li><a href="#functions">Functions</a></li></ul></div><div id="sidebar-vars" data-name="dmabuf" data-ty="mod" data-relpath="./"></div><script defer src="./sidebar-items.js"></script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img src="../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img src="../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class="fqn"><span class="in-band">Module <a href="../../index.html">smithay</a>::<wbr><a href="../index.html">wayland</a>::<wbr><a class="mod" href="#">dmabuf</a><button id="copy-path" onclick="copy_path(this)" title="copy path"><img src="../../../clipboard.svg" width="19" height="18" alt="Copy item import" title="Copy item import to clipboard"></button></span><span class="out-of-band"><span id="render-detail"><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span><a class="srclink" href="../../../src/smithay/wayland/dmabuf/mod.rs.html#1-471" title="goto source code">[src]</a></span></h1><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Linux DMABUF protocol</p>
 <p>This module provides helper to handle the linux-dmabuf protocol, which allows clients to submit their
 contents as dmabuf file descriptors. These handlers automate the aggregation of the metadata associated
 with a dma buffer, and do some basic checking of the sanity of what the client sends.</p>
-<p>This module is only available if the <code>backend_drm</code> cargo feature is enabled.</p>
 <h2 id="how-to-use" class="section-header"><a href="#how-to-use">How to use</a></h2>
 <p>To setup the dmabuf global, you will need to provide 2 things:</p>
 <ul>
 <li>a list of the dmabuf formats you wish to support</li>
-<li>an implementation of the <code>DmabufHandler</code> trait</li>
+<li>a closure to test if a dmabuf buffer can be imported by your renderer</li>
 </ul>
-<p>The list of supported format is just a <code>Vec&lt;Format&gt;</code>, where you will enter all the (format, modifier)
-couples you support.</p>
-<p>The implementation of the <code>DmabufHandler</code> trait will be called whenever a client has finished setting up
-a dma buffer. You will be handled the full details of the client's submission as a <code>BufferInfo</code> struct,
-and you need to validate it and maybe import it into your renderer. The <code>BufferData</code> associated type
-allows you to store any metadata or handle to the resource you need into the created <code>wl_buffer</code>,
-user data, to then retrieve it when it is attached to a surface to re-identify the dmabuf.</p>
+<p>The list of supported format is just a <code>Vec&lt;Format&gt;</code>, where you will enter all the (code, modifier)
+couples you support. You can typically receive a list of supported formats for one renderer by calling
+<a href="../../backend/renderer/trait.ImportDma.html#method.dmabuf_formats" title="crate::backend::renderer::ImportDma::dmabuf_formats"><code>crate::backend::renderer::ImportDma::dmabuf_formats</code></a>.</p>
 
 <div class="example-wrap"><pre class="rust rust-example-rendered">
-<span class="kw">use</span> <span class="ident">smithay</span>::<span class="ident">wayland</span>::<span class="ident">dmabuf</span>::{<span class="ident">DmabufHandler</span>, <span class="ident">BufferInfo</span>, <span class="ident">init_dmabuf_global</span>};
-
-<span class="kw">struct</span> <span class="ident">MyDmabufHandler</span>;
-
-<span class="kw">struct</span> <span class="ident">MyBufferData</span> {
-    <span class="comment">/* ... */</span>
-}
-
-<span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">MyBufferData</span> {
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
-        <span class="comment">// This is called when all handles to this buffer have been dropped,</span>
-        <span class="comment">// both client-side and server side.</span>
-        <span class="comment">// You can now free the associated resources in your renderer.</span>
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">DmabufHandler</span> <span class="kw">for</span> <span class="ident">MyDmabufHandler</span> {
-    <span class="kw">type</span> <span class="ident">BufferData</span> <span class="op">=</span> <span class="ident">MyBufferData</span>;
-    <span class="kw">fn</span> <span class="ident">validate_dmabuf</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">info</span>: <span class="ident">BufferInfo</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">BufferData</span>, ()<span class="op">&gt;</span> {
-        <span class="comment">/* validate the dmabuf and import it into your renderer state */</span>
-        <span class="prelude-val">Ok</span>(<span class="ident">MyBufferData</span> { <span class="comment">/* ... */</span> })
-    }
-}
-
-<span class="comment">// Once this is defined, you can in your setup initialize the dmabuf global:</span>
+<span class="kw">use</span> <span class="ident">smithay</span>::{
+    <span class="ident">backend::allocator::dmabuf::Dmabuf</span>,
+    <span class="ident">reexports</span>::{<span class="ident">wayland_server::protocol::wl_buffer::WlBuffer</span>},
+    <span class="ident">wayland::dmabuf::init_dmabuf_global</span>,
+};
 
 <span class="comment">// define your supported formats</span>
-<span class="kw">let</span> <span class="ident">formats</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[
+<span class="kw">let</span> <span class="ident">formats</span> <span class="op">=</span> <span class="macro">vec!</span>[
     <span class="comment">/* ... */</span>
 ];
 <span class="kw">let</span> <span class="ident">dmabuf_global</span> <span class="op">=</span> <span class="ident">init_dmabuf_global</span>(
     <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">display</span>,
     <span class="ident">formats</span>,
-    <span class="ident">MyDmabufHandler</span>,
+    <span class="op">|</span><span class="ident">buffer</span>, <span class="ident">dispatch_data</span><span class="op">|</span> {
+        <span class="comment">/* validate the dmabuf and import it into your renderer state */</span>
+        <span class="bool-val">true</span>
+    },
     <span class="prelude-val">None</span> <span class="comment">// we don&#39;t provide a logger in this example</span>
 );</pre></div>
-</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
-<table><tr class='module-item'><td><a class="struct" href="struct.BufferFlags.html" title='smithay::wayland::dmabuf::BufferFlags struct'>BufferFlags</a></td><td class='docblock-short'><p>Possible flags for a DMA buffer</p>
-</td></tr><tr class='module-item'><td><a class="struct" href="struct.BufferInfo.html" title='smithay::wayland::dmabuf::BufferInfo struct'>BufferInfo</a></td><td class='docblock-short'><p>The complete information provided by the client to create a dmabuf buffer</p>
-</td></tr><tr class='module-item'><td><a class="struct" href="struct.Format.html" title='smithay::wayland::dmabuf::Format struct'>Format</a></td><td class='docblock-short'><p>Representation of a Dmabuf format, as advertized to the client</p>
-</td></tr><tr class='module-item'><td><a class="struct" href="struct.Plane.html" title='smithay::wayland::dmabuf::Plane struct'>Plane</a></td><td class='docblock-short'><p>A plane send by the client</p>
-</td></tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
-<table><tr class='module-item'><td><a class="enum" href="enum.Flags.html" title='smithay::wayland::dmabuf::Flags enum'>Flags</a></td><td class='docblock-short'></td></tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
-<table><tr class='module-item'><td><a class="trait" href="trait.DmabufHandler.html" title='smithay::wayland::dmabuf::DmabufHandler trait'>DmabufHandler</a></td><td class='docblock-short'><p>Handler trait for dmabuf validation</p>
-</td></tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
-<table><tr class='module-item'><td><a class="fn" href="fn.init_dmabuf_global.html" title='smithay::wayland::dmabuf::init_dmabuf_global fn'>init_dmabuf_global</a></td><td class='docblock-short'><p>Initialize a dmabuf global.</p>
-</td></tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "smithay";</script><script src="../../../main.js"></script><script defer src="../../../search-index.js"></script></body></html>
+</div></details><h2 id="enums" class="section-header"><a href="#enums">Enums</a></h2>
+<table><tr class="module-item"><td><a class="enum" href="enum.Flags.html" title="smithay::wayland::dmabuf::Flags enum">Flags</a></td><td class="docblock-short"></td></tr></table><h2 id="functions" class="section-header"><a href="#functions">Functions</a></h2>
+<table><tr class="module-item"><td><a class="fn" href="fn.init_dmabuf_global.html" title="smithay::wayland::dmabuf::init_dmabuf_global fn">init_dmabuf_global</a></td><td class="docblock-short"><p>Handler trait for dmabuf validation</p>
+</td></tr></table></section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="smithay" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div><script src="../../../main.js"></script></body></html>

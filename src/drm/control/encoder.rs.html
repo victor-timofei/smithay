@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/runner/.cargo/git/checkouts/drm-rs-9d15058f81d7e55c/e196639/src/control/encoder.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>encoder.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../drm/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/drm-0.4.0/src/control/encoder.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>encoder.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../drm/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img src="../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img src="../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -124,7 +126,9 @@
 <span id="124">124</span>
 <span id="125">125</span>
 <span id="126">126</span>
-</pre><div class="example-wrap"><pre class="rust ">
+<span id="127">127</span>
+<span id="128">128</span>
+</pre><pre class="rust">
 <span class="doccomment">//! # Encoder</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! An encoder is a bridge between a CRTC and a connector that takes the pixel</span>
@@ -135,35 +139,33 @@
 
 <span class="doccomment">/// A handle to an encoder</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Handle</span>(<span class="ident">control</span>::<span class="ident">RawResourceHandle</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Handle</span>(<span class="ident">control::RawResourceHandle</span>);
 
-<span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">control</span>::<span class="ident">RawResourceHandle</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Handle</span> {
-    <span class="kw">fn</span> <span class="ident">into</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">control</span>::<span class="ident">RawResourceHandle</span> {
-        <span class="self">self</span>.<span class="number">0</span>
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Handle</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">control::RawResourceHandle</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">handle</span>: <span class="ident">Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="ident">handle</span>.<span class="number">0</span>
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Handle</span> {
-    <span class="kw">fn</span> <span class="ident">into</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">into</span>()
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Handle</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">u32</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">handle</span>: <span class="ident">Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="ident">handle</span>.<span class="number">0</span>.<span class="ident">into</span>()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">control</span>::<span class="ident">RawResourceHandle</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Handle</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">handle</span>: <span class="ident">control</span>::<span class="ident">RawResourceHandle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">control::RawResourceHandle</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Handle</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">handle</span>: <span class="ident">control::RawResourceHandle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="ident">Handle</span>(<span class="ident">handle</span>)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">control</span>::<span class="ident">ResourceHandle</span> <span class="kw">for</span> <span class="ident">Handle</span> {
-    <span class="kw">const</span> <span class="ident">FFI_TYPE</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_OBJECT_ENCODER</span>;
+<span class="kw">impl</span> <span class="ident">control::ResourceHandle</span> <span class="kw">for</span> <span class="ident">Handle</span> {
+    <span class="kw">const</span> <span class="ident">FFI_TYPE</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_OBJECT_ENCODER</span>;
 }
 
-<span class="kw">impl</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Handle</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
-        <span class="ident">f</span>.<span class="ident">debug_tuple</span>(<span class="string">&quot;encoder::Handle&quot;</span>)
-            .<span class="ident">field</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>)
-            .<span class="ident">finish</span>()
+<span class="kw">impl</span> <span class="ident">std::fmt::Debug</span> <span class="kw">for</span> <span class="ident">Handle</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+        <span class="ident">f</span>.<span class="ident">debug_tuple</span>(<span class="string">&quot;encoder::Handle&quot;</span>).<span class="ident">field</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>).<span class="ident">finish</span>()
     }
 }
 
@@ -172,7 +174,7 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Info</span> {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">handle</span>: <span class="ident">Handle</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">enc_type</span>: <span class="ident">Kind</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">crtc</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">control</span>::<span class="ident">crtc</span>::<span class="ident">Handle</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">crtc</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">control::crtc::Handle</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">pos_crtcs</span>: <span class="ident">u32</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">pos_clones</span>: <span class="ident">u32</span>,
 }
@@ -189,23 +191,27 @@
     }
 
     <span class="doccomment">/// Returns a handle to the CRTC this encoder is attached to.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">crtc</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">control</span>::<span class="ident">crtc</span>::<span class="ident">Handle</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">crtc</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">control::crtc::Handle</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">crtc</span>
     }
 
     <span class="doccomment">/// Returns a filter for the possible CRTCs that can use this encoder.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">possible_crtcs</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">control</span>::<span class="ident">CrtcListFilter</span> {
-        <span class="ident">control</span>::<span class="ident">CrtcListFilter</span>(<span class="self">self</span>.<span class="ident">pos_crtcs</span>)
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Use with [`control::ResourceHandles::filter_crtcs`]</span>
+    <span class="doccomment">/// to receive a list of crtcs.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">possible_crtcs</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">control::CrtcListFilter</span> {
+        <span class="ident">control::CrtcListFilter</span>(<span class="self">self</span>.<span class="ident">pos_crtcs</span>)
     }
 
     <span class="doccomment">/// Returns a filter for the possible encoders that clones this one.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">possible_clones</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> () {
-        <span class="macro">unimplemented</span><span class="macro">!</span>()
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">possible_clones</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+        <span class="macro">unimplemented!</span>()
     }
 }
 
 <span class="doccomment">/// The type of encoder.</span>
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">missing_docs</span>)]</span>
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::upper_case_acronyms</span>)]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Kind</span> {
     <span class="prelude-val">None</span>,
@@ -222,34 +228,34 @@
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Kind</span> {
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">n</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="kw">match</span> <span class="ident">n</span> {
-            <span class="ident">ffi</span>::<span class="ident">DRM_MODE_ENCODER_NONE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind</span>::<span class="prelude-val">None</span>,
-            <span class="ident">ffi</span>::<span class="ident">DRM_MODE_ENCODER_DAC</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind</span>::<span class="ident">DAC</span>,
-            <span class="ident">ffi</span>::<span class="ident">DRM_MODE_ENCODER_TMDS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind</span>::<span class="ident">TMDS</span>,
-            <span class="ident">ffi</span>::<span class="ident">DRM_MODE_ENCODER_LVDS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind</span>::<span class="ident">LVDS</span>,
-            <span class="ident">ffi</span>::<span class="ident">DRM_MODE_ENCODER_TVDAC</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind</span>::<span class="ident">TVDAC</span>,
-            <span class="ident">ffi</span>::<span class="ident">DRM_MODE_ENCODER_VIRTUAL</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind</span>::<span class="ident">Virtual</span>,
-            <span class="ident">ffi</span>::<span class="ident">DRM_MODE_ENCODER_DSI</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind</span>::<span class="ident">DSI</span>,
-            <span class="ident">ffi</span>::<span class="ident">DRM_MODE_ENCODER_DPMST</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind</span>::<span class="ident">DPMST</span>,
-            <span class="ident">ffi</span>::<span class="ident">DRM_MODE_ENCODER_DPI</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind</span>::<span class="ident">DPI</span>,
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind</span>::<span class="prelude-val">None</span>,
+            <span class="ident">ffi::DRM_MODE_ENCODER_NONE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind::None</span>,
+            <span class="ident">ffi::DRM_MODE_ENCODER_DAC</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind::DAC</span>,
+            <span class="ident">ffi::DRM_MODE_ENCODER_TMDS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind::TMDS</span>,
+            <span class="ident">ffi::DRM_MODE_ENCODER_LVDS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind::LVDS</span>,
+            <span class="ident">ffi::DRM_MODE_ENCODER_TVDAC</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind::TVDAC</span>,
+            <span class="ident">ffi::DRM_MODE_ENCODER_VIRTUAL</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind::Virtual</span>,
+            <span class="ident">ffi::DRM_MODE_ENCODER_DSI</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind::DSI</span>,
+            <span class="ident">ffi::DRM_MODE_ENCODER_DPMST</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind::DPMST</span>,
+            <span class="ident">ffi::DRM_MODE_ENCODER_DPI</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind::DPI</span>,
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind::None</span>,
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Kind</span> {
-    <span class="kw">fn</span> <span class="ident">into</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Kind</span>::<span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_ENCODER_NONE</span>,
-            <span class="ident">Kind</span>::<span class="ident">DAC</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_ENCODER_DAC</span>,
-            <span class="ident">Kind</span>::<span class="ident">TMDS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_ENCODER_TMDS</span>,
-            <span class="ident">Kind</span>::<span class="ident">LVDS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_ENCODER_LVDS</span>,
-            <span class="ident">Kind</span>::<span class="ident">TVDAC</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_ENCODER_TVDAC</span>,
-            <span class="ident">Kind</span>::<span class="ident">Virtual</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_ENCODER_VIRTUAL</span>,
-            <span class="ident">Kind</span>::<span class="ident">DSI</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_ENCODER_DSI</span>,
-            <span class="ident">Kind</span>::<span class="ident">DPMST</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_ENCODER_DPMST</span>,
-            <span class="ident">Kind</span>::<span class="ident">DPI</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_ENCODER_DPI</span>,
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Kind</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">u32</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">kind</span>: <span class="ident">Kind</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="kw">match</span> <span class="ident">kind</span> {
+            <span class="ident">Kind::None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_ENCODER_NONE</span>,
+            <span class="ident">Kind::DAC</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_ENCODER_DAC</span>,
+            <span class="ident">Kind::TMDS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_ENCODER_TMDS</span>,
+            <span class="ident">Kind::LVDS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_ENCODER_LVDS</span>,
+            <span class="ident">Kind::TVDAC</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_ENCODER_TVDAC</span>,
+            <span class="ident">Kind::Virtual</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_ENCODER_VIRTUAL</span>,
+            <span class="ident">Kind::DSI</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_ENCODER_DSI</span>,
+            <span class="ident">Kind::DPMST</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_ENCODER_DPMST</span>,
+            <span class="ident">Kind::DPI</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_ENCODER_DPI</span>,
         }
     }
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "drm";</script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="drm" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script></body></html>

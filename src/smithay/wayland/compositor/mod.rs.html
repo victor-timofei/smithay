@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/wayland/compositor/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script src="../../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../../smithay/index.html'><div class='logo-container'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../../settings.html"><img src="../../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/wayland/compositor/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../../storage.js"></script><script src="../../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../../smithay/index.html'><div class='logo-container rust-logo'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img src="../../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../../settings.html" title="settings"><img src="../../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -619,7 +621,33 @@
 <span id="619">619</span>
 <span id="620">620</span>
 <span id="621">621</span>
-</pre><div class="example-wrap"><pre class="rust ">
+<span id="622">622</span>
+<span id="623">623</span>
+<span id="624">624</span>
+<span id="625">625</span>
+<span id="626">626</span>
+<span id="627">627</span>
+<span id="628">628</span>
+<span id="629">629</span>
+<span id="630">630</span>
+<span id="631">631</span>
+<span id="632">632</span>
+<span id="633">633</span>
+<span id="634">634</span>
+<span id="635">635</span>
+<span id="636">636</span>
+<span id="637">637</span>
+<span id="638">638</span>
+<span id="639">639</span>
+<span id="640">640</span>
+<span id="641">641</span>
+<span id="642">642</span>
+<span id="643">643</span>
+<span id="644">644</span>
+<span id="645">645</span>
+<span id="646">646</span>
+<span id="647">647</span>
+</pre><pre class="rust">
 <span class="doccomment">//! Utilities for handling surfaces, subsurfaces and regions</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! This module provides automatic handling of surfaces, subsurfaces</span>
@@ -645,7 +673,7 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ### Initialization</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! To initialize this implementation, use the [`compositor_init`](::wayland::compositor::compositor_init)</span>
+<span class="doccomment">//! To initialize this implementation, use the [`compositor_init`]</span>
 <span class="doccomment">//! method provided by this module. It&#39;ll require you to first define as few things, as shown in</span>
 <span class="doccomment">//! this example:</span>
 <span class="doccomment">//!</span>
@@ -661,7 +689,7 @@
 <span class="doccomment">//! // Call the init function:</span>
 <span class="doccomment">//! let (token, _, _) = compositor_init::&lt;MyRoles, _, _&gt;(</span>
 <span class="doccomment">//!     &amp;mut display,</span>
-<span class="doccomment">//!     |request, surface, compositor_token| {</span>
+<span class="doccomment">//!     |request, surface, compositor_token, dispatch_data| {</span>
 <span class="doccomment">//!         /*</span>
 <span class="doccomment">//!           Your handling of the user requests.</span>
 <span class="doccomment">//!          */</span>
@@ -678,42 +706,41 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! As you can see in the previous example, in the end we are retrieving a token from</span>
 <span class="doccomment">//! the `init` function. This token is necessary to retrieve the metadata associated with</span>
-<span class="doccomment">//! a surface. It can be cloned. See [`CompositorToken`](::wayland::compositor::CompositorToken)</span>
+<span class="doccomment">//! a surface. It can be cloned. See [`CompositorToken`]</span>
 <span class="doccomment">//! for the details of what it enables you.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! The surface metadata is held in the [`SurfaceAttributes`](::wayland::compositor::SurfaceAttributes)</span>
+<span class="doccomment">//! The surface metadata is held in the [`SurfaceAttributes`]</span>
 <span class="doccomment">//! struct. In contains double-buffered state pending from the client as defined by the protocol for</span>
 <span class="doccomment">//! [`wl_surface`](wayland_server::protocol::wl_surface), as well as your user-defined type holding</span>
 <span class="doccomment">//! any data you need to have associated with a struct. See its documentation for details.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! This [`CompositorToken`](::wayland::compositor::CompositorToken) also provides access to the metadata associated with the role of the</span>
-<span class="doccomment">//! surfaces. See the documentation of the [`roles`](::wayland::compositor::roles) submodule</span>
+<span class="doccomment">//! This [`CompositorToken`] also provides access to the metadata associated with the role of the</span>
+<span class="doccomment">//! surfaces. See the documentation of the [`roles`] submodule</span>
 <span class="doccomment">//! for a detailed explanation.</span>
 
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cell</span>::<span class="ident">RefCell</span>, <span class="ident">rc</span>::<span class="ident">Rc</span>, <span class="ident">sync</span>::<span class="ident">Mutex</span>};
+<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cell::RefCell</span>, <span class="ident">fmt</span>, <span class="ident">rc::Rc</span>, <span class="ident">sync::Mutex</span>};
 
 <span class="kw">mod</span> <span class="ident">handlers</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">roles</span>;
 <span class="kw">mod</span> <span class="ident">tree</span>;
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">tree</span>::<span class="ident">TraversalAction</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::tree::TraversalAction</span>;
 <span class="kw">use</span> <span class="self">self</span>::{
-    <span class="ident">roles</span>::{<span class="ident">Role</span>, <span class="ident">RoleType</span>, <span class="ident">WrongRole</span>},
-    <span class="ident">tree</span>::<span class="ident">SurfaceData</span>,
+    <span class="ident">roles</span>::{<span class="ident">AlreadyHasRole</span>, <span class="ident">Role</span>, <span class="ident">RoleType</span>, <span class="ident">WrongRole</span>},
+    <span class="ident">tree::SurfaceData</span>,
 };
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">utils</span>::<span class="ident">Rectangle</span>;
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils::Rectangle</span>;
 <span class="kw">use</span> <span class="ident">wayland_server</span>::{
     <span class="ident">protocol</span>::{
-        <span class="ident">wl_buffer</span>, <span class="ident">wl_callback</span>, <span class="ident">wl_compositor</span>, <span class="ident">wl_output</span>, <span class="ident">wl_region</span>, <span class="ident">wl_subcompositor</span>, <span class="ident">wl_surface</span>::<span class="ident">WlSurface</span>,
+        <span class="ident">wl_buffer</span>, <span class="ident">wl_callback</span>, <span class="ident">wl_compositor</span>, <span class="ident">wl_output</span>, <span class="ident">wl_region</span>, <span class="ident">wl_subcompositor</span>, <span class="ident">wl_surface::WlSurface</span>,
     },
-    <span class="ident">Display</span>, <span class="ident">Filter</span>, <span class="ident">Global</span>, <span class="ident">UserDataMap</span>,
+    <span class="ident">DispatchData</span>, <span class="ident">Display</span>, <span class="ident">Filter</span>, <span class="ident">Global</span>, <span class="ident">UserDataMap</span>,
 };
 
-<span class="doccomment">/// Description of which part of a surface</span>
+<span class="doccomment">/// Description of a part of a surface that</span>
 <span class="doccomment">/// should be considered damaged and needs to be redrawn</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Damage</span> {
-    <span class="doccomment">/// The whole surface must be considered damaged (this is the default)</span>
-    <span class="ident">Full</span>,
     <span class="doccomment">/// A rectangle containing the damaged zone, in surface coordinates</span>
     <span class="ident">Surface</span>(<span class="ident">Rectangle</span>),
     <span class="doccomment">/// A rectangle containing the damaged zone, in buffer coordinates</span>
@@ -722,19 +749,20 @@
     <span class="ident">Buffer</span>(<span class="ident">Rectangle</span>),
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Default</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Default</span>)]</span>
 <span class="kw">struct</span> <span class="ident">Marker</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="ident">_r</span>: ::<span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
+    <span class="ident">_r</span>: <span class="ident">::std::marker::PhantomData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
 }
 
 <span class="doccomment">/// New buffer assignation for a surface</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">BufferAssignment</span> {
     <span class="doccomment">/// The surface no longer has a buffer attached to it</span>
     <span class="ident">Removed</span>,
     <span class="doccomment">/// A new buffer has been attached</span>
     <span class="ident">NewBuffer</span> {
         <span class="doccomment">/// The buffer object</span>
-        <span class="ident">buffer</span>: <span class="ident">wl_buffer</span>::<span class="ident">WlBuffer</span>,
+        <span class="ident">buffer</span>: <span class="ident">wl_buffer::WlBuffer</span>,
         <span class="doccomment">/// location of the new buffer relative to the previous one</span>
         <span class="ident">delta</span>: (<span class="ident">i32</span>, <span class="ident">i32</span>),
     },
@@ -743,7 +771,7 @@
 <span class="doccomment">/// Data associated with a surface, aggregated by the handlers</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// Most of the fields of this struct represent a double-buffered state, which</span>
-<span class="doccomment">/// should only be applied once a [`commit`](::wayland::compositor::SurfaceEvent::Commit)</span>
+<span class="doccomment">/// should only be applied once a [`commit`](SurfaceEvent::Commit)</span>
 <span class="doccomment">/// request is received from the surface.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// You are responsible for setting those values as you see fit to avoid</span>
@@ -764,7 +792,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// If it matches the one of the output displaying this surface, no change</span>
     <span class="doccomment">/// is necessary.</span>
-    <span class="kw">pub</span> <span class="ident">buffer_transform</span>: <span class="ident">wl_output</span>::<span class="ident">Transform</span>,
+    <span class="kw">pub</span> <span class="ident">buffer_transform</span>: <span class="ident">wl_output::Transform</span>,
     <span class="doccomment">/// Region of the surface that is guaranteed to be opaque</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// By default the whole surface is potentially transparent</span>
@@ -777,19 +805,43 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Hint provided by the client to suggest that only this part</span>
     <span class="doccomment">/// of the surface was changed and needs to be redrawn</span>
-    <span class="kw">pub</span> <span class="ident">damage</span>: <span class="ident">Damage</span>,
-    <span class="doccomment">/// The frame callback associated with this surface for the commit</span>
+    <span class="kw">pub</span> <span class="ident">damage</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Damage</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// The frame callbacks associated with this surface for the commit</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// The be triggered to notify the client about when it would be a</span>
-    <span class="doccomment">/// good time to start drawing its next frame.</span>
+    <span class="doccomment">/// The server must send the notifications so that a client</span>
+    <span class="doccomment">/// will not send excessive updates, while still allowing</span>
+    <span class="doccomment">/// the highest possible update rate for clients that wait for the reply</span>
+    <span class="doccomment">/// before drawing again. The server should give some time for the client</span>
+    <span class="doccomment">/// to draw and commit after sending the frame callback events to let it</span>
+    <span class="doccomment">/// hit the next output refresh.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// A server should avoid signaling the frame callbacks if the</span>
+    <span class="doccomment">/// surface is not visible in any way, e.g. the surface is off-screen,</span>
+    <span class="doccomment">/// or completely obscured by other opaque surfaces.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// An example possibility would be to trigger it once the frame</span>
     <span class="doccomment">/// associated with this commit has been displayed on the screen.</span>
-    <span class="kw">pub</span> <span class="ident">frame_callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">wl_callback</span>::<span class="ident">WlCallback</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">frame_callbacks</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">wl_callback::WlCallback</span><span class="op">&gt;</span>,
     <span class="doccomment">/// User-controlled data</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This is your field to host whatever you need.</span>
     <span class="kw">pub</span> <span class="ident">user_data</span>: <span class="ident">UserDataMap</span>,
+}
+
+<span class="comment">// UserDataMap does not implement debug, so we have to impl Debug manually</span>
+<span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">SurfaceAttributes</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt::Result</span> {
+        <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;SurfaceAttributes&quot;</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;buffer&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">buffer</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;buffer_scale&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">buffer_scale</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;buffer_transform&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">buffer_transform</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;opaque_region&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">opaque_region</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;input_region&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">input_region</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;damage&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">damage</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;frame_callbacks&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">frame_callbacks</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;user_data&quot;</span>, <span class="kw-2">&amp;</span><span class="string">&quot;...&quot;</span>)
+            .<span class="ident">finish</span>()
+    }
 }
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">SurfaceAttributes</span> {
@@ -797,12 +849,12 @@
         <span class="ident">SurfaceAttributes</span> {
             <span class="ident">buffer</span>: <span class="prelude-val">None</span>,
             <span class="ident">buffer_scale</span>: <span class="number">1</span>,
-            <span class="ident">buffer_transform</span>: <span class="ident">wl_output</span>::<span class="ident">Transform</span>::<span class="ident">Normal</span>,
+            <span class="ident">buffer_transform</span>: <span class="ident">wl_output::Transform::Normal</span>,
             <span class="ident">opaque_region</span>: <span class="prelude-val">None</span>,
             <span class="ident">input_region</span>: <span class="prelude-val">None</span>,
-            <span class="ident">damage</span>: <span class="ident">Damage</span>::<span class="ident">Full</span>,
-            <span class="ident">frame_callback</span>: <span class="prelude-val">None</span>,
-            <span class="ident">user_data</span>: <span class="ident">UserDataMap</span>::<span class="ident">new</span>(),
+            <span class="ident">damage</span>: <span class="ident">Vec::new</span>(),
+            <span class="ident">frame_callbacks</span>: <span class="ident">Vec::new</span>(),
+            <span class="ident">user_data</span>: <span class="ident">UserDataMap::new</span>(),
         }
     }
 }
@@ -855,7 +907,7 @@
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">RegionAttributes</span> {
     <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RegionAttributes</span> {
-        <span class="ident">RegionAttributes</span> { <span class="ident">rects</span>: <span class="ident">Vec</span>::<span class="ident">new</span>() }
+        <span class="ident">RegionAttributes</span> { <span class="ident">rects</span>: <span class="ident">Vec::new</span>() }
     }
 }
 
@@ -866,8 +918,8 @@
         <span class="kw">for</span> (<span class="ident">kind</span>, <span class="ident">rect</span>) <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">rects</span> {
             <span class="kw">if</span> <span class="ident">rect</span>.<span class="ident">contains</span>(<span class="ident">point</span>) {
                 <span class="kw">match</span> <span class="ident">kind</span> {
-                    <span class="ident">RectangleKind</span>::<span class="ident">Add</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">contains</span> <span class="op">=</span> <span class="bool-val">true</span>,
-                    <span class="ident">RectangleKind</span>::<span class="ident">Subtract</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">contains</span> <span class="op">=</span> <span class="bool-val">false</span>,
+                    <span class="ident">RectangleKind::Add</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">contains</span> <span class="op">=</span> <span class="bool-val">true</span>,
+                    <span class="ident">RectangleKind::Subtract</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">contains</span> <span class="op">=</span> <span class="bool-val">false</span>,
                 }
             }
         }
@@ -881,8 +933,9 @@
 <span class="doccomment">/// access data associated with the [`wl_surface`](wayland_server::protocol::wl_surface)</span>
 <span class="doccomment">/// and [`wl_region`](wayland_server::protocol::wl_region) managed</span>
 <span class="doccomment">/// by the `CompositorGlobal` that provided it.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CompositorToken</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="ident">_role</span>: ::<span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">PhantomData</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">R</span><span class="op">&gt;</span>,
+    <span class="ident">_role</span>: <span class="ident">::std::marker::PhantomData</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">R</span><span class="op">&gt;</span>,
 }
 
 <span class="comment">// we implement them manually because #[derive(..)] would require R: Clone</span>
@@ -899,7 +952,7 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> <span class="ident">CompositorToken</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">make</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">CompositorToken</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
         <span class="ident">CompositorToken</span> {
-            <span class="ident">_role</span>: ::<span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">PhantomData</span>,
+            <span class="ident">_role</span>: <span class="ident">::std::marker::PhantomData</span>,
         }
     }
 }
@@ -915,7 +968,7 @@
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">SurfaceAttributes</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span>,
     {
-        <span class="ident">SurfaceData</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>::<span class="ident">with_data</span>(<span class="ident">surface</span>, <span class="ident">f</span>)
+        <span class="ident">SurfaceData</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="ident">::with_data</span>(<span class="ident">surface</span>, <span class="ident">f</span>)
     }
 }
 
@@ -961,7 +1014,7 @@
         <span class="ident">F2</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">WlSurface</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">SurfaceAttributes</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>),
         <span class="ident">F3</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">WlSurface</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">SurfaceAttributes</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span>,
     {
-        <span class="ident">SurfaceData</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>::<span class="ident">map_tree</span>(<span class="ident">surface</span>, <span class="kw-2">&amp;</span><span class="ident">initial</span>, <span class="ident">filter</span>, <span class="ident">processor</span>, <span class="ident">post_filter</span>, <span class="bool-val">false</span>);
+        <span class="ident">SurfaceData</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="ident">::map_tree</span>(<span class="ident">surface</span>, <span class="kw-2">&amp;</span><span class="ident">initial</span>, <span class="ident">filter</span>, <span class="ident">processor</span>, <span class="ident">post_filter</span>, <span class="bool-val">false</span>);
     }
 
     <span class="doccomment">/// Access the data of a surface tree from top to bottom</span>
@@ -982,7 +1035,7 @@
         <span class="ident">F2</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">WlSurface</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">SurfaceAttributes</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>),
         <span class="ident">F3</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">WlSurface</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">SurfaceAttributes</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span>,
     {
-        <span class="ident">SurfaceData</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>::<span class="ident">map_tree</span>(<span class="ident">surface</span>, <span class="kw-2">&amp;</span><span class="ident">initial</span>, <span class="ident">filter</span>, <span class="ident">processor</span>, <span class="ident">post_filter</span>, <span class="bool-val">true</span>);
+        <span class="ident">SurfaceData</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="ident">::map_tree</span>(<span class="ident">surface</span>, <span class="kw-2">&amp;</span><span class="ident">initial</span>, <span class="ident">filter</span>, <span class="ident">processor</span>, <span class="ident">post_filter</span>, <span class="bool-val">true</span>);
     }
 
     <span class="doccomment">/// Retrieve the parent of this surface</span>
@@ -992,7 +1045,7 @@
     <span class="doccomment">/// If the surface is not managed by the `CompositorGlobal` that provided this token, this</span>
     <span class="doccomment">/// will panic (having more than one compositor is not supported).</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_parent</span>(<span class="self">self</span>, <span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">WlSurface</span><span class="op">&gt;</span> {
-        <span class="ident">SurfaceData</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>::<span class="ident">get_parent</span>(<span class="ident">surface</span>)
+        <span class="ident">SurfaceData</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="ident">::get_parent</span>(<span class="ident">surface</span>)
     }
 
     <span class="doccomment">/// Retrieve the children of this surface</span>
@@ -1000,7 +1053,7 @@
     <span class="doccomment">/// If the surface is not managed by the `CompositorGlobal` that provided this token, this</span>
     <span class="doccomment">/// will panic (having more than one compositor is not supported).</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_children</span>(<span class="self">self</span>, <span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">WlSurface</span><span class="op">&gt;</span> {
-        <span class="ident">SurfaceData</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>::<span class="ident">get_children</span>(<span class="ident">surface</span>)
+        <span class="ident">SurfaceData</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="ident">::get_children</span>(<span class="ident">surface</span>)
     }
 }
 
@@ -1010,7 +1063,7 @@
     <span class="doccomment">/// If the surface is not managed by the `CompositorGlobal` that provided this token, this</span>
     <span class="doccomment">/// will panic (having more than one compositor is not supported).</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_a_role</span>(<span class="self">self</span>, <span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-        <span class="ident">SurfaceData</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>::<span class="ident">has_a_role</span>(<span class="ident">surface</span>)
+        <span class="ident">SurfaceData</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="ident">::has_a_role</span>(<span class="ident">surface</span>)
     }
 
     <span class="doccomment">/// Check whether this surface as a specific role</span>
@@ -1021,7 +1074,7 @@
     <span class="kw">where</span>
         <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span>,
     {
-        <span class="ident">SurfaceData</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>::<span class="ident">has_role</span>::<span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span>(<span class="ident">surface</span>)
+        <span class="ident">SurfaceData</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="ident">::has_role</span>::<span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span>(<span class="ident">surface</span>)
     }
 
     <span class="doccomment">/// Register that this surface has given role with default data</span>
@@ -1030,12 +1083,12 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// If the surface is not managed by the `CompositorGlobal` that provided this token, this</span>
     <span class="doccomment">/// will panic (having more than one compositor is not supported).</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">give_role</span><span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), ()<span class="op">&gt;</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">give_role</span><span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">AlreadyHasRole</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span>,
         <span class="ident">RoleData</span>: <span class="ident">Default</span>,
     {
-        <span class="ident">SurfaceData</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>::<span class="ident">give_role</span>::<span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span>(<span class="ident">surface</span>)
+        <span class="ident">SurfaceData</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="ident">::give_role</span>::<span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span>(<span class="ident">surface</span>)
     }
 
     <span class="doccomment">/// Register that this surface has given role with given data</span>
@@ -1048,7 +1101,7 @@
     <span class="kw">where</span>
         <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span>,
     {
-        <span class="ident">SurfaceData</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>::<span class="ident">give_role_with</span>::<span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span>(<span class="ident">surface</span>, <span class="ident">data</span>)
+        <span class="ident">SurfaceData</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="ident">::give_role_with</span>::<span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span>(<span class="ident">surface</span>, <span class="ident">data</span>)
     }
 
     <span class="doccomment">/// Access the role data of a surface</span>
@@ -1062,7 +1115,7 @@
         <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span>,
         <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RoleData</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span>,
     {
-        <span class="ident">SurfaceData</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>::<span class="ident">with_role_data</span>::<span class="op">&lt;</span><span class="ident">RoleData</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="ident">surface</span>, <span class="ident">f</span>)
+        <span class="ident">SurfaceData</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="ident">::with_role_data</span>::<span class="op">&lt;</span><span class="ident">RoleData</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="ident">surface</span>, <span class="ident">f</span>)
     }
 
     <span class="doccomment">/// Register that this surface does not have a role any longer and retrieve the data</span>
@@ -1075,17 +1128,17 @@
     <span class="kw">where</span>
         <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span>,
     {
-        <span class="ident">SurfaceData</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>::<span class="ident">remove_role</span>::<span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span>(<span class="ident">surface</span>)
+        <span class="ident">SurfaceData</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="ident">::remove_role</span>::<span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span>(<span class="ident">surface</span>)
     }
 
     <span class="doccomment">/// Retrieve the metadata associated with a `wl_region`</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// If the region is not managed by the `CompositorGlobal` that provided this token, this</span>
     <span class="doccomment">/// will panic (having more than one compositor is not supported).</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_region_attributes</span>(<span class="self">self</span>, <span class="ident">region</span>: <span class="kw-2">&amp;</span><span class="ident">wl_region</span>::<span class="ident">WlRegion</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RegionAttributes</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_region_attributes</span>(<span class="self">self</span>, <span class="ident">region</span>: <span class="kw-2">&amp;</span><span class="ident">wl_region::WlRegion</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RegionAttributes</span> {
         <span class="kw">match</span> <span class="ident">region</span>.<span class="ident">as_ref</span>().<span class="ident">user_data</span>().<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">RegionAttributes</span><span class="op">&gt;</span><span class="op">&gt;</span>() {
             <span class="prelude-val">Some</span>(<span class="ident">mutex</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">mutex</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>().<span class="ident">clone</span>(),
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Accessing the data of foreign regions is not supported.&quot;</span>),
+            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;Accessing the data of foreign regions is not supported.&quot;</span>),
         }
     }
 }
@@ -1105,32 +1158,32 @@
     <span class="ident">logger</span>: <span class="ident">L</span>,
 ) <span class="op">-</span><span class="op">&gt;</span> (
     <span class="ident">CompositorToken</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
-    <span class="ident">Global</span><span class="op">&lt;</span><span class="ident">wl_compositor</span>::<span class="ident">WlCompositor</span><span class="op">&gt;</span>,
-    <span class="ident">Global</span><span class="op">&lt;</span><span class="ident">wl_subcompositor</span>::<span class="ident">WlSubcompositor</span><span class="op">&gt;</span>,
+    <span class="ident">Global</span><span class="op">&lt;</span><span class="ident">wl_compositor::WlCompositor</span><span class="op">&gt;</span>,
+    <span class="ident">Global</span><span class="op">&lt;</span><span class="ident">wl_subcompositor::WlSubcompositor</span><span class="op">&gt;</span>,
 )
 <span class="kw">where</span>
-    <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span>::<span class="ident">slog</span>::<span class="ident">Logger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">::slog::Logger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">R</span>: <span class="ident">Default</span> <span class="op">+</span> <span class="ident">RoleType</span> <span class="op">+</span> <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">SubsurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-    <span class="ident">Impl</span>: <span class="ident">FnMut</span>(<span class="ident">SurfaceEvent</span>, <span class="ident">WlSurface</span>, <span class="ident">CompositorToken</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    <span class="ident">Impl</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">FnMut</span>(<span class="ident">SurfaceEvent</span>, <span class="ident">WlSurface</span>, <span class="ident">CompositorToken</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>, <span class="ident">DispatchData</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
-    <span class="kw">let</span> <span class="ident">log</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">slog_or_fallback</span>(<span class="ident">logger</span>).<span class="ident">new</span>(<span class="macro">o</span><span class="macro">!</span>(<span class="string">&quot;smithay_module&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;compositor_handler&quot;</span>));
-    <span class="kw">let</span> <span class="ident">implem</span> <span class="op">=</span> <span class="ident">Rc</span>::<span class="ident">new</span>(<span class="ident">RefCell</span>::<span class="ident">new</span>(<span class="ident">implem</span>));
+    <span class="kw">let</span> <span class="ident">log</span> <span class="op">=</span> <span class="kw">crate</span><span class="ident">::slog_or_fallback</span>(<span class="ident">logger</span>).<span class="ident">new</span>(<span class="macro">o!</span>(<span class="string">&quot;smithay_module&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;compositor_handler&quot;</span>));
+    <span class="kw">let</span> <span class="ident">implem</span> <span class="op">=</span> <span class="ident">Rc::new</span>(<span class="ident">RefCell::new</span>(<span class="ident">implem</span>));
 
     <span class="kw">let</span> <span class="ident">compositor</span> <span class="op">=</span> <span class="ident">display</span>.<span class="ident">create_global</span>(
         <span class="number">4</span>,
-        <span class="ident">Filter</span>::<span class="ident">new</span>(<span class="kw">move</span> <span class="op">|</span>(<span class="ident">new_compositor</span>, <span class="ident">_version</span>), <span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> {
-            <span class="self">self</span>::<span class="ident">handlers</span>::<span class="ident">implement_compositor</span>::<span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">Impl</span><span class="op">&gt;</span>(<span class="ident">new_compositor</span>, <span class="ident">log</span>.<span class="ident">clone</span>(), <span class="ident">implem</span>.<span class="ident">clone</span>());
+        <span class="ident">Filter::new</span>(<span class="kw">move</span> <span class="op">|</span>(<span class="ident">new_compositor</span>, <span class="ident">_version</span>), <span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> {
+            <span class="self">self</span><span class="ident">::handlers::implement_compositor</span>::<span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">Impl</span><span class="op">&gt;</span>(<span class="ident">new_compositor</span>, <span class="ident">log</span>.<span class="ident">clone</span>(), <span class="ident">implem</span>.<span class="ident">clone</span>());
         }),
     );
 
     <span class="kw">let</span> <span class="ident">subcompositor</span> <span class="op">=</span> <span class="ident">display</span>.<span class="ident">create_global</span>(
         <span class="number">1</span>,
-        <span class="ident">Filter</span>::<span class="ident">new</span>(<span class="kw">move</span> <span class="op">|</span>(<span class="ident">new_subcompositor</span>, <span class="ident">_version</span>), <span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> {
-            <span class="self">self</span>::<span class="ident">handlers</span>::<span class="ident">implement_subcompositor</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">new_subcompositor</span>);
+        <span class="ident">Filter::new</span>(<span class="kw">move</span> <span class="op">|</span>(<span class="ident">new_subcompositor</span>, <span class="ident">_version</span>), <span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> {
+            <span class="self">self</span><span class="ident">::handlers::implement_subcompositor</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">new_subcompositor</span>);
         }),
     );
 
-    (<span class="ident">CompositorToken</span>::<span class="ident">make</span>(), <span class="ident">compositor</span>, <span class="ident">subcompositor</span>)
+    (<span class="ident">CompositorToken::make</span>(), <span class="ident">compositor</span>, <span class="ident">subcompositor</span>)
 }
 
 <span class="doccomment">/// User-handled events for surfaces</span>
@@ -1138,6 +1191,7 @@
 <span class="doccomment">/// The global provided by smithay cannot process these events for you, so</span>
 <span class="doccomment">/// they are forwarded directly via your provided implementation, and are</span>
 <span class="doccomment">/// described by this global.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">SurfaceEvent</span> {
     <span class="doccomment">/// The double-buffered state has been validated by the client</span>
     <span class="doccomment">///</span>
@@ -1152,15 +1206,15 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">region_attributes_empty</span>() {
-        <span class="kw">let</span> <span class="ident">region</span> <span class="op">=</span> <span class="ident">RegionAttributes</span> { <span class="ident">rects</span>: <span class="macro">vec</span><span class="macro">!</span>[] };
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">region</span>.<span class="ident">contains</span>((<span class="number">0</span>, <span class="number">0</span>)), <span class="bool-val">false</span>);
+        <span class="kw">let</span> <span class="ident">region</span> <span class="op">=</span> <span class="ident">RegionAttributes</span> { <span class="ident">rects</span>: <span class="macro">vec!</span>[] };
+        <span class="macro">assert_eq!</span>(<span class="ident">region</span>.<span class="ident">contains</span>((<span class="number">0</span>, <span class="number">0</span>)), <span class="bool-val">false</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">region_attributes_add</span>() {
         <span class="kw">let</span> <span class="ident">region</span> <span class="op">=</span> <span class="ident">RegionAttributes</span> {
-            <span class="ident">rects</span>: <span class="macro">vec</span><span class="macro">!</span>[(
-                <span class="ident">RectangleKind</span>::<span class="ident">Add</span>,
+            <span class="ident">rects</span>: <span class="macro">vec!</span>[(
+                <span class="ident">RectangleKind::Add</span>,
                 <span class="ident">Rectangle</span> {
                     <span class="ident">x</span>: <span class="number">0</span>,
                     <span class="ident">y</span>: <span class="number">0</span>,
@@ -1170,15 +1224,15 @@
             )],
         };
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">region</span>.<span class="ident">contains</span>((<span class="number">0</span>, <span class="number">0</span>)), <span class="bool-val">true</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">region</span>.<span class="ident">contains</span>((<span class="number">0</span>, <span class="number">0</span>)), <span class="bool-val">true</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">region_attributes_add_subtract</span>() {
         <span class="kw">let</span> <span class="ident">region</span> <span class="op">=</span> <span class="ident">RegionAttributes</span> {
-            <span class="ident">rects</span>: <span class="macro">vec</span><span class="macro">!</span>[
+            <span class="ident">rects</span>: <span class="macro">vec!</span>[
                 (
-                    <span class="ident">RectangleKind</span>::<span class="ident">Add</span>,
+                    <span class="ident">RectangleKind::Add</span>,
                     <span class="ident">Rectangle</span> {
                         <span class="ident">x</span>: <span class="number">0</span>,
                         <span class="ident">y</span>: <span class="number">0</span>,
@@ -1187,7 +1241,7 @@
                     },
                 ),
                 (
-                    <span class="ident">RectangleKind</span>::<span class="ident">Subtract</span>,
+                    <span class="ident">RectangleKind::Subtract</span>,
                     <span class="ident">Rectangle</span> {
                         <span class="ident">x</span>: <span class="number">0</span>,
                         <span class="ident">y</span>: <span class="number">0</span>,
@@ -1198,16 +1252,16 @@
             ],
         };
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">region</span>.<span class="ident">contains</span>((<span class="number">0</span>, <span class="number">0</span>)), <span class="bool-val">false</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">region</span>.<span class="ident">contains</span>((<span class="number">5</span>, <span class="number">5</span>)), <span class="bool-val">true</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">region</span>.<span class="ident">contains</span>((<span class="number">0</span>, <span class="number">0</span>)), <span class="bool-val">false</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">region</span>.<span class="ident">contains</span>((<span class="number">5</span>, <span class="number">5</span>)), <span class="bool-val">true</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">region_attributes_add_subtract_add</span>() {
         <span class="kw">let</span> <span class="ident">region</span> <span class="op">=</span> <span class="ident">RegionAttributes</span> {
-            <span class="ident">rects</span>: <span class="macro">vec</span><span class="macro">!</span>[
+            <span class="ident">rects</span>: <span class="macro">vec!</span>[
                 (
-                    <span class="ident">RectangleKind</span>::<span class="ident">Add</span>,
+                    <span class="ident">RectangleKind::Add</span>,
                     <span class="ident">Rectangle</span> {
                         <span class="ident">x</span>: <span class="number">0</span>,
                         <span class="ident">y</span>: <span class="number">0</span>,
@@ -1216,7 +1270,7 @@
                     },
                 ),
                 (
-                    <span class="ident">RectangleKind</span>::<span class="ident">Subtract</span>,
+                    <span class="ident">RectangleKind::Subtract</span>,
                     <span class="ident">Rectangle</span> {
                         <span class="ident">x</span>: <span class="number">0</span>,
                         <span class="ident">y</span>: <span class="number">0</span>,
@@ -1225,7 +1279,7 @@
                     },
                 ),
                 (
-                    <span class="ident">RectangleKind</span>::<span class="ident">Add</span>,
+                    <span class="ident">RectangleKind::Add</span>,
                     <span class="ident">Rectangle</span> {
                         <span class="ident">x</span>: <span class="number">2</span>,
                         <span class="ident">y</span>: <span class="number">2</span>,
@@ -1236,10 +1290,10 @@
             ],
         };
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">region</span>.<span class="ident">contains</span>((<span class="number">0</span>, <span class="number">0</span>)), <span class="bool-val">false</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">region</span>.<span class="ident">contains</span>((<span class="number">5</span>, <span class="number">5</span>)), <span class="bool-val">true</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">region</span>.<span class="ident">contains</span>((<span class="number">2</span>, <span class="number">2</span>)), <span class="bool-val">true</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">region</span>.<span class="ident">contains</span>((<span class="number">0</span>, <span class="number">0</span>)), <span class="bool-val">false</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">region</span>.<span class="ident">contains</span>((<span class="number">5</span>, <span class="number">5</span>)), <span class="bool-val">true</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">region</span>.<span class="ident">contains</span>((<span class="number">2</span>, <span class="number">2</span>)), <span class="bool-val">true</span>);
     }
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../../";window.currentCrate = "smithay";</script><script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script><script defer src="../../../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-search-index-js="../../../../search-index.js" data-search-js="../../../../search.js"></div><script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script></body></html>

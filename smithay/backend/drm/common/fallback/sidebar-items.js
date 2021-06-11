@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["EitherError","Enum uniting two kinds of possible errors."],["FallbackDevice","`Device` Wrapper to assist fallback in case initialization of the preferred device type fails."],["FallbackSurface","`Surface` Wrapper to assist fallback in case initialization of the preferred device type fails."]]});

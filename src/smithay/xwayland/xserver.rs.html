@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/xwayland/xserver.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>xserver.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../smithay/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/xwayland/xserver.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>xserver.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../smithay/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img src="../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img src="../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -414,7 +416,10 @@
 <span id="414">414</span>
 <span id="415">415</span>
 <span id="416">416</span>
-</pre><div class="example-wrap"><pre class="rust ">
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+</pre><pre class="rust">
 <span class="comment">/*
  * Steps of XWayland server creation
  *
@@ -431,108 +436,127 @@
  *   - /tmp/.X11-unix/X$D
  *   - @/tmp/.X11-unix/X$D (abstract socket)
  *
- * The XWayland server is spawned via fork+exec.
+ * The XWayland server is spawned via an intermediate shell
  * -&gt; wlroots does a double-fork while weston a single one, why ??
  *    -&gt; https://stackoverflow.com/questions/881388/
- * -&gt; once it is started, it sends us a SIGUSR1, we need to setup a listener
- *    for it and when we receive it we can launch the WM
+ * -&gt; once it is started, it will check if SIGUSR1 is set to ignored. If so,
+ *    if will consider its parent as &quot;smart&quot;, and send a SIGUSR1 signal when
+ *    startup completes. We want to catch this so we can launch the VM.
  * -&gt; we need to track if the XWayland crashes, to restart it
  *
  * cf https://github.com/swaywm/wlroots/blob/master/xwayland/xwayland.c
  *
+ * Setting SIGUSR1 handler is complicated in multithreaded program, because
+ * Xwayland will send SIGUSR1 to the process, and if a thread cannot handle
+ * SIGUSR1, that thread will be killed.
+ *
+ * Double-fork can tackle this issue, but this is also very complex in a
+ * a multithread program, after forking only signal-safe functions can be used.
+ * The only workaround is to fork early before any other thread starts, but
+ * doing so will expose an unsafe interface.
+ *
+ * We use an intermediate shell to translate the signal to simple fd IO.
+ * We ask sh to setup SIGUSR1 handler, and in a subshell mute SIGUSR1 and exec
+ * Xwayland. When the SIGUSR1 is received, it can communicate to us via redirected
+ * STDOUT.
  */</span>
 <span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">any</span>::<span class="ident">Any</span>,
-    <span class="ident">cell</span>::<span class="ident">RefCell</span>,
+    <span class="ident">any::Any</span>,
+    <span class="ident">cell::RefCell</span>,
     <span class="ident">env</span>,
-    <span class="ident">ffi</span>::<span class="ident">CString</span>,
-    <span class="ident">os</span>::<span class="ident">unix</span>::{
-        <span class="ident">io</span>::{<span class="ident">AsRawFd</span>, <span class="ident">IntoRawFd</span>},
-        <span class="ident">net</span>::<span class="ident">UnixStream</span>,
+    <span class="ident">io</span>::{<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">IOError</span>, <span class="ident">Read</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">IOResult</span>},
+    <span class="ident">os::unix</span>::{
+        <span class="ident">io</span>::{<span class="ident">AsRawFd</span>, <span class="ident">IntoRawFd</span>, <span class="ident">RawFd</span>},
+        <span class="ident">net::UnixStream</span>,
+        <span class="ident">process::CommandExt</span>,
     },
-    <span class="ident">rc</span>::<span class="ident">Rc</span>,
-    <span class="ident">sync</span>::<span class="ident">Arc</span>,
+    <span class="ident">process</span>::{<span class="ident">ChildStdout</span>, <span class="ident">Command</span>, <span class="ident">Stdio</span>},
+    <span class="ident">rc::Rc</span>,
+    <span class="ident">sync::Arc</span>,
 };
 
 <span class="kw">use</span> <span class="ident">calloop</span>::{
-    <span class="ident">signals</span>::{<span class="ident">Signal</span>, <span class="ident">Signals</span>},
-    <span class="ident">LoopHandle</span>, <span class="ident">Source</span>,
+    <span class="ident">channel</span>::{<span class="ident">sync_channel</span>, <span class="ident">Channel</span>, <span class="ident">SyncSender</span>},
+    <span class="ident">generic</span>::{<span class="ident">Fd</span>, <span class="ident">Generic</span>},
+    <span class="ident">Interest</span>, <span class="ident">LoopHandle</span>, <span class="ident">Mode</span>, <span class="ident">RegistrationToken</span>,
 };
 
-<span class="kw">use</span> <span class="ident">nix</span>::{
-    <span class="ident">errno</span>::<span class="ident">Errno</span>,
-    <span class="ident">sys</span>::<span class="ident">signal</span>,
-    <span class="ident">unistd</span>::{<span class="ident">fork</span>, <span class="ident">ForkResult</span>, <span class="ident">Pid</span>},
-    <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">NixError</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">NixResult</span>,
-};
+<span class="kw">use</span> <span class="ident">nix::Error</span> <span class="kw">as</span> <span class="ident">NixError</span>;
 
 <span class="kw">use</span> <span class="ident">wayland_server</span>::{<span class="ident">Client</span>, <span class="ident">Display</span>, <span class="ident">Filter</span>};
 
-<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">x11_sockets</span>::{<span class="ident">prepare_x11_sockets</span>, <span class="ident">X11Lock</span>};
+<span class="kw">use</span> <span class="kw">super</span><span class="ident">::x11_sockets</span>::{<span class="ident">prepare_x11_sockets</span>, <span class="ident">X11Lock</span>};
 
 <span class="doccomment">/// The XWayland handle</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">XWayland</span><span class="op">&lt;</span><span class="ident">WM</span>: <span class="ident">XWindowManager</span><span class="op">&gt;</span> {
-    <span class="ident">inner</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">Inner</span><span class="op">&lt;</span><span class="ident">WM</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">XWayland</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&gt;</span> {
+    <span class="ident">inner</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">Inner</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
-<span class="doccomment">/// Trait to be implemented by you WM for XWayland</span>
+<span class="doccomment">/// Events generated by the XWayland manager</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// This is a very low-level trait, only notifying you</span>
-<span class="doccomment">/// when the connection with XWayland is up, or when</span>
-<span class="doccomment">/// it terminates.</span>
+<span class="doccomment">/// This is a very low-level interface, only notifying you when the connection</span>
+<span class="doccomment">/// with XWayland is up, or when it terminates.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// You WM must be able handle the XWayland server connecting</span>
-<span class="doccomment">/// then disconnecting several time in a row, but only a single</span>
-<span class="doccomment">/// connection will be active at any given time.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">XWindowManager</span> {
+<span class="doccomment">/// Your WM code must be able handle the XWayland server connecting then</span>
+<span class="doccomment">/// disconnecting several time in a row, but only a single connection will</span>
+<span class="doccomment">/// be active at any given time.</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">XWaylandEvent</span> {
     <span class="doccomment">/// The XWayland server is ready</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Your privileged connection to it is this `UnixStream`</span>
-    <span class="kw">fn</span> <span class="ident">xwayland_ready</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">connection</span>: <span class="ident">UnixStream</span>, <span class="ident">client</span>: <span class="ident">Client</span>);
-    <span class="doccomment">/// The XWayland server has exited</span>
-    <span class="kw">fn</span> <span class="ident">xwayland_exited</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>);
+    <span class="ident">Ready</span> {
+        <span class="doccomment">/// Privileged X11 connection to XWayland</span>
+        <span class="ident">connection</span>: <span class="ident">UnixStream</span>,
+        <span class="doccomment">/// Wayland client representing XWayland</span>
+        <span class="ident">client</span>: <span class="ident">Client</span>,
+    },
+    <span class="doccomment">/// The XWayland server exited</span>
+    <span class="ident">Exited</span>,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">WM</span>: <span class="ident">XWindowManager</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">XWayland</span><span class="op">&lt;</span><span class="ident">WM</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Start the XWayland server</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">init</span><span class="op">&lt;</span><span class="ident">L</span>, <span class="ident">T</span>: <span class="ident">Any</span>, <span class="ident">Data</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
-        <span class="ident">wm</span>: <span class="ident">WM</span>,
-        <span class="ident">handle</span>: <span class="ident">LoopHandle</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&gt;</span>,
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Data</span>: <span class="ident">Any</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">XWayland</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// Create a new XWayland manager</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>(
+        <span class="ident">handle</span>: <span class="ident">LoopHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">Data</span><span class="op">&gt;</span>,
         <span class="ident">display</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">Display</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">T</span>,
         <span class="ident">logger</span>: <span class="ident">L</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">XWayland</span><span class="op">&lt;</span><span class="ident">WM</span><span class="op">&gt;</span>, ()<span class="op">&gt;</span>
+    ) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">XWayland</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&gt;</span>, <span class="ident">XWaylandSource</span>)
     <span class="kw">where</span>
-        <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span>::<span class="ident">slog</span>::<span class="ident">Logger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">::slog::Logger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     {
-        <span class="kw">let</span> <span class="ident">log</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">slog_or_fallback</span>(<span class="ident">logger</span>);
-        <span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="ident">Rc</span>::<span class="ident">new</span>(<span class="ident">RefCell</span>::<span class="ident">new</span>(<span class="ident">Inner</span> {
-            <span class="ident">wm</span>,
-            <span class="ident">kill_source</span>: {
-                <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">handle</span>.<span class="ident">clone</span>();
-                <span class="ident">Box</span>::<span class="ident">new</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">handle</span>.<span class="ident">kill</span>(<span class="ident">source</span>))
-            },
-            <span class="ident">source_maker</span>: <span class="ident">Box</span>::<span class="ident">new</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">inner</span><span class="op">|</span> {
-                <span class="ident">handle</span>
-                    .<span class="ident">insert_source</span>(
-                        <span class="ident">Signals</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span>[<span class="ident">Signal</span>::<span class="ident">SIGUSR1</span>]).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> ())<span class="question-mark">?</span>,
-                        <span class="kw">move</span> <span class="op">|</span><span class="ident">evt</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> {
-                            <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">evt</span>.<span class="ident">signal</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">Signal</span>::<span class="ident">SIGUSR1</span>);
-                            <span class="ident">xwayland_ready</span>(<span class="kw-2">&amp;</span><span class="ident">inner</span>);
-                        },
-                    )
-                    .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> ())
-            }),
+        <span class="kw">let</span> <span class="ident">log</span> <span class="op">=</span> <span class="kw">crate</span><span class="ident">::slog_or_fallback</span>(<span class="ident">logger</span>);
+        <span class="comment">// We don&#39;t expect to ever have more than 2 messages in flight, if XWayland got ready and then died right away</span>
+        <span class="kw">let</span> (<span class="ident">sender</span>, <span class="ident">channel</span>) <span class="op">=</span> <span class="ident">sync_channel</span>(<span class="number">2</span>);
+        <span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="ident">Rc::new</span>(<span class="ident">RefCell::new</span>(<span class="ident">Inner</span> {
+            <span class="ident">handle</span>,
             <span class="ident">wayland_display</span>: <span class="ident">display</span>,
             <span class="ident">instance</span>: <span class="prelude-val">None</span>,
-            <span class="ident">log</span>: <span class="ident">log</span>.<span class="ident">new</span>(<span class="macro">o</span><span class="macro">!</span>(<span class="string">&quot;smithay_module&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;XWayland&quot;</span>)),
+            <span class="ident">sender</span>,
+            <span class="ident">log</span>: <span class="ident">log</span>.<span class="ident">new</span>(<span class="macro">o!</span>(<span class="string">&quot;smithay_module&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;XWayland&quot;</span>)),
         }));
-        <span class="ident">launch</span>(<span class="kw-2">&amp;</span><span class="ident">inner</span>, <span class="ident">data</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="ident">XWayland</span> { <span class="ident">inner</span> })
+        (<span class="ident">XWayland</span> { <span class="ident">inner</span> }, <span class="ident">XWaylandSource</span> { <span class="ident">channel</span> })
+    }
+
+    <span class="doccomment">/// Attempt to start the XWayland instance</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If it succeeds, you&#39;ll eventually receive an `XWaylandEvent::Ready`</span>
+    <span class="doccomment">/// through the source provided by `XWayland::new()` containing an</span>
+    <span class="doccomment">/// `UnixStream` representing your WM connection to XWayland, and the</span>
+    <span class="doccomment">/// wayland `Client` for XWayland.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Does nothing if XWayland is already started or starting.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">start</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="ident">launch</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">inner</span>)
+    }
+
+    <span class="doccomment">/// Shutdown XWayland</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Does nothing if it was not already running, otherwise kills it and you will</span>
+    <span class="doccomment">/// later receive a `XWaylandEvent::Exited` event.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shutdown</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">borrow_mut</span>().<span class="ident">shutdown</span>();
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">WM</span>: <span class="ident">XWindowManager</span><span class="op">&gt;</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">XWayland</span><span class="op">&lt;</span><span class="ident">WM</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&gt;</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">XWayland</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
         <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">borrow_mut</span>().<span class="ident">shutdown</span>();
     }
@@ -540,146 +564,149 @@
 
 <span class="kw">struct</span> <span class="ident">XWaylandInstance</span> {
     <span class="ident">display_lock</span>: <span class="ident">X11Lock</span>,
-    <span class="ident">wayland_client</span>: <span class="ident">Client</span>,
-    <span class="ident">sigusr1_handler</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Source</span><span class="op">&lt;</span><span class="ident">Signals</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">wayland_client</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Client</span><span class="op">&gt;</span>,
+    <span class="ident">startup_handler</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RegistrationToken</span><span class="op">&gt;</span>,
     <span class="ident">wm_fd</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">UnixStream</span><span class="op">&gt;</span>,
-    <span class="ident">started_at</span>: ::<span class="ident">std</span>::<span class="ident">time</span>::<span class="ident">Instant</span>,
-    <span class="ident">child_pid</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Pid</span><span class="op">&gt;</span>,
+    <span class="ident">child_stdout</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ChildStdout</span><span class="op">&gt;</span>,
 }
 
-<span class="kw">type</span> <span class="ident">SourceMaker</span><span class="op">&lt;</span><span class="ident">WM</span><span class="op">&gt;</span> <span class="op">=</span> <span class="kw">dyn</span> <span class="ident">FnMut</span>(<span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">Inner</span><span class="op">&lt;</span><span class="ident">WM</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Source</span><span class="op">&lt;</span><span class="ident">Signals</span><span class="op">&gt;</span>, ()<span class="op">&gt;</span>;
-
 <span class="comment">// Inner implementation of the XWayland manager</span>
-<span class="kw">struct</span> <span class="ident">Inner</span><span class="op">&lt;</span><span class="ident">WM</span>: <span class="ident">XWindowManager</span><span class="op">&gt;</span> {
-    <span class="ident">wm</span>: <span class="ident">WM</span>,
-    <span class="ident">source_maker</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">SourceMaker</span><span class="op">&lt;</span><span class="ident">WM</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="kw">struct</span> <span class="ident">Inner</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&gt;</span> {
+    <span class="ident">sender</span>: <span class="ident">SyncSender</span><span class="op">&lt;</span><span class="ident">XWaylandEvent</span><span class="op">&gt;</span>,
+    <span class="ident">handle</span>: <span class="ident">LoopHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">Data</span><span class="op">&gt;</span>,
     <span class="ident">wayland_display</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">Display</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">instance</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">XWaylandInstance</span><span class="op">&gt;</span>,
-    <span class="ident">kill_source</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="ident">Source</span><span class="op">&lt;</span><span class="ident">Signals</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
-    <span class="ident">log</span>: ::<span class="ident">slog</span>::<span class="ident">Logger</span>,
+    <span class="ident">log</span>: <span class="ident">::slog::Logger</span>,
 }
 
 <span class="comment">// Launch an XWayland server</span>
 <span class="comment">//</span>
 <span class="comment">// Does nothing if there is already a launched instance</span>
-<span class="kw">fn</span> <span class="ident">launch</span><span class="op">&lt;</span><span class="ident">WM</span>: <span class="ident">XWindowManager</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>, <span class="ident">T</span>: <span class="ident">Any</span><span class="op">&gt;</span>(
-    <span class="ident">inner</span>: <span class="kw-2">&amp;</span><span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">Inner</span><span class="op">&lt;</span><span class="ident">WM</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">T</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), ()<span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">launch</span><span class="op">&lt;</span><span class="ident">Data</span>: <span class="ident">Any</span><span class="op">&gt;</span>(<span class="ident">inner</span>: <span class="kw-2">&amp;</span><span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">Inner</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">guard</span> <span class="op">=</span> <span class="ident">inner</span>.<span class="ident">borrow_mut</span>();
     <span class="kw">if</span> <span class="ident">guard</span>.<span class="ident">instance</span>.<span class="ident">is_some</span>() {
         <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
     }
 
-    <span class="macro">info</span><span class="macro">!</span>(<span class="ident">guard</span>.<span class="ident">log</span>, <span class="string">&quot;Starting XWayland&quot;</span>);
+    <span class="macro">info!</span>(<span class="ident">guard</span>.<span class="ident">log</span>, <span class="string">&quot;Starting XWayland&quot;</span>);
 
-    <span class="kw">let</span> (<span class="ident">x_wm_x11</span>, <span class="ident">x_wm_me</span>) <span class="op">=</span> <span class="ident">UnixStream</span>::<span class="ident">pair</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> ())<span class="question-mark">?</span>;
-    <span class="kw">let</span> (<span class="ident">wl_x11</span>, <span class="ident">wl_me</span>) <span class="op">=</span> <span class="ident">UnixStream</span>::<span class="ident">pair</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> ())<span class="question-mark">?</span>;
+    <span class="kw">let</span> (<span class="ident">x_wm_x11</span>, <span class="ident">x_wm_me</span>) <span class="op">=</span> <span class="ident">UnixStream::pair</span>()<span class="question-mark">?</span>;
+    <span class="kw">let</span> (<span class="ident">wl_x11</span>, <span class="ident">wl_me</span>) <span class="op">=</span> <span class="ident">UnixStream::pair</span>()<span class="question-mark">?</span>;
 
     <span class="kw">let</span> (<span class="ident">lock</span>, <span class="ident">x_fds</span>) <span class="op">=</span> <span class="ident">prepare_x11_sockets</span>(<span class="ident">guard</span>.<span class="ident">log</span>.<span class="ident">clone</span>())<span class="question-mark">?</span>;
 
     <span class="comment">// we have now created all the required sockets</span>
 
-    <span class="comment">// record launch time</span>
-    <span class="kw">let</span> <span class="ident">creation_time</span> <span class="op">=</span> ::<span class="ident">std</span>::<span class="ident">time</span>::<span class="ident">Instant</span>::<span class="ident">now</span>();
+    <span class="comment">// Setup the associated wayland client to be created in an idle callback, so that we don&#39;t need</span>
+    <span class="comment">// to access the dispatch_data *right now*</span>
+    <span class="kw">let</span> <span class="ident">idle_inner</span> <span class="op">=</span> <span class="ident">inner</span>.<span class="ident">clone</span>();
+    <span class="ident">guard</span>.<span class="ident">handle</span>.<span class="ident">insert_idle</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">data</span><span class="op">|</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">guard</span> <span class="op">=</span> <span class="ident">idle_inner</span>.<span class="ident">borrow_mut</span>();
+        <span class="kw">let</span> <span class="ident">guard</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">guard</span>;
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">instance</span>) <span class="op">=</span> <span class="ident">guard</span>.<span class="ident">instance</span> {
+            <span class="comment">// create the wayland client for XWayland</span>
+            <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="kw">unsafe</span> {
+                <span class="ident">guard</span>
+                    .<span class="ident">wayland_display</span>
+                    .<span class="ident">borrow_mut</span>()
+                    .<span class="ident">create_client</span>(<span class="ident">wl_me</span>.<span class="ident">into_raw_fd</span>(), <span class="ident">data</span>)
+            };
+            <span class="ident">client</span>.<span class="ident">data_map</span>().<span class="ident">insert_if_missing</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">idle_inner</span>.<span class="ident">clone</span>());
+            <span class="ident">client</span>.<span class="ident">add_destructor</span>(<span class="ident">Filter::new</span>(<span class="op">|</span><span class="ident">e</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> <span class="ident">client_destroy</span>::<span class="op">&lt;</span><span class="ident">Data</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">e</span>)));
 
-    <span class="comment">// create the wayland client for XWayland</span>
-    <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="kw">unsafe</span> {
-        <span class="ident">guard</span>
-            .<span class="ident">wayland_display</span>
-            .<span class="ident">borrow_mut</span>()
-            .<span class="ident">create_client</span>(<span class="ident">wl_me</span>.<span class="ident">into_raw_fd</span>(), <span class="ident">data</span>)
-    };
-    <span class="ident">client</span>.<span class="ident">data_map</span>().<span class="ident">insert_if_missing</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">inner</span>.<span class="ident">clone</span>());
-    <span class="ident">client</span>.<span class="ident">add_destructor</span>(<span class="ident">Filter</span>::<span class="ident">new</span>(<span class="op">|</span><span class="ident">e</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span>, <span class="kw">_</span>, <span class="kw-2">mut</span> <span class="ident">data</span><span class="op">|</span> {
-        <span class="ident">client_destroy</span>::<span class="op">&lt;</span><span class="ident">WM</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">e</span>, <span class="ident">data</span>.<span class="ident">get</span>().<span class="ident">unwrap</span>())
-    }));
-
-    <span class="comment">// setup the SIGUSR1 handler</span>
-    <span class="kw">let</span> <span class="ident">sigusr1_handler</span> <span class="op">=</span> (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">guard</span>.<span class="ident">source_maker</span>)(<span class="ident">inner</span>.<span class="ident">clone</span>())<span class="question-mark">?</span>;
+            <span class="ident">instance</span>.<span class="ident">wayland_client</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">client</span>);
+        }
+    });
 
     <span class="comment">// all is ready, we can do the fork dance</span>
-    <span class="kw">let</span> <span class="ident">child_pid</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">fork</span>() {
-        <span class="prelude-val">Ok</span>(<span class="ident">ForkResult</span>::<span class="ident">Parent</span> { <span class="ident">child</span> }) <span class="op">=</span><span class="op">&gt;</span> {
-            <span class="comment">// we are the main smithay process</span>
-            <span class="ident">child</span>
-        }
-        <span class="prelude-val">Ok</span>(<span class="ident">ForkResult</span>::<span class="ident">Child</span>) <span class="op">=</span><span class="op">&gt;</span> {
-            <span class="comment">// we are the first child</span>
-            <span class="kw">let</span> <span class="ident">ppid</span> <span class="op">=</span> <span class="ident">Pid</span>::<span class="ident">parent</span>();
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">set</span> <span class="op">=</span> <span class="ident">signal</span>::<span class="ident">SigSet</span>::<span class="ident">empty</span>();
-            <span class="ident">set</span>.<span class="ident">add</span>(<span class="ident">signal</span>::<span class="ident">Signal</span>::<span class="ident">SIGUSR1</span>);
-            <span class="ident">set</span>.<span class="ident">add</span>(<span class="ident">signal</span>::<span class="ident">Signal</span>::<span class="ident">SIGCHLD</span>);
-            <span class="comment">// we can&#39;t handle errors here anyway</span>
-            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">signal</span>::<span class="ident">sigprocmask</span>(<span class="ident">signal</span>::<span class="ident">SigmaskHow</span>::<span class="ident">SIG_BLOCK</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">set</span>), <span class="prelude-val">None</span>);
-            <span class="kw">match</span> <span class="ident">fork</span>() {
-                <span class="prelude-val">Ok</span>(<span class="ident">ForkResult</span>::<span class="ident">Parent</span> { <span class="ident">child</span> }) <span class="op">=</span><span class="op">&gt;</span> {
-                    <span class="comment">// we are still the first child</span>
-                    <span class="kw">let</span> <span class="ident">sig</span> <span class="op">=</span> <span class="ident">set</span>.<span class="ident">wait</span>();
-                    <span class="comment">// send USR1 to parent</span>
-                    <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">signal</span>::<span class="ident">kill</span>(<span class="ident">ppid</span>, <span class="ident">signal</span>::<span class="ident">Signal</span>::<span class="ident">SIGUSR1</span>);
-                    <span class="comment">// Parent will wait for us and know from out</span>
-                    <span class="comment">// exit status if XWayland launch was a success or not =)</span>
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">signal</span>::<span class="ident">Signal</span>::<span class="ident">SIGCHLD</span>) <span class="op">=</span> <span class="ident">sig</span> {
-                        <span class="comment">// XWayland has exited before being ready</span>
-                        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> ::<span class="ident">nix</span>::<span class="ident">sys</span>::<span class="ident">wait</span>::<span class="ident">waitpid</span>(<span class="ident">child</span>, <span class="prelude-val">None</span>);
-                        <span class="kw">unsafe</span> { ::<span class="ident">nix</span>::<span class="ident">libc</span>::<span class="ident">exit</span>(<span class="number">1</span>) };
-                    }
-                    <span class="kw">unsafe</span> { ::<span class="ident">nix</span>::<span class="ident">libc</span>::<span class="ident">exit</span>(<span class="number">0</span>) };
-                }
-                <span class="prelude-val">Ok</span>(<span class="ident">ForkResult</span>::<span class="ident">Child</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                    <span class="comment">// we are the second child, we exec xwayland</span>
-                    <span class="kw">match</span> <span class="ident">exec_xwayland</span>(<span class="ident">lock</span>.<span class="ident">display</span>(), <span class="ident">wl_x11</span>, <span class="ident">x_wm_x11</span>, <span class="kw-2">&amp;</span><span class="ident">x_fds</span>) {
-                        <span class="prelude-val">Ok</span>(<span class="ident">x</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">x</span> {},
-                        <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                            <span class="comment">// well, what can we do ?</span>
-                            <span class="macro">error</span><span class="macro">!</span>(<span class="ident">guard</span>.<span class="ident">log</span>, <span class="string">&quot;exec XWayland failed&quot;</span>; <span class="string">&quot;err&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">e</span>));
-                            <span class="kw">unsafe</span> { ::<span class="ident">nix</span>::<span class="ident">libc</span>::<span class="ident">exit</span>(<span class="number">1</span>) };
-                        }
-                    }
-                }
-                <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                    <span class="comment">// well, what can we do ?</span>
-                    <span class="macro">error</span><span class="macro">!</span>(<span class="ident">guard</span>.<span class="ident">log</span>, <span class="string">&quot;XWayland second fork failed&quot;</span>; <span class="string">&quot;err&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">e</span>));
-                    <span class="kw">unsafe</span> { ::<span class="ident">nix</span>::<span class="ident">libc</span>::<span class="ident">exit</span>(<span class="number">1</span>) };
-                }
-            }
-        }
+    <span class="kw">let</span> <span class="ident">child_stdout</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">spawn_xwayland</span>(<span class="ident">lock</span>.<span class="ident">display</span>(), <span class="ident">wl_x11</span>, <span class="ident">x_wm_x11</span>, <span class="kw-2">&amp;</span><span class="ident">x_fds</span>) {
+        <span class="prelude-val">Ok</span>(<span class="ident">child_stdout</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">child_stdout</span>,
         <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> {
-            <span class="macro">error</span><span class="macro">!</span>(<span class="ident">guard</span>.<span class="ident">log</span>, <span class="string">&quot;XWayland first fork failed&quot;</span>; <span class="string">&quot;err&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">e</span>));
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(());
+            <span class="macro">error!</span>(<span class="ident">guard</span>.<span class="ident">log</span>, <span class="string">&quot;XWayland failed to spawn&quot;</span>; <span class="string">&quot;err&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">e</span>));
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">e</span>);
         }
     };
+
+    <span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="ident">inner</span>.<span class="ident">clone</span>();
+    <span class="kw">let</span> <span class="ident">startup_handler</span> <span class="op">=</span> <span class="ident">guard</span>.<span class="ident">handle</span>.<span class="ident">insert_source</span>(
+        <span class="ident">Generic::new</span>(<span class="ident">Fd</span>(<span class="ident">child_stdout</span>.<span class="ident">as_raw_fd</span>()), <span class="ident">Interest::READ</span>, <span class="ident">Mode::Level</span>),
+        <span class="kw">move</span> <span class="op">|</span><span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> {
+            <span class="comment">// the closure must be called exactly one time, this cannot panic</span>
+            <span class="ident">xwayland_ready</span>(<span class="kw-2">&amp;</span><span class="ident">inner</span>);
+            <span class="prelude-val">Ok</span>(())
+        },
+    )<span class="question-mark">?</span>;
 
     <span class="ident">guard</span>.<span class="ident">instance</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">XWaylandInstance</span> {
         <span class="ident">display_lock</span>: <span class="ident">lock</span>,
-        <span class="ident">wayland_client</span>: <span class="ident">client</span>,
-        <span class="ident">sigusr1_handler</span>: <span class="prelude-val">Some</span>(<span class="ident">sigusr1_handler</span>),
+        <span class="ident">startup_handler</span>: <span class="prelude-val">Some</span>(<span class="ident">startup_handler</span>),
+        <span class="ident">wayland_client</span>: <span class="prelude-val">None</span>,
         <span class="ident">wm_fd</span>: <span class="prelude-val">Some</span>(<span class="ident">x_wm_me</span>),
-        <span class="ident">started_at</span>: <span class="ident">creation_time</span>,
-        <span class="ident">child_pid</span>: <span class="prelude-val">Some</span>(<span class="ident">child_pid</span>),
+        <span class="ident">child_stdout</span>: <span class="prelude-val">Some</span>(<span class="ident">child_stdout</span>),
     });
 
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">WM</span>: <span class="ident">XWindowManager</span><span class="op">&gt;</span> <span class="ident">Inner</span><span class="op">&lt;</span><span class="ident">WM</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">XWaylandSource</span> {
+    <span class="ident">channel</span>: <span class="ident">Channel</span><span class="op">&lt;</span><span class="ident">XWaylandEvent</span><span class="op">&gt;</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">calloop::EventSource</span> <span class="kw">for</span> <span class="ident">XWaylandSource</span> {
+    <span class="kw">type</span> <span class="ident">Event</span> <span class="op">=</span> <span class="ident">XWaylandEvent</span>;
+    <span class="kw">type</span> <span class="ident">Metadata</span> <span class="op">=</span> ();
+    <span class="kw">type</span> <span class="ident">Ret</span> <span class="op">=</span> ();
+
+    <span class="kw">fn</span> <span class="ident">process_events</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">readiness</span>: <span class="ident">calloop::Readiness</span>,
+        <span class="ident">token</span>: <span class="ident">calloop::Token</span>,
+        <span class="kw-2">mut</span> <span class="ident">callback</span>: <span class="ident">F</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="self">Self</span><span class="ident">::Event</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span><span class="ident">::Metadata</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span><span class="ident">::Ret</span>,
+    {
+        <span class="self">self</span>.<span class="ident">channel</span>
+            .<span class="ident">process_events</span>(<span class="ident">readiness</span>, <span class="ident">token</span>, <span class="op">|</span><span class="ident">event</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> ()<span class="op">|</span> <span class="kw">match</span> <span class="ident">event</span> {
+                <span class="ident">calloop::channel::Event::Msg</span>(<span class="ident">msg</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">callback</span>(<span class="ident">msg</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> ()),
+                <span class="ident">calloop::channel::Event::Closed</span> <span class="op">=</span><span class="op">&gt;</span> {}
+            })
+    }
+
+    <span class="kw">fn</span> <span class="ident">register</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">calloop::Poll</span>, <span class="ident">token</span>: <span class="ident">calloop::Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">channel</span>.<span class="ident">register</span>(<span class="ident">poll</span>, <span class="ident">token</span>)
+    }
+
+    <span class="kw">fn</span> <span class="ident">reregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">calloop::Poll</span>, <span class="ident">token</span>: <span class="ident">calloop::Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">channel</span>.<span class="ident">reregister</span>(<span class="ident">poll</span>, <span class="ident">token</span>)
+    }
+
+    <span class="kw">fn</span> <span class="ident">unregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">calloop::Poll</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">channel</span>.<span class="ident">unregister</span>(<span class="ident">poll</span>)
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&gt;</span> <span class="ident">Inner</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&gt;</span> {
     <span class="comment">// Shutdown the XWayland server and cleanup everything</span>
     <span class="kw">fn</span> <span class="ident">shutdown</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
         <span class="comment">// don&#39;t do anything if not running</span>
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">instance</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">instance</span>.<span class="ident">take</span>() {
-            <span class="macro">info</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">log</span>, <span class="string">&quot;Shutting down XWayland.&quot;</span>);
-            <span class="self">self</span>.<span class="ident">wm</span>.<span class="ident">xwayland_exited</span>();
+            <span class="macro">info!</span>(<span class="self">self</span>.<span class="ident">log</span>, <span class="string">&quot;Shutting down XWayland.&quot;</span>);
             <span class="comment">// kill the client</span>
-            <span class="ident">instance</span>.<span class="ident">wayland_client</span>.<span class="ident">kill</span>();
-            <span class="comment">// remove the event source</span>
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">s</span>) <span class="op">=</span> <span class="ident">instance</span>.<span class="ident">sigusr1_handler</span>.<span class="ident">take</span>() {
-                (<span class="self">self</span>.<span class="ident">kill_source</span>)(<span class="ident">s</span>);
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">client</span>) <span class="op">=</span> <span class="ident">instance</span>.<span class="ident">wayland_client</span> {
+                <span class="ident">client</span>.<span class="ident">kill</span>();
             }
+            <span class="comment">// remove the event source</span>
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">s</span>) <span class="op">=</span> <span class="ident">instance</span>.<span class="ident">startup_handler</span>.<span class="ident">take</span>() {
+                <span class="self">self</span>.<span class="ident">handle</span>.<span class="ident">kill</span>(<span class="ident">s</span>);
+            }
+            <span class="comment">// send error occurs if the user dropped the channel... We cannot do much except ignore.</span>
+            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">send</span>(<span class="ident">XWaylandEvent::Exited</span>);
+
             <span class="comment">// All connections and lockfiles are cleaned by their destructors</span>
 
             <span class="comment">// Remove DISPLAY from the env</span>
-            ::<span class="ident">std</span>::<span class="ident">env</span>::<span class="ident">remove_var</span>(<span class="string">&quot;DISPLAY&quot;</span>);
+            <span class="ident">::std::env::remove_var</span>(<span class="string">&quot;DISPLAY&quot;</span>);
             <span class="comment">// We do like wlroots:</span>
             <span class="comment">// &gt; We do not kill the XWayland process, it dies to broken pipe</span>
             <span class="comment">// &gt; after we close our side of the wm/wl fds. This is more reliable</span>
@@ -688,148 +715,129 @@
     }
 }
 
-<span class="kw">fn</span> <span class="ident">client_destroy</span><span class="op">&lt;</span><span class="ident">WM</span>: <span class="ident">XWindowManager</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>, <span class="ident">T</span>: <span class="ident">Any</span><span class="op">&gt;</span>(<span class="ident">map</span>: <span class="kw-2">&amp;</span>::<span class="ident">wayland_server</span>::<span class="ident">UserDataMap</span>, <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">T</span>) {
-    <span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="ident">map</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">Inner</span><span class="op">&lt;</span><span class="ident">WM</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
-
-    <span class="comment">// shutdown the server</span>
-    <span class="kw">let</span> <span class="ident">started_at</span> <span class="op">=</span> <span class="ident">inner</span>.<span class="ident">borrow</span>().<span class="ident">instance</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">i</span><span class="op">|</span> <span class="ident">i</span>.<span class="ident">started_at</span>);
+<span class="kw">fn</span> <span class="ident">client_destroy</span><span class="op">&lt;</span><span class="ident">Data</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">map</span>: <span class="kw-2">&amp;</span><span class="ident">::wayland_server::UserDataMap</span>) {
+    <span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="ident">map</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">Inner</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
     <span class="ident">inner</span>.<span class="ident">borrow_mut</span>().<span class="ident">shutdown</span>();
-
-    <span class="comment">// restart it, unless we really just started it, if it crashes right</span>
-    <span class="comment">// at startup there is no point</span>
-    <span class="kw">if</span> <span class="ident">started_at</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">t</span><span class="op">|</span> <span class="ident">t</span>.<span class="ident">elapsed</span>().<span class="ident">as_secs</span>()).<span class="ident">unwrap_or</span>(<span class="number">10</span>) <span class="op">&gt;</span> <span class="number">5</span> {
-        <span class="macro">warn</span><span class="macro">!</span>(<span class="ident">inner</span>.<span class="ident">borrow</span>().<span class="ident">log</span>, <span class="string">&quot;XWayland crashed, restarting.&quot;</span>);
-        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">launch</span>(<span class="kw-2">&amp;</span><span class="ident">inner</span>, <span class="ident">data</span>);
-    } <span class="kw">else</span> {
-        <span class="macro">warn</span><span class="macro">!</span>(
-            <span class="ident">inner</span>.<span class="ident">borrow</span>().<span class="ident">log</span>,
-            <span class="string">&quot;XWayland crashed less than 5 seconds after its startup, not restarting.&quot;</span>
-        );
-    }
 }
 
-<span class="kw">fn</span> <span class="ident">xwayland_ready</span><span class="op">&lt;</span><span class="ident">WM</span>: <span class="ident">XWindowManager</span><span class="op">&gt;</span>(<span class="ident">inner</span>: <span class="kw-2">&amp;</span><span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">Inner</span><span class="op">&lt;</span><span class="ident">WM</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
-    <span class="kw">use</span> <span class="ident">nix</span>::<span class="ident">sys</span>::<span class="ident">wait</span>;
+<span class="kw">fn</span> <span class="ident">xwayland_ready</span><span class="op">&lt;</span><span class="ident">Data</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">inner</span>: <span class="kw-2">&amp;</span><span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">Inner</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
+    <span class="comment">// Lots of re-borrowing to please the borrow-checker</span>
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">guard</span> <span class="op">=</span> <span class="ident">inner</span>.<span class="ident">borrow_mut</span>();
-    <span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">guard</span>;
+    <span class="kw">let</span> <span class="ident">guard</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">guard</span>;
     <span class="comment">// instance should never be None at this point</span>
-    <span class="kw">let</span> <span class="ident">instance</span> <span class="op">=</span> <span class="ident">inner</span>.<span class="ident">instance</span>.<span class="ident">as_mut</span>().<span class="ident">unwrap</span>();
-    <span class="kw">let</span> <span class="ident">wm</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">inner</span>.<span class="ident">wm</span>;
-    <span class="comment">// neither the pid</span>
-    <span class="kw">let</span> <span class="ident">pid</span> <span class="op">=</span> <span class="ident">instance</span>.<span class="ident">child_pid</span>.<span class="ident">unwrap</span>();
+    <span class="kw">let</span> <span class="ident">instance</span> <span class="op">=</span> <span class="ident">guard</span>.<span class="ident">instance</span>.<span class="ident">as_mut</span>().<span class="ident">unwrap</span>();
+    <span class="comment">// neither the child_stdout</span>
+    <span class="kw">let</span> <span class="ident">child_stdout</span> <span class="op">=</span> <span class="ident">instance</span>.<span class="ident">child_stdout</span>.<span class="ident">as_mut</span>().<span class="ident">unwrap</span>();
 
-    <span class="comment">// find out if the launch was a success by waiting on the intermediate child</span>
-    <span class="kw">let</span> <span class="ident">success</span>: <span class="ident">bool</span>;
-    <span class="kw">loop</span> {
-        <span class="kw">match</span> <span class="ident">wait</span>::<span class="ident">waitpid</span>(<span class="ident">pid</span>, <span class="prelude-val">None</span>) {
-            <span class="prelude-val">Ok</span>(<span class="ident">wait</span>::<span class="ident">WaitStatus</span>::<span class="ident">Exited</span>(<span class="kw">_</span>, <span class="number">0</span>)) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="comment">// XWayland was correctly started :)</span>
-                <span class="ident">success</span> <span class="op">=</span> <span class="bool-val">true</span>;
-                <span class="kw">break</span>;
-            }
-            <span class="prelude-val">Err</span>(<span class="ident">NixError</span>::<span class="ident">Sys</span>(<span class="ident">Errno</span>::<span class="ident">EINTR</span>)) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="comment">// interupted, retry</span>
-                <span class="kw">continue</span>;
-            }
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="comment">// something went wrong :(</span>
-                <span class="ident">success</span> <span class="op">=</span> <span class="bool-val">false</span>;
-                <span class="kw">break</span>;
-            }
+    <span class="comment">// This reads the one byte that is written when sh receives SIGUSR1</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffer</span> <span class="op">=</span> [<span class="number">0</span>];
+    <span class="kw">let</span> <span class="ident">success</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">child_stdout</span>.<span class="ident">read</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">buffer</span>) {
+        <span class="prelude-val">Ok</span>(<span class="ident">len</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">len</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">buffer</span>[<span class="number">0</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;S&#39;</span>,
+        <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="macro">error!</span>(<span class="ident">guard</span>.<span class="ident">log</span>, <span class="string">&quot;Checking launch status failed&quot;</span>; <span class="string">&quot;err&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">e</span>));
+            <span class="bool-val">false</span>
         }
-    }
+    };
 
     <span class="kw">if</span> <span class="ident">success</span> {
-        <span class="comment">// signal the WM</span>
-        <span class="macro">info</span><span class="macro">!</span>(<span class="ident">inner</span>.<span class="ident">log</span>, <span class="string">&quot;XWayland is ready, signaling the WM.&quot;</span>);
-        <span class="ident">wm</span>.<span class="ident">xwayland_ready</span>(
-            <span class="ident">instance</span>.<span class="ident">wm_fd</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>(), <span class="comment">// This is a bug if None</span>
-            <span class="ident">instance</span>.<span class="ident">wayland_client</span>.<span class="ident">clone</span>(),
-        );
-
         <span class="comment">// setup the environemnt</span>
-        ::<span class="ident">std</span>::<span class="ident">env</span>::<span class="ident">set_var</span>(<span class="string">&quot;DISPLAY&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;:{}&quot;</span>, <span class="ident">instance</span>.<span class="ident">display_lock</span>.<span class="ident">display</span>()));
+        <span class="ident">::std::env::set_var</span>(<span class="string">&quot;DISPLAY&quot;</span>, <span class="macro">format!</span>(<span class="string">&quot;:{}&quot;</span>, <span class="ident">instance</span>.<span class="ident">display_lock</span>.<span class="ident">display</span>()));
+
+        <span class="comment">// signal the WM</span>
+        <span class="macro">info!</span>(<span class="ident">guard</span>.<span class="ident">log</span>, <span class="string">&quot;XWayland is ready, signaling the WM.&quot;</span>);
+        <span class="comment">// send error occurs if the user dropped the channel... We cannot do much except ignore.</span>
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">guard</span>.<span class="ident">sender</span>.<span class="ident">send</span>(<span class="ident">XWaylandEvent::Ready</span> {
+            <span class="ident">connection</span>: <span class="ident">instance</span>.<span class="ident">wm_fd</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>(), <span class="comment">// This is a bug if None</span>
+            <span class="ident">client</span>: <span class="ident">instance</span>.<span class="ident">wayland_client</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>(),
+        });
     } <span class="kw">else</span> {
-        <span class="macro">error</span><span class="macro">!</span>(
-            <span class="ident">inner</span>.<span class="ident">log</span>,
+        <span class="macro">error!</span>(
+            <span class="ident">guard</span>.<span class="ident">log</span>,
             <span class="string">&quot;XWayland crashed at startup, will not try to restart it.&quot;</span>
         );
     }
 
     <span class="comment">// in all cases, cleanup</span>
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">s</span>) <span class="op">=</span> <span class="ident">instance</span>.<span class="ident">sigusr1_handler</span>.<span class="ident">take</span>() {
-        (<span class="ident">inner</span>.<span class="ident">kill_source</span>)(<span class="ident">s</span>);
+    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">s</span>) <span class="op">=</span> <span class="ident">instance</span>.<span class="ident">startup_handler</span>.<span class="ident">take</span>() {
+        <span class="ident">guard</span>.<span class="ident">handle</span>.<span class="ident">kill</span>(<span class="ident">s</span>);
     }
 }
 
-<span class="kw">enum</span> <span class="ident">Void</span> {}
-
-<span class="doccomment">/// Exec XWayland with given sockets on given display</span>
+<span class="doccomment">/// Spawn XWayland with given sockets on given display</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// If this returns, that means that something failed</span>
-<span class="kw">fn</span> <span class="ident">exec_xwayland</span>(
+<span class="doccomment">/// Returns a pipe that outputs &#39;S&#39; upon successful launch.</span>
+<span class="kw">fn</span> <span class="ident">spawn_xwayland</span>(
     <span class="ident">display</span>: <span class="ident">u32</span>,
     <span class="ident">wayland_socket</span>: <span class="ident">UnixStream</span>,
     <span class="ident">wm_socket</span>: <span class="ident">UnixStream</span>,
     <span class="ident">listen_sockets</span>: <span class="kw-2">&amp;</span>[<span class="ident">UnixStream</span>],
-) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NixResult</span><span class="op">&lt;</span><span class="ident">Void</span><span class="op">&gt;</span> {
-    <span class="comment">// uset the CLOEXEC flag from the sockets we need to pass</span>
-    <span class="comment">// to xwayland</span>
-    <span class="ident">unset_cloexec</span>(<span class="kw-2">&amp;</span><span class="ident">wayland_socket</span>)<span class="question-mark">?</span>;
-    <span class="ident">unset_cloexec</span>(<span class="kw-2">&amp;</span><span class="ident">wm_socket</span>)<span class="question-mark">?</span>;
+) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IOResult</span><span class="op">&lt;</span><span class="ident">ChildStdout</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">command</span> <span class="op">=</span> <span class="ident">Command::new</span>(<span class="string">&quot;sh&quot;</span>);
+
+    <span class="comment">// We use output stream to communicate because FD is easier to handle than exit code.</span>
+    <span class="ident">command</span>.<span class="ident">stdout</span>(<span class="ident">Stdio::piped</span>());
+
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">xwayland_args</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;:{} -rootless -terminate -wm {}&quot;</span>, <span class="ident">display</span>, <span class="ident">wm_socket</span>.<span class="ident">as_raw_fd</span>());
     <span class="kw">for</span> <span class="ident">socket</span> <span class="kw">in</span> <span class="ident">listen_sockets</span> {
-        <span class="ident">unset_cloexec</span>(<span class="ident">socket</span>)<span class="question-mark">?</span>;
+        <span class="ident">xwayland_args</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot; -listen {}&quot;</span>, <span class="ident">socket</span>.<span class="ident">as_raw_fd</span>()));
     }
-    <span class="comment">// prepare the arguments to XWayland</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">args</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[
-        <span class="ident">CString</span>::<span class="ident">new</span>(<span class="string">&quot;Xwayland&quot;</span>).<span class="ident">unwrap</span>(),
-        <span class="ident">CString</span>::<span class="ident">new</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;:{}&quot;</span>, <span class="ident">display</span>)).<span class="ident">unwrap</span>(),
-        <span class="ident">CString</span>::<span class="ident">new</span>(<span class="string">&quot;-rootless&quot;</span>).<span class="ident">unwrap</span>(),
-        <span class="ident">CString</span>::<span class="ident">new</span>(<span class="string">&quot;-terminate&quot;</span>).<span class="ident">unwrap</span>(),
-        <span class="ident">CString</span>::<span class="ident">new</span>(<span class="string">&quot;-wm&quot;</span>).<span class="ident">unwrap</span>(),
-        <span class="ident">CString</span>::<span class="ident">new</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">wm_socket</span>.<span class="ident">as_raw_fd</span>())).<span class="ident">unwrap</span>(),
-    ];
-    <span class="kw">for</span> <span class="ident">socket</span> <span class="kw">in</span> <span class="ident">listen_sockets</span> {
-        <span class="ident">args</span>.<span class="ident">push</span>(<span class="ident">CString</span>::<span class="ident">new</span>(<span class="string">&quot;-listen&quot;</span>).<span class="ident">unwrap</span>());
-        <span class="ident">args</span>.<span class="ident">push</span>(<span class="ident">CString</span>::<span class="ident">new</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">socket</span>.<span class="ident">as_raw_fd</span>())).<span class="ident">unwrap</span>());
-    }
-    <span class="comment">// setup the environment: clear everything except PATH and XDG_RUNTIME_DIR</span>
-    <span class="kw">for</span> (<span class="ident">key</span>, <span class="kw">_</span>) <span class="kw">in</span> <span class="ident">env</span>::<span class="ident">vars_os</span>() {
+    <span class="comment">// This command let sh to:</span>
+    <span class="comment">// * Set up signal handler for USR1</span>
+    <span class="comment">// * Launch Xwayland with USR1 ignored so Xwayland will signal us when it is ready (also redirect</span>
+    <span class="comment">//   Xwayland&#39;s STDOUT to STDERR so its output, if any, won&#39;t distract us)</span>
+    <span class="comment">// * Print &quot;S&quot; and exit if USR1 is received</span>
+    <span class="ident">command</span>.<span class="ident">arg</span>(<span class="string">&quot;-c&quot;</span>).<span class="ident">arg</span>(<span class="macro">format!</span>(
+        <span class="string">&quot;trap &#39;echo S&#39; USR1; (trap &#39;&#39; USR1; exec Xwayland {}) 1&gt;&amp;2 &amp; wait&quot;</span>,
+        <span class="ident">xwayland_args</span>
+    ));
+
+    <span class="comment">// Setup the environment: clear everything except PATH and XDG_RUNTIME_DIR</span>
+    <span class="ident">command</span>.<span class="ident">env_clear</span>();
+    <span class="kw">for</span> (<span class="ident">key</span>, <span class="ident">value</span>) <span class="kw">in</span> <span class="ident">env::vars_os</span>() {
         <span class="kw">if</span> <span class="ident">key</span>.<span class="ident">to_str</span>() <span class="op">=</span><span class="op">=</span> <span class="prelude-val">Some</span>(<span class="string">&quot;PATH&quot;</span>) <span class="op">|</span><span class="op">|</span> <span class="ident">key</span>.<span class="ident">to_str</span>() <span class="op">=</span><span class="op">=</span> <span class="prelude-val">Some</span>(<span class="string">&quot;XDG_RUNTIME_DIR&quot;</span>) {
+            <span class="ident">command</span>.<span class="ident">env</span>(<span class="ident">key</span>, <span class="ident">value</span>);
             <span class="kw">continue</span>;
         }
-        <span class="ident">env</span>::<span class="ident">remove_var</span>(<span class="ident">key</span>);
     }
-    <span class="comment">// the WAYLAND_SOCKET var tells XWayland where to connect as a wayland client</span>
-    <span class="ident">env</span>::<span class="ident">set_var</span>(<span class="string">&quot;WAYLAND_SOCKET&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">wayland_socket</span>.<span class="ident">as_raw_fd</span>()));
+    <span class="ident">command</span>.<span class="ident">env</span>(<span class="string">&quot;WAYLAND_SOCKET&quot;</span>, <span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">wayland_socket</span>.<span class="ident">as_raw_fd</span>()));
 
-    <span class="comment">// ignore SIGUSR1, this will make the XWayland server send us this</span>
-    <span class="comment">// signal when it is ready apparently</span>
     <span class="kw">unsafe</span> {
-        <span class="kw">use</span> <span class="ident">nix</span>::<span class="ident">sys</span>::<span class="ident">signal</span>::<span class="kw-2">*</span>;
-        <span class="ident">sigaction</span>(
-            <span class="ident">Signal</span>::<span class="ident">SIGUSR1</span>,
-            <span class="kw-2">&amp;</span><span class="ident">SigAction</span>::<span class="ident">new</span>(<span class="ident">SigHandler</span>::<span class="ident">SigIgn</span>, <span class="ident">SaFlags</span>::<span class="ident">empty</span>(), <span class="ident">SigSet</span>::<span class="ident">empty</span>()),
-        )<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">wayland_socket_fd</span> <span class="op">=</span> <span class="ident">wayland_socket</span>.<span class="ident">as_raw_fd</span>();
+        <span class="kw">let</span> <span class="ident">wm_socket_fd</span> <span class="op">=</span> <span class="ident">wm_socket</span>.<span class="ident">as_raw_fd</span>();
+        <span class="kw">let</span> <span class="ident">socket_fds</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">listen_sockets</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">socket</span><span class="op">|</span> <span class="ident">socket</span>.<span class="ident">as_raw_fd</span>()).<span class="ident">collect</span>();
+        <span class="ident">command</span>.<span class="ident">pre_exec</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
+            <span class="comment">// unset the CLOEXEC flag from the sockets we need to pass</span>
+            <span class="comment">// to xwayland</span>
+            <span class="ident">unset_cloexec</span>(<span class="ident">wayland_socket_fd</span>)<span class="question-mark">?</span>;
+            <span class="ident">unset_cloexec</span>(<span class="ident">wm_socket_fd</span>)<span class="question-mark">?</span>;
+            <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">socket</span> <span class="kw">in</span> <span class="ident">socket_fds</span>.<span class="ident">iter</span>() {
+                <span class="ident">unset_cloexec</span>(<span class="ident">socket</span>)<span class="question-mark">?</span>;
+            }
+            <span class="prelude-val">Ok</span>(())
+        });
     }
 
-    <span class="comment">// run it</span>
-    <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> ::<span class="ident">nix</span>::<span class="ident">unistd</span>::<span class="ident">execvp</span>(
-        <span class="kw-2">&amp;</span><span class="ident">CString</span>::<span class="ident">new</span>(<span class="string">&quot;Xwayland&quot;</span>).<span class="ident">unwrap</span>(),
-        <span class="kw-2">&amp;</span><span class="ident">args</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="ident">AsRef</span>::<span class="ident">as_ref</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
-    )<span class="question-mark">?</span>;
-    <span class="comment">// small dance to actually return Void</span>
-    <span class="kw">match</span> <span class="ident">ret</span> {}
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">child</span> <span class="op">=</span> <span class="ident">command</span>.<span class="ident">spawn</span>()<span class="question-mark">?</span>;
+    <span class="prelude-val">Ok</span>(<span class="ident">child</span>.<span class="ident">stdout</span>.<span class="ident">take</span>().<span class="ident">expect</span>(<span class="string">&quot;stdout should be piped&quot;</span>))
+}
+
+<span class="kw">fn</span> <span class="ident">nix_error_to_io</span>(<span class="ident">err</span>: <span class="ident">NixError</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IOError</span> {
+    <span class="kw">use</span> <span class="ident">std::io::ErrorKind</span>;
+    <span class="kw">match</span> <span class="ident">err</span> {
+        <span class="ident">NixError::Sys</span>(<span class="ident">errno</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">errno</span>.<span class="ident">into</span>(),
+        <span class="ident">NixError::InvalidPath</span> <span class="op">|</span> <span class="ident">NixError::InvalidUtf8</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">IOError::new</span>(<span class="ident">ErrorKind::InvalidInput</span>, <span class="ident">err</span>),
+        <span class="ident">NixError::UnsupportedOperation</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">IOError::new</span>(<span class="ident">ErrorKind::Other</span>, <span class="ident">err</span>),
+    }
 }
 
 <span class="doccomment">/// Remove the `O_CLOEXEC` flag from this `Fd`</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// This means that the `Fd` will *not* be automatically</span>
 <span class="doccomment">/// closed when we `exec()` into XWayland</span>
-<span class="kw">fn</span> <span class="ident">unset_cloexec</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">AsRawFd</span><span class="op">&gt;</span>(<span class="ident">fd</span>: <span class="kw-2">&amp;</span><span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NixResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="kw">use</span> <span class="ident">nix</span>::<span class="ident">fcntl</span>::{<span class="ident">fcntl</span>, <span class="ident">FcntlArg</span>, <span class="ident">FdFlag</span>};
-    <span class="ident">fcntl</span>(<span class="ident">fd</span>.<span class="ident">as_raw_fd</span>(), <span class="ident">FcntlArg</span>::<span class="ident">F_SETFD</span>(<span class="ident">FdFlag</span>::<span class="ident">empty</span>()))<span class="question-mark">?</span>;
+<span class="kw">fn</span> <span class="ident">unset_cloexec</span>(<span class="ident">fd</span>: <span class="ident">RawFd</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IOResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">use</span> <span class="ident">nix::fcntl</span>::{<span class="ident">fcntl</span>, <span class="ident">FcntlArg</span>, <span class="ident">FdFlag</span>};
+    <span class="ident">fcntl</span>(<span class="ident">fd</span>, <span class="ident">FcntlArg::F_SETFD</span>(<span class="ident">FdFlag::empty</span>())).<span class="ident">map_err</span>(<span class="ident">nix_error_to_io</span>)<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>(())
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "smithay";</script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="smithay" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script></body></html>

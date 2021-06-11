@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/input-0.5.0/src/event/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../input/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/input-0.5.0/src/event/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../input/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img src="../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img src="../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -222,7 +224,7 @@
 <span id="222">222</span>
 <span id="223">223</span>
 <span id="224">224</span>
-</pre><div class="example-wrap"><pre class="rust ">
+</pre><pre class="rust">
 <span class="doccomment">//! Libinput Events</span>
 
 <span class="kw">use</span> {<span class="ident">ffi</span>, <span class="ident">AsRaw</span>, <span class="ident">Context</span>, <span class="ident">Device</span>, <span class="ident">FromRaw</span>};
@@ -251,14 +253,14 @@
 <span class="doccomment">/// Common functions all (Sub-)Events implement.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">EventTrait</span>: <span class="ident">Context</span> {
     <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">as_raw_event</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">libinput_event</span>;
+    <span class="kw">fn</span> <span class="ident">as_raw_event</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::libinput_event</span>;
 
     <span class="doccomment">/// Convert into a general `Event` again</span>
     <span class="kw">fn</span> <span class="ident">into_event</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Event</span>
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
     {
-        <span class="kw">unsafe</span> { <span class="ident">Event</span>::<span class="ident">from_raw</span>(<span class="self">self</span>.<span class="ident">as_raw_event</span>(), <span class="self">self</span>.<span class="ident">context</span>()) }
+        <span class="kw">unsafe</span> { <span class="ident">Event::from_raw</span>(<span class="self">self</span>.<span class="ident">as_raw_event</span>(), <span class="self">self</span>.<span class="ident">context</span>()) }
     }
 
     <span class="doccomment">/// Return the device associated with this event.</span>
@@ -267,8 +269,8 @@
     <span class="doccomment">/// For all other device events, this is the device that generated the event.</span>
     <span class="kw">fn</span> <span class="ident">device</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Device</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">Device</span>::<span class="ident">from_raw</span>(
-                <span class="ident">ffi</span>::<span class="ident">libinput_event_get_device</span>(<span class="self">self</span>.<span class="ident">as_raw_event</span>()),
+            <span class="ident">Device::from_raw</span>(
+                <span class="ident">ffi::libinput_event_get_device</span>(<span class="self">self</span>.<span class="ident">as_raw_event</span>()),
                 <span class="self">self</span>.<span class="ident">context</span>(),
             )
         }
@@ -276,113 +278,113 @@
 }
 
 <span class="kw">impl</span> <span class="ident">EventTrait</span> <span class="kw">for</span> <span class="ident">Event</span> {
-    <span class="kw">fn</span> <span class="ident">as_raw_event</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">libinput_event</span> {
+    <span class="kw">fn</span> <span class="ident">as_raw_event</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::libinput_event</span> {
         <span class="self">self</span>.<span class="ident">as_raw_mut</span>()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">FromRaw</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">libinput_event</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Event</span> {
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">event</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">libinput_event</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span>::<span class="ident">context</span>::<span class="ident">Libinput</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_get_type</span>(<span class="ident">event</span>) {
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_NONE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Trying to convert null event&quot;</span>),
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_DEVICE_ADDED</span>
-            <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_DEVICE_REMOVED</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Event</span>::<span class="ident">Device</span>(
-                <span class="ident">DeviceEvent</span>::<span class="ident">from_raw</span>(<span class="ident">ffi</span>::<span class="ident">libinput_event_get_device_notify_event</span>(<span class="ident">event</span>), <span class="ident">context</span>),
+<span class="kw">impl</span> <span class="ident">FromRaw</span><span class="op">&lt;</span><span class="ident">ffi::libinput_event</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Event</span> {
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">event</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::libinput_event</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">::context::Libinput</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="kw">match</span> <span class="ident">ffi::libinput_event_get_type</span>(<span class="ident">event</span>) {
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_NONE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;Trying to convert null event&quot;</span>),
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_DEVICE_ADDED</span>
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_DEVICE_REMOVED</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Event::Device</span>(
+                <span class="ident">DeviceEvent::from_raw</span>(<span class="ident">ffi::libinput_event_get_device_notify_event</span>(<span class="ident">event</span>), <span class="ident">context</span>),
             ),
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_KEYBOARD_KEY</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Event</span>::<span class="ident">Keyboard</span>(
-                <span class="ident">KeyboardEvent</span>::<span class="ident">from_raw</span>(<span class="ident">ffi</span>::<span class="ident">libinput_event_get_keyboard_event</span>(<span class="ident">event</span>), <span class="ident">context</span>),
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_KEYBOARD_KEY</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Event::Keyboard</span>(
+                <span class="ident">KeyboardEvent::from_raw</span>(<span class="ident">ffi::libinput_event_get_keyboard_event</span>(<span class="ident">event</span>), <span class="ident">context</span>),
             ),
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_POINTER_MOTION</span>
-            <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE</span>
-            <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_POINTER_BUTTON</span>
-            <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_POINTER_AXIS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Event</span>::<span class="ident">Pointer</span>(
-                <span class="ident">PointerEvent</span>::<span class="ident">from_raw</span>(<span class="ident">ffi</span>::<span class="ident">libinput_event_get_pointer_event</span>(<span class="ident">event</span>), <span class="ident">context</span>),
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_POINTER_MOTION</span>
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE</span>
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_POINTER_BUTTON</span>
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_POINTER_AXIS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Event::Pointer</span>(
+                <span class="ident">PointerEvent::from_raw</span>(<span class="ident">ffi::libinput_event_get_pointer_event</span>(<span class="ident">event</span>), <span class="ident">context</span>),
             ),
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_TOUCH_DOWN</span>
-            <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_TOUCH_UP</span>
-            <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_TOUCH_MOTION</span>
-            <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_TOUCH_CANCEL</span>
-            <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_TOUCH_FRAME</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Event</span>::<span class="ident">Touch</span>(<span class="ident">TouchEvent</span>::<span class="ident">from_raw</span>(
-                <span class="ident">ffi</span>::<span class="ident">libinput_event_get_touch_event</span>(<span class="ident">event</span>),
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TOUCH_DOWN</span>
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TOUCH_UP</span>
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TOUCH_MOTION</span>
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TOUCH_CANCEL</span>
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TOUCH_FRAME</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Event::Touch</span>(<span class="ident">TouchEvent::from_raw</span>(
+                <span class="ident">ffi::libinput_event_get_touch_event</span>(<span class="ident">event</span>),
                 <span class="ident">context</span>,
             )),
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_TABLET_TOOL_AXIS</span>
-            <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_TABLET_TOOL_PROXIMITY</span>
-            <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_TABLET_TOOL_TIP</span>
-            <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_TABLET_TOOL_BUTTON</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Event</span>::<span class="ident">Tablet</span>(
-                <span class="ident">TabletToolEvent</span>::<span class="ident">from_raw</span>(<span class="ident">ffi</span>::<span class="ident">libinput_event_get_tablet_tool_event</span>(<span class="ident">event</span>), <span class="ident">context</span>),
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TABLET_TOOL_AXIS</span>
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TABLET_TOOL_PROXIMITY</span>
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TABLET_TOOL_TIP</span>
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TABLET_TOOL_BUTTON</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Event::Tablet</span>(
+                <span class="ident">TabletToolEvent::from_raw</span>(<span class="ident">ffi::libinput_event_get_tablet_tool_event</span>(<span class="ident">event</span>), <span class="ident">context</span>),
             ),
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_TABLET_PAD_BUTTON</span>
-            <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_TABLET_PAD_RING</span>
-            <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_TABLET_PAD_STRIP</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Event</span>::<span class="ident">TabletPad</span>(
-                <span class="ident">TabletPadEvent</span>::<span class="ident">from_raw</span>(<span class="ident">ffi</span>::<span class="ident">libinput_event_get_tablet_pad_event</span>(<span class="ident">event</span>), <span class="ident">context</span>),
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TABLET_PAD_BUTTON</span>
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TABLET_PAD_RING</span>
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TABLET_PAD_STRIP</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Event::TabletPad</span>(
+                <span class="ident">TabletPadEvent::from_raw</span>(<span class="ident">ffi::libinput_event_get_tablet_pad_event</span>(<span class="ident">event</span>), <span class="ident">context</span>),
             ),
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_GESTURE_SWIPE_BEGIN</span>
-            <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE</span>
-            <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_GESTURE_SWIPE_END</span>
-            <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_GESTURE_PINCH_BEGIN</span>
-            <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_GESTURE_PINCH_UPDATE</span>
-            <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_GESTURE_PINCH_END</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Event</span>::<span class="ident">Gesture</span>(
-                <span class="ident">GestureEvent</span>::<span class="ident">from_raw</span>(<span class="ident">ffi</span>::<span class="ident">libinput_event_get_gesture_event</span>(<span class="ident">event</span>), <span class="ident">context</span>),
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_SWIPE_BEGIN</span>
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE</span>
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_SWIPE_END</span>
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_PINCH_BEGIN</span>
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_PINCH_UPDATE</span>
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_PINCH_END</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Event::Gesture</span>(
+                <span class="ident">GestureEvent::from_raw</span>(<span class="ident">ffi::libinput_event_get_gesture_event</span>(<span class="ident">event</span>), <span class="ident">context</span>),
             ),
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_SWITCH_TOGGLE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Event</span>::<span class="ident">Switch</span>(<span class="ident">SwitchEvent</span>::<span class="ident">from_raw</span>(
-                <span class="ident">ffi</span>::<span class="ident">libinput_event_get_switch_event</span>(<span class="ident">event</span>),
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_SWITCH_TOGGLE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Event::Switch</span>(<span class="ident">SwitchEvent::from_raw</span>(
+                <span class="ident">ffi::libinput_event_get_switch_event</span>(<span class="ident">event</span>),
                 <span class="ident">context</span>,
             )),
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_event_type&#39;&quot;</span>),
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_event_type&#39;&quot;</span>),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">libinput_event</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Event</span> {
-    <span class="kw">fn</span> <span class="ident">as_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">ffi</span>::<span class="ident">libinput_event</span> {
+<span class="kw">impl</span> <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi::libinput_event</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Event</span> {
+    <span class="kw">fn</span> <span class="ident">as_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">ffi::libinput_event</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">Event</span>::<span class="ident">Device</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-            <span class="ident">Event</span>::<span class="ident">Keyboard</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-            <span class="ident">Event</span>::<span class="ident">Pointer</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-            <span class="ident">Event</span>::<span class="ident">Touch</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-            <span class="ident">Event</span>::<span class="ident">Tablet</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-            <span class="ident">Event</span>::<span class="ident">TabletPad</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-            <span class="ident">Event</span>::<span class="ident">Gesture</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-            <span class="ident">Event</span>::<span class="ident">Switch</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+            <span class="ident">Event::Device</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+            <span class="ident">Event::Keyboard</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+            <span class="ident">Event::Pointer</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+            <span class="ident">Event::Touch</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+            <span class="ident">Event::Tablet</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+            <span class="ident">Event::TabletPad</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+            <span class="ident">Event::Gesture</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+            <span class="ident">Event::Switch</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Context</span> <span class="kw">for</span> <span class="ident">Event</span> {
-    <span class="kw">fn</span> <span class="ident">context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>::<span class="ident">Libinput</span> {
+    <span class="kw">fn</span> <span class="ident">context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">::Libinput</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">Event</span>::<span class="ident">Device</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
-            <span class="ident">Event</span>::<span class="ident">Keyboard</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
-            <span class="ident">Event</span>::<span class="ident">Pointer</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
-            <span class="ident">Event</span>::<span class="ident">Touch</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
-            <span class="ident">Event</span>::<span class="ident">Tablet</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
-            <span class="ident">Event</span>::<span class="ident">TabletPad</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
-            <span class="ident">Event</span>::<span class="ident">Gesture</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
-            <span class="ident">Event</span>::<span class="ident">Switch</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">Event::Device</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">Event::Keyboard</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">Event::Pointer</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">Event::Touch</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">Event::Tablet</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">Event::TabletPad</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">Event::Gesture</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">Event::Switch</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
         }
     }
 }
 
-<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">ffi_event_struct</span> {
+<span class="macro">macro_rules!</span> <span class="ident">ffi_event_struct</span> {
     ($(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">attr</span>:<span class="ident">meta</span>]</span>)<span class="op">*</span> <span class="kw">struct</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ffi_name</span>:<span class="ident">path</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">get_base_fn</span>:<span class="ident">path</span>) <span class="op">=</span><span class="op">&gt;</span> (
         <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Eq</span>)]</span>
         $(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">attr</span>]</span>)<span class="op">*</span>
         <span class="kw">pub</span> <span class="kw">struct</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span>
         {
             <span class="ident">ffi</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ffi_name</span>,
-            <span class="ident">context</span>: <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">context</span>::<span class="ident">Libinput</span>,
+            <span class="ident">context</span>: <span class="macro-nonterminal">$</span><span class="kw">crate</span><span class="macro-nonterminal">::context::Libinput</span>,
         }
 
-        <span class="kw">impl</span> ::<span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span> {
-            <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> ::<span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> ::<span class="ident">std</span>::<span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
-                <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;$struct_name @{:p}&quot;</span>, <span class="self">self</span>.<span class="ident">as_raw</span>())
+        <span class="kw">impl</span> <span class="ident">::std::fmt::Debug</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span> {
+            <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">::std::fmt::Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::std::fmt::Result</span> {
+                <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;$struct_name @{:p}&quot;</span>, <span class="self">self</span>.<span class="ident">as_raw</span>())
             }
         }
 
         <span class="kw">impl</span> <span class="ident">FromRaw</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">ffi_name</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span>
         {
-            <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">ffi</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ffi_name</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">context</span>::<span class="ident">Libinput</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+            <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">ffi</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ffi_name</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="kw">crate</span><span class="macro-nonterminal">::context::Libinput</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
                 <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span> {
                     <span class="ident">ffi</span>: <span class="ident">ffi</span>,
                     <span class="ident">context</span>: <span class="ident">context</span>.<span class="ident">clone</span>(),
@@ -397,8 +399,8 @@
             }
         }
 
-        <span class="kw">impl</span> ::<span class="ident">Context</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span> {
-            <span class="kw">fn</span> <span class="ident">context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">context</span>::<span class="ident">Libinput</span> {
+        <span class="kw">impl</span> <span class="ident">::Context</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span> {
+            <span class="kw">fn</span> <span class="ident">context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="kw">crate</span><span class="macro-nonterminal">::context::Libinput</span> {
                 <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">context</span>
             }
         }
@@ -409,22 +411,22 @@
             }
         }
 
-        <span class="kw">impl</span> ::<span class="ident">std</span>::<span class="ident">hash</span>::<span class="ident">Hash</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span> {
-            <span class="kw">fn</span> <span class="ident">hash</span><span class="op">&lt;</span><span class="ident">H</span>: ::<span class="ident">std</span>::<span class="ident">hash</span>::<span class="ident">Hasher</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">H</span>) {
+        <span class="kw">impl</span> <span class="ident">::std::hash::Hash</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span> {
+            <span class="kw">fn</span> <span class="ident">hash</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">::std::hash::Hasher</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">H</span>) {
                 <span class="self">self</span>.<span class="ident">as_raw</span>().<span class="ident">hash</span>(<span class="ident">state</span>);
             }
         }
 
         <span class="kw">impl</span> <span class="ident">EventTrait</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span> {
             <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">fn</span> <span class="ident">as_raw_event</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">libinput_event</span> {
+            <span class="kw">fn</span> <span class="ident">as_raw_event</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::libinput_event</span> {
                 <span class="kw">unsafe</span> { <span class="macro-nonterminal">$</span><span class="macro-nonterminal">get_base_fn</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) }
             }
         }
 
         <span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span> {
             <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
-                <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">libinput_event_destroy</span>(<span class="self">self</span>.<span class="ident">as_raw_event</span>()) }
+                <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_event_destroy</span>(<span class="self">self</span>.<span class="ident">as_raw_event</span>()) }
             }
         }
     )
@@ -439,13 +441,13 @@
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">tablet_pad</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">touch</span>;
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">device</span>::<span class="ident">DeviceEvent</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">gesture</span>::<span class="ident">GestureEvent</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">keyboard</span>::<span class="ident">KeyboardEvent</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">pointer</span>::<span class="ident">PointerEvent</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">switch</span>::<span class="ident">SwitchEvent</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">tablet_pad</span>::<span class="ident">TabletPadEvent</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">tablet_tool</span>::<span class="ident">TabletToolEvent</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">touch</span>::<span class="ident">TouchEvent</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::device::DeviceEvent</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::gesture::GestureEvent</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::keyboard::KeyboardEvent</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::pointer::PointerEvent</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::switch::SwitchEvent</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::tablet_pad::TabletPadEvent</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::tablet_tool::TabletToolEvent</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::touch::TouchEvent</span>;
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "input";</script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="input" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script></body></html>

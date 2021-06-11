@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/input-0.5.0/src/event/tablet_pad/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script src="../../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../../input/index.html'><div class='logo-container'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../../settings.html"><img src="../../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/input-0.5.0/src/event/tablet_pad/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../../storage.js"></script><script src="../../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../../input/index.html'><div class='logo-container rust-logo'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img src="../../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../../settings.html" title="settings"><img src="../../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -295,26 +297,26 @@
 <span id="295">295</span>
 <span id="296">296</span>
 <span id="297">297</span>
-</pre><div class="example-wrap"><pre class="rust ">
+</pre><pre class="rust">
 <span class="doccomment">//! Tablet pad event types</span>
 
-<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">EventTrait</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">pointer</span>::<span class="ident">ButtonState</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">keyboard</span>::<span class="ident">KeyState</span>;
+<span class="kw">use</span> <span class="kw">super</span><span class="ident">::EventTrait</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="kw">super</span><span class="ident">::pointer::ButtonState</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="kw">super</span><span class="ident">::keyboard::KeyState</span>;
 <span class="kw">use</span> {<span class="ident">ffi</span>, <span class="ident">AsRaw</span>, <span class="ident">Context</span>, <span class="ident">FromRaw</span>};
 
 <span class="kw">mod</span> <span class="ident">mode_group</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">mode_group</span>::<span class="kw-2">*</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::mode_group</span>::<span class="kw-2">*</span>;
 
 <span class="doccomment">/// Common functions all TabletPad-Events implement.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">TabletPadEventTrait</span>: <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Context</span> {
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">TabletPadEventTrait</span>: <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi::libinput_event_tablet_pad</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Context</span> {
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// The event time for this event</span>
-    <span class="kw">fn</span> <span class="ident">time</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad_get_time</span>, <span class="ident">u32</span>);
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="kw">fn</span> <span class="ident">time</span>, <span class="ident">ffi::libinput_event_tablet_pad_get_time</span>, <span class="ident">u32</span>);
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// The event time for this event in microseconds</span>
-    <span class="kw">fn</span> <span class="ident">time_usec</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad_get_time_usec</span>, <span class="ident">u64</span>);
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="kw">fn</span> <span class="ident">time_usec</span>, <span class="ident">ffi::libinput_event_tablet_pad_get_time_usec</span>, <span class="ident">u64</span>);
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Returns the mode the button, ring, or strip that triggered this event is in, at the time of the event.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The mode is a virtual grouping of functionality, usually based on some</span>
@@ -331,7 +333,7 @@
     <span class="doccomment">/// Note that the returned mode is the mode valid as of the time of the event.</span>
     <span class="doccomment">/// The returned mode may thus be different to the mode returned by</span>
     <span class="doccomment">/// `TabletPadModeGroup::mode`. See `TabletPadModeGroup::mode` for details.</span>
-    <span class="kw">fn</span> <span class="ident">mode</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad_get_mode</span>, <span class="ident">u32</span>);
+    <span class="kw">fn</span> <span class="ident">mode</span>, <span class="ident">ffi::libinput_event_tablet_pad_get_mode</span>, <span class="ident">u32</span>);
 
     <span class="doccomment">/// Returns the mode group that the button, ring, or strip that triggered this</span>
     <span class="doccomment">/// event is considered in.</span>
@@ -340,8 +342,8 @@
     <span class="doccomment">/// visual feedback like LEDs on the pad. See [Tablet pad modes](https://wayland.freedesktop.org/libinput/doc/latest/tablet-support.html#tablet-pad-modes) for details.</span>
     <span class="kw">fn</span> <span class="ident">mode_group</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">TabletPadModeGroup</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">TabletPadModeGroup</span>::<span class="ident">from_raw</span>(
-                <span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad_get_mode_group</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()),
+            <span class="ident">TabletPadModeGroup::from_raw</span>(
+                <span class="ident">ffi::libinput_event_tablet_pad_get_mode_group</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()),
                 <span class="self">self</span>.<span class="ident">context</span>(),
             )
         }
@@ -352,11 +354,11 @@
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
     {
-        <span class="kw">unsafe</span> { <span class="ident">TabletPadEvent</span>::<span class="ident">from_raw</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="self">self</span>.<span class="ident">context</span>()) }
+        <span class="kw">unsafe</span> { <span class="ident">TabletPadEvent::from_raw</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="self">self</span>.<span class="ident">context</span>()) }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Context</span><span class="op">&gt;</span> <span class="ident">TabletPadEventTrait</span> <span class="kw">for</span> <span class="ident">T</span> {}
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi::libinput_event_tablet_pad</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Context</span><span class="op">&gt;</span> <span class="ident">TabletPadEventTrait</span> <span class="kw">for</span> <span class="ident">T</span> {}
 
 <span class="doccomment">/// A tablet-pad related `Event`</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>)]</span>
@@ -389,87 +391,87 @@
 
 <span class="kw">impl</span> <span class="ident">EventTrait</span> <span class="kw">for</span> <span class="ident">TabletPadEvent</span> {
     <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">as_raw_event</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">libinput_event</span> {
+    <span class="kw">fn</span> <span class="ident">as_raw_event</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::libinput_event</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">TabletPadEvent</span>::<span class="ident">Button</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
-            <span class="ident">TabletPadEvent</span>::<span class="ident">Ring</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
-            <span class="ident">TabletPadEvent</span>::<span class="ident">Strip</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
+            <span class="ident">TabletPadEvent::Button</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
+            <span class="ident">TabletPadEvent::Ring</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
+            <span class="ident">TabletPadEvent::Strip</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;libinput_1_15&quot;</span>)]</span>
-            <span class="ident">TabletPadEvent</span>::<span class="ident">Key</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
+            <span class="ident">TabletPadEvent::Key</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">FromRaw</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">TabletPadEvent</span> {
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">event</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span>::<span class="ident">Libinput</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">base</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad_get_base_event</span>(<span class="ident">event</span>);
-        <span class="kw">match</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_get_type</span>(<span class="ident">base</span>) {
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_TABLET_PAD_BUTTON</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">TabletPadEvent</span>::<span class="ident">Button</span>(<span class="ident">TabletPadButtonEvent</span>::<span class="ident">from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
+<span class="kw">impl</span> <span class="ident">FromRaw</span><span class="op">&lt;</span><span class="ident">ffi::libinput_event_tablet_pad</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">TabletPadEvent</span> {
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">event</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::libinput_event_tablet_pad</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">::Libinput</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="ident">base</span> <span class="op">=</span> <span class="ident">ffi::libinput_event_tablet_pad_get_base_event</span>(<span class="ident">event</span>);
+        <span class="kw">match</span> <span class="ident">ffi::libinput_event_get_type</span>(<span class="ident">base</span>) {
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TABLET_PAD_BUTTON</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">TabletPadEvent::Button</span>(<span class="ident">TabletPadButtonEvent::from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
             }
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_TABLET_PAD_RING</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">TabletPadEvent</span>::<span class="ident">Ring</span>(<span class="ident">TabletPadRingEvent</span>::<span class="ident">from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TABLET_PAD_RING</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">TabletPadEvent::Ring</span>(<span class="ident">TabletPadRingEvent::from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
             }
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_TABLET_PAD_STRIP</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">TabletPadEvent</span>::<span class="ident">Strip</span>(<span class="ident">TabletPadStripEvent</span>::<span class="ident">from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TABLET_PAD_STRIP</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">TabletPadEvent::Strip</span>(<span class="ident">TabletPadStripEvent::from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
             }
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;libinput_1_15&quot;</span>)]</span>
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_TABLET_PAD_KEY</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">TabletPadEvent</span>::<span class="ident">Key</span>(<span class="ident">TabletPadKeyEvent</span>::<span class="ident">from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TABLET_PAD_KEY</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">TabletPadEvent::Key</span>(<span class="ident">TabletPadKeyEvent::from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
             }
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>(),
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">TabletPadEvent</span> {
-    <span class="kw">fn</span> <span class="ident">as_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad</span> {
+<span class="kw">impl</span> <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi::libinput_event_tablet_pad</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">TabletPadEvent</span> {
+    <span class="kw">fn</span> <span class="ident">as_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">ffi::libinput_event_tablet_pad</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">TabletPadEvent</span>::<span class="ident">Button</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
-            <span class="ident">TabletPadEvent</span>::<span class="ident">Ring</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
-            <span class="ident">TabletPadEvent</span>::<span class="ident">Strip</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
+            <span class="ident">TabletPadEvent::Button</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
+            <span class="ident">TabletPadEvent::Ring</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
+            <span class="ident">TabletPadEvent::Strip</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;libinput_1_15&quot;</span>)]</span>
-            <span class="ident">TabletPadEvent</span>::<span class="ident">Key</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
+            <span class="ident">TabletPadEvent::Key</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Context</span> <span class="kw">for</span> <span class="ident">TabletPadEvent</span> {
-    <span class="kw">fn</span> <span class="ident">context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>::<span class="ident">Libinput</span> {
+    <span class="kw">fn</span> <span class="ident">context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">::Libinput</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">TabletPadEvent</span>::<span class="ident">Button</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
-            <span class="ident">TabletPadEvent</span>::<span class="ident">Ring</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
-            <span class="ident">TabletPadEvent</span>::<span class="ident">Strip</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">TabletPadEvent::Button</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">TabletPadEvent::Ring</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">TabletPadEvent::Strip</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;libinput_1_15&quot;</span>)]</span>
-            <span class="ident">TabletPadEvent</span>::<span class="ident">Key</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">TabletPadEvent::Key</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
         }
     }
 }
 
-<span class="macro">ffi_event_struct</span><span class="macro">!</span>(
+<span class="macro">ffi_event_struct!</span>(
 <span class="doccomment">/// A button pressed on a device with the `DeviceCapability::TabletPad`</span>
 <span class="doccomment">/// capability.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// This event is not to be confused with the button events emitted by tools</span>
 <span class="doccomment">/// on a tablet. See `TabletToolButtonEvent`.</span>
-<span class="kw">struct</span> <span class="ident">TabletPadButtonEvent</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad_get_base_event</span>);
+<span class="kw">struct</span> <span class="ident">TabletPadButtonEvent</span>, <span class="ident">ffi::libinput_event_tablet_pad</span>, <span class="ident">ffi::libinput_event_tablet_pad_get_base_event</span>);
 
 <span class="kw">impl</span> <span class="ident">TabletPadButtonEvent</span> {
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Return the button number that triggered this event, starting at 0.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Note that the number returned is a generic sequential button number and</span>
     <span class="doccomment">/// not a semantic button code as defined in linux/input.h.</span>
     <span class="doccomment">/// [See Tablet pad button numbers](https://wayland.freedesktop.org/libinput/doc/latest/tablet-support.html#tablet-pad-buttons)</span>
     <span class="doccomment">/// for more details.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">button_number</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad_get_button_number</span>, <span class="ident">u32</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">button_number</span>, <span class="ident">ffi::libinput_event_tablet_pad_get_button_number</span>, <span class="ident">u32</span>);
 
     <span class="doccomment">/// Return the button state of the event.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">button_state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ButtonState</span> {
-        <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad_get_button_state</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) } {
-            <span class="ident">ffi</span>::<span class="ident">libinput_button_state_LIBINPUT_BUTTON_STATE_PRESSED</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ButtonState</span>::<span class="ident">Pressed</span>,
-            <span class="ident">ffi</span>::<span class="ident">libinput_button_state_LIBINPUT_BUTTON_STATE_RELEASED</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ButtonState</span>::<span class="ident">Released</span>,
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_button_state&#39;&quot;</span>),
+        <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_event_tablet_pad_get_button_state</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) } {
+            <span class="ident">ffi::libinput_button_state_LIBINPUT_BUTTON_STATE_PRESSED</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ButtonState::Pressed</span>,
+            <span class="ident">ffi::libinput_button_state_LIBINPUT_BUTTON_STATE_RELEASED</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ButtonState::Released</span>,
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_button_state&#39;&quot;</span>),
         }
     }
 }
@@ -483,19 +485,19 @@
     <span class="ident">Finger</span>,
 }
 
-<span class="macro">ffi_event_struct</span><span class="macro">!</span>(
+<span class="macro">ffi_event_struct!</span>(
 <span class="doccomment">/// A status change on a tablet ring with the `DeviceCapability::TabletPad`</span>
 <span class="doccomment">/// capability.</span>
-<span class="kw">struct</span> <span class="ident">TabletPadRingEvent</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad_get_base_event</span>);
+<span class="kw">struct</span> <span class="ident">TabletPadRingEvent</span>, <span class="ident">ffi::libinput_event_tablet_pad</span>, <span class="ident">ffi::libinput_event_tablet_pad_get_base_event</span>);
 
 <span class="kw">impl</span> <span class="ident">TabletPadRingEvent</span> {
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Returns the number of the ring that has changed state, with 0 being the</span>
     <span class="doccomment">/// first ring.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// On tablets with only one ring, this function always returns 0.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">number</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad_get_ring_number</span>, <span class="ident">u32</span>);
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">number</span>, <span class="ident">ffi::libinput_event_tablet_pad_get_ring_number</span>, <span class="ident">u32</span>);
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Returns the current position of the ring, in degrees counterclockwise from</span>
     <span class="doccomment">/// the northern-most point of the ring in the tablet&#39;s current logical</span>
     <span class="doccomment">/// orientation.</span>
@@ -504,21 +506,21 @@
     <span class="doccomment">/// event with a ring value of -1 when the finger is lifted from the ring. A</span>
     <span class="doccomment">/// caller may use this information to e.g. determine if kinetic scrolling</span>
     <span class="doccomment">/// should be triggered.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">position</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad_get_ring_position</span>, <span class="ident">f64</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">position</span>, <span class="ident">ffi::libinput_event_tablet_pad_get_ring_position</span>, <span class="ident">f64</span>);
 
     <span class="doccomment">/// Returns the source of the interaction with the ring.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// If the source is `RingAxisSource::Finger`, libinput sends a ring position</span>
     <span class="doccomment">/// value of -1 to terminate the current interaction.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RingAxisSource</span> {
-        <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad_get_ring_source</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) } {
-            <span class="ident">ffi</span>::<span class="ident">libinput_tablet_pad_ring_axis_source_LIBINPUT_TABLET_PAD_RING_SOURCE_UNKNOWN</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">RingAxisSource</span>::<span class="ident">Unknown</span>
+        <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_event_tablet_pad_get_ring_source</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) } {
+            <span class="ident">ffi::libinput_tablet_pad_ring_axis_source_LIBINPUT_TABLET_PAD_RING_SOURCE_UNKNOWN</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">RingAxisSource::Unknown</span>
             }
-            <span class="ident">ffi</span>::<span class="ident">libinput_tablet_pad_ring_axis_source_LIBINPUT_TABLET_PAD_RING_SOURCE_FINGER</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">RingAxisSource</span>::<span class="ident">Finger</span>
+            <span class="ident">ffi::libinput_tablet_pad_ring_axis_source_LIBINPUT_TABLET_PAD_RING_SOURCE_FINGER</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">RingAxisSource::Finger</span>
             }
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_tablet_pad_ring_axis_source&#39;&quot;</span>),
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_tablet_pad_ring_axis_source&#39;&quot;</span>),
         }
     }
 }
@@ -532,19 +534,19 @@
     <span class="ident">Finger</span>,
 }
 
-<span class="macro">ffi_event_struct</span><span class="macro">!</span>(
+<span class="macro">ffi_event_struct!</span>(
 <span class="doccomment">/// A status change on a strip on a device with the `DeviceCapability::TabletPad`</span>
 <span class="doccomment">/// capability.</span>
-<span class="kw">struct</span> <span class="ident">TabletPadStripEvent</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad_get_base_event</span>);
+<span class="kw">struct</span> <span class="ident">TabletPadStripEvent</span>, <span class="ident">ffi::libinput_event_tablet_pad</span>, <span class="ident">ffi::libinput_event_tablet_pad_get_base_event</span>);
 
 <span class="kw">impl</span> <span class="ident">TabletPadStripEvent</span> {
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Returns the number of the strip that has changed state, with 0 being the</span>
     <span class="doccomment">/// first strip.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// On tablets with only one strip, this function always returns 0.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">number</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad_get_strip_number</span>, <span class="ident">u32</span>);
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">number</span>, <span class="ident">ffi::libinput_event_tablet_pad_get_strip_number</span>, <span class="ident">u32</span>);
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Returns the current position of the strip, normalized to the range [0, 1],</span>
     <span class="doccomment">/// with 0 being the top/left-most point in the tablet&#39;s current logical</span>
     <span class="doccomment">/// orientation.</span>
@@ -553,44 +555,44 @@
     <span class="doccomment">/// event with a ring value of -1 when the finger is lifted from the ring. A</span>
     <span class="doccomment">/// caller may use this information to e.g. determine if kinetic scrolling</span>
     <span class="doccomment">/// should be triggered.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">position</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad_get_strip_position</span>, <span class="ident">f64</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">position</span>, <span class="ident">ffi::libinput_event_tablet_pad_get_strip_position</span>, <span class="ident">f64</span>);
 
     <span class="doccomment">/// Returns the source of the interaction with the strip.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// If the source is `StripAxisSource::Finger`, libinput sends a strip</span>
     <span class="doccomment">/// position value of -1 to terminate the current interaction</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">StripAxisSource</span> {
-        <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad_get_strip_source</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) } {
-            <span class="ident">ffi</span>::<span class="ident">libinput_tablet_pad_strip_axis_source_LIBINPUT_TABLET_PAD_STRIP_SOURCE_UNKNOWN</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">StripAxisSource</span>::<span class="ident">Unknown</span>
+        <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_event_tablet_pad_get_strip_source</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) } {
+            <span class="ident">ffi::libinput_tablet_pad_strip_axis_source_LIBINPUT_TABLET_PAD_STRIP_SOURCE_UNKNOWN</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">StripAxisSource::Unknown</span>
             }
-            <span class="ident">ffi</span>::<span class="ident">libinput_tablet_pad_strip_axis_source_LIBINPUT_TABLET_PAD_STRIP_SOURCE_FINGER</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">StripAxisSource</span>::<span class="ident">Finger</span>
+            <span class="ident">ffi::libinput_tablet_pad_strip_axis_source_LIBINPUT_TABLET_PAD_STRIP_SOURCE_FINGER</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">StripAxisSource::Finger</span>
             }
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_tablet_pad_strip_axis_source&#39;&quot;</span>),
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_tablet_pad_strip_axis_source&#39;&quot;</span>),
         }
     }
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;libinput_1_15&quot;</span>)]</span>
-<span class="macro">ffi_event_struct</span><span class="macro">!</span>(
+<span class="macro">ffi_event_struct!</span>(
 <span class="doccomment">/// A key pressed on a device with the `DeviceCapability::TabletPad` capability.</span>
-<span class="kw">struct</span> <span class="ident">TabletPadKeyEvent</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad_get_base_event</span>);
+<span class="kw">struct</span> <span class="ident">TabletPadKeyEvent</span>, <span class="ident">ffi::libinput_event_tablet_pad</span>, <span class="ident">ffi::libinput_event_tablet_pad_get_base_event</span>);
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;libinput_1_15&quot;</span>)]</span>
 <span class="kw">impl</span> <span class="ident">TabletPadKeyEvent</span> {
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Return the key code that triggered this event, e.g. KEY_CONTROLPANEL.</span>
     <span class="doccomment">/// The list of key codes is defined in linux/input-event-codes.h</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">key</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad_get_key</span>, <span class="ident">u32</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">key</span>, <span class="ident">ffi::libinput_event_tablet_pad_get_key</span>, <span class="ident">u32</span>);
     
     <span class="doccomment">/// Return the key state of the event</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">key_state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">KeyState</span> {
-        <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">libinput_event_tablet_pad_get_key_state</span>(<span class="self">self</span>.<span class="ident">as_raw</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>) } {
-            <span class="ident">ffi</span>::<span class="ident">libinput_key_state_LIBINPUT_KEY_STATE_PRESSED</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">KeyState</span>::<span class="ident">Pressed</span>,
-            <span class="ident">ffi</span>::<span class="ident">libinput_key_state_LIBINPUT_KEY_STATE_RELEASED</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">KeyState</span>::<span class="ident">Released</span>,
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_key_state&#39;&quot;</span>),
+        <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_event_tablet_pad_get_key_state</span>(<span class="self">self</span>.<span class="ident">as_raw</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>) } {
+            <span class="ident">ffi::libinput_key_state_LIBINPUT_KEY_STATE_PRESSED</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">KeyState::Pressed</span>,
+            <span class="ident">ffi::libinput_key_state_LIBINPUT_KEY_STATE_RELEASED</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">KeyState::Released</span>,
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_key_state&#39;&quot;</span>),
         }
     }
 }</pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../../";window.currentCrate = "input";</script><script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script><script defer src="../../../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="input" data-search-index-js="../../../../search-index.js" data-search-js="../../../../search.js"></div><script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script></body></html>

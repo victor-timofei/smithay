@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/dbus-0.8.4/src/blocking.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>blocking.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../dbus/index.html'><div class='logo-container'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/dbus-0.9.2/src/blocking.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>blocking.rs - source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script id="default-settings"></script><script src="../../storage.js"></script><script src="../../crates.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../dbus/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img src="../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../settings.html" title="settings"><img src="../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -368,21 +370,151 @@
 <span id="368">368</span>
 <span id="369">369</span>
 <span id="370">370</span>
-</pre><div class="example-wrap"><pre class="rust ">
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
+<span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+<span id="407">407</span>
+<span id="408">408</span>
+<span id="409">409</span>
+<span id="410">410</span>
+<span id="411">411</span>
+<span id="412">412</span>
+<span id="413">413</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
+<span id="435">435</span>
+</pre><pre class="rust">
 <span class="doccomment">//! Connections and proxies that make blocking method calls.</span>
 
 
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">strings</span>::{<span class="ident">BusName</span>, <span class="ident">Path</span>, <span class="ident">Interface</span>, <span class="ident">Member</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">arg</span>::{<span class="ident">AppendAll</span>, <span class="ident">ReadAll</span>, <span class="ident">IterAppend</span>};
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::strings</span>::{<span class="ident">BusName</span>, <span class="ident">Path</span>, <span class="ident">Interface</span>, <span class="ident">Member</span>};
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::arg</span>::{<span class="ident">AppendAll</span>, <span class="ident">ReadAll</span>, <span class="ident">IterAppend</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">channel</span>, <span class="ident">Error</span>, <span class="ident">Message</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">message</span>::{<span class="ident">MatchRule</span>, <span class="ident">SignalArgs</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">channel</span>::{<span class="ident">Channel</span>, <span class="ident">BusType</span>, <span class="ident">Token</span>};
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cell</span>::<span class="ident">RefCell</span>, <span class="ident">time</span>::<span class="ident">Duration</span>, <span class="ident">sync</span>::<span class="ident">Mutex</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">filters</span>::<span class="ident">Filters</span>;
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::message</span>::{<span class="ident">MatchRule</span>, <span class="ident">SignalArgs</span>};
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::channel</span>::{<span class="ident">Channel</span>, <span class="ident">BusType</span>, <span class="ident">Token</span>};
+<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cell::RefCell</span>, <span class="ident">time::Duration</span>, <span class="ident">sync::Mutex</span>};
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::filters::Filters</span>;
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">stdintf</span>;
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">missing_docs</span>)]</span>
+<span class="kw">mod</span> <span class="ident">generated_org_freedesktop_standard_interfaces</span>;
+<span class="kw">mod</span> <span class="ident">generated_org_freedesktop_dbus</span>;
 
+<span class="doccomment">/// This module contains some standard interfaces and an easy way to call them.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// See the [D-Bus specification](https://dbus.freedesktop.org/doc/dbus-specification.html#standard-interfaces) for more information about these standard interfaces.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The code was created by dbus-codegen.</span>
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">stdintf</span> {
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">missing_docs</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">org_freedesktop_dbus</span> {
+        <span class="kw">pub</span> <span class="kw">use</span> <span class="kw">super</span>::<span class="kw">super</span><span class="ident">::generated_org_freedesktop_standard_interfaces</span>::<span class="kw-2">*</span>;
 
+        <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">RequestNameReply</span> {
+            <span class="ident">PrimaryOwner</span> <span class="op">=</span> <span class="number">1</span>,
+            <span class="ident">InQueue</span> <span class="op">=</span> <span class="number">2</span>,
+            <span class="ident">Exists</span> <span class="op">=</span> <span class="number">3</span>,
+            <span class="ident">AlreadyOwner</span> <span class="op">=</span> <span class="number">4</span>,
+        }
+
+        <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ReleaseNameReply</span> {
+            <span class="ident">Released</span> <span class="op">=</span> <span class="number">1</span>,
+            <span class="ident">NonExistent</span> <span class="op">=</span> <span class="number">2</span>,
+            <span class="ident">NotOwner</span> <span class="op">=</span> <span class="number">3</span>,
+        }
+
+        <span class="kw">pub</span> (<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">request_name</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="kw">crate</span><span class="ident">::blocking::BlockingSender</span><span class="op">&gt;</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">S</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">allow_replacement</span>: <span class="ident">bool</span>, <span class="ident">replace_existing</span>: <span class="ident">bool</span>, <span class="ident">do_not_queue</span>: <span class="ident">bool</span>)
+            <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RequestNameReply</span>, <span class="kw">crate</span><span class="ident">::Error</span><span class="op">&gt;</span> {
+            <span class="kw">let</span> <span class="ident">flags</span>: <span class="ident">u32</span> <span class="op">=</span>
+                <span class="kw">if</span> <span class="ident">allow_replacement</span> { <span class="number">1</span> } <span class="kw">else</span> { <span class="number">0</span> } <span class="op">+</span>
+                <span class="kw">if</span> <span class="ident">replace_existing</span> { <span class="number">2</span> } <span class="kw">else</span> { <span class="number">0</span> } <span class="op">+</span>
+                <span class="kw">if</span> <span class="ident">do_not_queue</span> { <span class="number">4</span> } <span class="kw">else</span> { <span class="number">0</span> };
+            <span class="kw">let</span> <span class="ident">proxy</span> <span class="op">=</span> <span class="kw">super</span><span class="ident">::proxy</span>(<span class="ident">s</span>);
+            <span class="kw">use</span> <span class="kw">super</span><span class="ident">::org_freedesktop::DBus</span>;
+            <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">proxy</span>.<span class="ident">request_name</span>(<span class="ident">name</span>, <span class="ident">flags</span>)<span class="question-mark">?</span>;
+            <span class="kw">use</span> <span class="ident">RequestNameReply</span>::<span class="kw-2">*</span>;
+            <span class="kw">let</span> <span class="ident">all</span> <span class="op">=</span> [<span class="ident">PrimaryOwner</span>, <span class="ident">InQueue</span>, <span class="ident">Exists</span>, <span class="ident">AlreadyOwner</span>];
+            <span class="ident">all</span>.<span class="ident">iter</span>().<span class="ident">find</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">x</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">=</span><span class="op">=</span> <span class="ident">r</span>).<span class="ident">copied</span>().<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span>
+                <span class="kw">crate</span><span class="ident">::Error::new_failed</span>(<span class="string">&quot;Invalid reply from DBus server&quot;</span>)
+            )
+        }
+
+        <span class="kw">pub</span> (<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">release_name</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="kw">crate</span><span class="ident">::blocking::BlockingSender</span><span class="op">&gt;</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">S</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>)
+            <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ReleaseNameReply</span>, <span class="kw">crate</span><span class="ident">::Error</span><span class="op">&gt;</span> {
+
+            <span class="kw">let</span> <span class="ident">proxy</span> <span class="op">=</span> <span class="kw">super</span><span class="ident">::proxy</span>(<span class="ident">s</span>);
+            <span class="kw">use</span> <span class="kw">super</span><span class="ident">::org_freedesktop::DBus</span>;
+            <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">proxy</span>.<span class="ident">release_name</span>(<span class="ident">name</span>)<span class="question-mark">?</span>;
+            <span class="kw">use</span> <span class="ident">ReleaseNameReply</span>::<span class="kw-2">*</span>;
+            <span class="kw">let</span> <span class="ident">all</span> <span class="op">=</span> [<span class="ident">Released</span>, <span class="ident">NonExistent</span>, <span class="ident">NotOwner</span>];
+            <span class="ident">all</span>.<span class="ident">iter</span>().<span class="ident">find</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">x</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">=</span><span class="op">=</span> <span class="ident">r</span>).<span class="ident">copied</span>().<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span>
+                <span class="kw">crate</span><span class="ident">::Error::new_failed</span>(<span class="string">&quot;Invalid reply from DBus server&quot;</span>)
+            )
+        }
+    }
+
+    <span class="comment">// Not public yet, because of lack of named arguments</span>
+    <span class="kw">pub</span> (<span class="kw">super</span>) <span class="kw">mod</span> <span class="ident">org_freedesktop</span> {
+        <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use</span> <span class="kw">super</span>::<span class="kw">super</span><span class="ident">::generated_org_freedesktop_dbus</span>::<span class="kw-2">*</span>;
+    }
+
+    <span class="kw">pub</span> (<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">proxy</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>(<span class="ident">c</span>: <span class="ident">C</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw">crate</span><span class="ident">::blocking::Proxy</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">C</span><span class="op">&gt;</span> {
+        <span class="kw">super</span><span class="ident">::Proxy::new</span>(<span class="string">&quot;org.freedesktop.DBus&quot;</span>, <span class="string">&quot;/org/freedesktop/DBus&quot;</span>, <span class="ident">std::time::Duration::from_millis</span>(<span class="number">5000</span>), <span class="ident">c</span>)
+    }
+}
 
 <span class="doccomment">/// A connection to D-Bus, thread local + non-async version</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">LocalConnection</span> {
@@ -402,9 +534,9 @@
     <span class="ident">filters</span>: <span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">Filters</span><span class="op">&lt;</span><span class="ident">SyncFilterCb</span><span class="op">&gt;</span><span class="op">&gt;</span>
 }
 
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">blocking</span>::<span class="ident">stdintf</span>::<span class="ident">org_freedesktop_dbus</span>;
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::blocking::stdintf::org_freedesktop_dbus</span>;
 
-<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">connimpl</span> {
+<span class="macro">macro_rules!</span> <span class="ident">connimpl</span> {
      (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">c</span>: <span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">cb</span>: <span class="ident">ident</span> $(, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ss</span>:<span class="ident">tt</span>)<span class="kw-2">*</span>) <span class="op">=</span><span class="op">&gt;</span>  {
 
 <span class="kw">type</span>
@@ -415,12 +547,12 @@
 
     <span class="doccomment">/// Create a new connection to the session bus.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_session</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="ident">Channel</span>::<span class="ident">get_private</span>(<span class="ident">BusType</span>::<span class="ident">Session</span>).<span class="ident">map</span>(<span class="ident">From</span>::<span class="ident">from</span>)
+        <span class="ident">Channel::get_private</span>(<span class="ident">BusType::Session</span>).<span class="ident">map</span>(<span class="ident">From::from</span>)
     }
 
     <span class="doccomment">/// Create a new connection to the system-wide bus.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_system</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="ident">Channel</span>::<span class="ident">get_private</span>(<span class="ident">BusType</span>::<span class="ident">System</span>).<span class="ident">map</span>(<span class="ident">From</span>::<span class="ident">from</span>)
+        <span class="ident">Channel::get_private</span>(<span class="ident">BusType::System</span>).<span class="ident">map</span>(<span class="ident">From::from</span>)
     }
 
     <span class="doccomment">/// Get the connection&#39;s unique name.</span>
@@ -439,13 +571,13 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// For detailed information on the flags and return values, see the libdbus documentation.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">request_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">N</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">BusName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="ident">N</span>, <span class="ident">allow_replacement</span>: <span class="ident">bool</span>, <span class="ident">replace_existing</span>: <span class="ident">bool</span>, <span class="ident">do_not_queue</span>: <span class="ident">bool</span>)
-    <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">org_freedesktop_dbus</span>::<span class="ident">RequestNameReply</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="ident">org_freedesktop_dbus</span>::<span class="ident">request_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">channel</span>, <span class="kw-2">&amp;</span><span class="ident">name</span>.<span class="ident">into</span>(), <span class="ident">allow_replacement</span>, <span class="ident">replace_existing</span>, <span class="ident">do_not_queue</span>)
+    <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">org_freedesktop_dbus::RequestNameReply</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="ident">org_freedesktop_dbus::request_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">channel</span>, <span class="kw-2">&amp;</span><span class="ident">name</span>.<span class="ident">into</span>(), <span class="ident">allow_replacement</span>, <span class="ident">replace_existing</span>, <span class="ident">do_not_queue</span>)
     }
 
     <span class="doccomment">/// Release a previously requested name on the D-Bus.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">release_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">N</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">BusName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="ident">N</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">org_freedesktop_dbus</span>::<span class="ident">ReleaseNameReply</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="ident">org_freedesktop_dbus</span>::<span class="ident">release_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">channel</span>, <span class="kw-2">&amp;</span><span class="ident">name</span>.<span class="ident">into</span>())
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">release_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">N</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">BusName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="ident">N</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">org_freedesktop_dbus::ReleaseNameReply</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="ident">org_freedesktop_dbus::release_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">channel</span>, <span class="kw-2">&amp;</span><span class="ident">name</span>.<span class="ident">into</span>())
     }
 
     <span class="doccomment">/// Adds a new match to the connection, and sets up a callback when this message arrives.</span>
@@ -456,28 +588,28 @@
     <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">S</span>, <span class="kw-2">&amp;</span><span class="self">Self</span>, <span class="kw-2">&amp;</span><span class="ident">Message</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> $(<span class="op">+</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ss</span>)<span class="op">*</span> <span class="op">+</span> <span class="lifetime">&#39;static</span> {
         <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">match_rule</span>.<span class="ident">match_str</span>();
         <span class="self">self</span>.<span class="ident">add_match_no_cb</span>(<span class="kw-2">&amp;</span><span class="ident">m</span>)<span class="question-mark">?</span>;
-        <span class="kw">use</span> <span class="ident">channel</span>::<span class="ident">MatchingReceiver</span>;
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">start_receive</span>(<span class="ident">match_rule</span>, <span class="ident">MakeSignal</span>::<span class="ident">make</span>(<span class="ident">f</span>, <span class="ident">m</span>)))
+        <span class="kw">use</span> <span class="ident">channel::MatchingReceiver</span>;
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">start_receive</span>(<span class="ident">match_rule</span>, <span class="ident">MakeSignal::make</span>(<span class="ident">f</span>, <span class="ident">m</span>)))
     }
 
     <span class="doccomment">/// Adds a new match to the connection, without setting up a callback when this message arrives.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_match_no_cb</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">match_str</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">blocking</span>::<span class="ident">stdintf</span>::<span class="ident">org_freedesktop</span>::<span class="ident">DBus</span>;
-        <span class="kw">let</span> <span class="ident">proxy</span> <span class="op">=</span> <span class="ident">stdintf</span>::<span class="ident">proxy</span>(<span class="self">self</span>);
+        <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::blocking::stdintf::org_freedesktop::DBus</span>;
+        <span class="kw">let</span> <span class="ident">proxy</span> <span class="op">=</span> <span class="ident">stdintf::proxy</span>(<span class="self">self</span>);
         <span class="ident">proxy</span>.<span class="ident">add_match</span>(<span class="ident">match_str</span>)
     }
 
     <span class="doccomment">/// Removes a match from the connection, without removing any callbacks.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove_match_no_cb</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">match_str</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">blocking</span>::<span class="ident">stdintf</span>::<span class="ident">org_freedesktop</span>::<span class="ident">DBus</span>;
-        <span class="kw">let</span> <span class="ident">proxy</span> <span class="op">=</span> <span class="ident">stdintf</span>::<span class="ident">proxy</span>(<span class="self">self</span>);
+        <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::blocking::stdintf::org_freedesktop::DBus</span>;
+        <span class="kw">let</span> <span class="ident">proxy</span> <span class="op">=</span> <span class="ident">stdintf::proxy</span>(<span class="self">self</span>);
         <span class="ident">proxy</span>.<span class="ident">remove_match</span>(<span class="ident">match_str</span>)
     }
 
     <span class="doccomment">/// Removes a previously added match and callback from the connection.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove_match</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">use</span> <span class="ident">channel</span>::<span class="ident">MatchingReceiver</span>;
-        <span class="kw">let</span> (<span class="ident">mr</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">stop_receive</span>(<span class="ident">id</span>).<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">Error</span>::<span class="ident">new_failed</span>(<span class="string">&quot;No match with that id found&quot;</span>))<span class="question-mark">?</span>;
+        <span class="kw">use</span> <span class="ident">channel::MatchingReceiver</span>;
+        <span class="kw">let</span> (<span class="ident">mr</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">stop_receive</span>(<span class="ident">id</span>).<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">Error::new_failed</span>(<span class="string">&quot;No match with that id found&quot;</span>))<span class="question-mark">?</span>;
         <span class="self">self</span>.<span class="ident">remove_match_no_cb</span>(<span class="kw-2">&amp;</span><span class="ident">mr</span>.<span class="ident">match_str</span>())
     }
 
@@ -493,7 +625,7 @@
                 <span class="kw">if</span> <span class="ident">ff</span>.<span class="number">2</span>(<span class="ident">msg</span>, <span class="self">self</span>) {
                     <span class="self">self</span>.<span class="ident">filters_mut</span>().<span class="ident">insert</span>(<span class="ident">ff</span>);
                 }
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">reply</span>) <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">channel</span>::<span class="ident">default_reply</span>(<span class="kw-2">&amp;</span><span class="ident">msg</span>) {
+            } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">reply</span>) <span class="op">=</span> <span class="kw">crate</span><span class="ident">::channel::default_reply</span>(<span class="kw-2">&amp;</span><span class="ident">msg</span>) {
                 <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">channel</span>.<span class="ident">send</span>(<span class="ident">reply</span>);
             }
             <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>)
@@ -516,21 +648,21 @@
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Channel</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">c</span> {
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">channel</span>: <span class="ident">Channel</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">c</span> { <span class="macro-nonterminal">$</span><span class="macro-nonterminal">c</span> {
-        <span class="ident">channel</span>, <span class="ident">filters</span>: <span class="ident">Default</span>::<span class="ident">default</span>(),
+        <span class="ident">channel</span>, <span class="ident">filters</span>: <span class="ident">Default::default</span>(),
     } }
 }
 
-<span class="kw">impl</span> <span class="ident">channel</span>::<span class="ident">Sender</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">c</span> {
+<span class="kw">impl</span> <span class="ident">channel::Sender</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">c</span> {
     <span class="kw">fn</span> <span class="ident">send</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">msg</span>: <span class="ident">Message</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u32</span>, ()<span class="op">&gt;</span> { <span class="self">self</span>.<span class="ident">channel</span>.<span class="ident">send</span>(<span class="ident">msg</span>) }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">ReadAll</span>, <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">S</span>, <span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">c</span>, <span class="kw-2">&amp;</span><span class="ident">Message</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> $(<span class="op">+</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ss</span>)<span class="op">*</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">MakeSignal</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">cb</span>, <span class="ident">S</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">c</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">F</span> {
     <span class="kw">fn</span> <span class="ident">make</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">mstr</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">cb</span> {
-        <span class="ident">Box</span>::<span class="ident">new</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">msg</span>: <span class="ident">Message</span>, <span class="ident">conn</span>: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">c</span><span class="op">|</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">s</span>) <span class="op">=</span> <span class="ident">S</span>::<span class="ident">read</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">msg</span>.<span class="ident">iter_init</span>()) {
+        <span class="ident">Box::new</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">msg</span>: <span class="ident">Message</span>, <span class="ident">conn</span>: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">c</span><span class="op">|</span> {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">s</span>) <span class="op">=</span> <span class="ident">S::read</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">msg</span>.<span class="ident">iter_init</span>()) {
                 <span class="kw">if</span> <span class="self">self</span>(<span class="ident">s</span>, <span class="ident">conn</span>, <span class="kw-2">&amp;</span><span class="ident">msg</span>) { <span class="kw">return</span> <span class="bool-val">true</span> };
-                <span class="kw">let</span> <span class="ident">proxy</span> <span class="op">=</span> <span class="ident">stdintf</span>::<span class="ident">proxy</span>(<span class="ident">conn</span>);
-                <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">blocking</span>::<span class="ident">stdintf</span>::<span class="ident">org_freedesktop</span>::<span class="ident">DBus</span>;
+                <span class="kw">let</span> <span class="ident">proxy</span> <span class="op">=</span> <span class="ident">stdintf::proxy</span>(<span class="ident">conn</span>);
+                <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::blocking::stdintf::org_freedesktop::DBus</span>;
                 <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">proxy</span>.<span class="ident">remove_match</span>(<span class="kw-2">&amp;</span><span class="ident">mstr</span>);
                 <span class="bool-val">false</span>
             } <span class="kw">else</span> { <span class="bool-val">true</span> }
@@ -538,12 +670,12 @@
     }
 }
 
-<span class="kw">impl</span> <span class="ident">channel</span>::<span class="ident">MatchingReceiver</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">c</span> {
+<span class="kw">impl</span> <span class="ident">channel::MatchingReceiver</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">c</span> {
     <span class="kw">type</span> <span class="ident">F</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">cb</span>;
-    <span class="kw">fn</span> <span class="ident">start_receive</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">m</span>: <span class="ident">MatchRule</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>, <span class="ident">f</span>: <span class="self">Self</span>::<span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Token</span> {
+    <span class="kw">fn</span> <span class="ident">start_receive</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">m</span>: <span class="ident">MatchRule</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>, <span class="ident">f</span>: <span class="self">Self</span><span class="ident">::F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Token</span> {
         <span class="self">self</span>.<span class="ident">filters_mut</span>().<span class="ident">add</span>(<span class="ident">m</span>, <span class="ident">f</span>)
     }
-    <span class="kw">fn</span> <span class="ident">stop_receive</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">MatchRule</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>, <span class="self">Self</span>::<span class="ident">F</span>)<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">stop_receive</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">MatchRule</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>, <span class="self">Self</span><span class="ident">::F</span>)<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">filters_mut</span>().<span class="ident">remove</span>(<span class="ident">id</span>)
     }
 }
@@ -553,20 +685,20 @@
      }
 }
 
-<span class="macro">connimpl</span><span class="macro">!</span>(<span class="ident">Connection</span>, <span class="ident">FilterCb</span>, <span class="ident">Send</span>);
-<span class="macro">connimpl</span><span class="macro">!</span>(<span class="ident">LocalConnection</span>, <span class="ident">LocalFilterCb</span>);
-<span class="macro">connimpl</span><span class="macro">!</span>(<span class="ident">SyncConnection</span>, <span class="ident">SyncFilterCb</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
+<span class="macro">connimpl!</span>(<span class="ident">Connection</span>, <span class="ident">FilterCb</span>, <span class="ident">Send</span>);
+<span class="macro">connimpl!</span>(<span class="ident">LocalConnection</span>, <span class="ident">LocalFilterCb</span>);
+<span class="macro">connimpl!</span>(<span class="ident">SyncConnection</span>, <span class="ident">SyncFilterCb</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
 
 <span class="kw">impl</span> <span class="ident">Connection</span> {
-    <span class="kw">fn</span> <span class="ident">filters_mut</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std</span>::<span class="ident">cell</span>::<span class="ident">RefMut</span><span class="op">&lt;</span><span class="ident">Filters</span><span class="op">&lt;</span><span class="ident">FilterCb</span><span class="op">&gt;</span><span class="op">&gt;</span> { <span class="self">self</span>.<span class="ident">filters</span>.<span class="ident">borrow_mut</span>() }
+    <span class="kw">fn</span> <span class="ident">filters_mut</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::cell::RefMut</span><span class="op">&lt;</span><span class="ident">Filters</span><span class="op">&lt;</span><span class="ident">FilterCb</span><span class="op">&gt;</span><span class="op">&gt;</span> { <span class="self">self</span>.<span class="ident">filters</span>.<span class="ident">borrow_mut</span>() }
 }
 
 <span class="kw">impl</span> <span class="ident">LocalConnection</span> {
-    <span class="kw">fn</span> <span class="ident">filters_mut</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std</span>::<span class="ident">cell</span>::<span class="ident">RefMut</span><span class="op">&lt;</span><span class="ident">Filters</span><span class="op">&lt;</span><span class="ident">LocalFilterCb</span><span class="op">&gt;</span><span class="op">&gt;</span> { <span class="self">self</span>.<span class="ident">filters</span>.<span class="ident">borrow_mut</span>() }
+    <span class="kw">fn</span> <span class="ident">filters_mut</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::cell::RefMut</span><span class="op">&lt;</span><span class="ident">Filters</span><span class="op">&lt;</span><span class="ident">LocalFilterCb</span><span class="op">&gt;</span><span class="op">&gt;</span> { <span class="self">self</span>.<span class="ident">filters</span>.<span class="ident">borrow_mut</span>() }
 }
 
 <span class="kw">impl</span> <span class="ident">SyncConnection</span> {
-    <span class="kw">fn</span> <span class="ident">filters_mut</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">MutexGuard</span><span class="op">&lt;</span><span class="ident">Filters</span><span class="op">&lt;</span><span class="ident">SyncFilterCb</span><span class="op">&gt;</span><span class="op">&gt;</span> { <span class="self">self</span>.<span class="ident">filters</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>() }
+    <span class="kw">fn</span> <span class="ident">filters_mut</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::sync::MutexGuard</span><span class="op">&lt;</span><span class="ident">Filters</span><span class="op">&lt;</span><span class="ident">SyncFilterCb</span><span class="op">&gt;</span><span class="op">&gt;</span> { <span class="self">self</span>.<span class="ident">filters</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>() }
 }
 
 <span class="doccomment">/// Abstraction over different connections</span>
@@ -579,7 +711,7 @@
 
 <span class="kw">impl</span> <span class="ident">BlockingSender</span> <span class="kw">for</span> <span class="ident">Channel</span> {
     <span class="kw">fn</span> <span class="ident">send_with_reply_and_block</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">msg</span>: <span class="ident">Message</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Message</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="ident">Channel</span>::<span class="ident">send_with_reply_and_block</span>(<span class="self">self</span>, <span class="ident">msg</span>, <span class="ident">timeout</span>)
+        <span class="ident">Channel::send_with_reply_and_block</span>(<span class="self">self</span>, <span class="ident">msg</span>, <span class="ident">timeout</span>)
     }
 }
 
@@ -607,7 +739,7 @@
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">BlockingSender</span>, <span class="ident">C</span>: <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Deref</span><span class="op">&lt;</span><span class="ident">Target</span><span class="op">=</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">Proxy</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">C</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">BlockingSender</span>, <span class="ident">C</span>: <span class="ident">std::ops::Deref</span><span class="op">&lt;</span><span class="ident">Target</span><span class="op">=</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">Proxy</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">C</span><span class="op">&gt;</span> {
 <span class="comment">// impl&lt;&#39;a, S: std::convert::AsRef&lt;channel::Sender&gt;&gt; Proxy&lt;&#39;a, S&gt; {</span>
     <span class="doccomment">/// Make a method call using typed input and output arguments, then block waiting for a reply.</span>
     <span class="doccomment">///</span>
@@ -623,43 +755,43 @@
     <span class="doccomment">/// # Ok::&lt;(), Box&lt;dyn std::error::Error&gt;&gt;(())</span>
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">method_call</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;m</span>, <span class="ident">R</span>: <span class="ident">ReadAll</span>, <span class="ident">A</span>: <span class="ident">AppendAll</span>, <span class="ident">I</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Interface</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">M</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Member</span><span class="op">&lt;</span><span class="lifetime">&#39;m</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">i</span>: <span class="ident">I</span>, <span class="ident">m</span>: <span class="ident">M</span>, <span class="ident">args</span>: <span class="ident">A</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">Message</span>::<span class="ident">method_call</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">destination</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">path</span>, <span class="kw-2">&amp;</span><span class="ident">i</span>.<span class="ident">into</span>(), <span class="kw-2">&amp;</span><span class="ident">m</span>.<span class="ident">into</span>());
-        <span class="ident">args</span>.<span class="ident">append</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">IterAppend</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">msg</span>));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">Message::method_call</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">destination</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">path</span>, <span class="kw-2">&amp;</span><span class="ident">i</span>.<span class="ident">into</span>(), <span class="kw-2">&amp;</span><span class="ident">m</span>.<span class="ident">into</span>());
+        <span class="ident">args</span>.<span class="ident">append</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">IterAppend::new</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">msg</span>));
         <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">connection</span>.<span class="ident">send_with_reply_and_block</span>(<span class="ident">msg</span>, <span class="self">self</span>.<span class="ident">timeout</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="ident">R</span>::<span class="ident">read</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">r</span>.<span class="ident">iter_init</span>())<span class="question-mark">?</span>)
+        <span class="prelude-val">Ok</span>(<span class="ident">R::read</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">r</span>.<span class="ident">iter_init</span>())<span class="question-mark">?</span>)
     }
 
     <span class="doccomment">/// Starts matching incoming messages on this destination and path.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// For matching signals, match_signal_local or match_signal_sync might be more convenient.</span>
+    <span class="doccomment">/// For matching signals, match_signal might be more convenient.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The match rule will be modified to include this path and destination only.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// If call_add_match is true, will notify the D-Bus server that matching should start.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">match_start</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">mr</span>: <span class="ident">MatchRule</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>, <span class="ident">call_add_match</span>: <span class="ident">bool</span>, <span class="ident">f</span>: <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">channel</span>::<span class="ident">MatchingReceiver</span><span class="op">&gt;</span>::<span class="ident">F</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">match_start</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">mr</span>: <span class="ident">MatchRule</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>, <span class="ident">call_add_match</span>: <span class="ident">bool</span>, <span class="ident">f</span>: <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">channel::MatchingReceiver</span><span class="op">&gt;</span><span class="ident">::F</span>)
     <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Token</span>, <span class="ident">Error</span><span class="op">&gt;</span>
-    <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">channel</span>::<span class="ident">MatchingReceiver</span> {
+    <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">channel::MatchingReceiver</span> {
         <span class="ident">mr</span>.<span class="ident">path</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">path</span>.<span class="ident">clone</span>().<span class="ident">into_static</span>());
         <span class="ident">mr</span>.<span class="ident">sender</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">destination</span>.<span class="ident">clone</span>().<span class="ident">into_static</span>());
         <span class="kw">if</span> <span class="ident">call_add_match</span> {
-            <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">blocking</span>::<span class="ident">stdintf</span>::<span class="ident">org_freedesktop</span>::<span class="ident">DBus</span>;
-            <span class="kw">let</span> <span class="ident">proxy</span> <span class="op">=</span> <span class="ident">stdintf</span>::<span class="ident">proxy</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">connection</span>);
+            <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::blocking::stdintf::org_freedesktop::DBus</span>;
+            <span class="kw">let</span> <span class="ident">proxy</span> <span class="op">=</span> <span class="ident">stdintf::proxy</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">connection</span>);
             <span class="ident">proxy</span>.<span class="ident">add_match</span>(<span class="kw-2">&amp;</span><span class="ident">mr</span>.<span class="ident">match_str</span>())<span class="question-mark">?</span>;
         }
 
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">connection</span>.<span class="ident">start_receive</span>(<span class="ident">mr</span>, <span class="ident">f</span>))
     }
 
-    <span class="doccomment">/// Stops matching a signal added with match_start, match_signal_local or match_signal_sync.</span>
+    <span class="doccomment">/// Stops matching a signal added with match_start or match_signal.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// If call_add_match is true, will notify the D-Bus server that matching should stop,</span>
-    <span class="doccomment">/// this should be true in case match_signal_local or match_signal_sync was used.</span>
+    <span class="doccomment">/// If call_remove_match is true, will notify the D-Bus server that matching should stop,</span>
+    <span class="doccomment">/// this should be true in case match_signal was used.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">match_stop</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">Token</span>, <span class="ident">call_remove_match</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>
-    <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">channel</span>::<span class="ident">MatchingReceiver</span> {
+    <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">channel::MatchingReceiver</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">mr</span>, <span class="kw">_</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">connection</span>.<span class="ident">stop_receive</span>(<span class="ident">id</span>) {
             <span class="kw">if</span> <span class="ident">call_remove_match</span> {
-                <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">blocking</span>::<span class="ident">stdintf</span>::<span class="ident">org_freedesktop</span>::<span class="ident">DBus</span>;
-                <span class="kw">let</span> <span class="ident">proxy</span> <span class="op">=</span> <span class="ident">stdintf</span>::<span class="ident">proxy</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">connection</span>);
+                <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::blocking::stdintf::org_freedesktop::DBus</span>;
+                <span class="kw">let</span> <span class="ident">proxy</span> <span class="op">=</span> <span class="ident">stdintf::proxy</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">connection</span>);
                 <span class="ident">proxy</span>.<span class="ident">remove_match</span>(<span class="kw-2">&amp;</span><span class="ident">mr</span>.<span class="ident">match_str</span>())<span class="question-mark">?</span>;
             }
         }
@@ -671,10 +803,10 @@
     <span class="doccomment">/// The returned value can be used to remove the match. The match is also removed if the callback</span>
     <span class="doccomment">/// returns &quot;false&quot;.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">match_signal</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">SignalArgs</span> <span class="op">+</span> <span class="ident">ReadAll</span>, <span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Token</span>, <span class="ident">Error</span><span class="op">&gt;</span>
-    <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">channel</span>::<span class="ident">MatchingReceiver</span>,
-          <span class="ident">F</span>: <span class="ident">MakeSignal</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">channel</span>::<span class="ident">MatchingReceiver</span><span class="op">&gt;</span>::<span class="ident">F</span>, <span class="ident">S</span>, <span class="ident">T</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">channel::MatchingReceiver</span>,
+          <span class="ident">F</span>: <span class="ident">MakeSignal</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">channel::MatchingReceiver</span><span class="op">&gt;</span><span class="ident">::F</span>, <span class="ident">S</span>, <span class="ident">T</span><span class="op">&gt;</span>
     {
-        <span class="kw">let</span> <span class="ident">mr</span> <span class="op">=</span> <span class="ident">S</span>::<span class="ident">match_rule</span>(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">destination</span>), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">path</span>)).<span class="ident">static_clone</span>();
+        <span class="kw">let</span> <span class="ident">mr</span> <span class="op">=</span> <span class="ident">S::match_rule</span>(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">destination</span>), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">path</span>)).<span class="ident">static_clone</span>();
         <span class="kw">let</span> <span class="ident">ff</span> <span class="op">=</span> <span class="ident">f</span>.<span class="ident">make</span>(<span class="ident">mr</span>.<span class="ident">match_str</span>());
         <span class="self">self</span>.<span class="ident">match_start</span>(<span class="ident">mr</span>, <span class="bool-val">true</span>, <span class="ident">ff</span>)
     }
@@ -688,9 +820,9 @@
 
 <span class="attribute">#[<span class="ident">test</span>]</span>
 <span class="kw">fn</span> <span class="ident">test_add_match</span>() {
-    <span class="kw">use</span> <span class="self">self</span>::<span class="ident">stdintf</span>::<span class="ident">org_freedesktop_dbus</span>::<span class="ident">PropertiesPropertiesChanged</span> <span class="kw">as</span> <span class="ident">Ppc</span>;
-    <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Connection</span>::<span class="ident">new_session</span>().<span class="ident">unwrap</span>();
-    <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="ident">c</span>.<span class="ident">add_match</span>(<span class="ident">Ppc</span>::<span class="ident">match_rule</span>(<span class="prelude-val">None</span>, <span class="prelude-val">None</span>), <span class="op">|</span><span class="kw">_</span>: <span class="ident">Ppc</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> { <span class="bool-val">true</span> }).<span class="ident">unwrap</span>();
+    <span class="kw">use</span> <span class="self">self</span><span class="ident">::stdintf::org_freedesktop_dbus::PropertiesPropertiesChanged</span> <span class="kw">as</span> <span class="ident">Ppc</span>;
+    <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Connection::new_session</span>().<span class="ident">unwrap</span>();
+    <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="ident">c</span>.<span class="ident">add_match</span>(<span class="ident">Ppc::match_rule</span>(<span class="prelude-val">None</span>, <span class="prelude-val">None</span>), <span class="op">|</span><span class="kw">_</span>: <span class="ident">Ppc</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> { <span class="bool-val">true</span> }).<span class="ident">unwrap</span>();
     <span class="ident">c</span>.<span class="ident">remove_match</span>(<span class="ident">x</span>).<span class="ident">unwrap</span>();
 }
 
@@ -699,45 +831,45 @@
     <span class="kw">fn</span> <span class="ident">is_send</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Send</span><span class="op">&gt;</span>(<span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>) {}
     <span class="kw">fn</span> <span class="ident">is_sync</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Sync</span><span class="op">&gt;</span>(<span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>) {}
 
-    <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">SyncConnection</span>::<span class="ident">new_session</span>().<span class="ident">unwrap</span>();
+    <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">SyncConnection::new_session</span>().<span class="ident">unwrap</span>();
     <span class="ident">is_send</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>);
     <span class="ident">is_sync</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>);
 
-    <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Connection</span>::<span class="ident">new_session</span>().<span class="ident">unwrap</span>();
+    <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Connection::new_session</span>().<span class="ident">unwrap</span>();
     <span class="ident">is_send</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>);
 }
 
 <span class="attribute">#[<span class="ident">test</span>]</span>
 <span class="kw">fn</span> <span class="ident">test_peer</span>() {
-    <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Connection</span>::<span class="ident">new_session</span>().<span class="ident">unwrap</span>();
+    <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Connection::new_session</span>().<span class="ident">unwrap</span>();
 
     <span class="kw">let</span> <span class="ident">c_name</span> <span class="op">=</span> <span class="ident">c</span>.<span class="ident">unique_name</span>().<span class="ident">into_static</span>();
-    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">Arc</span>;
-    <span class="kw">let</span> <span class="ident">done</span> <span class="op">=</span> <span class="ident">Arc</span>::<span class="ident">new</span>(<span class="bool-val">false</span>);
+    <span class="kw">use</span> <span class="ident">std::sync::Arc</span>;
+    <span class="kw">let</span> <span class="ident">done</span> <span class="op">=</span> <span class="ident">Arc::new</span>(<span class="bool-val">false</span>);
     <span class="kw">let</span> <span class="ident">d2</span> <span class="op">=</span> <span class="ident">done</span>.<span class="ident">clone</span>();
-    <span class="kw">let</span> <span class="ident">j</span> <span class="op">=</span> <span class="ident">std</span>::<span class="ident">thread</span>::<span class="ident">spawn</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
-        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">Connection</span>::<span class="ident">new_session</span>().<span class="ident">unwrap</span>();
+    <span class="kw">let</span> <span class="ident">j</span> <span class="op">=</span> <span class="ident">std::thread::spawn</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
+        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">Connection::new_session</span>().<span class="ident">unwrap</span>();
 
-        <span class="kw">let</span> <span class="ident">proxy</span> <span class="op">=</span> <span class="ident">c2</span>.<span class="ident">with_proxy</span>(<span class="ident">c_name</span>, <span class="string">&quot;/&quot;</span>, <span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">5</span>));
+        <span class="kw">let</span> <span class="ident">proxy</span> <span class="op">=</span> <span class="ident">c2</span>.<span class="ident">with_proxy</span>(<span class="ident">c_name</span>, <span class="string">&quot;/&quot;</span>, <span class="ident">Duration::from_secs</span>(<span class="number">5</span>));
         <span class="kw">let</span> (<span class="ident">s2</span>,): (<span class="ident">String</span>,) <span class="op">=</span> <span class="ident">proxy</span>.<span class="ident">method_call</span>(<span class="string">&quot;org.freedesktop.DBus.Peer&quot;</span>, <span class="string">&quot;GetMachineId&quot;</span>, ()).<span class="ident">unwrap</span>();
-        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">s2</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Arc</span>::<span class="ident">strong_count</span>(<span class="kw-2">&amp;</span><span class="ident">d2</span>), <span class="number">2</span>);
+        <span class="macro">println!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">s2</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">Arc::strong_count</span>(<span class="kw-2">&amp;</span><span class="ident">d2</span>), <span class="number">2</span>);
         <span class="ident">s2</span>
     });
-    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Arc</span>::<span class="ident">strong_count</span>(<span class="kw-2">&amp;</span><span class="ident">done</span>), <span class="number">2</span>);
+    <span class="macro">assert_eq!</span>(<span class="ident">Arc::strong_count</span>(<span class="kw-2">&amp;</span><span class="ident">done</span>), <span class="number">2</span>);
 
     <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="number">30</span> {
-        <span class="ident">c</span>.<span class="ident">process</span>(<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">100</span>)).<span class="ident">unwrap</span>();
-        <span class="kw">if</span> <span class="ident">Arc</span>::<span class="ident">strong_count</span>(<span class="kw-2">&amp;</span><span class="ident">done</span>) <span class="op">&lt;</span> <span class="number">2</span> { <span class="kw">break</span>; }
+        <span class="ident">c</span>.<span class="ident">process</span>(<span class="ident">Duration::from_millis</span>(<span class="number">100</span>)).<span class="ident">unwrap</span>();
+        <span class="kw">if</span> <span class="ident">Arc::strong_count</span>(<span class="kw-2">&amp;</span><span class="ident">done</span>) <span class="op">&lt;</span> <span class="number">2</span> { <span class="kw">break</span>; }
     }
 
     <span class="kw">let</span> <span class="ident">s2</span> <span class="op">=</span> <span class="ident">j</span>.<span class="ident">join</span>().<span class="ident">unwrap</span>();
 
-    <span class="kw">let</span> <span class="ident">proxy</span> <span class="op">=</span> <span class="ident">c</span>.<span class="ident">with_proxy</span>(<span class="string">&quot;org.a11y.Bus&quot;</span>, <span class="string">&quot;/org/a11y/bus&quot;</span>, <span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">5</span>));
+    <span class="kw">let</span> <span class="ident">proxy</span> <span class="op">=</span> <span class="ident">c</span>.<span class="ident">with_proxy</span>(<span class="string">&quot;org.a11y.Bus&quot;</span>, <span class="string">&quot;/org/a11y/bus&quot;</span>, <span class="ident">Duration::from_secs</span>(<span class="number">5</span>));
     <span class="kw">let</span> (<span class="ident">s1</span>,): (<span class="ident">String</span>,) <span class="op">=</span> <span class="ident">proxy</span>.<span class="ident">method_call</span>(<span class="string">&quot;org.freedesktop.DBus.Peer&quot;</span>, <span class="string">&quot;GetMachineId&quot;</span>, ()).<span class="ident">unwrap</span>();
 
-    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">s1</span>, <span class="ident">s2</span>);
+    <span class="macro">assert_eq!</span>(<span class="ident">s1</span>, <span class="ident">s2</span>);
 
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "dbus";</script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dbus" data-search-index-js="../../search-index.js" data-search-js="../../search.js"></div><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script></body></html>

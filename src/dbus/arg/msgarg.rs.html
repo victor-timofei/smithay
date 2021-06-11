@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/dbus-0.8.4/src/arg/msgarg.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>msgarg.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../dbus/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/dbus-0.9.2/src/arg/msgarg.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>msgarg.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../dbus/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img src="../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img src="../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -485,13 +487,119 @@
 <span id="485">485</span>
 <span id="486">486</span>
 <span id="487">487</span>
-</pre><div class="example-wrap"><pre class="rust ">
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
+<span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+</pre><pre class="rust">
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Signature</span>, <span class="ident">arg</span>::<span class="ident">TypeMismatchError</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Signature</span>, <span class="ident">arg::TypeMismatchError</span>, <span class="ident">arg::Variant</span>};
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">fmt</span>, <span class="ident">any</span>};
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">Arc</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">rc</span>::<span class="ident">Rc</span>;
+<span class="kw">use</span> <span class="ident">std::sync::Arc</span>;
+<span class="comment">// use std::rc::Rc;</span>
+<span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
 
 <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Iter</span>, <span class="ident">IterAppend</span>, <span class="ident">ArgType</span>};
 
@@ -511,7 +619,7 @@
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_camel_case_types</span>)]</span> <span class="comment">// Note: This should be changed for 0.9 - but for now, don&#39;t break backwards compatibility</span>
     <span class="kw">type</span> <span class="ident">strs</span>;
     <span class="doccomment">/// Enumerates all arguments with their signatures (introspection helper method).</span>
-    <span class="kw">fn</span> <span class="ident">strs_sig</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">Signature</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>)<span class="op">&gt;</span>(<span class="ident">a</span>: <span class="self">Self</span>::<span class="ident">strs</span>, <span class="ident">f</span>: <span class="ident">F</span>);
+    <span class="kw">fn</span> <span class="ident">strs_sig</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">Signature</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>)<span class="op">&gt;</span>(<span class="ident">a</span>: <span class="self">Self</span><span class="ident">::strs</span>, <span class="ident">f</span>: <span class="ident">F</span>);
 }
 
 <span class="doccomment">/// Types that can be appended to a message as arguments implement this trait.</span>
@@ -543,7 +651,7 @@
 
 
 <span class="doccomment">/// Object safe version of Arg + Append + Get.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">RefArg</span>: <span class="ident">fmt</span>::<span class="ident">Debug</span> {
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">RefArg</span>: <span class="ident">fmt::Debug</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> {
     <span class="doccomment">/// The corresponding D-Bus argument type code.</span>
     <span class="kw">fn</span> <span class="ident">arg_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ArgType</span>;
     <span class="doccomment">/// The corresponding D-Bus type signature for this type.</span>
@@ -558,7 +666,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Note: The internal representation of complex types (Dict, Struct) is unstable</span>
     <span class="doccomment">/// and as_any should not be relied upon for these types. Use as_iter instead.</span>
-    <span class="kw">fn</span> <span class="ident">as_any</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">any</span>::<span class="ident">Any</span> <span class="kw">where</span> <span class="self">Self</span>: <span class="lifetime">&#39;static</span>;
+    <span class="kw">fn</span> <span class="ident">as_any</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">any::Any</span> <span class="kw">where</span> <span class="self">Self</span>: <span class="lifetime">&#39;static</span>;
     <span class="doccomment">/// Transforms this argument to Any (which can be downcasted to read the current value).</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// If the type is an array, and the element type is byte, numeric, boolean, or string, then the</span>
@@ -571,7 +679,7 @@
     <span class="doccomment">/// # Panic</span>
     <span class="doccomment">/// Will panic if the interior cannot be made mutable, e g, if encapsulated</span>
     <span class="doccomment">/// inside a Rc with a reference count &gt; 1.</span>
-    <span class="kw">fn</span> <span class="ident">as_any_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">any</span>::<span class="ident">Any</span> <span class="kw">where</span> <span class="self">Self</span>: <span class="lifetime">&#39;static</span>;
+    <span class="kw">fn</span> <span class="ident">as_any_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">any::Any</span> <span class="kw">where</span> <span class="self">Self</span>: <span class="lifetime">&#39;static</span>;
     <span class="doccomment">/// Try to read the argument as an i64.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Works for: Boolean, Byte, Int16, UInt16, Int32, UInt32, Int64, UnixFd.</span>
@@ -610,7 +718,12 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// In case of complex types (Array, Dict, Struct), the clone is not guaranteed</span>
     <span class="doccomment">/// to have the same internal representation as the original.</span>
-    <span class="kw">fn</span> <span class="ident">box_clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">RefArg</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> { <span class="macro">unimplemented</span><span class="macro">!</span>() <span class="comment">/* Needed for backwards comp */</span> }
+    <span class="kw">fn</span> <span class="ident">box_clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">RefArg</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>;
+
+    <span class="doccomment">/// Deep clone of an array.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This method is used internally by box_clone.</span>
+    <span class="kw">fn</span> <span class="ident">array_clone</span>(<span class="ident">_arg</span>: <span class="kw-2">&amp;</span>[<span class="self">Self</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">RefArg</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="self">Self</span>: <span class="ident">Sized</span> { <span class="prelude-val">None</span> }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Get</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">RefArg</span><span class="op">&gt;</span> {
@@ -629,6 +742,17 @@
 <span class="attribute">#[<span class="ident">inline</span>]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cast_mut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">a</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> (<span class="kw">dyn</span> <span class="ident">RefArg</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">T</span><span class="op">&gt;</span> { <span class="ident">a</span>.<span class="ident">as_any_mut</span>().<span class="ident">downcast_mut</span>() }
 
+<span class="doccomment">/// The type typically used for a dictionary of properties.</span>
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">PropMap</span> <span class="op">=</span> <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Variant</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">RefArg</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+
+
+<span class="doccomment">/// Descend into a hashmap returned by e g &quot;Properties::get_all&quot; to retrieve the value of a property.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Shortcut for get + cast. Returns None both if the property does not exist, or if it was of a different type.</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">prop_cast</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">map</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">PropMap</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="ident">map</span>.<span class="ident">get</span>(<span class="ident">key</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">cast</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>.<span class="number">0</span>))
+}
+
 <span class="doccomment">/// If a type implements this trait, it means the size and alignment is the same</span>
 <span class="doccomment">/// as in D-Bus. This means that you can quickly append and get slices of this type.</span>
 <span class="doccomment">///</span>
@@ -642,8 +766,8 @@
 
 <span class="doccomment">/// Simple lift over reference to value - this makes some iterators more ergonomic to use</span>
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">Arg</span><span class="op">&gt;</span> <span class="ident">Arg</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">T</span> {
-    <span class="kw">const</span> <span class="ident">ARG_TYPE</span>: <span class="ident">ArgType</span> <span class="op">=</span> <span class="ident">T</span>::<span class="ident">ARG_TYPE</span>;
-    <span class="kw">fn</span> <span class="ident">signature</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Signature</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> { <span class="ident">T</span>::<span class="ident">signature</span>() }
+    <span class="kw">const</span> <span class="ident">ARG_TYPE</span>: <span class="ident">ArgType</span> <span class="op">=</span> <span class="ident">T::ARG_TYPE</span>;
+    <span class="kw">fn</span> <span class="ident">signature</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Signature</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> { <span class="ident">T::signature</span>() }
 }
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">Append</span><span class="op">&gt;</span> <span class="ident">Append</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">T</span> {
     <span class="kw">fn</span> <span class="ident">append_by_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">i</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">IterAppend</span>) { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">append_by_ref</span>(<span class="ident">i</span>) }
@@ -658,9 +782,9 @@
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">append</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">i</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">IterAppend</span>) { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">append</span>(<span class="ident">i</span>) }
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">as_any</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">any</span>::<span class="ident">Any</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="lifetime">&#39;static</span> { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">as_any</span>() }
+    <span class="kw">fn</span> <span class="ident">as_any</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">any::Any</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="lifetime">&#39;static</span> { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">as_any</span>() }
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">as_any_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">any</span>::<span class="ident">Any</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="lifetime">&#39;static</span> { <span class="macro">unreachable</span><span class="macro">!</span>() }
+    <span class="kw">fn</span> <span class="ident">as_any_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">any::Any</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="lifetime">&#39;static</span> { <span class="macro">unreachable!</span>() }
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">as_i64</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i64</span><span class="op">&gt;</span> { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">as_i64</span>() }
     <span class="attribute">#[<span class="ident">inline</span>]</span>
@@ -672,14 +796,14 @@
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">as_iter</span><span class="op">&lt;</span><span class="lifetime">&#39;b</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;b</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;b</span> <span class="kw">dyn</span> <span class="ident">RefArg</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;b</span><span class="op">&gt;</span><span class="op">&gt;</span> { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">as_iter</span>() }
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">as_static_inner</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">index</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">RefArg</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)<span class="op">&gt;</span> <span class="kw">where</span> <span class="self">Self</span>: <span class="lifetime">&#39;static</span> { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">as_static_inner</span>(<span class="ident">index</span>) }    
+    <span class="kw">fn</span> <span class="ident">as_static_inner</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">index</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">RefArg</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)<span class="op">&gt;</span> <span class="kw">where</span> <span class="self">Self</span>: <span class="lifetime">&#39;static</span> { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">as_static_inner</span>(<span class="ident">index</span>) }
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">box_clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">RefArg</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">box_clone</span>() }
 }
 
 
 
-<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">deref_impl</span> {
+<span class="macro">macro_rules!</span> <span class="ident">deref_impl</span> {
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>: <span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ss</span>: <span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">make_mut</span>: <span class="ident">expr</span>) <span class="op">=</span><span class="op">&gt;</span> {
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">RefArg</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> <span class="ident">RefArg</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
@@ -690,9 +814,9 @@
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">append</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">i</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">IterAppend</span>) { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">append</span>(<span class="ident">i</span>) }
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">as_any</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">any</span>::<span class="ident">Any</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="lifetime">&#39;static</span> { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">as_any</span>() }
+    <span class="kw">fn</span> <span class="ident">as_any</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">any::Any</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="lifetime">&#39;static</span> { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">as_any</span>() }
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">as_any_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ss</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">any</span>::<span class="ident">Any</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="lifetime">&#39;static</span> { <span class="macro-nonterminal">$</span><span class="macro-nonterminal">make_mut</span>.<span class="ident">as_any_mut</span>() }
+    <span class="kw">fn</span> <span class="ident">as_any_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ss</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">any::Any</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="lifetime">&#39;static</span> { <span class="macro-nonterminal">$</span><span class="macro-nonterminal">make_mut</span>.<span class="ident">as_any_mut</span>() }
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">as_i64</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i64</span><span class="op">&gt;</span> { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">as_i64</span>() }
     <span class="attribute">#[<span class="ident">inline</span>]</span>
@@ -711,11 +835,11 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">DictKey</span><span class="op">&gt;</span> <span class="ident">DictKey</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {}
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Arg</span><span class="op">&gt;</span> <span class="ident">Arg</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">const</span> <span class="ident">ARG_TYPE</span>: <span class="ident">ArgType</span> <span class="op">=</span> <span class="ident">T</span>::<span class="ident">ARG_TYPE</span>;
-    <span class="kw">fn</span> <span class="ident">signature</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Signature</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> { <span class="ident">T</span>::<span class="ident">signature</span>() }
+    <span class="kw">const</span> <span class="ident">ARG_TYPE</span>: <span class="ident">ArgType</span> <span class="op">=</span> <span class="ident">T::ARG_TYPE</span>;
+    <span class="kw">fn</span> <span class="ident">signature</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Signature</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> { <span class="ident">T::signature</span>() }
 }
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">Get</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">Get</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">get</span>(<span class="ident">i</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> { <span class="ident">T</span>::<span class="ident">get</span>(<span class="ident">i</span>).<span class="ident">map</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>::<span class="ident">new</span>) }
+    <span class="kw">fn</span> <span class="ident">get</span>(<span class="ident">i</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> { <span class="ident">T::get</span>(<span class="ident">i</span>).<span class="ident">map</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">t::new</span>) }
 }
 
     }
@@ -725,18 +849,18 @@
     <span class="kw">fn</span> <span class="ident">append_by_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">i</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">IterAppend</span>) { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">append_by_ref</span>(<span class="ident">i</span>) }
 }
 
-<span class="macro">deref_impl</span><span class="macro">!</span>(<span class="ident">Box</span>, <span class="self">self</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span> );
-<span class="macro">deref_impl</span><span class="macro">!</span>(<span class="ident">Rc</span>, <span class="self">self</span>, <span class="ident">Rc</span>::<span class="ident">get_mut</span>(<span class="self">self</span>).<span class="ident">unwrap</span>());
-<span class="macro">deref_impl</span><span class="macro">!</span>(<span class="ident">Arc</span>, <span class="self">self</span>, <span class="ident">Arc</span>::<span class="ident">get_mut</span>(<span class="self">self</span>).<span class="ident">unwrap</span>());
+<span class="macro">deref_impl!</span>(<span class="ident">Box</span>, <span class="self">self</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span> );
+<span class="comment">// deref_impl!(Rc, self, Rc::get_mut(self).unwrap());</span>
+<span class="macro">deref_impl!</span>(<span class="ident">Arc</span>, <span class="self">self</span>, <span class="ident">Arc::get_mut</span>(<span class="self">self</span>).<span class="ident">unwrap</span>());
 
-<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">argall_impl</span> {
+<span class="macro">macro_rules!</span> <span class="ident">argall_impl</span> {
     ($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">n</span>: <span class="ident">ident</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>: <span class="ident">ident</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">s</span>: <span class="ident">ty</span>,)<span class="op">+</span>) <span class="op">=</span><span class="op">&gt;</span> {
 
 <span class="kw">impl</span><span class="op">&lt;</span>$(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>: <span class="ident">Arg</span>),<span class="kw-2">*</span><span class="op">&gt;</span> <span class="ident">ArgAll</span> <span class="kw">for</span> ($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>,)<span class="kw-2">*</span>) {
     <span class="kw">type</span> <span class="ident">strs</span> <span class="op">=</span> ($(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">s</span>,)<span class="kw-2">*</span>);
-    <span class="kw">fn</span> <span class="ident">strs_sig</span><span class="op">&lt;</span><span class="ident">Q</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">Signature</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>)<span class="op">&gt;</span>(<span class="ident">z</span>: <span class="self">Self</span>::<span class="ident">strs</span>, <span class="kw-2">mut</span> <span class="ident">q</span>: <span class="ident">Q</span>) {
+    <span class="kw">fn</span> <span class="ident">strs_sig</span><span class="op">&lt;</span><span class="ident">Q</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">Signature</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>)<span class="op">&gt;</span>(<span class="ident">z</span>: <span class="self">Self</span><span class="ident">::strs</span>, <span class="kw-2">mut</span> <span class="ident">q</span>: <span class="ident">Q</span>) {
         <span class="kw">let</span> ( $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">n</span>,)<span class="kw-2">*</span>) <span class="op">=</span> <span class="ident">z</span>;
-        $( <span class="ident">q</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">n</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>::<span class="ident">signature</span>()); )<span class="op">*</span>
+        $( <span class="ident">q</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">n</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t::signature</span>()); )<span class="op">*</span>
     }
 }
 
@@ -760,7 +884,7 @@
 
 <span class="kw">impl</span> <span class="ident">ArgAll</span> <span class="kw">for</span> () {
     <span class="kw">type</span> <span class="ident">strs</span> <span class="op">=</span> ();
-    <span class="kw">fn</span> <span class="ident">strs_sig</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">Signature</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>)<span class="op">&gt;</span>(<span class="kw">_</span>: <span class="self">Self</span>::<span class="ident">strs</span>, <span class="kw">_</span>: <span class="ident">F</span>) {}
+    <span class="kw">fn</span> <span class="ident">strs_sig</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">Signature</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>)<span class="op">&gt;</span>(<span class="kw">_</span>: <span class="self">Self</span><span class="ident">::strs</span>, <span class="kw">_</span>: <span class="ident">F</span>) {}
 }
 
 <span class="kw">impl</span> <span class="ident">AppendAll</span> <span class="kw">for</span> () {
@@ -773,81 +897,83 @@
     }
 }
 
-<span class="macro">argall_impl</span><span class="macro">!</span>(<span class="ident">a</span> <span class="ident">A</span> <span class="ident">str</span>,);
-<span class="macro">argall_impl</span><span class="macro">!</span>(<span class="ident">a</span> <span class="ident">A</span> <span class="ident">str</span>, <span class="ident">b</span> <span class="ident">B</span> <span class="ident">str</span>,);
-<span class="macro">argall_impl</span><span class="macro">!</span>(<span class="ident">a</span> <span class="ident">A</span> <span class="ident">str</span>, <span class="ident">b</span> <span class="ident">B</span> <span class="ident">str</span>, <span class="ident">c</span> <span class="ident">C</span> <span class="ident">str</span>,);
-<span class="macro">argall_impl</span><span class="macro">!</span>(<span class="ident">a</span> <span class="ident">A</span> <span class="ident">str</span>, <span class="ident">b</span> <span class="ident">B</span> <span class="ident">str</span>, <span class="ident">c</span> <span class="ident">C</span> <span class="ident">str</span>, <span class="ident">d</span> <span class="ident">D</span> <span class="ident">str</span>,);
-<span class="macro">argall_impl</span><span class="macro">!</span>(<span class="ident">a</span> <span class="ident">A</span> <span class="ident">str</span>, <span class="ident">b</span> <span class="ident">B</span> <span class="ident">str</span>, <span class="ident">c</span> <span class="ident">C</span> <span class="ident">str</span>, <span class="ident">d</span> <span class="ident">D</span> <span class="ident">str</span>, <span class="ident">e</span> <span class="ident">E</span> <span class="ident">str</span>,);
-<span class="macro">argall_impl</span><span class="macro">!</span>(<span class="ident">a</span> <span class="ident">A</span> <span class="ident">str</span>, <span class="ident">b</span> <span class="ident">B</span> <span class="ident">str</span>, <span class="ident">c</span> <span class="ident">C</span> <span class="ident">str</span>, <span class="ident">d</span> <span class="ident">D</span> <span class="ident">str</span>, <span class="ident">e</span> <span class="ident">E</span> <span class="ident">str</span>, <span class="ident">f</span> <span class="ident">F</span> <span class="ident">str</span>,);
-<span class="macro">argall_impl</span><span class="macro">!</span>(<span class="ident">a</span> <span class="ident">A</span> <span class="ident">str</span>, <span class="ident">b</span> <span class="ident">B</span> <span class="ident">str</span>, <span class="ident">c</span> <span class="ident">C</span> <span class="ident">str</span>, <span class="ident">d</span> <span class="ident">D</span> <span class="ident">str</span>, <span class="ident">e</span> <span class="ident">E</span> <span class="ident">str</span>, <span class="ident">f</span> <span class="ident">F</span> <span class="ident">str</span>, <span class="ident">g</span> <span class="ident">G</span> <span class="ident">str</span>,);
-<span class="macro">argall_impl</span><span class="macro">!</span>(<span class="ident">a</span> <span class="ident">A</span> <span class="ident">str</span>, <span class="ident">b</span> <span class="ident">B</span> <span class="ident">str</span>, <span class="ident">c</span> <span class="ident">C</span> <span class="ident">str</span>, <span class="ident">d</span> <span class="ident">D</span> <span class="ident">str</span>, <span class="ident">e</span> <span class="ident">E</span> <span class="ident">str</span>, <span class="ident">f</span> <span class="ident">F</span> <span class="ident">str</span>, <span class="ident">g</span> <span class="ident">G</span> <span class="ident">str</span>, <span class="ident">h</span> <span class="ident">H</span> <span class="ident">str</span>,);
-<span class="macro">argall_impl</span><span class="macro">!</span>(<span class="ident">a</span> <span class="ident">A</span> <span class="ident">str</span>, <span class="ident">b</span> <span class="ident">B</span> <span class="ident">str</span>, <span class="ident">c</span> <span class="ident">C</span> <span class="ident">str</span>, <span class="ident">d</span> <span class="ident">D</span> <span class="ident">str</span>, <span class="ident">e</span> <span class="ident">E</span> <span class="ident">str</span>, <span class="ident">f</span> <span class="ident">F</span> <span class="ident">str</span>, <span class="ident">g</span> <span class="ident">G</span> <span class="ident">str</span>, <span class="ident">h</span> <span class="ident">H</span> <span class="ident">str</span>, <span class="ident">i</span> <span class="ident">I</span> <span class="ident">str</span>,);
-<span class="macro">argall_impl</span><span class="macro">!</span>(<span class="ident">a</span> <span class="ident">A</span> <span class="ident">str</span>, <span class="ident">b</span> <span class="ident">B</span> <span class="ident">str</span>, <span class="ident">c</span> <span class="ident">C</span> <span class="ident">str</span>, <span class="ident">d</span> <span class="ident">D</span> <span class="ident">str</span>, <span class="ident">e</span> <span class="ident">E</span> <span class="ident">str</span>, <span class="ident">f</span> <span class="ident">F</span> <span class="ident">str</span>, <span class="ident">g</span> <span class="ident">G</span> <span class="ident">str</span>, <span class="ident">h</span> <span class="ident">H</span> <span class="ident">str</span>, <span class="ident">i</span> <span class="ident">I</span> <span class="ident">str</span>, <span class="ident">j</span> <span class="ident">J</span> <span class="ident">str</span>,);
-
+<span class="macro">argall_impl!</span>(<span class="ident">a</span> <span class="ident">A</span> <span class="ident">str</span>,);
+<span class="macro">argall_impl!</span>(<span class="ident">a</span> <span class="ident">A</span> <span class="ident">str</span>, <span class="ident">b</span> <span class="ident">B</span> <span class="ident">str</span>,);
+<span class="macro">argall_impl!</span>(<span class="ident">a</span> <span class="ident">A</span> <span class="ident">str</span>, <span class="ident">b</span> <span class="ident">B</span> <span class="ident">str</span>, <span class="ident">c</span> <span class="ident">C</span> <span class="ident">str</span>,);
+<span class="macro">argall_impl!</span>(<span class="ident">a</span> <span class="ident">A</span> <span class="ident">str</span>, <span class="ident">b</span> <span class="ident">B</span> <span class="ident">str</span>, <span class="ident">c</span> <span class="ident">C</span> <span class="ident">str</span>, <span class="ident">d</span> <span class="ident">D</span> <span class="ident">str</span>,);
+<span class="macro">argall_impl!</span>(<span class="ident">a</span> <span class="ident">A</span> <span class="ident">str</span>, <span class="ident">b</span> <span class="ident">B</span> <span class="ident">str</span>, <span class="ident">c</span> <span class="ident">C</span> <span class="ident">str</span>, <span class="ident">d</span> <span class="ident">D</span> <span class="ident">str</span>, <span class="ident">e</span> <span class="ident">E</span> <span class="ident">str</span>,);
+<span class="macro">argall_impl!</span>(<span class="ident">a</span> <span class="ident">A</span> <span class="ident">str</span>, <span class="ident">b</span> <span class="ident">B</span> <span class="ident">str</span>, <span class="ident">c</span> <span class="ident">C</span> <span class="ident">str</span>, <span class="ident">d</span> <span class="ident">D</span> <span class="ident">str</span>, <span class="ident">e</span> <span class="ident">E</span> <span class="ident">str</span>, <span class="ident">f</span> <span class="ident">F</span> <span class="ident">str</span>,);
+<span class="macro">argall_impl!</span>(<span class="ident">a</span> <span class="ident">A</span> <span class="ident">str</span>, <span class="ident">b</span> <span class="ident">B</span> <span class="ident">str</span>, <span class="ident">c</span> <span class="ident">C</span> <span class="ident">str</span>, <span class="ident">d</span> <span class="ident">D</span> <span class="ident">str</span>, <span class="ident">e</span> <span class="ident">E</span> <span class="ident">str</span>, <span class="ident">f</span> <span class="ident">F</span> <span class="ident">str</span>, <span class="ident">g</span> <span class="ident">G</span> <span class="ident">str</span>,);
+<span class="macro">argall_impl!</span>(<span class="ident">a</span> <span class="ident">A</span> <span class="ident">str</span>, <span class="ident">b</span> <span class="ident">B</span> <span class="ident">str</span>, <span class="ident">c</span> <span class="ident">C</span> <span class="ident">str</span>, <span class="ident">d</span> <span class="ident">D</span> <span class="ident">str</span>, <span class="ident">e</span> <span class="ident">E</span> <span class="ident">str</span>, <span class="ident">f</span> <span class="ident">F</span> <span class="ident">str</span>, <span class="ident">g</span> <span class="ident">G</span> <span class="ident">str</span>, <span class="ident">h</span> <span class="ident">H</span> <span class="ident">str</span>,);
+<span class="macro">argall_impl!</span>(<span class="ident">a</span> <span class="ident">A</span> <span class="ident">str</span>, <span class="ident">b</span> <span class="ident">B</span> <span class="ident">str</span>, <span class="ident">c</span> <span class="ident">C</span> <span class="ident">str</span>, <span class="ident">d</span> <span class="ident">D</span> <span class="ident">str</span>, <span class="ident">e</span> <span class="ident">E</span> <span class="ident">str</span>, <span class="ident">f</span> <span class="ident">F</span> <span class="ident">str</span>, <span class="ident">g</span> <span class="ident">G</span> <span class="ident">str</span>, <span class="ident">h</span> <span class="ident">H</span> <span class="ident">str</span>, <span class="ident">i</span> <span class="ident">I</span> <span class="ident">str</span>,);
+<span class="macro">argall_impl!</span>(<span class="ident">a</span> <span class="ident">A</span> <span class="ident">str</span>, <span class="ident">b</span> <span class="ident">B</span> <span class="ident">str</span>, <span class="ident">c</span> <span class="ident">C</span> <span class="ident">str</span>, <span class="ident">d</span> <span class="ident">D</span> <span class="ident">str</span>, <span class="ident">e</span> <span class="ident">E</span> <span class="ident">str</span>, <span class="ident">f</span> <span class="ident">F</span> <span class="ident">str</span>, <span class="ident">g</span> <span class="ident">G</span> <span class="ident">str</span>, <span class="ident">h</span> <span class="ident">H</span> <span class="ident">str</span>, <span class="ident">i</span> <span class="ident">I</span> <span class="ident">str</span>, <span class="ident">j</span> <span class="ident">J</span> <span class="ident">str</span>,);
+<span class="macro">argall_impl!</span>(<span class="ident">a</span> <span class="ident">A</span> <span class="ident">str</span>, <span class="ident">b</span> <span class="ident">B</span> <span class="ident">str</span>, <span class="ident">c</span> <span class="ident">C</span> <span class="ident">str</span>, <span class="ident">d</span> <span class="ident">D</span> <span class="ident">str</span>, <span class="ident">e</span> <span class="ident">E</span> <span class="ident">str</span>, <span class="ident">f</span> <span class="ident">F</span> <span class="ident">str</span>, <span class="ident">g</span> <span class="ident">G</span> <span class="ident">str</span>, <span class="ident">h</span> <span class="ident">H</span> <span class="ident">str</span>, <span class="ident">i</span> <span class="ident">I</span> <span class="ident">str</span>, <span class="ident">j</span> <span class="ident">J</span> <span class="ident">str</span>, <span class="ident">k</span> <span class="ident">K</span> <span class="ident">str</span>,);
+<span class="macro">argall_impl!</span>(<span class="ident">a</span> <span class="ident">A</span> <span class="ident">str</span>, <span class="ident">b</span> <span class="ident">B</span> <span class="ident">str</span>, <span class="ident">c</span> <span class="ident">C</span> <span class="ident">str</span>, <span class="ident">d</span> <span class="ident">D</span> <span class="ident">str</span>, <span class="ident">e</span> <span class="ident">E</span> <span class="ident">str</span>, <span class="ident">f</span> <span class="ident">F</span> <span class="ident">str</span>, <span class="ident">g</span> <span class="ident">G</span> <span class="ident">str</span>, <span class="ident">h</span> <span class="ident">H</span> <span class="ident">str</span>, <span class="ident">i</span> <span class="ident">I</span> <span class="ident">str</span>, <span class="ident">j</span> <span class="ident">J</span> <span class="ident">str</span>, <span class="ident">k</span> <span class="ident">K</span> <span class="ident">str</span>, <span class="ident">l</span> <span class="ident">L</span> <span class="ident">str</span>,);
+<span class="macro">argall_impl!</span>(<span class="ident">a</span> <span class="ident">A</span> <span class="ident">str</span>, <span class="ident">b</span> <span class="ident">B</span> <span class="ident">str</span>, <span class="ident">c</span> <span class="ident">C</span> <span class="ident">str</span>, <span class="ident">d</span> <span class="ident">D</span> <span class="ident">str</span>, <span class="ident">e</span> <span class="ident">E</span> <span class="ident">str</span>, <span class="ident">f</span> <span class="ident">F</span> <span class="ident">str</span>, <span class="ident">g</span> <span class="ident">G</span> <span class="ident">str</span>, <span class="ident">h</span> <span class="ident">H</span> <span class="ident">str</span>, <span class="ident">i</span> <span class="ident">I</span> <span class="ident">str</span>, <span class="ident">j</span> <span class="ident">J</span> <span class="ident">str</span>, <span class="ident">k</span> <span class="ident">K</span> <span class="ident">str</span>, <span class="ident">l</span> <span class="ident">L</span> <span class="ident">str</span>, <span class="ident">m</span> <span class="ident">M</span> <span class="ident">str</span>,);
 
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">test</span> {
     <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">channel</span>::{<span class="ident">Channel</span>, <span class="ident">BusType</span>}, <span class="ident">Message</span>, <span class="ident">Path</span>, <span class="ident">Signature</span>};
-    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">message</span>::<span class="ident">MessageType</span>;
-    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">arg</span>::{<span class="ident">Array</span>, <span class="ident">Variant</span>, <span class="ident">Dict</span>, <span class="ident">Iter</span>, <span class="ident">ArgType</span>, <span class="ident">TypeMismatchError</span>, <span class="ident">RefArg</span>, <span class="ident">cast</span>};
+    <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::message::MessageType</span>;
+    <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::arg</span>::{<span class="ident">Array</span>, <span class="ident">Variant</span>, <span class="ident">Dict</span>, <span class="ident">Iter</span>, <span class="ident">ArgType</span>, <span class="ident">TypeMismatchError</span>, <span class="ident">RefArg</span>, <span class="ident">cast</span>};
 
-    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">HashMap</span>;
+    <span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">refarg</span>() {
-        <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Channel</span>::<span class="ident">get_private</span>(<span class="ident">BusType</span>::<span class="ident">Session</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">Message</span>::<span class="ident">new_method_call</span>(<span class="ident">c</span>.<span class="ident">unique_name</span>().<span class="ident">unwrap</span>(), <span class="string">&quot;/mooh&quot;</span>, <span class="string">&quot;com.example.hello&quot;</span>, <span class="string">&quot;Hello&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Channel::get_private</span>(<span class="ident">BusType::Session</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">Message::new_method_call</span>(<span class="ident">c</span>.<span class="ident">unique_name</span>().<span class="ident">unwrap</span>(), <span class="string">&quot;/mooh&quot;</span>, <span class="string">&quot;com.example.hello&quot;</span>, <span class="string">&quot;Hello&quot;</span>).<span class="ident">unwrap</span>();
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">vv</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Variant</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">RefArg</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>();
-        <span class="ident">vv</span>.<span class="ident">push</span>(<span class="ident">Variant</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="number">5i32</span>)));
-        <span class="ident">vv</span>.<span class="ident">push</span>(<span class="ident">Variant</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">String</span>::<span class="ident">from</span>(<span class="string">&quot;Hello world&quot;</span>))));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">vv</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Variant</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">RefArg</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec!</span>();
+        <span class="ident">vv</span>.<span class="ident">push</span>(<span class="ident">Variant</span>(<span class="ident">Box::new</span>(<span class="number">5i32</span>)));
+        <span class="ident">vv</span>.<span class="ident">push</span>(<span class="ident">Variant</span>(<span class="ident">Box::new</span>(<span class="ident">String::from</span>(<span class="string">&quot;Hello world&quot;</span>))));
         <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">append_ref</span>(<span class="kw-2">&amp;</span><span class="ident">vv</span>);
 
         <span class="kw">let</span> (<span class="ident">f1</span>, <span class="ident">f2</span>) <span class="op">=</span> (<span class="bool-val">false</span>, <span class="number">7u64</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">RefArg</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">RefArg</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec!</span>();
         <span class="ident">v</span>.<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">f1</span>);
         <span class="ident">v</span>.<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">f2</span>);
         <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">append_ref</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>);
-        <span class="kw">let</span> <span class="ident">vi32</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="number">7i32</span>, <span class="number">9i32</span>];
+        <span class="kw">let</span> <span class="ident">vi32</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">7i32</span>, <span class="number">9i32</span>];
         <span class="kw">let</span> <span class="ident">vstr</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> [<span class="string">&quot;This&quot;</span>, <span class="string">&quot;is&quot;</span>, <span class="string">&quot;dbus&quot;</span>, <span class="string">&quot;rs&quot;</span>].<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">into</span>()).<span class="ident">collect</span>();
         <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">append_ref</span>(<span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">vi32</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">RefArg</span>, <span class="kw-2">&amp;</span><span class="ident">vstr</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">RefArg</span>]);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">map</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
-        <span class="ident">map</span>.<span class="ident">insert</span>(<span class="bool-val">true</span>, <span class="ident">String</span>::<span class="ident">from</span>(<span class="string">&quot;Yes&quot;</span>));
-        <span class="ident">map</span>.<span class="ident">insert</span>(<span class="bool-val">false</span>, <span class="ident">String</span>::<span class="ident">from</span>(<span class="string">&quot;No&quot;</span>));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">map</span> <span class="op">=</span> <span class="ident">HashMap::new</span>();
+        <span class="ident">map</span>.<span class="ident">insert</span>(<span class="bool-val">true</span>, <span class="ident">String::from</span>(<span class="string">&quot;Yes&quot;</span>));
+        <span class="ident">map</span>.<span class="ident">insert</span>(<span class="bool-val">false</span>, <span class="ident">String::from</span>(<span class="string">&quot;No&quot;</span>));
         <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">append_ref</span>(<span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">map</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">RefArg</span>, <span class="kw-2">&amp;</span><span class="number">1.5f64</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">RefArg</span>]);
 
         <span class="ident">c</span>.<span class="ident">send</span>(<span class="ident">m</span>).<span class="ident">unwrap</span>();
 
         <span class="kw">loop</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">m</span>) <span class="op">=</span> <span class="ident">c</span>.<span class="ident">blocking_pop_message</span>(<span class="ident">std</span>::<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">1000</span>)).<span class="ident">unwrap</span>() {
-                <span class="kw">if</span> <span class="ident">m</span>.<span class="ident">msg_type</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">MessageType</span>::<span class="ident">MethodCall</span> { <span class="kw">continue</span>; }
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">m</span>) <span class="op">=</span> <span class="ident">c</span>.<span class="ident">blocking_pop_message</span>(<span class="ident">std::time::Duration::from_millis</span>(<span class="number">1000</span>)).<span class="ident">unwrap</span>() {
+                <span class="kw">if</span> <span class="ident">m</span>.<span class="ident">msg_type</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">MessageType::MethodCall</span> { <span class="kw">continue</span>; }
 
                 <span class="kw">let</span> <span class="ident">rv</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">RefArg</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">iter_init</span>().<span class="ident">collect</span>();
-                <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Receiving {:?}&quot;</span>, <span class="ident">rv</span>);
+                <span class="macro">println!</span>(<span class="string">&quot;Receiving {:?}&quot;</span>, <span class="ident">rv</span>);
                 <span class="kw">let</span> <span class="ident">rv0</span>: <span class="kw-2">&amp;</span><span class="ident">Variant</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">RefArg</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">cast</span>(<span class="kw-2">&amp;</span><span class="ident">rv</span>[<span class="number">0</span>]).<span class="ident">unwrap</span>();
                 <span class="kw">let</span> <span class="ident">rv00</span>: <span class="kw-2">&amp;</span><span class="ident">i32</span> <span class="op">=</span> <span class="ident">cast</span>(<span class="kw-2">&amp;</span><span class="ident">rv0</span>.<span class="number">0</span>).<span class="ident">unwrap</span>();
-                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">rv00</span>, <span class="kw-2">&amp;</span><span class="number">5i32</span>);
-                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="bool-val">false</span>), <span class="ident">rv</span>[<span class="number">2</span>].<span class="ident">as_any</span>().<span class="ident">downcast_ref</span>::<span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>());
-                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">vi32</span>), <span class="ident">rv</span>[<span class="number">4</span>].<span class="ident">as_any</span>().<span class="ident">downcast_ref</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span><span class="op">&gt;</span>());
-                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">vstr</span>), <span class="ident">rv</span>[<span class="number">5</span>].<span class="ident">as_any</span>().<span class="ident">downcast_ref</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>());
+                <span class="macro">assert_eq!</span>(<span class="ident">rv00</span>, <span class="kw-2">&amp;</span><span class="number">5i32</span>);
+                <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="bool-val">false</span>), <span class="ident">rv</span>[<span class="number">2</span>].<span class="ident">as_any</span>().<span class="ident">downcast_ref</span>::<span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>());
+                <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">vi32</span>), <span class="ident">rv</span>[<span class="number">4</span>].<span class="ident">as_any</span>().<span class="ident">downcast_ref</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span><span class="op">&gt;</span>());
+                <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">vstr</span>), <span class="ident">rv</span>[<span class="number">5</span>].<span class="ident">as_any</span>().<span class="ident">downcast_ref</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>());
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">diter</span> <span class="op">=</span> <span class="ident">rv</span>[<span class="number">6</span>].<span class="ident">as_iter</span>().<span class="ident">unwrap</span>();
                 {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">mmap</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">bool</span>, <span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
+                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">mmap</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">bool</span>, <span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashMap::new</span>();
                     <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">k</span>) <span class="op">=</span> <span class="ident">diter</span>.<span class="ident">next</span>() {
                         <span class="kw">let</span> <span class="ident">x</span>: <span class="ident">String</span> <span class="op">=</span> <span class="ident">diter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">as_str</span>().<span class="ident">unwrap</span>().<span class="ident">into</span>();
                         <span class="ident">mmap</span>.<span class="ident">insert</span>(<span class="kw-2">*</span><span class="ident">cast</span>::<span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">k</span>.<span class="ident">box_clone</span>()).<span class="ident">unwrap</span>(), <span class="ident">x</span>);
                     }
-                    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">mmap</span>[<span class="kw-2">&amp;</span><span class="bool-val">true</span>], <span class="string">&quot;Yes&quot;</span>);
+                    <span class="macro">assert_eq!</span>(<span class="ident">mmap</span>[<span class="kw-2">&amp;</span><span class="bool-val">true</span>], <span class="string">&quot;Yes&quot;</span>);
                 }
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">rv</span>[<span class="number">6</span>].<span class="ident">as_iter</span>().<span class="ident">unwrap</span>();
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">as_i64</span>().<span class="ident">is_some</span>());
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">as_str</span>().<span class="ident">is_some</span>());
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">as_str</span>().<span class="ident">is_none</span>());
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">as_i64</span>().<span class="ident">is_none</span>());
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">is_none</span>());
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">rv</span>[<span class="number">7</span>].<span class="ident">as_f64</span>().<span class="ident">unwrap</span>() <span class="op">&gt;</span> <span class="number">1.0</span>);
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">rv</span>[<span class="number">7</span>].<span class="ident">as_f64</span>().<span class="ident">unwrap</span>() <span class="op">&lt;</span> <span class="number">2.0</span>);
+                <span class="macro">assert!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">as_i64</span>().<span class="ident">is_some</span>());
+                <span class="macro">assert!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">as_str</span>().<span class="ident">is_some</span>());
+                <span class="macro">assert!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">as_str</span>().<span class="ident">is_none</span>());
+                <span class="macro">assert!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">as_i64</span>().<span class="ident">is_none</span>());
+                <span class="macro">assert!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">is_none</span>());
+                <span class="macro">assert!</span>(<span class="ident">rv</span>[<span class="number">7</span>].<span class="ident">as_f64</span>().<span class="ident">unwrap</span>() <span class="op">&gt;</span> <span class="number">1.0</span>);
+                <span class="macro">assert!</span>(<span class="ident">rv</span>[<span class="number">7</span>].<span class="ident">as_f64</span>().<span class="ident">unwrap</span>() <span class="op">&lt;</span> <span class="number">2.0</span>);
                 <span class="kw">break</span>;
             }
         }
@@ -855,62 +981,62 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">message_types</span>() {
-        <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Channel</span>::<span class="ident">get_private</span>(<span class="ident">BusType</span>::<span class="ident">Session</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Channel::get_private</span>(<span class="ident">BusType::Session</span>).<span class="ident">unwrap</span>();
 
-        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">Message</span>::<span class="ident">new_method_call</span>(<span class="ident">c</span>.<span class="ident">unique_name</span>().<span class="ident">unwrap</span>(), <span class="string">&quot;/hello&quot;</span>, <span class="string">&quot;com.example.hello&quot;</span>, <span class="string">&quot;Hello&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">Message::new_method_call</span>(<span class="ident">c</span>.<span class="ident">unique_name</span>().<span class="ident">unwrap</span>(), <span class="string">&quot;/hello&quot;</span>, <span class="string">&quot;com.example.hello&quot;</span>, <span class="string">&quot;Hello&quot;</span>).<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">append1</span>(<span class="number">2000u16</span>);
-        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">append1</span>(<span class="kw-2">&amp;</span><span class="ident">Array</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="macro">vec</span><span class="macro">!</span>[<span class="number">129u8</span>, <span class="number">5</span>, <span class="number">254</span>]));
+        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">append1</span>(<span class="kw-2">&amp;</span><span class="ident">Array::new</span>(<span class="kw-2">&amp;</span><span class="macro">vec!</span>[<span class="number">129u8</span>, <span class="number">5</span>, <span class="number">254</span>]));
         <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">append2</span>(<span class="ident">Variant</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;Hello&quot;</span>, <span class="string">&quot;world&quot;</span>][..]), <span class="kw-2">&amp;</span>[<span class="number">32768u16</span>, <span class="number">16u16</span>, <span class="number">12u16</span>][..]);
-        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">append3</span>(<span class="op">-</span><span class="number">1i32</span>, <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Hello world&quot;</span>), <span class="op">-</span><span class="number">3.14f64</span>);
+        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">append3</span>(<span class="op">-</span><span class="number">1i32</span>, <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="macro">format!</span>(<span class="string">&quot;Hello world&quot;</span>), <span class="op">-</span><span class="number">3.14f64</span>);
         <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">append1</span>((<span class="number">256i16</span>, <span class="ident">Variant</span>(<span class="number">18_446_744_073_709_551_615u64</span>)));
-        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">append2</span>(<span class="ident">Path</span>::<span class="ident">new</span>(<span class="string">&quot;/a/valid/path&quot;</span>).<span class="ident">unwrap</span>(), <span class="kw-2">&amp;</span><span class="ident">Signature</span>::<span class="ident">new</span>(<span class="string">&quot;a{sv}&quot;</span>).<span class="ident">unwrap</span>());
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">z</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
+        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">append2</span>(<span class="ident">Path::new</span>(<span class="string">&quot;/a/valid/path&quot;</span>).<span class="ident">unwrap</span>(), <span class="kw-2">&amp;</span><span class="ident">Signature::new</span>(<span class="string">&quot;a{sv}&quot;</span>).<span class="ident">unwrap</span>());
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">z</span> <span class="op">=</span> <span class="ident">HashMap::new</span>();
         <span class="ident">z</span>.<span class="ident">insert</span>(<span class="number">123543u32</span>, <span class="bool-val">true</span>);
         <span class="ident">z</span>.<span class="ident">insert</span>(<span class="number">0u32</span>, <span class="bool-val">false</span>);
-        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">append1</span>(<span class="ident">Dict</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">z</span>));
-        <span class="kw">let</span> <span class="ident">sending</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">m</span>.<span class="ident">iter_init</span>());
-        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Sending {}&quot;</span>, <span class="ident">sending</span>);
+        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">append1</span>(<span class="ident">Dict::new</span>(<span class="kw-2">&amp;</span><span class="ident">z</span>));
+        <span class="kw">let</span> <span class="ident">sending</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">m</span>.<span class="ident">iter_init</span>());
+        <span class="macro">println!</span>(<span class="string">&quot;Sending {}&quot;</span>, <span class="ident">sending</span>);
         <span class="ident">c</span>.<span class="ident">send</span>(<span class="ident">m</span>).<span class="ident">unwrap</span>();
 
         <span class="kw">loop</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">m</span>) <span class="op">=</span> <span class="ident">c</span>.<span class="ident">blocking_pop_message</span>(<span class="ident">std</span>::<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">1000</span>)).<span class="ident">unwrap</span>() {
-                <span class="kw">if</span> <span class="ident">m</span>.<span class="ident">msg_type</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">MessageType</span>::<span class="ident">MethodCall</span> { <span class="kw">continue</span>; }
-                <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">Arg</span>;
-                <span class="kw">let</span> <span class="ident">receiving</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">m</span>.<span class="ident">iter_init</span>());
-                <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Receiving {}&quot;</span>, <span class="ident">receiving</span>);
-                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">sending</span>, <span class="ident">receiving</span>);
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">m</span>) <span class="op">=</span> <span class="ident">c</span>.<span class="ident">blocking_pop_message</span>(<span class="ident">std::time::Duration::from_millis</span>(<span class="number">1000</span>)).<span class="ident">unwrap</span>() {
+                <span class="kw">if</span> <span class="ident">m</span>.<span class="ident">msg_type</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">MessageType::MethodCall</span> { <span class="kw">continue</span>; }
+                <span class="kw">use</span> <span class="kw">super</span><span class="ident">::Arg</span>;
+                <span class="kw">let</span> <span class="ident">receiving</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">m</span>.<span class="ident">iter_init</span>());
+                <span class="macro">println!</span>(<span class="string">&quot;Receiving {}&quot;</span>, <span class="ident">receiving</span>);
+                <span class="macro">assert_eq!</span>(<span class="ident">sending</span>, <span class="ident">receiving</span>);
 
-                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">2000u16</span>, <span class="ident">m</span>.<span class="ident">get1</span>().<span class="ident">unwrap</span>());
-                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">m</span>.<span class="ident">get2</span>(), (<span class="prelude-val">Some</span>(<span class="number">2000u16</span>), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>[<span class="number">129u8</span>, <span class="number">5</span>, <span class="number">254</span>][..])));
-                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">m</span>.<span class="ident">read2</span>::<span class="op">&lt;</span><span class="ident">u16</span>, <span class="ident">bool</span><span class="op">&gt;</span>().<span class="ident">unwrap_err</span>(),
-                    <span class="ident">TypeMismatchError</span> { <span class="ident">position</span>: <span class="number">1</span>, <span class="ident">found</span>: <span class="ident">ArgType</span>::<span class="ident">Array</span>, <span class="ident">expected</span>: <span class="ident">ArgType</span>::<span class="ident">Boolean</span> });
+                <span class="macro">assert_eq!</span>(<span class="number">2000u16</span>, <span class="ident">m</span>.<span class="ident">get1</span>().<span class="ident">unwrap</span>());
+                <span class="macro">assert_eq!</span>(<span class="ident">m</span>.<span class="ident">get2</span>(), (<span class="prelude-val">Some</span>(<span class="number">2000u16</span>), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>[<span class="number">129u8</span>, <span class="number">5</span>, <span class="number">254</span>][..])));
+                <span class="macro">assert_eq!</span>(<span class="ident">m</span>.<span class="ident">read2</span>::<span class="op">&lt;</span><span class="ident">u16</span>, <span class="ident">bool</span><span class="op">&gt;</span>().<span class="ident">unwrap_err</span>(),
+                    <span class="ident">TypeMismatchError</span> { <span class="ident">position</span>: <span class="number">1</span>, <span class="ident">found</span>: <span class="ident">ArgType::Array</span>, <span class="ident">expected</span>: <span class="ident">ArgType::Boolean</span> });
 
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">g</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">iter_init</span>();
                 <span class="kw">let</span> <span class="ident">e</span> <span class="op">=</span> <span class="ident">g</span>.<span class="ident">read</span>::<span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>().<span class="ident">unwrap_err</span>();
-                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">e</span>.<span class="ident">pos</span>(), <span class="number">0</span>);
-                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">e</span>.<span class="ident">expected_arg_type</span>(), <span class="ident">ArgType</span>::<span class="ident">UInt32</span>);
-                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">e</span>.<span class="ident">found_arg_type</span>(), <span class="ident">ArgType</span>::<span class="ident">UInt16</span>);
+                <span class="macro">assert_eq!</span>(<span class="ident">e</span>.<span class="ident">pos</span>(), <span class="number">0</span>);
+                <span class="macro">assert_eq!</span>(<span class="ident">e</span>.<span class="ident">expected_arg_type</span>(), <span class="ident">ArgType::UInt32</span>);
+                <span class="macro">assert_eq!</span>(<span class="ident">e</span>.<span class="ident">found_arg_type</span>(), <span class="ident">ArgType::UInt16</span>);
 
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">g</span>.<span class="ident">next</span>() <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">g</span>.<span class="ident">next</span>());
+                <span class="macro">assert!</span>(<span class="ident">g</span>.<span class="ident">next</span>() <span class="op">&amp;&amp;</span> <span class="ident">g</span>.<span class="ident">next</span>());
                 <span class="kw">let</span> <span class="ident">v</span>: <span class="ident">Variant</span><span class="op">&lt;</span><span class="ident">Iter</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">g</span>.<span class="ident">get</span>().<span class="ident">unwrap</span>();
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">viter</span> <span class="op">=</span> <span class="ident">v</span>.<span class="number">0</span>;
-                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">viter</span>.<span class="ident">arg_type</span>(), <span class="ident">Array</span>::<span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span>,()<span class="op">&gt;</span>::<span class="ident">ARG_TYPE</span>);
+                <span class="macro">assert_eq!</span>(<span class="ident">viter</span>.<span class="ident">arg_type</span>(), <span class="ident">Array</span>::<span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span>,()<span class="op">&gt;</span><span class="ident">::ARG_TYPE</span>);
                 <span class="kw">let</span> <span class="ident">a</span>: <span class="ident">Array</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">viter</span>.<span class="ident">get</span>().<span class="ident">unwrap</span>();
-                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">a</span>.<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>(), <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;Hello&quot;</span>, <span class="string">&quot;world&quot;</span>]);
+                <span class="macro">assert_eq!</span>(<span class="ident">a</span>.<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>(), <span class="macro">vec!</span>[<span class="string">&quot;Hello&quot;</span>, <span class="string">&quot;world&quot;</span>]);
 
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">g</span>.<span class="ident">next</span>());
-                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">g</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>(), <span class="prelude-val">None</span>); <span class="comment">// It&#39;s an array, not a single u16</span>
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">g</span>.<span class="ident">next</span>() <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">g</span>.<span class="ident">next</span>() <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">g</span>.<span class="ident">next</span>() <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">g</span>.<span class="ident">next</span>());
+                <span class="macro">assert!</span>(<span class="ident">g</span>.<span class="ident">next</span>());
+                <span class="macro">assert_eq!</span>(<span class="ident">g</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>(), <span class="prelude-val">None</span>); <span class="comment">// It&#39;s an array, not a single u16</span>
+                <span class="macro">assert!</span>(<span class="ident">g</span>.<span class="ident">next</span>() <span class="op">&amp;&amp;</span> <span class="ident">g</span>.<span class="ident">next</span>() <span class="op">&amp;&amp;</span> <span class="ident">g</span>.<span class="ident">next</span>() <span class="op">&amp;&amp;</span> <span class="ident">g</span>.<span class="ident">next</span>());
 
-                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">g</span>.<span class="ident">get</span>(), <span class="prelude-val">Some</span>((<span class="number">256i16</span>, <span class="ident">Variant</span>(<span class="number">18_446_744_073_709_551_615u64</span>))));
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">g</span>.<span class="ident">next</span>());
-                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">g</span>.<span class="ident">get</span>(), <span class="prelude-val">Some</span>(<span class="ident">Path</span>::<span class="ident">new</span>(<span class="string">&quot;/a/valid/path&quot;</span>).<span class="ident">unwrap</span>()));
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">g</span>.<span class="ident">next</span>());
-                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">g</span>.<span class="ident">get</span>(), <span class="prelude-val">Some</span>(<span class="ident">Signature</span>::<span class="ident">new</span>(<span class="string">&quot;a{sv}&quot;</span>).<span class="ident">unwrap</span>()));
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">g</span>.<span class="ident">next</span>());
+                <span class="macro">assert_eq!</span>(<span class="ident">g</span>.<span class="ident">get</span>(), <span class="prelude-val">Some</span>((<span class="number">256i16</span>, <span class="ident">Variant</span>(<span class="number">18_446_744_073_709_551_615u64</span>))));
+                <span class="macro">assert!</span>(<span class="ident">g</span>.<span class="ident">next</span>());
+                <span class="macro">assert_eq!</span>(<span class="ident">g</span>.<span class="ident">get</span>(), <span class="prelude-val">Some</span>(<span class="ident">Path::new</span>(<span class="string">&quot;/a/valid/path&quot;</span>).<span class="ident">unwrap</span>()));
+                <span class="macro">assert!</span>(<span class="ident">g</span>.<span class="ident">next</span>());
+                <span class="macro">assert_eq!</span>(<span class="ident">g</span>.<span class="ident">get</span>(), <span class="prelude-val">Some</span>(<span class="ident">Signature::new</span>(<span class="string">&quot;a{sv}&quot;</span>).<span class="ident">unwrap</span>()));
+                <span class="macro">assert!</span>(<span class="ident">g</span>.<span class="ident">next</span>());
                 <span class="kw">let</span> <span class="ident">d</span>: <span class="ident">Dict</span><span class="op">&lt;</span><span class="ident">u32</span>, <span class="ident">bool</span>, <span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">g</span>.<span class="ident">get</span>().<span class="ident">unwrap</span>();
                 <span class="kw">let</span> <span class="ident">z2</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">d</span>.<span class="ident">collect</span>();
-                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">z</span>, <span class="ident">z2</span>);
+                <span class="macro">assert_eq!</span>(<span class="ident">z</span>, <span class="ident">z2</span>);
                 <span class="kw">break</span>;
             }
         }
@@ -918,60 +1044,146 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">cast_vecs</span>() {
-        <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Channel</span>::<span class="ident">get_private</span>(<span class="ident">BusType</span>::<span class="ident">Session</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Channel::get_private</span>(<span class="ident">BusType::Session</span>).<span class="ident">unwrap</span>();
 
-        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">Message</span>::<span class="ident">new_method_call</span>(<span class="ident">c</span>.<span class="ident">unique_name</span>().<span class="ident">unwrap</span>(), <span class="string">&quot;/hello&quot;</span>, <span class="string">&quot;com.example.hello&quot;</span>, <span class="string">&quot;Hello&quot;</span>).<span class="ident">unwrap</span>();
-        <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">append_array</span> {
+        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">Message::new_method_call</span>(<span class="ident">c</span>.<span class="ident">unique_name</span>().<span class="ident">unwrap</span>(), <span class="string">&quot;/hello&quot;</span>, <span class="string">&quot;com.example.hello&quot;</span>, <span class="string">&quot;Hello&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="macro">macro_rules!</span> <span class="ident">append_array</span> {
             (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">m</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>:<span class="ident">ty</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="macro-nonterminal">$</span><span class="macro-nonterminal">m</span>.<span class="ident">append1</span>(<span class="ident">Variant</span>(<span class="kw-2">&amp;</span><span class="ident">Array</span>::<span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>, <span class="kw">_</span><span class="op">&gt;</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="macro">vec</span><span class="macro">!</span>[<span class="ident">Default</span>::<span class="ident">default</span>()])));
+                <span class="macro-nonterminal">$</span><span class="macro-nonterminal">m</span>.<span class="ident">append1</span>(<span class="ident">Variant</span>(<span class="kw-2">&amp;</span><span class="ident">Array</span>::<span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>, <span class="kw">_</span><span class="op">&gt;</span><span class="ident">::new</span>(<span class="kw-2">&amp;</span><span class="macro">vec!</span>[<span class="ident">Default::default</span>()])));
             };
         }
-        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="macro">append_array</span><span class="macro">!</span>(<span class="ident">m</span>, <span class="ident">bool</span>);
-        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="macro">append_array</span><span class="macro">!</span>(<span class="ident">m</span>, <span class="ident">u8</span>);
-        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="macro">append_array</span><span class="macro">!</span>(<span class="ident">m</span>, <span class="ident">u16</span>);
-        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="macro">append_array</span><span class="macro">!</span>(<span class="ident">m</span>, <span class="ident">i16</span>);
-        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="macro">append_array</span><span class="macro">!</span>(<span class="ident">m</span>, <span class="ident">u32</span>);
-        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="macro">append_array</span><span class="macro">!</span>(<span class="ident">m</span>, <span class="ident">i32</span>);
-        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="macro">append_array</span><span class="macro">!</span>(<span class="ident">m</span>, <span class="ident">f64</span>);
-        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="macro">append_array</span><span class="macro">!</span>(<span class="ident">m</span>, <span class="ident">String</span>);
+        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="macro">append_array!</span>(<span class="ident">m</span>, <span class="ident">bool</span>);
+        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="macro">append_array!</span>(<span class="ident">m</span>, <span class="ident">u8</span>);
+        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="macro">append_array!</span>(<span class="ident">m</span>, <span class="ident">u16</span>);
+        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="macro">append_array!</span>(<span class="ident">m</span>, <span class="ident">i16</span>);
+        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="macro">append_array!</span>(<span class="ident">m</span>, <span class="ident">u32</span>);
+        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="macro">append_array!</span>(<span class="ident">m</span>, <span class="ident">i32</span>);
+        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="macro">append_array!</span>(<span class="ident">m</span>, <span class="ident">f64</span>);
+        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="macro">append_array!</span>(<span class="ident">m</span>, <span class="ident">String</span>);
         <span class="ident">c</span>.<span class="ident">send</span>(<span class="ident">m</span>).<span class="ident">unwrap</span>();
         <span class="kw">loop</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">m</span>) <span class="op">=</span> <span class="ident">c</span>.<span class="ident">blocking_pop_message</span>(<span class="ident">std</span>::<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">1000</span>)).<span class="ident">unwrap</span>() {
-                <span class="kw">if</span> <span class="ident">m</span>.<span class="ident">msg_type</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">MessageType</span>::<span class="ident">MethodCall</span> {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">m</span>) <span class="op">=</span> <span class="ident">c</span>.<span class="ident">blocking_pop_message</span>(<span class="ident">std::time::Duration::from_millis</span>(<span class="number">1000</span>)).<span class="ident">unwrap</span>() {
+                <span class="kw">if</span> <span class="ident">m</span>.<span class="ident">msg_type</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">MessageType::MethodCall</span> {
                     <span class="kw">continue</span>;
                 }
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">iter_init</span>();
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i2</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">iter_init</span>();
 
-                <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">check_array</span> {
+                <span class="macro">macro_rules!</span> <span class="ident">check_array</span> {
                     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>:<span class="ident">ty</span>) <span class="op">=</span><span class="op">&gt;</span> {
                         <span class="kw">let</span> <span class="ident">array</span>: <span class="ident">Variant</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">RefArg</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">i</span>.<span class="ident">read</span>().<span class="ident">unwrap</span>();
-                        <span class="macro">assert_eq</span><span class="macro">!</span>(
+                        <span class="macro">assert_eq!</span>(
                             <span class="ident">cast</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span>(<span class="ident">array</span>.<span class="number">0</span>)),
-                            <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="macro">vec</span><span class="macro">!</span>[<span class="ident">Default</span>::<span class="ident">default</span>()]),
-                            <span class="string">&quot;a variant containing an array of of {0} should be castable to a Vec&lt;{0}&gt;&quot;</span>,
-                            <span class="ident">std</span>::<span class="ident">any</span>::<span class="ident">type_name</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span><span class="op">&gt;</span>()
+                            <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="macro">vec!</span>[<span class="ident">Default::default</span>()]),
+                            <span class="string">&quot;a variant containing an array of {0} should be castable to a Vec&lt;{0}&gt;&quot;</span>,
+                            <span class="ident">std::any::type_name</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span><span class="op">&gt;</span>()
                         );
                         <span class="kw">let</span> <span class="ident">refarg</span> <span class="op">=</span> <span class="ident">i2</span>.<span class="ident">get_refarg</span>().<span class="ident">unwrap</span>();
-                        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;refarg {:?}&quot;</span>, <span class="ident">refarg</span>);
+                        <span class="macro">println!</span>(<span class="string">&quot;refarg {:?}&quot;</span>, <span class="ident">refarg</span>);
+                        <span class="kw">let</span> <span class="ident">cloned</span> <span class="op">=</span> <span class="ident">refarg</span>.<span class="ident">box_clone</span>();
+                        <span class="macro">println!</span>(<span class="string">&quot;cloned: {:?}&quot;</span>, <span class="ident">cloned</span>);
                         <span class="kw">let</span> <span class="ident">st_inner</span> <span class="op">=</span> <span class="ident">refarg</span>.<span class="ident">as_static_inner</span>(<span class="number">0</span>).<span class="ident">unwrap</span>();
-                        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;st_inner {:?}&quot;</span>, <span class="ident">st_inner</span>);
+                        <span class="macro">println!</span>(<span class="string">&quot;st_inner {:?}&quot;</span>, <span class="ident">st_inner</span>);
                         <span class="ident">i2</span>.<span class="ident">next</span>();
-                        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">cast</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">st_inner</span>), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="macro">vec</span><span class="macro">!</span>[<span class="ident">Default</span>::<span class="ident">default</span>()]));
+                        <span class="macro">assert_eq!</span>(<span class="ident">cast</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">st_inner</span>), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="macro">vec!</span>[<span class="ident">Default::default</span>()]));
+                        <span class="kw">let</span> <span class="ident">cl_inner</span> <span class="op">=</span> <span class="ident">refarg</span>.<span class="ident">as_static_inner</span>(<span class="number">0</span>).<span class="ident">unwrap</span>();
+                        <span class="macro">assert_eq!</span>(<span class="ident">cast</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">cl_inner</span>), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="macro">vec!</span>[<span class="ident">Default::default</span>()]));
                     };
                 }
-                <span class="macro">check_array</span><span class="macro">!</span>(<span class="ident">bool</span>);
-                <span class="macro">check_array</span><span class="macro">!</span>(<span class="ident">u8</span>);
-                <span class="macro">check_array</span><span class="macro">!</span>(<span class="ident">u16</span>);
-                <span class="macro">check_array</span><span class="macro">!</span>(<span class="ident">i16</span>);
-                <span class="macro">check_array</span><span class="macro">!</span>(<span class="ident">u32</span>);
-                <span class="macro">check_array</span><span class="macro">!</span>(<span class="ident">i32</span>);
-                <span class="macro">check_array</span><span class="macro">!</span>(<span class="ident">f64</span>);
-                <span class="macro">check_array</span><span class="macro">!</span>(<span class="ident">String</span>);
+                <span class="macro">check_array!</span>(<span class="ident">bool</span>);
+                <span class="macro">check_array!</span>(<span class="ident">u8</span>);
+                <span class="macro">check_array!</span>(<span class="ident">u16</span>);
+                <span class="macro">check_array!</span>(<span class="ident">i16</span>);
+                <span class="macro">check_array!</span>(<span class="ident">u32</span>);
+                <span class="macro">check_array!</span>(<span class="ident">i32</span>);
+                <span class="macro">check_array!</span>(<span class="ident">f64</span>);
+                <span class="macro">check_array!</span>(<span class="ident">String</span>);
+                <span class="kw">break</span>;
+            }
+        }
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">cast_dicts</span>() {
+        <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Channel::get_private</span>(<span class="ident">BusType::Session</span>).<span class="ident">unwrap</span>();
+
+        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">Message::new_method_call</span>(
+            <span class="ident">c</span>.<span class="ident">unique_name</span>().<span class="ident">unwrap</span>(),
+            <span class="string">&quot;/hello&quot;</span>,
+            <span class="string">&quot;com.example.hello&quot;</span>,
+            <span class="string">&quot;Hello&quot;</span>,
+        )
+        .<span class="ident">unwrap</span>();
+        <span class="macro">macro_rules!</span> <span class="ident">append_dict_variant</span> {
+            (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">m</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">k</span>:<span class="ident">ty</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span>:<span class="ident">ty</span>) <span class="op">=</span><span class="op">&gt;</span> {{
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">map</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">k</span>, <span class="ident">Variant</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">RefArg</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashMap::new</span>();
+                <span class="ident">map</span>.<span class="ident">insert</span>(<span class="ident">Default::default</span>(), <span class="ident">Variant</span>(<span class="ident">Box::new</span>(<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span><span class="op">&gt;</span><span class="ident">::default</span>())));
+                <span class="macro-nonterminal">$</span><span class="macro-nonterminal">m</span>.<span class="ident">append1</span>(<span class="ident">Variant</span>(<span class="kw-2">&amp;</span><span class="ident">map</span>))
+            }};
+        }
+        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="macro">append_dict_variant!</span>(<span class="ident">m</span>, <span class="ident">bool</span>, <span class="ident">bool</span>);
+        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="macro">append_dict_variant!</span>(<span class="ident">m</span>, <span class="ident">u8</span>, <span class="ident">u8</span>);
+        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="macro">append_dict_variant!</span>(<span class="ident">m</span>, <span class="ident">u16</span>, <span class="ident">u16</span>);
+        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="macro">append_dict_variant!</span>(<span class="ident">m</span>, <span class="ident">i16</span>, <span class="ident">i16</span>);
+        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="macro">append_dict_variant!</span>(<span class="ident">m</span>, <span class="ident">u32</span>, <span class="ident">u32</span>);
+        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="macro">append_dict_variant!</span>(<span class="ident">m</span>, <span class="ident">i32</span>, <span class="ident">i32</span>);
+        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="macro">append_dict_variant!</span>(<span class="ident">m</span>, <span class="ident">u64</span>, <span class="ident">u64</span>);
+        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="macro">append_dict_variant!</span>(<span class="ident">m</span>, <span class="ident">i64</span>, <span class="ident">i64</span>);
+        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="macro">append_dict_variant!</span>(<span class="ident">m</span>, <span class="ident">u8</span>, <span class="ident">f64</span>);
+        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="macro">append_dict_variant!</span>(<span class="ident">m</span>, <span class="ident">String</span>, <span class="ident">String</span>);
+        <span class="ident">c</span>.<span class="ident">send</span>(<span class="ident">m</span>).<span class="ident">unwrap</span>();
+        <span class="kw">loop</span> {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">m</span>) <span class="op">=</span> <span class="ident">c</span>
+                .<span class="ident">blocking_pop_message</span>(<span class="ident">std::time::Duration::from_millis</span>(<span class="number">1000</span>))
+                .<span class="ident">unwrap</span>()
+            {
+                <span class="kw">if</span> <span class="ident">m</span>.<span class="ident">msg_type</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">MessageType::MethodCall</span> {
+                    <span class="kw">continue</span>;
+                }
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">iter_init</span>();
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i2</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">iter_init</span>();
+
+                <span class="macro">macro_rules!</span> <span class="ident">check_dict_variant</span> {
+                    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">k</span>:<span class="ident">ty</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span>:<span class="ident">ty</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="kw">let</span> <span class="ident">map</span>: <span class="ident">Variant</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">RefArg</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">i</span>.<span class="ident">read</span>().<span class="ident">unwrap</span>();
+                        <span class="kw">let</span> <span class="ident">expected_key</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">k</span> <span class="op">=</span> <span class="ident">Default::default</span>();
+                        <span class="kw">let</span> <span class="ident">expected_value</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span> <span class="op">=</span> <span class="ident">Default::default</span>();
+                        <span class="kw">let</span> <span class="ident">cast_map</span> <span class="op">=</span> <span class="ident">cast</span>::<span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">k</span>, <span class="ident">Variant</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">RefArg</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">map</span>.<span class="number">0</span>);
+                        <span class="macro">assert!</span>(<span class="ident">cast_map</span>.<span class="ident">is_some</span>(),
+                            <span class="string">&quot;a variant containing a dict of {0} to Variant({1}) should be castable to a HashMap&lt;{0}, Variant&lt;Box&lt;dyn RefArg&gt;&gt;&gt;&quot;</span>,
+                            <span class="ident">std::any::type_name</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">k</span><span class="op">&gt;</span>(),
+                            <span class="ident">std::any::type_name</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span><span class="op">&gt;</span>()
+                        );
+                        <span class="kw">let</span> <span class="ident">cast_map_value</span> <span class="op">=</span> <span class="ident">cast_map</span>.<span class="ident">unwrap</span>().<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">expected_key</span>).<span class="ident">unwrap</span>();
+                        <span class="macro">assert_eq!</span>(
+                            <span class="ident">cast</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">cast_map_value</span>.<span class="number">0</span>),
+                            <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">expected_value</span>),
+                            <span class="string">&quot;a variant {0:?} containing a {1} should be castable to {1}&quot;</span>,
+                            <span class="ident">cast_map_value</span>,
+                            <span class="ident">std::any::type_name</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span><span class="op">&gt;</span>()
+                        );
+                        <span class="kw">let</span> <span class="ident">refarg</span> <span class="op">=</span> <span class="ident">i2</span>.<span class="ident">get_refarg</span>().<span class="ident">unwrap</span>();
+                        <span class="macro">println!</span>(<span class="string">&quot;refarg {:?}&quot;</span>, <span class="ident">refarg</span>);
+                        <span class="kw">let</span> <span class="ident">st_inner</span> <span class="op">=</span> <span class="ident">refarg</span>.<span class="ident">as_static_inner</span>(<span class="number">0</span>).<span class="ident">unwrap</span>();
+                        <span class="macro">println!</span>(<span class="string">&quot;st_inner {:?}&quot;</span>, <span class="ident">st_inner</span>);
+                        <span class="ident">i2</span>.<span class="ident">next</span>();
+                        <span class="macro">assert!</span>(<span class="ident">cast</span>::<span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">k</span>, <span class="ident">Variant</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">RefArg</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">st_inner</span>).<span class="ident">is_some</span>());
+                    };
+                }
+                <span class="macro">check_dict_variant!</span>(<span class="ident">bool</span>, <span class="ident">bool</span>);
+                <span class="macro">check_dict_variant!</span>(<span class="ident">u8</span>, <span class="ident">u8</span>);
+                <span class="macro">check_dict_variant!</span>(<span class="ident">u16</span>, <span class="ident">u16</span>);
+                <span class="macro">check_dict_variant!</span>(<span class="ident">i16</span>, <span class="ident">i16</span>);
+                <span class="macro">check_dict_variant!</span>(<span class="ident">u32</span>, <span class="ident">u32</span>);
+                <span class="macro">check_dict_variant!</span>(<span class="ident">i32</span>, <span class="ident">i32</span>);
+                <span class="macro">check_dict_variant!</span>(<span class="ident">u64</span>, <span class="ident">u64</span>);
+                <span class="macro">check_dict_variant!</span>(<span class="ident">i64</span>, <span class="ident">i64</span>);
+                <span class="macro">check_dict_variant!</span>(<span class="ident">u8</span>, <span class="ident">f64</span>);
+                <span class="macro">check_dict_variant!</span>(<span class="ident">String</span>, <span class="ident">String</span>);
                 <span class="kw">break</span>;
             }
         }
     }
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "dbus";</script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="dbus" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script></body></html>

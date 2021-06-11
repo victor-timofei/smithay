@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/backend/egl/error.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>error.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script src="../../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../../smithay/index.html'><div class='logo-container'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../../settings.html"><img src="../../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/backend/egl/error.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>error.rs - source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../../storage.js"></script><script src="../../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../../smithay/index.html'><div class='logo-container rust-logo'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img src="../../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../../settings.html" title="settings"><img src="../../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -139,10 +141,10 @@
 <span id="139">139</span>
 <span id="140">140</span>
 <span id="141">141</span>
-</pre><div class="example-wrap"><pre class="rust ">
-<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">ffi</span>;
+</pre><pre class="rust">
+<span class="kw">use</span> <span class="kw">super</span><span class="ident">::ffi</span>;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">thiserror</span>::<span class="ident">Error</span>, <span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">thiserror::Error</span>, <span class="ident">Debug</span>)]</span>
 <span class="doccomment">/// EGL errors</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Error</span> {
     <span class="doccomment">/// The requested OpenGL version is not supported</span>
@@ -190,7 +192,7 @@
 }
 
 <span class="doccomment">/// Raw EGL error</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">thiserror</span>::<span class="ident">Error</span>, <span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">thiserror::Error</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">EGLError</span> {
     <span class="doccomment">/// EGL is not initialized, or could not be initialized, for the specified EGL display connection.</span>
     <span class="attribute">#[<span class="ident">error</span>(
@@ -248,38 +250,38 @@
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">EGLError</span> {
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">value</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="kw">match</span> <span class="ident">value</span> {
-            <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">NOT_INITIALIZED</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError</span>::<span class="ident">NotInitialized</span>,
-            <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">BAD_ACCESS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError</span>::<span class="ident">BadAccess</span>,
-            <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">BAD_ALLOC</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError</span>::<span class="ident">BadAlloc</span>,
-            <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">BAD_ATTRIBUTE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError</span>::<span class="ident">BadAttribute</span>,
-            <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">BAD_CONTEXT</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError</span>::<span class="ident">BadContext</span>,
-            <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">BAD_CURRENT_SURFACE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError</span>::<span class="ident">BadCurrentSurface</span>,
-            <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">BAD_DISPLAY</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError</span>::<span class="ident">BadDisplay</span>,
-            <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">BAD_SURFACE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError</span>::<span class="ident">BadSurface</span>,
-            <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">BAD_MATCH</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError</span>::<span class="ident">BadMatch</span>,
-            <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">BAD_PARAMETER</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError</span>::<span class="ident">BadParameter</span>,
-            <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">BAD_NATIVE_PIXMAP</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError</span>::<span class="ident">BadNativePixmap</span>,
-            <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">BAD_NATIVE_WINDOW</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError</span>::<span class="ident">BadNativeWindow</span>,
+            <span class="ident">ffi::egl::NOT_INITIALIZED</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::NotInitialized</span>,
+            <span class="ident">ffi::egl::BAD_ACCESS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::BadAccess</span>,
+            <span class="ident">ffi::egl::BAD_ALLOC</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::BadAlloc</span>,
+            <span class="ident">ffi::egl::BAD_ATTRIBUTE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::BadAttribute</span>,
+            <span class="ident">ffi::egl::BAD_CONTEXT</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::BadContext</span>,
+            <span class="ident">ffi::egl::BAD_CURRENT_SURFACE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::BadCurrentSurface</span>,
+            <span class="ident">ffi::egl::BAD_DISPLAY</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::BadDisplay</span>,
+            <span class="ident">ffi::egl::BAD_SURFACE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::BadSurface</span>,
+            <span class="ident">ffi::egl::BAD_MATCH</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::BadMatch</span>,
+            <span class="ident">ffi::egl::BAD_PARAMETER</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::BadParameter</span>,
+            <span class="ident">ffi::egl::BAD_NATIVE_PIXMAP</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::BadNativePixmap</span>,
+            <span class="ident">ffi::egl::BAD_NATIVE_WINDOW</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::BadNativeWindow</span>,
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_drm_eglstream&quot;</span>)]</span>
-            <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">RESOURCE_BUSY_EXT</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError</span>::<span class="ident">ResourceBusy</span>,
-            <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">CONTEXT_LOST</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError</span>::<span class="ident">ContextLost</span>,
-            <span class="ident">x</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError</span>::<span class="ident">Unknown</span>(<span class="ident">x</span>),
+            <span class="ident">ffi::egl::RESOURCE_BUSY_EXT</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::ResourceBusy</span>,
+            <span class="ident">ffi::egl::CONTEXT_LOST</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::ContextLost</span>,
+            <span class="ident">x</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::Unknown</span>(<span class="ident">x</span>),
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">EGLError</span> {
     <span class="kw">fn</span> <span class="ident">from_last_call</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">EGLError</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">GetError</span>() <span class="kw">as</span> <span class="ident">u32</span> } {
-            <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">SUCCESS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(()),
-            <span class="ident">x</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">EGLError</span>::<span class="ident">from</span>(<span class="ident">x</span>)),
+        <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi::egl::GetError</span>() <span class="kw">as</span> <span class="ident">u32</span> } {
+            <span class="ident">ffi::egl::SUCCESS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(()),
+            <span class="ident">x</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">EGLError::from</span>(<span class="ident">x</span>)),
         }
     }
 }
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">wrap_egl_call</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">call</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">EGLError</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">call</span>();
-    <span class="ident">EGLError</span>::<span class="ident">from_last_call</span>().<span class="ident">map</span>(<span class="op">|</span>()<span class="op">|</span> <span class="ident">res</span>)
+    <span class="ident">EGLError::from_last_call</span>().<span class="ident">map</span>(<span class="op">|</span>()<span class="op">|</span> <span class="ident">res</span>)
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../../";window.currentCrate = "smithay";</script><script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script><script defer src="../../../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-search-index-js="../../../../search-index.js" data-search-js="../../../../search.js"></div><script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script></body></html>

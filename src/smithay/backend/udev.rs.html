@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/backend/udev.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>udev.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../smithay/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/backend/udev.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>udev.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../smithay/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img src="../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img src="../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -277,15 +279,29 @@
 <span id="277">277</span>
 <span id="278">278</span>
 <span id="279">279</span>
-</pre><div class="example-wrap"><pre class="rust ">
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+</pre><pre class="rust">
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Provides `udev` related functionality for automated device scanning.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! This module mainly provides the [`UdevBackend`](::backend::udev::UdevBackend), which</span>
+<span class="doccomment">//! This module mainly provides the [`UdevBackend`], which</span>
 <span class="doccomment">//! monitors available DRM devices and acts as an event source, generating events whenever these</span>
 <span class="doccomment">//! devices change.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! *Note:* Once inserted into the event loop, the [`UdevBackend`](::backend::udev::UdevBackend) will</span>
+<span class="doccomment">//! *Note:* Once inserted into the event loop, the [`UdevBackend`] will</span>
 <span class="doccomment">//! only notify you about *changes* in the device list. To get an initial snapshot of the state during</span>
 <span class="doccomment">//! your initialization, you need to call its `device_list` method.</span>
 <span class="doccomment">//!</span>
@@ -298,7 +314,7 @@
 <span class="doccomment">//!     // process the initial list of devices</span>
 <span class="doccomment">//! }</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! # let event_loop = smithay::reexports::calloop::EventLoop::&lt;()&gt;::new().unwrap();</span>
+<span class="doccomment">//! # let event_loop = smithay::reexports::calloop::EventLoop::&lt;()&gt;::try_new().unwrap();</span>
 <span class="doccomment">//! # let loop_handle = event_loop.handle();</span>
 <span class="doccomment">//! // setup the event source for long-term monitoring</span>
 <span class="doccomment">//! loop_handle.insert_source(udev, |event, _, _dispatch_data| match event {</span>
@@ -319,12 +335,13 @@
 <span class="doccomment">//! See also `anvil/src/udev.rs` for pure hardware backed example of a compositor utilizing this</span>
 <span class="doccomment">//! backend.</span>
 
-<span class="kw">use</span> <span class="ident">nix</span>::<span class="ident">sys</span>::<span class="ident">stat</span>::{<span class="ident">dev_t</span>, <span class="ident">stat</span>};
+<span class="kw">use</span> <span class="ident">nix::sys::stat</span>::{<span class="ident">dev_t</span>, <span class="ident">stat</span>};
 <span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">collections</span>::<span class="ident">HashMap</span>,
-    <span class="ident">ffi</span>::<span class="ident">OsString</span>,
-    <span class="ident">io</span>::<span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">IoResult</span>,
-    <span class="ident">os</span>::<span class="ident">unix</span>::<span class="ident">io</span>::{<span class="ident">AsRawFd</span>, <span class="ident">RawFd</span>},
+    <span class="ident">collections::HashMap</span>,
+    <span class="ident">ffi::OsString</span>,
+    <span class="ident">fmt</span>,
+    <span class="ident">io::Result</span> <span class="kw">as</span> <span class="ident">IoResult</span>,
+    <span class="ident">os::unix::io</span>::{<span class="ident">AsRawFd</span>, <span class="ident">RawFd</span>},
     <span class="ident">path</span>::{<span class="ident">Path</span>, <span class="ident">PathBuf</span>},
 };
 <span class="kw">use</span> <span class="ident">udev</span>::{<span class="ident">Enumerator</span>, <span class="ident">EventType</span>, <span class="ident">MonitorBuilder</span>, <span class="ident">MonitorSocket</span>};
@@ -339,7 +356,19 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">UdevBackend</span> {
     <span class="ident">devices</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">dev_t</span>, <span class="ident">PathBuf</span><span class="op">&gt;</span>,
     <span class="ident">monitor</span>: <span class="ident">MonitorSocket</span>,
-    <span class="ident">logger</span>: ::<span class="ident">slog</span>::<span class="ident">Logger</span>,
+    <span class="ident">logger</span>: <span class="ident">::slog::Logger</span>,
+}
+
+<span class="comment">// MonitorSocket does not implement debug, so we have to impl Debug manually</span>
+<span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">UdevBackend</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt::Result</span> {
+        <span class="kw">use</span> <span class="ident">udev::AsRaw</span>;
+        <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;UdevBackend&quot;</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;devices&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">devices</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;monitor&quot;</span>, <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;MonitorSocket ({:?})&quot;</span>, <span class="self">self</span>.<span class="ident">monitor</span>.<span class="ident">as_raw</span>()))
+            .<span class="ident">field</span>(<span class="string">&quot;logger&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">logger</span>)
+            .<span class="ident">finish</span>()
+    }
 }
 
 <span class="kw">impl</span> <span class="ident">AsRawFd</span> <span class="kw">for</span> <span class="ident">UdevBackend</span> {
@@ -356,9 +385,9 @@
     <span class="doccomment">/// `logger`  - slog Logger to be used by the backend and its `DrmDevices`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">L</span>, <span class="ident">S</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">seat</span>: <span class="ident">S</span>, <span class="ident">logger</span>: <span class="ident">L</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IoResult</span><span class="op">&lt;</span><span class="ident">UdevBackend</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span>::<span class="ident">slog</span>::<span class="ident">Logger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">::slog::Logger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     {
-        <span class="kw">let</span> <span class="ident">log</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">slog_or_fallback</span>(<span class="ident">logger</span>).<span class="ident">new</span>(<span class="macro">o</span><span class="macro">!</span>(<span class="string">&quot;smithay_module&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;backend_udev&quot;</span>));
+        <span class="kw">let</span> <span class="ident">log</span> <span class="op">=</span> <span class="kw">crate</span><span class="ident">::slog_or_fallback</span>(<span class="ident">logger</span>).<span class="ident">new</span>(<span class="macro">o!</span>(<span class="string">&quot;smithay_module&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;backend_udev&quot;</span>));
 
         <span class="kw">let</span> <span class="ident">devices</span> <span class="op">=</span> <span class="ident">all_gpus</span>(<span class="ident">seat</span>)<span class="question-mark">?</span>
             .<span class="ident">into_iter</span>()
@@ -366,13 +395,13 @@
             .<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">path</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">stat</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>) {
                 <span class="prelude-val">Ok</span>(<span class="ident">stat</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>((<span class="ident">stat</span>.<span class="ident">st_rdev</span>, <span class="ident">path</span>)),
                 <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                    <span class="macro">warn</span><span class="macro">!</span>(<span class="ident">log</span>, <span class="string">&quot;Unable to get id of {:?}, Error: {:?}. Skipping&quot;</span>, <span class="ident">path</span>, <span class="ident">err</span>);
+                    <span class="macro">warn!</span>(<span class="ident">log</span>, <span class="string">&quot;Unable to get id of {:?}, Error: {:?}. Skipping&quot;</span>, <span class="ident">path</span>, <span class="ident">err</span>);
                     <span class="prelude-val">None</span>
                 }
             })
             .<span class="ident">collect</span>();
 
-        <span class="kw">let</span> <span class="ident">monitor</span> <span class="op">=</span> <span class="ident">MonitorBuilder</span>::<span class="ident">new</span>()<span class="question-mark">?</span>.<span class="ident">match_subsystem</span>(<span class="string">&quot;drm&quot;</span>)<span class="question-mark">?</span>.<span class="ident">listen</span>()<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">monitor</span> <span class="op">=</span> <span class="ident">MonitorBuilder::new</span>()<span class="question-mark">?</span>.<span class="ident">match_subsystem</span>(<span class="string">&quot;drm&quot;</span>)<span class="question-mark">?</span>.<span class="ident">listen</span>()<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(<span class="ident">UdevBackend</span> {
             <span class="ident">devices</span>,
@@ -395,13 +424,13 @@
     <span class="kw">type</span> <span class="ident">Metadata</span> <span class="op">=</span> ();
     <span class="kw">type</span> <span class="ident">Ret</span> <span class="op">=</span> ();
 
-    <span class="kw">fn</span> <span class="ident">process_events</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="kw">_</span>: <span class="ident">Readiness</span>, <span class="kw">_</span>: <span class="ident">Token</span>, <span class="kw-2">mut</span> <span class="ident">callback</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">process_events</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="kw">_</span>: <span class="ident">Readiness</span>, <span class="kw">_</span>: <span class="ident">Token</span>, <span class="kw-2">mut</span> <span class="ident">callback</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">UdevEvent</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> ()),
     {
         <span class="kw">let</span> <span class="ident">monitor</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">monitor</span>.<span class="ident">clone</span>();
         <span class="kw">for</span> <span class="ident">event</span> <span class="kw">in</span> <span class="ident">monitor</span> {
-            <span class="macro">debug</span><span class="macro">!</span>(
+            <span class="macro">debug!</span>(
                 <span class="self">self</span>.<span class="ident">logger</span>,
                 <span class="string">&quot;Udev event: type={}, devnum={:?} devnode={:?}&quot;</span>,
                 <span class="ident">event</span>.<span class="ident">event_type</span>(),
@@ -410,12 +439,12 @@
             );
             <span class="kw">match</span> <span class="ident">event</span>.<span class="ident">event_type</span>() {
                 <span class="comment">// New device</span>
-                <span class="ident">EventType</span>::<span class="ident">Add</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">EventType::Add</span> <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="kw">if</span> <span class="kw">let</span> (<span class="prelude-val">Some</span>(<span class="ident">path</span>), <span class="prelude-val">Some</span>(<span class="ident">devnum</span>)) <span class="op">=</span> (<span class="ident">event</span>.<span class="ident">devnode</span>(), <span class="ident">event</span>.<span class="ident">devnum</span>()) {
-                        <span class="macro">info</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">logger</span>, <span class="string">&quot;New device: #{} at {}&quot;</span>, <span class="ident">devnum</span>, <span class="ident">path</span>.<span class="ident">display</span>());
+                        <span class="macro">info!</span>(<span class="self">self</span>.<span class="ident">logger</span>, <span class="string">&quot;New device: #{} at {}&quot;</span>, <span class="ident">devnum</span>, <span class="ident">path</span>.<span class="ident">display</span>());
                         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">devices</span>.<span class="ident">insert</span>(<span class="ident">devnum</span>, <span class="ident">path</span>.<span class="ident">to_path_buf</span>()).<span class="ident">is_none</span>() {
                             <span class="ident">callback</span>(
-                                <span class="ident">UdevEvent</span>::<span class="ident">Added</span> {
+                                <span class="ident">UdevEvent::Added</span> {
                                     <span class="ident">device_id</span>: <span class="ident">devnum</span>,
                                     <span class="ident">path</span>: <span class="ident">path</span>.<span class="ident">to_path_buf</span>(),
                                 },
@@ -425,20 +454,20 @@
                     }
                 }
                 <span class="comment">// Device removed</span>
-                <span class="ident">EventType</span>::<span class="ident">Remove</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">EventType::Remove</span> <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">devnum</span>) <span class="op">=</span> <span class="ident">event</span>.<span class="ident">devnum</span>() {
-                        <span class="macro">info</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">logger</span>, <span class="string">&quot;Device removed: #{}&quot;</span>, <span class="ident">devnum</span>);
+                        <span class="macro">info!</span>(<span class="self">self</span>.<span class="ident">logger</span>, <span class="string">&quot;Device removed: #{}&quot;</span>, <span class="ident">devnum</span>);
                         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">devices</span>.<span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="ident">devnum</span>).<span class="ident">is_some</span>() {
-                            <span class="ident">callback</span>(<span class="ident">UdevEvent</span>::<span class="ident">Removed</span> { <span class="ident">device_id</span>: <span class="ident">devnum</span> }, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> ());
+                            <span class="ident">callback</span>(<span class="ident">UdevEvent::Removed</span> { <span class="ident">device_id</span>: <span class="ident">devnum</span> }, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> ());
                         }
                     }
                 }
                 <span class="comment">// New connector</span>
-                <span class="ident">EventType</span>::<span class="ident">Change</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">EventType::Change</span> <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">devnum</span>) <span class="op">=</span> <span class="ident">event</span>.<span class="ident">devnum</span>() {
-                        <span class="macro">info</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">logger</span>, <span class="string">&quot;Device changed: #{}&quot;</span>, <span class="ident">devnum</span>);
+                        <span class="macro">info!</span>(<span class="self">self</span>.<span class="ident">logger</span>, <span class="string">&quot;Device changed: #{}&quot;</span>, <span class="ident">devnum</span>);
                         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">devices</span>.<span class="ident">contains_key</span>(<span class="kw-2">&amp;</span><span class="ident">devnum</span>) {
-                            <span class="ident">callback</span>(<span class="ident">UdevEvent</span>::<span class="ident">Changed</span> { <span class="ident">device_id</span>: <span class="ident">devnum</span> }, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> ());
+                            <span class="ident">callback</span>(<span class="ident">UdevEvent::Changed</span> { <span class="ident">device_id</span>: <span class="ident">devnum</span> }, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> ());
                         }
                     }
                 }
@@ -448,20 +477,21 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">register</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token</span>: <span class="ident">Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="ident">poll</span>.<span class="ident">register</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="ident">Interest</span>::<span class="ident">Readable</span>, <span class="ident">Mode</span>::<span class="ident">Level</span>, <span class="ident">token</span>)
+    <span class="kw">fn</span> <span class="ident">register</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token</span>: <span class="ident">Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="ident">poll</span>.<span class="ident">register</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="ident">Interest::READ</span>, <span class="ident">Mode::Level</span>, <span class="ident">token</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">reregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token</span>: <span class="ident">Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="ident">poll</span>.<span class="ident">reregister</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="ident">Interest</span>::<span class="ident">Readable</span>, <span class="ident">Mode</span>::<span class="ident">Level</span>, <span class="ident">token</span>)
+    <span class="kw">fn</span> <span class="ident">reregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token</span>: <span class="ident">Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="ident">poll</span>.<span class="ident">reregister</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="ident">Interest::READ</span>, <span class="ident">Mode::Level</span>, <span class="ident">token</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">unregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">unregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="ident">poll</span>.<span class="ident">unregister</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>())
     }
 }
 
 <span class="doccomment">/// Events generated by the [`UdevBackend`], notifying you of changes in system devices</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">UdevEvent</span> {
     <span class="doccomment">/// A new device has been detected</span>
     <span class="ident">Added</span> {
@@ -484,10 +514,10 @@
 
 <span class="doccomment">/// Returns the path of the primary GPU device if any</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// Might be used for filtering in [`UdevHandler::device_added`] or for manual</span>
-<span class="doccomment">/// [`LegacyDrmDevice`](::backend::drm::legacy::LegacyDrmDevice) initialization.</span>
+<span class="doccomment">/// Might be used for filtering of [`UdevEvent::Added`] or for manual</span>
+<span class="doccomment">/// [`DrmDevice`](crate::backend::drm::DrmDevice) initialization.</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">primary_gpu</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">seat</span>: <span class="ident">S</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IoResult</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">enumerator</span> <span class="op">=</span> <span class="ident">Enumerator</span>::<span class="ident">new</span>()<span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">enumerator</span> <span class="op">=</span> <span class="ident">Enumerator::new</span>()<span class="question-mark">?</span>;
     <span class="ident">enumerator</span>.<span class="ident">match_subsystem</span>(<span class="string">&quot;drm&quot;</span>)<span class="question-mark">?</span>;
     <span class="ident">enumerator</span>.<span class="ident">match_sysname</span>(<span class="string">&quot;card[0-9]*&quot;</span>)<span class="question-mark">?</span>;
 
@@ -497,9 +527,9 @@
             <span class="kw">let</span> <span class="ident">seat_name</span> <span class="op">=</span> <span class="ident">device</span>
                 .<span class="ident">property_value</span>(<span class="string">&quot;ID_SEAT&quot;</span>)
                 .<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">to_os_string</span>())
-                .<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">OsString</span>::<span class="ident">from</span>(<span class="string">&quot;seat0&quot;</span>));
+                .<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">OsString::from</span>(<span class="string">&quot;seat0&quot;</span>));
             <span class="kw">if</span> <span class="ident">seat_name</span> <span class="op">=</span><span class="op">=</span> <span class="kw-2">*</span><span class="ident">seat</span>.<span class="ident">as_ref</span>() {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">pci</span>)) <span class="op">=</span> <span class="ident">device</span>.<span class="ident">parent_with_subsystem</span>(<span class="ident">Path</span>::<span class="ident">new</span>(<span class="string">&quot;pci&quot;</span>)) {
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">pci</span>)) <span class="op">=</span> <span class="ident">device</span>.<span class="ident">parent_with_subsystem</span>(<span class="ident">Path::new</span>(<span class="string">&quot;pci&quot;</span>)) {
                     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">id</span>) <span class="op">=</span> <span class="ident">pci</span>.<span class="ident">attribute_value</span>(<span class="string">&quot;boot_vga&quot;</span>) {
                         <span class="kw">return</span> <span class="ident">id</span> <span class="op">=</span><span class="op">=</span> <span class="string">&quot;1&quot;</span>;
                     }
@@ -507,7 +537,7 @@
             }
             <span class="bool-val">false</span>
         })
-        .<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">device</span><span class="op">|</span> <span class="ident">device</span>.<span class="ident">devnode</span>().<span class="ident">map</span>(<span class="ident">PathBuf</span>::<span class="ident">from</span>))
+        .<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">device</span><span class="op">|</span> <span class="ident">device</span>.<span class="ident">devnode</span>().<span class="ident">map</span>(<span class="ident">PathBuf::from</span>))
         .<span class="ident">next</span>()
     {
         <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">path</span>))
@@ -518,10 +548,10 @@
 
 <span class="doccomment">/// Returns the paths of all available GPU devices</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// Might be used for manual  [`LegacyDrmDevice`](::backend::drm::legacy::LegacyDrmDevice)</span>
+<span class="doccomment">/// Might be used for manual  [`DrmDevice`](crate::backend::drm::DrmDevice)</span>
 <span class="doccomment">/// initialization.</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">all_gpus</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">seat</span>: <span class="ident">S</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IoResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">enumerator</span> <span class="op">=</span> <span class="ident">Enumerator</span>::<span class="ident">new</span>()<span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">enumerator</span> <span class="op">=</span> <span class="ident">Enumerator::new</span>()<span class="question-mark">?</span>;
     <span class="ident">enumerator</span>.<span class="ident">match_subsystem</span>(<span class="string">&quot;drm&quot;</span>)<span class="question-mark">?</span>;
     <span class="ident">enumerator</span>.<span class="ident">match_sysname</span>(<span class="string">&quot;card[0-9]*&quot;</span>)<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>(<span class="ident">enumerator</span>
@@ -530,16 +560,16 @@
             <span class="ident">device</span>
                 .<span class="ident">property_value</span>(<span class="string">&quot;ID_SEAT&quot;</span>)
                 .<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">to_os_string</span>())
-                .<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">OsString</span>::<span class="ident">from</span>(<span class="string">&quot;seat0&quot;</span>))
+                .<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">OsString::from</span>(<span class="string">&quot;seat0&quot;</span>))
                 <span class="op">=</span><span class="op">=</span> <span class="kw-2">*</span><span class="ident">seat</span>.<span class="ident">as_ref</span>()
         })
-        .<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">device</span><span class="op">|</span> <span class="ident">device</span>.<span class="ident">devnode</span>().<span class="ident">map</span>(<span class="ident">PathBuf</span>::<span class="ident">from</span>))
+        .<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">device</span><span class="op">|</span> <span class="ident">device</span>.<span class="ident">devnode</span>().<span class="ident">map</span>(<span class="ident">PathBuf::from</span>))
         .<span class="ident">collect</span>())
 }
 
 <span class="doccomment">/// Returns the loaded driver for a device named by it&#39;s [`dev_t`](::nix::sys::stat::dev_t).</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">driver</span>(<span class="ident">dev</span>: <span class="ident">dev_t</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IoResult</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">OsString</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">enumerator</span> <span class="op">=</span> <span class="ident">Enumerator</span>::<span class="ident">new</span>()<span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">enumerator</span> <span class="op">=</span> <span class="ident">Enumerator::new</span>()<span class="question-mark">?</span>;
     <span class="ident">enumerator</span>.<span class="ident">match_subsystem</span>(<span class="string">&quot;drm&quot;</span>)<span class="question-mark">?</span>;
     <span class="ident">enumerator</span>.<span class="ident">match_sysname</span>(<span class="string">&quot;card[0-9]*&quot;</span>)<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>(<span class="ident">enumerator</span>
@@ -549,7 +579,7 @@
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">device</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">dev</span>);
             <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">dev</span>) <span class="op">=</span> <span class="ident">device</span> {
                 <span class="kw">if</span> <span class="ident">dev</span>.<span class="ident">driver</span>().<span class="ident">is_some</span>() {
-                    <span class="kw">return</span> <span class="ident">dev</span>.<span class="ident">driver</span>().<span class="ident">map</span>(<span class="ident">std</span>::<span class="ident">ffi</span>::<span class="ident">OsStr</span>::<span class="ident">to_os_string</span>);
+                    <span class="kw">return</span> <span class="ident">dev</span>.<span class="ident">driver</span>().<span class="ident">map</span>(<span class="ident">std::ffi::OsStr::to_os_string</span>);
                 }
                 <span class="ident">device</span> <span class="op">=</span> <span class="ident">dev</span>.<span class="ident">parent</span>();
             }
@@ -558,4 +588,4 @@
         .<span class="ident">next</span>())
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "smithay";</script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="smithay" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script></body></html>

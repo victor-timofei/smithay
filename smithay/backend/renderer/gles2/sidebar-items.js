@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Gles2Error","Error returned during rendering using GL ES"]],"mod":[["ffi",""]],"struct":[["Gles2Frame","Handle to the currently rendered frame during `Gles2Renderer::render`"],["Gles2Renderer","A renderer utilizing OpenGL ES 2"],["Gles2Texture","A handle to a GLES2 texture"]]});

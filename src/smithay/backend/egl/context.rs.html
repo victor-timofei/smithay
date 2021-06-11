@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/backend/egl/context.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>context.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script src="../../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../../smithay/index.html'><div class='logo-container'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../../settings.html"><img src="../../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/backend/egl/context.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>context.rs - source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../../storage.js"></script><script src="../../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../../smithay/index.html'><div class='logo-container rust-logo'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img src="../../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../../settings.html" title="settings"><img src="../../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -335,120 +337,212 @@
 <span id="335">335</span>
 <span id="336">336</span>
 <span id="337">337</span>
-</pre><div class="example-wrap"><pre class="rust ">
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+</pre><pre class="rust">
 <span class="doccomment">//! EGL context related structs</span>
+<span class="kw">use</span> <span class="ident">std::collections::HashSet</span>;
+<span class="kw">use</span> <span class="ident">std::os::raw::c_int</span>;
+<span class="kw">use</span> <span class="ident">std::sync::atomic::Ordering</span>;
 
 <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">ffi</span>, <span class="ident">wrap_egl_call</span>, <span class="ident">Error</span>, <span class="ident">MakeCurrentError</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">backend</span>::<span class="ident">egl</span>::<span class="ident">display</span>::{<span class="ident">EGLDisplay</span>, <span class="ident">EGLDisplayHandle</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">backend</span>::<span class="ident">egl</span>::<span class="ident">native</span>::<span class="ident">NativeSurface</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">backend</span>::<span class="ident">egl</span>::{<span class="ident">native</span>, <span class="ident">EGLSurface</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">backend</span>::<span class="ident">graphics</span>::<span class="ident">PixelFormat</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">raw</span>::<span class="ident">c_int</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ptr</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::{<span class="ident">atomic</span>::<span class="ident">Ordering</span>, <span class="ident">Arc</span>};
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend::allocator::Format</span> <span class="kw">as</span> <span class="ident">DrmFormat</span>;
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend::egl::display</span>::{<span class="ident">EGLDisplay</span>, <span class="ident">PixelFormat</span>};
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend::egl::EGLSurface</span>;
 
 <span class="doccomment">/// EGL context for rendering</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EGLContext</span> {
-    <span class="ident">context</span>: <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">types</span>::<span class="ident">EGLContext</span>,
-    <span class="ident">display</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">EGLDisplayHandle</span><span class="op">&gt;</span>,
-    <span class="ident">config_id</span>: <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">types</span>::<span class="ident">EGLConfig</span>,
-    <span class="ident">pixel_format</span>: <span class="ident">PixelFormat</span>,
+    <span class="ident">context</span>: <span class="ident">ffi::egl::types::EGLContext</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">display</span>: <span class="ident">EGLDisplay</span>,
+    <span class="ident">config_id</span>: <span class="ident">ffi::egl::types::EGLConfig</span>,
+    <span class="ident">pixel_format</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PixelFormat</span><span class="op">&gt;</span>,
 }
 <span class="comment">// EGLContexts can be moved between threads safely</span>
 <span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Send</span> <span class="kw">for</span> <span class="ident">EGLContext</span> {}
 <span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Sync</span> <span class="kw">for</span> <span class="ident">EGLContext</span> {}
 
 <span class="kw">impl</span> <span class="ident">EGLContext</span> {
-    <span class="doccomment">/// Create a new [`EGLContext`] from a given [`NativeDisplay`](native::NativeDisplay)</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">N</span>, <span class="ident">L</span><span class="op">&gt;</span>(
-        <span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="ident">EGLDisplay</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">N</span><span class="op">&gt;</span>,
-        <span class="kw-2">mut</span> <span class="ident">attributes</span>: <span class="ident">GlAttributes</span>,
+    <span class="doccomment">/// Creates a new configless `EGLContext` from a given `EGLDisplay`</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>(<span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="ident">EGLDisplay</span>, <span class="ident">log</span>: <span class="ident">L</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">EGLContext</span>, <span class="ident">Error</span><span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">::slog::Logger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    {
+        <span class="self">Self</span><span class="ident">::new_internal</span>(<span class="ident">display</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="ident">log</span>)
+    }
+
+    <span class="doccomment">/// Create a new [`EGLContext`] from a given `EGLDisplay` and configuration requirements</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_with_config</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>(
+        <span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="ident">EGLDisplay</span>,
+        <span class="ident">attributes</span>: <span class="ident">GlAttributes</span>,
         <span class="ident">reqs</span>: <span class="ident">PixelFormatRequirements</span>,
         <span class="ident">log</span>: <span class="ident">L</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">EGLContext</span>, <span class="ident">Error</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span>::<span class="ident">slog</span>::<span class="ident">Logger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">B</span>: <span class="ident">native</span>::<span class="ident">Backend</span>,
-        <span class="ident">N</span>: <span class="ident">native</span>::<span class="ident">NativeDisplay</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
+        <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">::slog::Logger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     {
-        <span class="kw">let</span> <span class="ident">log</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">slog_or_fallback</span>(<span class="ident">log</span>.<span class="ident">into</span>()).<span class="ident">new</span>(<span class="macro">o</span><span class="macro">!</span>(<span class="string">&quot;smithay_module&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;renderer_egl&quot;</span>));
+        <span class="self">Self</span><span class="ident">::new_internal</span>(<span class="ident">display</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>((<span class="ident">attributes</span>, <span class="ident">reqs</span>)), <span class="ident">log</span>)
+    }
 
-        <span class="comment">// If no version is given, try OpenGLES 3.0, if available,</span>
-        <span class="comment">// fallback to 2.0 otherwise</span>
-        <span class="kw">let</span> <span class="ident">version</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">attributes</span>.<span class="ident">version</span> {
-            <span class="prelude-val">Some</span>((<span class="number">3</span>, <span class="ident">x</span>)) <span class="op">=</span><span class="op">&gt;</span> (<span class="number">3</span>, <span class="ident">x</span>),
-            <span class="prelude-val">Some</span>((<span class="number">2</span>, <span class="ident">x</span>)) <span class="op">=</span><span class="op">&gt;</span> (<span class="number">2</span>, <span class="ident">x</span>),
+    <span class="doccomment">/// Create a new configless `EGLContext` from a given `EGLDisplay` sharing resources with another context</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_shared</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>(<span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="ident">EGLDisplay</span>, <span class="ident">share</span>: <span class="kw-2">&amp;</span><span class="ident">EGLContext</span>, <span class="ident">log</span>: <span class="ident">L</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">EGLContext</span>, <span class="ident">Error</span><span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">::slog::Logger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    {
+        <span class="self">Self</span><span class="ident">::new_internal</span>(<span class="ident">display</span>, <span class="prelude-val">Some</span>(<span class="ident">share</span>), <span class="prelude-val">None</span>, <span class="ident">log</span>)
+    }
+
+    <span class="doccomment">/// Create a new `EGLContext` from a given `EGLDisplay` and configuration requirements sharing resources with another context</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_shared_with_config</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>(
+        <span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="ident">EGLDisplay</span>,
+        <span class="ident">share</span>: <span class="kw-2">&amp;</span><span class="ident">EGLContext</span>,
+        <span class="ident">attributes</span>: <span class="ident">GlAttributes</span>,
+        <span class="ident">reqs</span>: <span class="ident">PixelFormatRequirements</span>,
+        <span class="ident">log</span>: <span class="ident">L</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">EGLContext</span>, <span class="ident">Error</span><span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">::slog::Logger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    {
+        <span class="self">Self</span><span class="ident">::new_internal</span>(<span class="ident">display</span>, <span class="prelude-val">Some</span>(<span class="ident">share</span>), <span class="prelude-val">Some</span>((<span class="ident">attributes</span>, <span class="ident">reqs</span>)), <span class="ident">log</span>)
+    }
+
+    <span class="kw">fn</span> <span class="ident">new_internal</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>(
+        <span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="ident">EGLDisplay</span>,
+        <span class="ident">shared</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">EGLContext</span><span class="op">&gt;</span>,
+        <span class="ident">config</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">GlAttributes</span>, <span class="ident">PixelFormatRequirements</span>)<span class="op">&gt;</span>,
+        <span class="ident">log</span>: <span class="ident">L</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">EGLContext</span>, <span class="ident">Error</span><span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">::slog::Logger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    {
+        <span class="kw">let</span> <span class="ident">log</span> <span class="op">=</span> <span class="kw">crate</span><span class="ident">::slog_or_fallback</span>(<span class="ident">log</span>.<span class="ident">into</span>()).<span class="ident">new</span>(<span class="macro">o!</span>(<span class="string">&quot;smithay_module&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;backend_egl&quot;</span>));
+
+        <span class="kw">let</span> (<span class="ident">pixel_format</span>, <span class="ident">config_id</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span> {
+            <span class="prelude-val">Some</span>((<span class="ident">attributes</span>, <span class="ident">reqs</span>)) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="kw">let</span> (<span class="ident">format</span>, <span class="ident">config_id</span>) <span class="op">=</span> <span class="ident">display</span>.<span class="ident">choose_config</span>(<span class="ident">attributes</span>, <span class="ident">reqs</span>)<span class="question-mark">?</span>;
+                (<span class="prelude-val">Some</span>(<span class="ident">format</span>), <span class="ident">config_id</span>)
+            }
             <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="macro">debug</span><span class="macro">!</span>(<span class="ident">log</span>, <span class="string">&quot;Trying to initialize EGL with OpenGLES 3.0&quot;</span>);
-                <span class="ident">attributes</span>.<span class="ident">version</span> <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="number">3</span>, <span class="number">0</span>));
-                <span class="kw">match</span> <span class="ident">EGLContext</span>::<span class="ident">new</span>(<span class="ident">display</span>, <span class="ident">attributes</span>, <span class="ident">reqs</span>, <span class="ident">log</span>.<span class="ident">clone</span>()) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">x</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">x</span>),
-                    <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                        <span class="macro">warn</span><span class="macro">!</span>(<span class="ident">log</span>, <span class="string">&quot;EGL OpenGLES 3.0 Initialization failed with {}&quot;</span>, <span class="ident">err</span>);
-                        <span class="macro">debug</span><span class="macro">!</span>(<span class="ident">log</span>, <span class="string">&quot;Trying to initialize EGL with OpenGLES 2.0&quot;</span>);
-                        <span class="ident">attributes</span>.<span class="ident">version</span> <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="number">2</span>, <span class="number">0</span>));
-                        <span class="kw">return</span> <span class="ident">EGLContext</span>::<span class="ident">new</span>(<span class="ident">display</span>, <span class="ident">attributes</span>, <span class="ident">reqs</span>, <span class="ident">log</span>.<span class="ident">clone</span>());
-                    }
+                <span class="kw">if</span> <span class="op">!</span><span class="ident">display</span>
+                    .<span class="ident">extensions</span>
+                    .<span class="ident">iter</span>()
+                    .<span class="ident">any</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span> <span class="op">=</span><span class="op">=</span> <span class="string">&quot;EGL_KHR_no_config_context&quot;</span>)
+                    <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">display</span>
+                        .<span class="ident">extensions</span>
+                        .<span class="ident">iter</span>()
+                        .<span class="ident">any</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span> <span class="op">=</span><span class="op">=</span> <span class="string">&quot;EGL_MESA_configless_context&quot;</span>)
+                    <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">display</span>
+                        .<span class="ident">extensions</span>
+                        .<span class="ident">iter</span>()
+                        .<span class="ident">any</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span> <span class="op">=</span><span class="op">=</span> <span class="string">&quot;EGL_KHR_surfaceless_context&quot;</span>)
+                {
+                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::EglExtensionNotSupported</span>(<span class="kw-2">&amp;</span>[
+                        <span class="string">&quot;EGL_KHR_no_config_context&quot;</span>,
+                        <span class="string">&quot;EGL_MESA_configless_context&quot;</span>,
+                        <span class="string">&quot;EGL_KHR_surfaceless_context&quot;</span>,
+                    ]));
                 }
-            }
-            <span class="prelude-val">Some</span>((<span class="number">1</span>, <span class="ident">x</span>)) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="macro">error</span><span class="macro">!</span>(<span class="ident">log</span>, <span class="string">&quot;OpenGLES 1.* is not supported by the EGL renderer backend&quot;</span>);
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">OpenGlVersionNotSupported</span>((<span class="number">1</span>, <span class="ident">x</span>)));
-            }
-            <span class="prelude-val">Some</span>(<span class="ident">version</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="macro">error</span><span class="macro">!</span>(
-                    <span class="ident">log</span>,
-                    <span class="string">&quot;OpenGLES {:?} is unknown and not supported by the EGL renderer backend&quot;</span>, <span class="ident">version</span>
-                );
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">OpenGlVersionNotSupported</span>(<span class="ident">version</span>));
+                (<span class="prelude-val">None</span>, <span class="ident">ffi::egl::NO_CONFIG_KHR</span>)
             }
         };
 
-        <span class="kw">let</span> (<span class="ident">pixel_format</span>, <span class="ident">config_id</span>) <span class="op">=</span> <span class="ident">display</span>.<span class="ident">choose_config</span>(<span class="ident">attributes</span>, <span class="ident">reqs</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">context_attributes</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="number">10</span>);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">context_attributes</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="number">10</span>);
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">attributes</span>, <span class="kw">_</span>)) <span class="op">=</span> <span class="ident">config</span> {
+            <span class="kw">let</span> <span class="ident">version</span> <span class="op">=</span> <span class="ident">attributes</span>.<span class="ident">version</span>;
 
-        <span class="kw">if</span> <span class="ident">display</span>.<span class="ident">egl_version</span> <span class="op">&gt;</span><span class="op">=</span> (<span class="number">1</span>, <span class="number">5</span>) <span class="op">|</span><span class="op">|</span> <span class="ident">display</span>.<span class="ident">extensions</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span> <span class="op">=</span><span class="op">=</span> <span class="string">&quot;EGL_KHR_create_context&quot;</span>) {
-            <span class="macro">trace</span><span class="macro">!</span>(<span class="ident">log</span>, <span class="string">&quot;Setting CONTEXT_MAJOR_VERSION to {}&quot;</span>, <span class="ident">version</span>.<span class="number">0</span>);
-            <span class="ident">context_attributes</span>.<span class="ident">push</span>(<span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">CONTEXT_MAJOR_VERSION</span> <span class="kw">as</span> <span class="ident">i32</span>);
-            <span class="ident">context_attributes</span>.<span class="ident">push</span>(<span class="ident">version</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">i32</span>);
-            <span class="macro">trace</span><span class="macro">!</span>(<span class="ident">log</span>, <span class="string">&quot;Setting CONTEXT_MINOR_VERSION to {}&quot;</span>, <span class="ident">version</span>.<span class="number">1</span>);
-            <span class="ident">context_attributes</span>.<span class="ident">push</span>(<span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">CONTEXT_MINOR_VERSION</span> <span class="kw">as</span> <span class="ident">i32</span>);
-            <span class="ident">context_attributes</span>.<span class="ident">push</span>(<span class="ident">version</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">i32</span>);
+            <span class="kw">if</span> <span class="ident">display</span>.<span class="ident">egl_version</span> <span class="op">&gt;</span><span class="op">=</span> (<span class="number">1</span>, <span class="number">5</span>)
+                <span class="op">|</span><span class="op">|</span> <span class="ident">display</span>.<span class="ident">extensions</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span> <span class="op">=</span><span class="op">=</span> <span class="string">&quot;EGL_KHR_create_context&quot;</span>)
+            {
+                <span class="macro">trace!</span>(<span class="ident">log</span>, <span class="string">&quot;Setting CONTEXT_MAJOR_VERSION to {}&quot;</span>, <span class="ident">version</span>.<span class="number">0</span>);
+                <span class="ident">context_attributes</span>.<span class="ident">push</span>(<span class="ident">ffi::egl::CONTEXT_MAJOR_VERSION</span> <span class="kw">as</span> <span class="ident">i32</span>);
+                <span class="ident">context_attributes</span>.<span class="ident">push</span>(<span class="ident">version</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">i32</span>);
+                <span class="macro">trace!</span>(<span class="ident">log</span>, <span class="string">&quot;Setting CONTEXT_MINOR_VERSION to {}&quot;</span>, <span class="ident">version</span>.<span class="number">1</span>);
+                <span class="ident">context_attributes</span>.<span class="ident">push</span>(<span class="ident">ffi::egl::CONTEXT_MINOR_VERSION</span> <span class="kw">as</span> <span class="ident">i32</span>);
+                <span class="ident">context_attributes</span>.<span class="ident">push</span>(<span class="ident">version</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">i32</span>);
 
-            <span class="kw">if</span> <span class="ident">attributes</span>.<span class="ident">debug</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">display</span>.<span class="ident">egl_version</span> <span class="op">&gt;</span><span class="op">=</span> (<span class="number">1</span>, <span class="number">5</span>) {
-                <span class="macro">trace</span><span class="macro">!</span>(<span class="ident">log</span>, <span class="string">&quot;Setting CONTEXT_OPENGL_DEBUG to TRUE&quot;</span>);
-                <span class="ident">context_attributes</span>.<span class="ident">push</span>(<span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">CONTEXT_OPENGL_DEBUG</span> <span class="kw">as</span> <span class="ident">i32</span>);
-                <span class="ident">context_attributes</span>.<span class="ident">push</span>(<span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">TRUE</span> <span class="kw">as</span> <span class="ident">i32</span>);
+                <span class="kw">if</span> <span class="ident">attributes</span>.<span class="ident">debug</span> <span class="op">&amp;&amp;</span> <span class="ident">display</span>.<span class="ident">egl_version</span> <span class="op">&gt;</span><span class="op">=</span> (<span class="number">1</span>, <span class="number">5</span>) {
+                    <span class="macro">trace!</span>(<span class="ident">log</span>, <span class="string">&quot;Setting CONTEXT_OPENGL_DEBUG to TRUE&quot;</span>);
+                    <span class="ident">context_attributes</span>.<span class="ident">push</span>(<span class="ident">ffi::egl::CONTEXT_OPENGL_DEBUG</span> <span class="kw">as</span> <span class="ident">i32</span>);
+                    <span class="ident">context_attributes</span>.<span class="ident">push</span>(<span class="ident">ffi::egl::TRUE</span> <span class="kw">as</span> <span class="ident">i32</span>);
+                }
+
+                <span class="ident">context_attributes</span>.<span class="ident">push</span>(<span class="ident">ffi::egl::CONTEXT_FLAGS_KHR</span> <span class="kw">as</span> <span class="ident">i32</span>);
+                <span class="ident">context_attributes</span>.<span class="ident">push</span>(<span class="number">0</span>);
+            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">display</span>.<span class="ident">egl_version</span> <span class="op">&gt;</span><span class="op">=</span> (<span class="number">1</span>, <span class="number">3</span>) {
+                <span class="macro">trace!</span>(<span class="ident">log</span>, <span class="string">&quot;Setting CONTEXT_CLIENT_VERSION to {}&quot;</span>, <span class="ident">version</span>.<span class="number">0</span>);
+                <span class="ident">context_attributes</span>.<span class="ident">push</span>(<span class="ident">ffi::egl::CONTEXT_CLIENT_VERSION</span> <span class="kw">as</span> <span class="ident">i32</span>);
+                <span class="ident">context_attributes</span>.<span class="ident">push</span>(<span class="ident">version</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">i32</span>);
             }
-
-            <span class="ident">context_attributes</span>.<span class="ident">push</span>(<span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">CONTEXT_FLAGS_KHR</span> <span class="kw">as</span> <span class="ident">i32</span>);
-            <span class="ident">context_attributes</span>.<span class="ident">push</span>(<span class="number">0</span>);
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">display</span>.<span class="ident">egl_version</span> <span class="op">&gt;</span><span class="op">=</span> (<span class="number">1</span>, <span class="number">3</span>) {
-            <span class="macro">trace</span><span class="macro">!</span>(<span class="ident">log</span>, <span class="string">&quot;Setting CONTEXT_CLIENT_VERSION to {}&quot;</span>, <span class="ident">version</span>.<span class="number">0</span>);
-            <span class="ident">context_attributes</span>.<span class="ident">push</span>(<span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">CONTEXT_CLIENT_VERSION</span> <span class="kw">as</span> <span class="ident">i32</span>);
-            <span class="ident">context_attributes</span>.<span class="ident">push</span>(<span class="ident">version</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">i32</span>);
+        } <span class="kw">else</span> {
+            <span class="macro">trace!</span>(<span class="ident">log</span>, <span class="string">&quot;Setting CONTEXT_CLIENT_VERSION to 2&quot;</span>);
+            <span class="ident">context_attributes</span>.<span class="ident">push</span>(<span class="ident">ffi::egl::CONTEXT_CLIENT_VERSION</span> <span class="kw">as</span> <span class="ident">i32</span>);
+            <span class="ident">context_attributes</span>.<span class="ident">push</span>(<span class="number">2</span>);
         }
 
-        <span class="ident">context_attributes</span>.<span class="ident">push</span>(<span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">NONE</span> <span class="kw">as</span> <span class="ident">i32</span>);
+        <span class="ident">context_attributes</span>.<span class="ident">push</span>(<span class="ident">ffi::egl::NONE</span> <span class="kw">as</span> <span class="ident">i32</span>);
 
-        <span class="macro">trace</span><span class="macro">!</span>(<span class="ident">log</span>, <span class="string">&quot;Creating EGL context...&quot;</span>);
-        <span class="comment">// TODO: Support shared contexts</span>
+        <span class="macro">trace!</span>(<span class="ident">log</span>, <span class="string">&quot;Creating EGL context...&quot;</span>);
         <span class="kw">let</span> <span class="ident">context</span> <span class="op">=</span> <span class="ident">wrap_egl_call</span>(<span class="op">|</span><span class="op">|</span> <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">CreateContext</span>(
+            <span class="ident">ffi::egl::CreateContext</span>(
                 <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">display</span>.<span class="ident">display</span>,
                 <span class="ident">config_id</span>,
-                <span class="ident">ptr</span>::<span class="ident">null</span>(),
+                <span class="ident">shared</span>
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">context</span><span class="op">|</span> <span class="ident">context</span>.<span class="ident">context</span>)
+                    .<span class="ident">unwrap_or</span>(<span class="ident">ffi::egl::NO_CONTEXT</span>),
                 <span class="ident">context_attributes</span>.<span class="ident">as_ptr</span>(),
             )
         })
-        .<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">CreationFailed</span>)<span class="question-mark">?</span>;
+        .<span class="ident">map_err</span>(<span class="ident">Error::CreationFailed</span>)<span class="question-mark">?</span>;
 
-        <span class="macro">info</span><span class="macro">!</span>(<span class="ident">log</span>, <span class="string">&quot;EGL context created&quot;</span>);
+        <span class="macro">info!</span>(<span class="ident">log</span>, <span class="string">&quot;EGL context created&quot;</span>);
 
         <span class="prelude-val">Ok</span>(<span class="ident">EGLContext</span> {
             <span class="ident">context</span>,
-            <span class="ident">display</span>: <span class="ident">display</span>.<span class="ident">display</span>.<span class="ident">clone</span>(),
+            <span class="ident">display</span>: <span class="ident">display</span>.<span class="ident">clone</span>(),
             <span class="ident">config_id</span>,
             <span class="ident">pixel_format</span>,
         })
@@ -461,14 +555,13 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This function is marked unsafe, because the context cannot be made current</span>
     <span class="doccomment">/// on multiple threads.</span>
-    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">make_current_with_surface</span><span class="op">&lt;</span><span class="ident">N</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">EGLSurface</span><span class="op">&lt;</span><span class="ident">N</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">MakeCurrentError</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">N</span>: <span class="ident">NativeSurface</span>,
-    {
-        <span class="kw">let</span> <span class="ident">surface_ptr</span> <span class="op">=</span> <span class="ident">surface</span>.<span class="ident">surface</span>.<span class="ident">load</span>(<span class="ident">Ordering</span>::<span class="ident">SeqCst</span>);
-        <span class="ident">wrap_egl_call</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">MakeCurrent</span>(<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">display</span>, <span class="ident">surface_ptr</span>, <span class="ident">surface_ptr</span>, <span class="self">self</span>.<span class="ident">context</span>))
-            .<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> ())
-            .<span class="ident">map_err</span>(<span class="ident">Into</span>::<span class="ident">into</span>)
+    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">make_current_with_surface</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">EGLSurface</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">MakeCurrentError</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">surface_ptr</span> <span class="op">=</span> <span class="ident">surface</span>.<span class="ident">surface</span>.<span class="ident">load</span>(<span class="ident">Ordering::SeqCst</span>);
+        <span class="ident">wrap_egl_call</span>(<span class="op">|</span><span class="op">|</span> {
+            <span class="ident">ffi::egl::MakeCurrent</span>(<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">display</span>.<span class="ident">display</span>, <span class="ident">surface_ptr</span>, <span class="ident">surface_ptr</span>, <span class="self">self</span>.<span class="ident">context</span>)
+        })
+        .<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> ())
+        .<span class="ident">map_err</span>(<span class="ident">Into::into</span>)
     }
 
     <span class="doccomment">/// Makes the OpenGL context the current context in the current thread with no surface bound.</span>
@@ -479,29 +572,29 @@
     <span class="doccomment">/// on multiple threads without being unbound again (see `unbind`)</span>
     <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">make_current</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">MakeCurrentError</span><span class="op">&gt;</span> {
         <span class="ident">wrap_egl_call</span>(<span class="op">|</span><span class="op">|</span> {
-            <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">MakeCurrent</span>(
-                <span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">display</span>,
-                <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">NO_SURFACE</span>,
-                <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">NO_SURFACE</span>,
+            <span class="ident">ffi::egl::MakeCurrent</span>(
+                <span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">display</span>.<span class="ident">display</span>,
+                <span class="ident">ffi::egl::NO_SURFACE</span>,
+                <span class="ident">ffi::egl::NO_SURFACE</span>,
                 <span class="self">self</span>.<span class="ident">context</span>,
             )
         })
         .<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> ())
-        .<span class="ident">map_err</span>(<span class="ident">Into</span>::<span class="ident">into</span>)
+        .<span class="ident">map_err</span>(<span class="ident">Into::into</span>)
     }
 
     <span class="doccomment">/// Returns true if the OpenGL context is the current one in the thread.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_current</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">GetCurrentContext</span>() <span class="op">=</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">context</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span> }
+        <span class="kw">unsafe</span> { <span class="ident">ffi::egl::GetCurrentContext</span>() <span class="op">=</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">context</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span> }
     }
 
     <span class="doccomment">/// Returns the egl config for this context</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_config_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">types</span>::<span class="ident">EGLConfig</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">config_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ffi::egl::types::EGLConfig</span> {
         <span class="self">self</span>.<span class="ident">config_id</span>
     }
 
     <span class="doccomment">/// Returns the pixel format of the main framebuffer of the context.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_pixel_format</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PixelFormat</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pixel_format</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PixelFormat</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">pixel_format</span>
     }
 
@@ -511,15 +604,25 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unbind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">MakeCurrentError</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">is_current</span>() {
             <span class="ident">wrap_egl_call</span>(<span class="op">|</span><span class="op">|</span> <span class="kw">unsafe</span> {
-                <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">MakeCurrent</span>(
-                    <span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">display</span>,
-                    <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">NO_SURFACE</span>,
-                    <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">NO_SURFACE</span>,
-                    <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">NO_CONTEXT</span>,
+                <span class="ident">ffi::egl::MakeCurrent</span>(
+                    <span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">display</span>.<span class="ident">display</span>,
+                    <span class="ident">ffi::egl::NO_SURFACE</span>,
+                    <span class="ident">ffi::egl::NO_SURFACE</span>,
+                    <span class="ident">ffi::egl::NO_CONTEXT</span>,
                 )
             })<span class="question-mark">?</span>;
         }
         <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="doccomment">/// Returns a list of formats for dmabufs that can be rendered to</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dmabuf_render_formats</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">DrmFormat</span><span class="op">&gt;</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">display</span>.<span class="ident">dmabuf_render_formats</span>
+    }
+
+    <span class="doccomment">/// Returns a list of formats for dmabufs that can be used as textures</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dmabuf_texture_formats</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">DrmFormat</span><span class="op">&gt;</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">display</span>.<span class="ident">dmabuf_import_formats</span>
     }
 }
 
@@ -529,7 +632,7 @@
             <span class="comment">// We need to ensure the context is unbound, otherwise it egl stalls the destroy call</span>
             <span class="comment">// ignore failures at this point</span>
             <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">unbind</span>();
-            <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">DestroyContext</span>(<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">display</span>, <span class="self">self</span>.<span class="ident">context</span>);
+            <span class="ident">ffi::egl::DestroyContext</span>(<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">display</span>.<span class="ident">display</span>, <span class="self">self</span>.<span class="ident">context</span>);
         }
     }
 }
@@ -539,9 +642,9 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GlAttributes</span> {
     <span class="doccomment">/// Describes the OpenGL API and version that are being requested when a context is created.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// `Some(3, 0)` will request a OpenGL ES 3.0 context for example.</span>
-    <span class="doccomment">/// `None` means &quot;don&#39;t care&quot; (minimum will be 2.0).</span>
-    <span class="kw">pub</span> <span class="ident">version</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">u8</span>, <span class="ident">u8</span>)<span class="op">&gt;</span>,
+    <span class="doccomment">/// `(3, 0)` will request a OpenGL ES 3.0 context for example.</span>
+    <span class="doccomment">/// `(2, 0)` is the minimum.</span>
+    <span class="kw">pub</span> <span class="ident">version</span>: (<span class="ident">u8</span>, <span class="ident">u8</span>),
     <span class="doccomment">/// OpenGL profile to use</span>
     <span class="kw">pub</span> <span class="ident">profile</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GlProfile</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Whether to enable the debug flag of the context.</span>
@@ -586,9 +689,6 @@
     <span class="doccomment">/// Contains the minimum number of samples per pixel in the color, depth and stencil buffers.</span>
     <span class="doccomment">/// `None` means &quot;don&#39;t care&quot;. Default is `None`. A value of `Some(0)` indicates that multisampling must not be enabled.</span>
     <span class="kw">pub</span> <span class="ident">multisampling</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// If `true`, only stereoscopic formats will be considered. If `false`, only non-stereoscopic formats.</span>
-    <span class="doccomment">/// The default is `false`.</span>
-    <span class="kw">pub</span> <span class="ident">stereoscopy</span>: <span class="ident">bool</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">PixelFormatRequirements</span> {
@@ -602,76 +702,68 @@
             <span class="ident">stencil_bits</span>: <span class="prelude-val">Some</span>(<span class="number">8</span>),
             <span class="ident">double_buffer</span>: <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
             <span class="ident">multisampling</span>: <span class="prelude-val">None</span>,
-            <span class="ident">stereoscopy</span>: <span class="bool-val">false</span>,
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">PixelFormatRequirements</span> {
     <span class="doccomment">/// Append the  requirements to the given attribute list</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_attributes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">out</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">c_int</span><span class="op">&gt;</span>, <span class="ident">logger</span>: <span class="kw-2">&amp;</span><span class="ident">slog</span>::<span class="ident">Logger</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), ()<span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_attributes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">out</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">c_int</span><span class="op">&gt;</span>, <span class="ident">logger</span>: <span class="kw-2">&amp;</span><span class="ident">slog::Logger</span>) {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">hardware_accelerated</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">hardware_accelerated</span> {
-            <span class="ident">out</span>.<span class="ident">push</span>(<span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">CONFIG_CAVEAT</span> <span class="kw">as</span> <span class="ident">c_int</span>);
+            <span class="ident">out</span>.<span class="ident">push</span>(<span class="ident">ffi::egl::CONFIG_CAVEAT</span> <span class="kw">as</span> <span class="ident">c_int</span>);
             <span class="ident">out</span>.<span class="ident">push</span>(<span class="kw">if</span> <span class="ident">hardware_accelerated</span> {
-                <span class="macro">trace</span><span class="macro">!</span>(<span class="ident">logger</span>, <span class="string">&quot;Setting CONFIG_CAVEAT to NONE&quot;</span>);
-                <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">NONE</span> <span class="kw">as</span> <span class="ident">c_int</span>
+                <span class="macro">trace!</span>(<span class="ident">logger</span>, <span class="string">&quot;Setting CONFIG_CAVEAT to NONE&quot;</span>);
+                <span class="ident">ffi::egl::NONE</span> <span class="kw">as</span> <span class="ident">c_int</span>
             } <span class="kw">else</span> {
-                <span class="macro">trace</span><span class="macro">!</span>(<span class="ident">logger</span>, <span class="string">&quot;Setting CONFIG_CAVEAT to SLOW_CONFIG&quot;</span>);
-                <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">SLOW_CONFIG</span> <span class="kw">as</span> <span class="ident">c_int</span>
+                <span class="macro">trace!</span>(<span class="ident">logger</span>, <span class="string">&quot;Setting CONFIG_CAVEAT to SLOW_CONFIG&quot;</span>);
+                <span class="ident">ffi::egl::SLOW_CONFIG</span> <span class="kw">as</span> <span class="ident">c_int</span>
             });
         }
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">color</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">color_bits</span> {
-            <span class="macro">trace</span><span class="macro">!</span>(<span class="ident">logger</span>, <span class="string">&quot;Setting RED_SIZE to {}&quot;</span>, <span class="ident">color</span> <span class="op">/</span> <span class="number">3</span>);
-            <span class="ident">out</span>.<span class="ident">push</span>(<span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">RED_SIZE</span> <span class="kw">as</span> <span class="ident">c_int</span>);
+            <span class="macro">trace!</span>(<span class="ident">logger</span>, <span class="string">&quot;Setting RED_SIZE to {}&quot;</span>, <span class="ident">color</span> <span class="op">/</span> <span class="number">3</span>);
+            <span class="ident">out</span>.<span class="ident">push</span>(<span class="ident">ffi::egl::RED_SIZE</span> <span class="kw">as</span> <span class="ident">c_int</span>);
             <span class="ident">out</span>.<span class="ident">push</span>((<span class="ident">color</span> <span class="op">/</span> <span class="number">3</span>) <span class="kw">as</span> <span class="ident">c_int</span>);
-            <span class="macro">trace</span><span class="macro">!</span>(
+            <span class="macro">trace!</span>(
                 <span class="ident">logger</span>,
                 <span class="string">&quot;Setting GREEN_SIZE to {}&quot;</span>,
                 <span class="ident">color</span> <span class="op">/</span> <span class="number">3</span> <span class="op">+</span> <span class="kw">if</span> <span class="ident">color</span> <span class="op">%</span> <span class="number">3</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> { <span class="number">1</span> } <span class="kw">else</span> { <span class="number">0</span> }
             );
-            <span class="ident">out</span>.<span class="ident">push</span>(<span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">GREEN_SIZE</span> <span class="kw">as</span> <span class="ident">c_int</span>);
+            <span class="ident">out</span>.<span class="ident">push</span>(<span class="ident">ffi::egl::GREEN_SIZE</span> <span class="kw">as</span> <span class="ident">c_int</span>);
             <span class="ident">out</span>.<span class="ident">push</span>((<span class="ident">color</span> <span class="op">/</span> <span class="number">3</span> <span class="op">+</span> <span class="kw">if</span> <span class="ident">color</span> <span class="op">%</span> <span class="number">3</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> { <span class="number">1</span> } <span class="kw">else</span> { <span class="number">0</span> }) <span class="kw">as</span> <span class="ident">c_int</span>);
-            <span class="macro">trace</span><span class="macro">!</span>(
+            <span class="macro">trace!</span>(
                 <span class="ident">logger</span>,
                 <span class="string">&quot;Setting BLUE_SIZE to {}&quot;</span>,
                 <span class="ident">color</span> <span class="op">/</span> <span class="number">3</span> <span class="op">+</span> <span class="kw">if</span> <span class="ident">color</span> <span class="op">%</span> <span class="number">3</span> <span class="op">=</span><span class="op">=</span> <span class="number">2</span> { <span class="number">1</span> } <span class="kw">else</span> { <span class="number">0</span> }
             );
-            <span class="ident">out</span>.<span class="ident">push</span>(<span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">BLUE_SIZE</span> <span class="kw">as</span> <span class="ident">c_int</span>);
+            <span class="ident">out</span>.<span class="ident">push</span>(<span class="ident">ffi::egl::BLUE_SIZE</span> <span class="kw">as</span> <span class="ident">c_int</span>);
             <span class="ident">out</span>.<span class="ident">push</span>((<span class="ident">color</span> <span class="op">/</span> <span class="number">3</span> <span class="op">+</span> <span class="kw">if</span> <span class="ident">color</span> <span class="op">%</span> <span class="number">3</span> <span class="op">=</span><span class="op">=</span> <span class="number">2</span> { <span class="number">1</span> } <span class="kw">else</span> { <span class="number">0</span> }) <span class="kw">as</span> <span class="ident">c_int</span>);
         }
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">alpha</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">alpha_bits</span> {
-            <span class="macro">trace</span><span class="macro">!</span>(<span class="ident">logger</span>, <span class="string">&quot;Setting ALPHA_SIZE to {}&quot;</span>, <span class="ident">alpha</span>);
-            <span class="ident">out</span>.<span class="ident">push</span>(<span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">ALPHA_SIZE</span> <span class="kw">as</span> <span class="ident">c_int</span>);
+            <span class="macro">trace!</span>(<span class="ident">logger</span>, <span class="string">&quot;Setting ALPHA_SIZE to {}&quot;</span>, <span class="ident">alpha</span>);
+            <span class="ident">out</span>.<span class="ident">push</span>(<span class="ident">ffi::egl::ALPHA_SIZE</span> <span class="kw">as</span> <span class="ident">c_int</span>);
             <span class="ident">out</span>.<span class="ident">push</span>(<span class="ident">alpha</span> <span class="kw">as</span> <span class="ident">c_int</span>);
         }
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">depth</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">depth_bits</span> {
-            <span class="macro">trace</span><span class="macro">!</span>(<span class="ident">logger</span>, <span class="string">&quot;Setting DEPTH_SIZE to {}&quot;</span>, <span class="ident">depth</span>);
-            <span class="ident">out</span>.<span class="ident">push</span>(<span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">DEPTH_SIZE</span> <span class="kw">as</span> <span class="ident">c_int</span>);
+            <span class="macro">trace!</span>(<span class="ident">logger</span>, <span class="string">&quot;Setting DEPTH_SIZE to {}&quot;</span>, <span class="ident">depth</span>);
+            <span class="ident">out</span>.<span class="ident">push</span>(<span class="ident">ffi::egl::DEPTH_SIZE</span> <span class="kw">as</span> <span class="ident">c_int</span>);
             <span class="ident">out</span>.<span class="ident">push</span>(<span class="ident">depth</span> <span class="kw">as</span> <span class="ident">c_int</span>);
         }
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">stencil</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">stencil_bits</span> {
-            <span class="macro">trace</span><span class="macro">!</span>(<span class="ident">logger</span>, <span class="string">&quot;Setting STENCIL_SIZE to {}&quot;</span>, <span class="ident">stencil</span>);
-            <span class="ident">out</span>.<span class="ident">push</span>(<span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">STENCIL_SIZE</span> <span class="kw">as</span> <span class="ident">c_int</span>);
+            <span class="macro">trace!</span>(<span class="ident">logger</span>, <span class="string">&quot;Setting STENCIL_SIZE to {}&quot;</span>, <span class="ident">stencil</span>);
+            <span class="ident">out</span>.<span class="ident">push</span>(<span class="ident">ffi::egl::STENCIL_SIZE</span> <span class="kw">as</span> <span class="ident">c_int</span>);
             <span class="ident">out</span>.<span class="ident">push</span>(<span class="ident">stencil</span> <span class="kw">as</span> <span class="ident">c_int</span>);
         }
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">multisampling</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">multisampling</span> {
-            <span class="macro">trace</span><span class="macro">!</span>(<span class="ident">logger</span>, <span class="string">&quot;Setting SAMPLES to {}&quot;</span>, <span class="ident">multisampling</span>);
-            <span class="ident">out</span>.<span class="ident">push</span>(<span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">SAMPLES</span> <span class="kw">as</span> <span class="ident">c_int</span>);
+            <span class="macro">trace!</span>(<span class="ident">logger</span>, <span class="string">&quot;Setting SAMPLES to {}&quot;</span>, <span class="ident">multisampling</span>);
+            <span class="ident">out</span>.<span class="ident">push</span>(<span class="ident">ffi::egl::SAMPLES</span> <span class="kw">as</span> <span class="ident">c_int</span>);
             <span class="ident">out</span>.<span class="ident">push</span>(<span class="ident">multisampling</span> <span class="kw">as</span> <span class="ident">c_int</span>);
         }
-
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">stereoscopy</span> {
-            <span class="macro">error</span><span class="macro">!</span>(<span class="ident">logger</span>, <span class="string">&quot;Stereoscopy is currently unsupported (sorry!)&quot;</span>);
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(());
-        }
-
-        <span class="prelude-val">Ok</span>(())
     }
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../../";window.currentCrate = "smithay";</script><script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script><script defer src="../../../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-search-index-js="../../../../search-index.js" data-search-js="../../../../search.js"></div><script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script></body></html>

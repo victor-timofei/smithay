@@ -1,3 +1,0 @@
-(function() {var implementors = {};
-implementors["smithay"] = [{"text":"impl Surface for <a class=\"struct\" href=\"smithay/backend/graphics/glium/struct.Frame.html\" title=\"struct smithay::backend::graphics::glium::Frame\">Frame</a>","synthetic":false,"types":["smithay::backend::graphics::glium::Frame"]}];
-if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

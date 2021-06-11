@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/input-0.5.0/src/event/tablet_tool/tool.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>tool.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script src="../../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../../input/index.html'><div class='logo-container'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../../settings.html"><img src="../../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/input-0.5.0/src/event/tablet_tool/tool.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>tool.rs - source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../../storage.js"></script><script src="../../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../../input/index.html'><div class='logo-container rust-logo'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img src="../../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../../settings.html" title="settings"><img src="../../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -127,7 +129,7 @@
 <span id="127">127</span>
 <span id="128">128</span>
 <span id="129">129</span>
-</pre><div class="example-wrap"><pre class="rust ">
+</pre><pre class="rust">
 <span class="kw">use</span> {<span class="ident">ffi</span>, <span class="ident">AsRaw</span>, <span class="ident">FromRaw</span>};
 
 <span class="doccomment">/// Available tool types for a device with the `DeviceCapability::TabletTool` capability.</span>
@@ -169,7 +171,7 @@
     <span class="ident">Totem</span>,
 }
 
-<span class="macro">ffi_ref_struct</span><span class="macro">!</span>(
+<span class="macro">ffi_ref_struct!</span>(
 <span class="doccomment">/// An object representing a tool being used by a device with the</span>
 <span class="doccomment">/// `DeviceCapability::TabletTool` capability.</span>
 <span class="doccomment">///</span>
@@ -177,16 +179,16 @@
 <span class="doccomment">/// coming from the device directly. Depending on the hardware it is possible to track</span>
 <span class="doccomment">/// the same physical tool across multiple `Device`s, see</span>
 <span class="doccomment">/// [Tracking unique tools](https://wayland.freedesktop.org/libinput/doc/latest/tablet-support.html#tablet-serial-numbers).</span>
-<span class="kw">struct</span> <span class="ident">TabletTool</span>, <span class="ident">ffi</span>::<span class="ident">libinput_tablet_tool</span>, <span class="ident">ffi</span>::<span class="ident">libinput_tablet_tool_ref</span>, <span class="ident">ffi</span>::<span class="ident">libinput_tablet_tool_unref</span>);
+<span class="kw">struct</span> <span class="ident">TabletTool</span>, <span class="ident">ffi::libinput_tablet_tool</span>, <span class="ident">ffi::libinput_tablet_tool_ref</span>, <span class="ident">ffi::libinput_tablet_tool_unref</span>);
 
 <span class="kw">impl</span> <span class="ident">TabletTool</span> {
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Return the serial number of a tool.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// If the tool does not report a serial number, this function returns zero.</span>
     <span class="doccomment">/// See [Tracking unique tools](https://wayland.freedesktop.org/libinput/doc/latest/tablet-support.html#tablet-serial-numbers) for details.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">serial</span>, <span class="ident">ffi</span>::<span class="ident">libinput_tablet_tool_get_serial</span>, <span class="ident">u64</span>);
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">serial</span>, <span class="ident">ffi::libinput_tablet_tool_get_serial</span>, <span class="ident">u64</span>);
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Return the tool ID for a tool object.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// If nonzero, this number identifies the specific type of the tool with more</span>
@@ -196,50 +198,50 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Tablets known to support tool IDs include the Wacom Intuos 3, 4, 5, Wacom Cintiq</span>
     <span class="doccomment">/// and Wacom Intuos Pro series.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tool_id</span>, <span class="ident">ffi</span>::<span class="ident">libinput_tablet_tool_get_tool_id</span>, <span class="ident">u64</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tool_id</span>, <span class="ident">ffi::libinput_tablet_tool_get_tool_id</span>, <span class="ident">u64</span>);
 
     <span class="doccomment">/// Return the tool type for a tool object,</span>
     <span class="doccomment">/// see [Vendor-specific tablet tool types](https://wayland.freedesktop.org/libinput/doc/latest/tablet-support.html#tablet-tool-types)</span>
     <span class="doccomment">/// for details.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tool_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">TabletToolType</span> {
-        <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">libinput_tablet_tool_get_type</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) } {
-            <span class="ident">ffi</span>::<span class="ident">libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_PEN</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType</span>::<span class="ident">Pen</span>,
-            <span class="ident">ffi</span>::<span class="ident">libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_ERASER</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType</span>::<span class="ident">Eraser</span>,
-            <span class="ident">ffi</span>::<span class="ident">libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_BRUSH</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType</span>::<span class="ident">Brush</span>,
-            <span class="ident">ffi</span>::<span class="ident">libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_PENCIL</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType</span>::<span class="ident">Pencil</span>,
-            <span class="ident">ffi</span>::<span class="ident">libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_AIRBRUSH</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType</span>::<span class="ident">Airbrush</span>,
-            <span class="ident">ffi</span>::<span class="ident">libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_MOUSE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType</span>::<span class="ident">Mouse</span>,
-            <span class="ident">ffi</span>::<span class="ident">libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_LENS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType</span>::<span class="ident">Lens</span>,
+        <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_tablet_tool_get_type</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) } {
+            <span class="ident">ffi::libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_PEN</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType::Pen</span>,
+            <span class="ident">ffi::libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_ERASER</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType::Eraser</span>,
+            <span class="ident">ffi::libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_BRUSH</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType::Brush</span>,
+            <span class="ident">ffi::libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_PENCIL</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType::Pencil</span>,
+            <span class="ident">ffi::libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_AIRBRUSH</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType::Airbrush</span>,
+            <span class="ident">ffi::libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_MOUSE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType::Mouse</span>,
+            <span class="ident">ffi::libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_LENS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType::Lens</span>,
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;libinput_1_14&quot;</span>)]</span>
-            <span class="ident">ffi</span>::<span class="ident">libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_TOTEM</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType</span>::<span class="ident">Totem</span>,
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_tablet_tool_type&#39;&quot;</span>),
+            <span class="ident">ffi::libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_TOTEM</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType::Totem</span>,
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_tablet_tool_type&#39;&quot;</span>),
         }
     }
 
     <span class="doccomment">/// Check if a tablet tool has a button with the passed-in code (see linux/input.h).</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_button</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">button</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">libinput_tablet_tool_has_button</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="ident">button</span>) <span class="op">!</span><span class="op">=</span> <span class="number">0</span> }
+        <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_tablet_tool_has_button</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="ident">button</span>) <span class="op">!</span><span class="op">=</span> <span class="number">0</span> }
     }
 
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Return whether the tablet tool supports distance.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_distance</span>, <span class="ident">ffi</span>::<span class="ident">libinput_tablet_tool_has_distance</span>, <span class="ident">bool</span>);
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_distance</span>, <span class="ident">ffi::libinput_tablet_tool_has_distance</span>, <span class="ident">bool</span>);
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Return whether the tablet tool supports pressure.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_pressure</span>, <span class="ident">ffi</span>::<span class="ident">libinput_tablet_tool_has_pressure</span>, <span class="ident">bool</span>);
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_pressure</span>, <span class="ident">ffi::libinput_tablet_tool_has_pressure</span>, <span class="ident">bool</span>);
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Return whether the tablet tool supports z-rotation.v</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_rotation</span>, <span class="ident">ffi</span>::<span class="ident">libinput_tablet_tool_has_rotation</span>, <span class="ident">bool</span>);
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_rotation</span>, <span class="ident">ffi::libinput_tablet_tool_has_rotation</span>, <span class="ident">bool</span>);
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Return whether the tablet tool has a slider axis.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_slider</span>, <span class="ident">ffi</span>::<span class="ident">libinput_tablet_tool_has_slider</span>, <span class="ident">bool</span>);
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_slider</span>, <span class="ident">ffi::libinput_tablet_tool_has_slider</span>, <span class="ident">bool</span>);
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Return whether the tablet tool supports tilt.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_tilt</span>, <span class="ident">ffi</span>::<span class="ident">libinput_tablet_tool_has_tilt</span>, <span class="ident">bool</span>);
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_tilt</span>, <span class="ident">ffi::libinput_tablet_tool_has_tilt</span>, <span class="ident">bool</span>);
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Return whether the tablet tool has a relative wheel.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_wheel</span>, <span class="ident">ffi</span>::<span class="ident">libinput_tablet_tool_has_wheel</span>, <span class="ident">bool</span>);
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_wheel</span>, <span class="ident">ffi::libinput_tablet_tool_has_wheel</span>, <span class="ident">bool</span>);
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Returns `true` if the physical tool can be uniquely identified by libinput, or</span>
     <span class="doccomment">/// `false` otherwise.</span>
     <span class="doccomment">///</span>
@@ -247,15 +249,15 @@
     <span class="doccomment">/// tracking the tool across proximity out sequences and across compatible tablets.</span>
     <span class="doccomment">/// See [Tracking unique tools](https://wayland.freedesktop.org/libinput/doc/latest/tablet-support.html#tablet-serial-numbers)</span>
     <span class="doccomment">/// for more details.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_unique</span>, <span class="ident">ffi</span>::<span class="ident">libinput_tablet_tool_is_unique</span>, <span class="ident">bool</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_unique</span>, <span class="ident">ffi::libinput_tablet_tool_is_unique</span>, <span class="ident">bool</span>);
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;libinput_1_14&quot;</span>)]</span>
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Returns whether the tablet tool has a ellipsis major and minor.</span>
     <span class="doccomment">/// </span>
     <span class="doccomment">/// Where the underlying hardware only supports one of either major or minor,</span>
     <span class="doccomment">/// libinput emulated the other axis as a cicular contact, i.e. major == minor</span>
     <span class="doccomment">/// for all values of major.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tablet_tool_has_size</span>, <span class="ident">ffi</span>::<span class="ident">libinput_tablet_tool_has_size</span>, <span class="ident">bool</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tablet_tool_has_size</span>, <span class="ident">ffi::libinput_tablet_tool_has_size</span>, <span class="ident">bool</span>);
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../../";window.currentCrate = "input";</script><script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script><script defer src="../../../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="input" data-search-index-js="../../../../search-index.js" data-search-js="../../../../search.js"></div><script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script></body></html>

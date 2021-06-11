@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/input-0.5.0/src/event/gesture.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>gesture.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../input/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/input-0.5.0/src/event/gesture.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>gesture.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../input/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img src="../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img src="../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -375,40 +377,40 @@
 <span id="375">375</span>
 <span id="376">376</span>
 <span id="377">377</span>
-</pre><div class="example-wrap"><pre class="rust ">
+</pre><pre class="rust">
 <span class="doccomment">//! Gesture event types</span>
 
-<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">EventTrait</span>;
+<span class="kw">use</span> <span class="kw">super</span><span class="ident">::EventTrait</span>;
 <span class="kw">use</span> {<span class="ident">AsRaw</span>, <span class="ident">Context</span>, <span class="ident">FromRaw</span>};
 <span class="kw">use</span> <span class="ident">ffi</span>;
 
 <span class="doccomment">/// Common functions all Gesture-Events implement.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">GestureEventTrait</span>: <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">libinput_event_gesture</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Context</span> {
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">GestureEventTrait</span>: <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi::libinput_event_gesture</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Context</span> {
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// The event time for this event</span>
-    <span class="kw">fn</span> <span class="ident">time</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture_get_time</span>, <span class="ident">u32</span>);
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="kw">fn</span> <span class="ident">time</span>, <span class="ident">ffi::libinput_event_gesture_get_time</span>, <span class="ident">u32</span>);
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// The event time for this event in microseconds</span>
-    <span class="kw">fn</span> <span class="ident">time_usec</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture_get_time_usec</span>, <span class="ident">u64</span>);
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="kw">fn</span> <span class="ident">time_usec</span>, <span class="ident">ffi::libinput_event_gesture_get_time_usec</span>, <span class="ident">u64</span>);
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Return the number of fingers used for a gesture.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This can be used e.g. to differentiate between 3 or 4 finger swipes.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This function can be called on all gesture events and the returned finger</span>
     <span class="doccomment">/// count value will not change during a sequence.</span>
-    <span class="kw">fn</span> <span class="ident">finger_count</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture_get_finger_count</span>, <span class="ident">i32</span>);
+    <span class="kw">fn</span> <span class="ident">finger_count</span>, <span class="ident">ffi::libinput_event_gesture_get_finger_count</span>, <span class="ident">i32</span>);
 
     <span class="doccomment">/// Convert into a general `GestureEvent` again</span>
     <span class="kw">fn</span> <span class="ident">into_gesture_event</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">GestureEvent</span>
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
     {
-        <span class="kw">unsafe</span> { <span class="ident">GestureEvent</span>::<span class="ident">from_raw</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="self">self</span>.<span class="ident">context</span>()) }
+        <span class="kw">unsafe</span> { <span class="ident">GestureEvent::from_raw</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="self">self</span>.<span class="ident">context</span>()) }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">libinput_event_gesture</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Context</span><span class="op">&gt;</span> <span class="ident">GestureEventTrait</span> <span class="kw">for</span> <span class="ident">T</span> {}
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi::libinput_event_gesture</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Context</span><span class="op">&gt;</span> <span class="ident">GestureEventTrait</span> <span class="kw">for</span> <span class="ident">T</span> {}
 
 <span class="doccomment">/// A gesture related `Event`</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>)]</span>
@@ -421,54 +423,54 @@
 
 <span class="kw">impl</span> <span class="ident">EventTrait</span> <span class="kw">for</span> <span class="ident">GestureEvent</span> {
     <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">as_raw_event</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">libinput_event</span> {
+    <span class="kw">fn</span> <span class="ident">as_raw_event</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::libinput_event</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">GestureEvent</span>::<span class="ident">Swipe</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
-            <span class="ident">GestureEvent</span>::<span class="ident">Pinch</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
+            <span class="ident">GestureEvent::Swipe</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
+            <span class="ident">GestureEvent::Pinch</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">FromRaw</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">libinput_event_gesture</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">GestureEvent</span> {
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">event</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span>::<span class="ident">context</span>::<span class="ident">Libinput</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">base</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture_get_base_event</span>(<span class="ident">event</span>);
-        <span class="kw">match</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_get_type</span>(<span class="ident">base</span>) {
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_GESTURE_SWIPE_BEGIN</span>
-            <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE</span>
-            <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_GESTURE_SWIPE_END</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">GestureEvent</span>::<span class="ident">Swipe</span>(<span class="ident">GestureSwipeEvent</span>::<span class="ident">from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
+<span class="kw">impl</span> <span class="ident">FromRaw</span><span class="op">&lt;</span><span class="ident">ffi::libinput_event_gesture</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">GestureEvent</span> {
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">event</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::libinput_event_gesture</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">::context::Libinput</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="ident">base</span> <span class="op">=</span> <span class="ident">ffi::libinput_event_gesture_get_base_event</span>(<span class="ident">event</span>);
+        <span class="kw">match</span> <span class="ident">ffi::libinput_event_get_type</span>(<span class="ident">base</span>) {
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_SWIPE_BEGIN</span>
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE</span>
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_SWIPE_END</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">GestureEvent::Swipe</span>(<span class="ident">GestureSwipeEvent::from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
             }
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_GESTURE_PINCH_BEGIN</span>
-            <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_GESTURE_PINCH_UPDATE</span>
-            <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_GESTURE_PINCH_END</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">GestureEvent</span>::<span class="ident">Pinch</span>(<span class="ident">GesturePinchEvent</span>::<span class="ident">from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_PINCH_BEGIN</span>
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_PINCH_UPDATE</span>
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_PINCH_END</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">GestureEvent::Pinch</span>(<span class="ident">GesturePinchEvent::from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
             }
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>(),
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">libinput_event_gesture</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">GestureEvent</span> {
-    <span class="kw">fn</span> <span class="ident">as_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture</span> {
+<span class="kw">impl</span> <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi::libinput_event_gesture</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">GestureEvent</span> {
+    <span class="kw">fn</span> <span class="ident">as_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">ffi::libinput_event_gesture</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">GestureEvent</span>::<span class="ident">Swipe</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
-            <span class="ident">GestureEvent</span>::<span class="ident">Pinch</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
+            <span class="ident">GestureEvent::Swipe</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
+            <span class="ident">GestureEvent::Pinch</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Context</span> <span class="kw">for</span> <span class="ident">GestureEvent</span> {
-    <span class="kw">fn</span> <span class="ident">context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>::<span class="ident">Libinput</span> {
+    <span class="kw">fn</span> <span class="ident">context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">::Libinput</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">GestureEvent</span>::<span class="ident">Swipe</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
-            <span class="ident">GestureEvent</span>::<span class="ident">Pinch</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">GestureEvent::Swipe</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">GestureEvent::Pinch</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
         }
     }
 }
 
 <span class="doccomment">/// Common functions for Gesture-Events having coordinates.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">GestureEventCoordinates</span>: <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">libinput_event_gesture</span><span class="op">&gt;</span> {
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">GestureEventCoordinates</span>: <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi::libinput_event_gesture</span><span class="op">&gt;</span> {
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Return the delta between the last event and the current event.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// If a device employs pointer acceleration, the delta returned by this</span>
@@ -477,8 +479,8 @@
     <span class="doccomment">/// Relative motion deltas are normalized to represent those of a device with</span>
     <span class="doccomment">/// 1000dpi resolution. See [Normalization of relative motion](https://wayland.freedesktop.org/libinput/doc/latest/motion_normalization.html)</span>
     <span class="doccomment">/// for more details.</span>
-    <span class="kw">fn</span> <span class="ident">dx</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture_get_dx</span>, <span class="ident">f64</span>);
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="kw">fn</span> <span class="ident">dx</span>, <span class="ident">ffi::libinput_event_gesture_get_dx</span>, <span class="ident">f64</span>);
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Return the relative delta of the unaccelerated motion vector of the</span>
     <span class="doccomment">/// current event.</span>
     <span class="doccomment">///</span>
@@ -489,8 +491,8 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Any rotation applied to the device also applies to gesture motion (see</span>
     <span class="doccomment">/// `rotation_set_angle`).</span>
-    <span class="kw">fn</span> <span class="ident">dx_unaccelerated</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture_get_dx_unaccelerated</span>, <span class="ident">f64</span>);
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="kw">fn</span> <span class="ident">dx_unaccelerated</span>, <span class="ident">ffi::libinput_event_gesture_get_dx_unaccelerated</span>, <span class="ident">f64</span>);
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Return the delta between the last event and the current event.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// If a device employs pointer acceleration, the delta returned by this</span>
@@ -499,8 +501,8 @@
     <span class="doccomment">/// Relative motion deltas are normalized to represent those of a device with</span>
     <span class="doccomment">/// 1000dpi resolution. See [Normalization of relative motion](https://wayland.freedesktop.org/libinput/doc/latest/motion_normalization.html)</span>
     <span class="doccomment">/// for more details.</span>
-    <span class="kw">fn</span> <span class="ident">dy</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture_get_dy</span>, <span class="ident">f64</span>);
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="kw">fn</span> <span class="ident">dy</span>, <span class="ident">ffi::libinput_event_gesture_get_dy</span>, <span class="ident">f64</span>);
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Return the relative delta of the unaccelerated motion vector of the</span>
     <span class="doccomment">/// current event.</span>
     <span class="doccomment">///</span>
@@ -511,14 +513,14 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Any rotation applied to the device also applies to gesture motion (see</span>
     <span class="doccomment">/// `rotation_set_angle`).</span>
-    <span class="kw">fn</span> <span class="ident">dy_unaccelerated</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture_get_dy_unaccelerated</span>, <span class="ident">f64</span>);
+    <span class="kw">fn</span> <span class="ident">dy_unaccelerated</span>, <span class="ident">ffi::libinput_event_gesture_get_dy_unaccelerated</span>, <span class="ident">f64</span>);
 }
 
 <span class="doccomment">/// Common functions for events noting the end of a gesture</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">GestureEndEvent</span>: <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">libinput_event_gesture</span><span class="op">&gt;</span> {
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">GestureEndEvent</span>: <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi::libinput_event_gesture</span><span class="op">&gt;</span> {
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Return if the gesture ended normally, or if it was cancelled.</span>
-    <span class="kw">fn</span> <span class="ident">cancelled</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture_get_cancelled</span>, <span class="ident">bool</span>);
+    <span class="kw">fn</span> <span class="ident">cancelled</span>, <span class="ident">ffi::libinput_event_gesture_get_cancelled</span>, <span class="ident">bool</span>);
 }
 
 <span class="doccomment">/// Events for swipe gestures</span>
@@ -533,13 +535,13 @@
 }
 
 <span class="doccomment">/// Common functions for swipe gesture events</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">GestureSwipeEventTrait</span>: <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">libinput_event_gesture</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Context</span> {
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">GestureSwipeEventTrait</span>: <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi::libinput_event_gesture</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Context</span> {
     <span class="doccomment">/// Convert into a general `GestureSwipeEvent`</span>
     <span class="kw">fn</span> <span class="ident">into_gesture_swipe_event</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">GestureSwipeEvent</span>
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
     {
-        <span class="kw">unsafe</span> { <span class="ident">GestureSwipeEvent</span>::<span class="ident">from_raw</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="self">self</span>.<span class="ident">context</span>()) }
+        <span class="kw">unsafe</span> { <span class="ident">GestureSwipeEvent::from_raw</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="self">self</span>.<span class="ident">context</span>()) }
     }
 }
 
@@ -547,54 +549,54 @@
 
 <span class="kw">impl</span> <span class="ident">EventTrait</span> <span class="kw">for</span> <span class="ident">GestureSwipeEvent</span> {
     <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">as_raw_event</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">libinput_event</span> {
+    <span class="kw">fn</span> <span class="ident">as_raw_event</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::libinput_event</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">GestureSwipeEvent</span>::<span class="ident">Begin</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
-            <span class="ident">GestureSwipeEvent</span>::<span class="ident">Update</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
-            <span class="ident">GestureSwipeEvent</span>::<span class="ident">End</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
+            <span class="ident">GestureSwipeEvent::Begin</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
+            <span class="ident">GestureSwipeEvent::Update</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
+            <span class="ident">GestureSwipeEvent::End</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">FromRaw</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">libinput_event_gesture</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">GestureSwipeEvent</span> {
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">event</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span>::<span class="ident">context</span>::<span class="ident">Libinput</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">base</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture_get_base_event</span>(<span class="ident">event</span>);
-        <span class="kw">match</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_get_type</span>(<span class="ident">base</span>) {
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_GESTURE_SWIPE_BEGIN</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">GestureSwipeEvent</span>::<span class="ident">Begin</span>(<span class="ident">GestureSwipeBeginEvent</span>::<span class="ident">from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
+<span class="kw">impl</span> <span class="ident">FromRaw</span><span class="op">&lt;</span><span class="ident">ffi::libinput_event_gesture</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">GestureSwipeEvent</span> {
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">event</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::libinput_event_gesture</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">::context::Libinput</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="ident">base</span> <span class="op">=</span> <span class="ident">ffi::libinput_event_gesture_get_base_event</span>(<span class="ident">event</span>);
+        <span class="kw">match</span> <span class="ident">ffi::libinput_event_get_type</span>(<span class="ident">base</span>) {
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_SWIPE_BEGIN</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">GestureSwipeEvent::Begin</span>(<span class="ident">GestureSwipeBeginEvent::from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
             }
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">GestureSwipeEvent</span>::<span class="ident">Update</span>(<span class="ident">GestureSwipeUpdateEvent</span>::<span class="ident">from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">GestureSwipeEvent::Update</span>(<span class="ident">GestureSwipeUpdateEvent::from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
             }
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_GESTURE_SWIPE_END</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">GestureSwipeEvent</span>::<span class="ident">End</span>(<span class="ident">GestureSwipeEndEvent</span>::<span class="ident">from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_SWIPE_END</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">GestureSwipeEvent::End</span>(<span class="ident">GestureSwipeEndEvent::from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
             }
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_GESTURE_PINCH_BEGIN</span>
-            <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_GESTURE_PINCH_UPDATE</span>
-            <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_GESTURE_PINCH_END</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Tried to make GestureSwipeEvent from Pinch event&quot;</span>)
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_PINCH_BEGIN</span>
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_PINCH_UPDATE</span>
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_PINCH_END</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="macro">panic!</span>(<span class="string">&quot;Tried to make GestureSwipeEvent from Pinch event&quot;</span>)
             }
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>(),
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">libinput_event_gesture</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">GestureSwipeEvent</span> {
-    <span class="kw">fn</span> <span class="ident">as_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture</span> {
+<span class="kw">impl</span> <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi::libinput_event_gesture</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">GestureSwipeEvent</span> {
+    <span class="kw">fn</span> <span class="ident">as_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">ffi::libinput_event_gesture</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">GestureSwipeEvent</span>::<span class="ident">Begin</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
-            <span class="ident">GestureSwipeEvent</span>::<span class="ident">Update</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
-            <span class="ident">GestureSwipeEvent</span>::<span class="ident">End</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
+            <span class="ident">GestureSwipeEvent::Begin</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
+            <span class="ident">GestureSwipeEvent::Update</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
+            <span class="ident">GestureSwipeEvent::End</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Context</span> <span class="kw">for</span> <span class="ident">GestureSwipeEvent</span> {
-    <span class="kw">fn</span> <span class="ident">context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>::<span class="ident">Libinput</span> {
+    <span class="kw">fn</span> <span class="ident">context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">::Libinput</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">GestureSwipeEvent</span>::<span class="ident">Begin</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
-            <span class="ident">GestureSwipeEvent</span>::<span class="ident">Update</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
-            <span class="ident">GestureSwipeEvent</span>::<span class="ident">End</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">GestureSwipeEvent::Begin</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">GestureSwipeEvent::Update</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">GestureSwipeEvent::End</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
         }
     }
 }
@@ -612,18 +614,18 @@
 
 <span class="kw">impl</span> <span class="ident">EventTrait</span> <span class="kw">for</span> <span class="ident">GesturePinchEvent</span> {
     <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">as_raw_event</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">libinput_event</span> {
+    <span class="kw">fn</span> <span class="ident">as_raw_event</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::libinput_event</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">GesturePinchEvent</span>::<span class="ident">Begin</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
-            <span class="ident">GesturePinchEvent</span>::<span class="ident">Update</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
-            <span class="ident">GesturePinchEvent</span>::<span class="ident">End</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
+            <span class="ident">GesturePinchEvent::Begin</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
+            <span class="ident">GesturePinchEvent::Update</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
+            <span class="ident">GesturePinchEvent::End</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
         }
     }
 }
 
 <span class="doccomment">/// Common functions for pinch gesture events</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">GesturePinchEventTrait</span>: <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">libinput_event_gesture</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Context</span> {
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">GesturePinchEventTrait</span>: <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi::libinput_event_gesture</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Context</span> {
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Return the absolute scale of a pinch gesture, the scale is the division of</span>
     <span class="doccomment">/// the current distance between the fingers and the distance at the start of</span>
     <span class="doccomment">/// the gesture.</span>
@@ -637,100 +639,100 @@
     <span class="doccomment">/// For gesture events that are of type `GesturePinchEndEvent`, this function</span>
     <span class="doccomment">/// returns the scale value of the most recent `GesturePinchUpdateEvent` event</span>
     <span class="doccomment">/// (if any) or 1.0 otherwise.</span>
-    <span class="kw">fn</span> <span class="ident">scale</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture_get_scale</span>, <span class="ident">f64</span>);
+    <span class="kw">fn</span> <span class="ident">scale</span>, <span class="ident">ffi::libinput_event_gesture_get_scale</span>, <span class="ident">f64</span>);
 
     <span class="doccomment">/// Convert into a general `GesturePinchEvent`</span>
     <span class="kw">fn</span> <span class="ident">into_gesture_pinch_event</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">GesturePinchEvent</span>
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
     {
-        <span class="kw">unsafe</span> { <span class="ident">GesturePinchEvent</span>::<span class="ident">from_raw</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="self">self</span>.<span class="ident">context</span>()) }
+        <span class="kw">unsafe</span> { <span class="ident">GesturePinchEvent::from_raw</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="self">self</span>.<span class="ident">context</span>()) }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">GesturePinchEventTrait</span> <span class="kw">for</span> <span class="ident">GesturePinchEvent</span> {}
 
-<span class="kw">impl</span> <span class="ident">FromRaw</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">libinput_event_gesture</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">GesturePinchEvent</span> {
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">event</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span>::<span class="ident">context</span>::<span class="ident">Libinput</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">base</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture_get_base_event</span>(<span class="ident">event</span>);
-        <span class="kw">match</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_get_type</span>(<span class="ident">base</span>) {
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_GESTURE_SWIPE_BEGIN</span>
-            <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE</span>
-            <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_GESTURE_SWIPE_END</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Tried to make GesturePinchEvent from Swipe event&quot;</span>)
+<span class="kw">impl</span> <span class="ident">FromRaw</span><span class="op">&lt;</span><span class="ident">ffi::libinput_event_gesture</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">GesturePinchEvent</span> {
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">event</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::libinput_event_gesture</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">::context::Libinput</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="ident">base</span> <span class="op">=</span> <span class="ident">ffi::libinput_event_gesture_get_base_event</span>(<span class="ident">event</span>);
+        <span class="kw">match</span> <span class="ident">ffi::libinput_event_get_type</span>(<span class="ident">base</span>) {
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_SWIPE_BEGIN</span>
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE</span>
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_SWIPE_END</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="macro">panic!</span>(<span class="string">&quot;Tried to make GesturePinchEvent from Swipe event&quot;</span>)
             }
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_GESTURE_PINCH_BEGIN</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">GesturePinchEvent</span>::<span class="ident">Begin</span>(<span class="ident">GesturePinchBeginEvent</span>::<span class="ident">from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_PINCH_BEGIN</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">GesturePinchEvent::Begin</span>(<span class="ident">GesturePinchBeginEvent::from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
             }
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_GESTURE_PINCH_UPDATE</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">GesturePinchEvent</span>::<span class="ident">Update</span>(<span class="ident">GesturePinchUpdateEvent</span>::<span class="ident">from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_PINCH_UPDATE</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">GesturePinchEvent::Update</span>(<span class="ident">GesturePinchUpdateEvent::from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
             }
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_GESTURE_PINCH_END</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">GesturePinchEvent</span>::<span class="ident">End</span>(<span class="ident">GesturePinchEndEvent</span>::<span class="ident">from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_PINCH_END</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">GesturePinchEvent::End</span>(<span class="ident">GesturePinchEndEvent::from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
             }
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>(),
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">libinput_event_gesture</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">GesturePinchEvent</span> {
-    <span class="kw">fn</span> <span class="ident">as_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture</span> {
+<span class="kw">impl</span> <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi::libinput_event_gesture</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">GesturePinchEvent</span> {
+    <span class="kw">fn</span> <span class="ident">as_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">ffi::libinput_event_gesture</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">GesturePinchEvent</span>::<span class="ident">Begin</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
-            <span class="ident">GesturePinchEvent</span>::<span class="ident">Update</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
-            <span class="ident">GesturePinchEvent</span>::<span class="ident">End</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
+            <span class="ident">GesturePinchEvent::Begin</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
+            <span class="ident">GesturePinchEvent::Update</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
+            <span class="ident">GesturePinchEvent::End</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Context</span> <span class="kw">for</span> <span class="ident">GesturePinchEvent</span> {
-    <span class="kw">fn</span> <span class="ident">context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>::<span class="ident">Libinput</span> {
+    <span class="kw">fn</span> <span class="ident">context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">::Libinput</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">GesturePinchEvent</span>::<span class="ident">Begin</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
-            <span class="ident">GesturePinchEvent</span>::<span class="ident">Update</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
-            <span class="ident">GesturePinchEvent</span>::<span class="ident">End</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">GesturePinchEvent::Begin</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">GesturePinchEvent::Update</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">GesturePinchEvent::End</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
         }
     }
 }
 
-<span class="macro">ffi_event_struct</span><span class="macro">!</span>(
+<span class="macro">ffi_event_struct!</span>(
 <span class="doccomment">/// Swipe gesture began</span>
-<span class="kw">struct</span> <span class="ident">GestureSwipeBeginEvent</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture_get_base_event</span>);
+<span class="kw">struct</span> <span class="ident">GestureSwipeBeginEvent</span>, <span class="ident">ffi::libinput_event_gesture</span>, <span class="ident">ffi::libinput_event_gesture_get_base_event</span>);
 
 <span class="kw">impl</span> <span class="ident">GestureSwipeEventTrait</span> <span class="kw">for</span> <span class="ident">GestureSwipeBeginEvent</span> {}
 
-<span class="macro">ffi_event_struct</span><span class="macro">!</span>(
+<span class="macro">ffi_event_struct!</span>(
 <span class="doccomment">/// In-progress swipe gesture updated</span>
-<span class="kw">struct</span> <span class="ident">GestureSwipeUpdateEvent</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture_get_base_event</span>);
+<span class="kw">struct</span> <span class="ident">GestureSwipeUpdateEvent</span>, <span class="ident">ffi::libinput_event_gesture</span>, <span class="ident">ffi::libinput_event_gesture_get_base_event</span>);
 
 <span class="kw">impl</span> <span class="ident">GestureSwipeEventTrait</span> <span class="kw">for</span> <span class="ident">GestureSwipeUpdateEvent</span> {}
 
 <span class="kw">impl</span> <span class="ident">GestureEventCoordinates</span> <span class="kw">for</span> <span class="ident">GestureSwipeUpdateEvent</span> {}
 
-<span class="macro">ffi_event_struct</span><span class="macro">!</span>(
+<span class="macro">ffi_event_struct!</span>(
 <span class="doccomment">/// Swipe gesture ended</span>
-<span class="kw">struct</span> <span class="ident">GestureSwipeEndEvent</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture_get_base_event</span>);
+<span class="kw">struct</span> <span class="ident">GestureSwipeEndEvent</span>, <span class="ident">ffi::libinput_event_gesture</span>, <span class="ident">ffi::libinput_event_gesture_get_base_event</span>);
 
 <span class="kw">impl</span> <span class="ident">GestureEndEvent</span> <span class="kw">for</span> <span class="ident">GestureSwipeEndEvent</span> {}
 
 <span class="kw">impl</span> <span class="ident">GestureSwipeEventTrait</span> <span class="kw">for</span> <span class="ident">GestureSwipeEndEvent</span> {}
 
-<span class="macro">ffi_event_struct</span><span class="macro">!</span>(
+<span class="macro">ffi_event_struct!</span>(
 <span class="doccomment">/// Pinch gesture began</span>
-<span class="kw">struct</span> <span class="ident">GesturePinchBeginEvent</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture_get_base_event</span>);
+<span class="kw">struct</span> <span class="ident">GesturePinchBeginEvent</span>, <span class="ident">ffi::libinput_event_gesture</span>, <span class="ident">ffi::libinput_event_gesture_get_base_event</span>);
 
 <span class="kw">impl</span> <span class="ident">GesturePinchEventTrait</span> <span class="kw">for</span> <span class="ident">GesturePinchBeginEvent</span> {}
 
-<span class="macro">ffi_event_struct</span><span class="macro">!</span>(
+<span class="macro">ffi_event_struct!</span>(
 <span class="doccomment">/// In-progress pinch gesture updated</span>
-<span class="kw">struct</span> <span class="ident">GesturePinchUpdateEvent</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture_get_base_event</span>);
+<span class="kw">struct</span> <span class="ident">GesturePinchUpdateEvent</span>, <span class="ident">ffi::libinput_event_gesture</span>, <span class="ident">ffi::libinput_event_gesture_get_base_event</span>);
 
 <span class="kw">impl</span> <span class="ident">GesturePinchEventTrait</span> <span class="kw">for</span> <span class="ident">GesturePinchUpdateEvent</span> {}
 
 <span class="kw">impl</span> <span class="ident">GestureEventCoordinates</span> <span class="kw">for</span> <span class="ident">GesturePinchUpdateEvent</span> {}
 
 <span class="kw">impl</span> <span class="ident">GesturePinchUpdateEvent</span> {
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Return the angle delta in degrees between the last and the current</span>
     <span class="doccomment">/// `GesturePinchUpdateEvent`.</span>
     <span class="doccomment">///</span>
@@ -743,15 +745,15 @@
     <span class="doccomment">/// If more than two fingers are present, the angle represents the rotation</span>
     <span class="doccomment">/// around the center of gravity. The calculation of the center of gravity is</span>
     <span class="doccomment">/// implementation-dependent.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">angle_delta</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture_get_angle_delta</span>, <span class="ident">f64</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">angle_delta</span>, <span class="ident">ffi::libinput_event_gesture_get_angle_delta</span>, <span class="ident">f64</span>);
 }
 
-<span class="macro">ffi_event_struct</span><span class="macro">!</span>(
+<span class="macro">ffi_event_struct!</span>(
 <span class="doccomment">/// Pinch gesture ended</span>
-<span class="kw">struct</span> <span class="ident">GesturePinchEndEvent</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_gesture_get_base_event</span>);
+<span class="kw">struct</span> <span class="ident">GesturePinchEndEvent</span>, <span class="ident">ffi::libinput_event_gesture</span>, <span class="ident">ffi::libinput_event_gesture_get_base_event</span>);
 
 <span class="kw">impl</span> <span class="ident">GesturePinchEventTrait</span> <span class="kw">for</span> <span class="ident">GesturePinchEndEvent</span> {}
 
 <span class="kw">impl</span> <span class="ident">GestureEndEvent</span> <span class="kw">for</span> <span class="ident">GesturePinchEndEvent</span> {}
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "input";</script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="input" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script></body></html>

@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/runner/.cargo/git/checkouts/drm-rs-9d15058f81d7e55c/e196639/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../drm/index.html'><div class='logo-container'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/drm-0.4.0/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script id="default-settings"></script><script src="../../storage.js"></script><script src="../../crates.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../drm/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img src="../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../settings.html" title="settings"><img src="../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -305,9 +307,7 @@
 <span id="305">305</span>
 <span id="306">306</span>
 <span id="307">307</span>
-<span id="308">308</span>
-<span id="309">309</span>
-</pre><div class="example-wrap"><pre class="rust ">
+</pre><pre class="rust">
 <span class="doccomment">//! A safe interface to the Direct Rendering Manager subsystem found in various</span>
 <span class="doccomment">//! operating systems.</span>
 <span class="doccomment">//!</span>
@@ -331,28 +331,27 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ## Usage</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! To begin using this crate, the [Device trait](Device.t.html) must be</span>
-<span class="doccomment">//! implemented. See the trait&#39;s [example](Device.t.html#example) section for</span>
+<span class="doccomment">//! To begin using this crate, the [`Device`] trait must be</span>
+<span class="doccomment">//! implemented. See the trait&#39;s [example section](trait@Device#example) for</span>
 <span class="doccomment">//! details on how to implement it.</span>
 <span class="doccomment">//!</span>
 
 <span class="attribute">#![<span class="ident">warn</span>(<span class="ident">missing_docs</span>)]</span>
-<span class="comment">// #![feature(str_internals)]</span>
-<span class="comment">// #![feature(nll)]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">core</span>;
 
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">drm_ffi</span>;
 
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">drm_fourcc</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">nix</span>;
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod</span> <span class="ident">util</span>;
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">control</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">buffer</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">control</span>;
 
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">unix</span>::<span class="ident">io</span>::<span class="ident">AsRawFd</span>;
+<span class="kw">use</span> <span class="ident">std::os::unix::io::AsRawFd</span>;
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">drm_ffi</span>::<span class="ident">result</span>::<span class="ident">SystemError</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">drm_ffi::result::SystemError</span>;
 <span class="kw">use</span> <span class="ident">util</span>::<span class="kw-2">*</span>;
 
 <span class="doccomment">/// This trait should be implemented by any object that acts as a DRM device. It</span>
@@ -377,22 +376,23 @@
 <span class="doccomment">/// use std::os::unix::io::AsRawFd;</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// #[derive(Debug)]</span>
-<span class="doccomment">/// // A simple wrapper for a device node.</span>
+<span class="doccomment">/// /// A simple wrapper for a device node.</span>
 <span class="doccomment">/// struct Card(File);</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// // Implementing `AsRawFd` is a prerequisite to implementing the traits found</span>
-<span class="doccomment">/// // in this crate. Here, we are just calling `as_raw_fd()` on the inner File.</span>
+<span class="doccomment">/// /// Implementing [`AsRawFd`] is a prerequisite to implementing the traits found</span>
+<span class="doccomment">/// /// in this crate. Here, we are just calling [`File::as_raw_fd()`] on the inner</span>
+<span class="doccomment">/// /// [`File`].</span>
 <span class="doccomment">/// impl AsRawFd for Card {</span>
 <span class="doccomment">///     fn as_raw_fd(&amp;self) -&gt; RawFd {</span>
 <span class="doccomment">///         self.0.as_raw_fd()</span>
 <span class="doccomment">///     }</span>
 <span class="doccomment">/// }</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// /// With `AsRawFd` implemented, we can now implement `drm::Device`.</span>
+<span class="doccomment">/// /// With [`AsRawFd`] implemented, we can now implement [`drm::Device`].</span>
 <span class="doccomment">/// impl Device for Card {}</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// // Simple helper method for opening a `Card`.</span>
 <span class="doccomment">/// impl Card {</span>
+<span class="doccomment">///     /// Simple helper method for opening a [`Card`].</span>
 <span class="doccomment">///     fn open() -&gt; Self {</span>
 <span class="doccomment">///         let mut options = OpenOptions::new();</span>
 <span class="doccomment">///         options.read(true);</span>
@@ -415,41 +415,41 @@
     <span class="doccomment">/// This function is only available to processes with CAP_SYS_ADMIN</span>
     <span class="doccomment">/// privileges (usually as root)</span>
     <span class="kw">fn</span> <span class="ident">acquire_master_lock</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
-        <span class="ident">drm_ffi</span>::<span class="ident">auth</span>::<span class="ident">acquire_master</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>())<span class="question-mark">?</span>;
+        <span class="ident">drm_ffi::auth::acquire_master</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>())<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="doccomment">/// Releases the DRM Master lock for another process to use.</span>
     <span class="kw">fn</span> <span class="ident">release_master_lock</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
-        <span class="ident">drm_ffi</span>::<span class="ident">auth</span>::<span class="ident">release_master</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>())<span class="question-mark">?</span>;
+        <span class="ident">drm_ffi::auth::release_master</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>())<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// Generates an [AuthToken](AuthToken.t.html) for this process.</span>
+    <span class="doccomment">/// Generates an [`AuthToken`] for this process.</span>
     <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;Consider opening a render node instead.&quot;</span>)]</span>
     <span class="kw">fn</span> <span class="ident">generate_auth_token</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">AuthToken</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="ident">drm_ffi</span>::<span class="ident">auth</span>::<span class="ident">get_magic_token</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>())<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="ident">drm_ffi::auth::get_magic_token</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>())<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">AuthToken</span>(<span class="ident">token</span>.<span class="ident">magic</span>))
     }
 
-    <span class="doccomment">/// Authenticates an [AuthToken](AuthToken.t.html) from another process.</span>
+    <span class="doccomment">/// Authenticates an [`AuthToken`] from another process.</span>
     <span class="kw">fn</span> <span class="ident">authenticate_auth_token</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">token</span>: <span class="ident">AuthToken</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
-        <span class="ident">drm_ffi</span>::<span class="ident">auth</span>::<span class="ident">auth_magic_token</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="ident">token</span>.<span class="number">0</span>)<span class="question-mark">?</span>;
+        <span class="ident">drm_ffi::auth::auth_magic_token</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="ident">token</span>.<span class="number">0</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="doccomment">/// Requests the driver to expose or hide certain capabilities. See</span>
-    <span class="doccomment">/// [ClientCapability](ClientCapability.t.html) for more information.</span>
+    <span class="doccomment">/// [`ClientCapability`] for more information.</span>
     <span class="kw">fn</span> <span class="ident">set_client_capability</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">cap</span>: <span class="ident">ClientCapability</span>,
         <span class="ident">enable</span>: <span class="ident">bool</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
-        <span class="ident">drm_ffi</span>::<span class="ident">set_capability</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="ident">cap</span> <span class="kw">as</span> <span class="ident">u64</span>, <span class="ident">enable</span>)<span class="question-mark">?</span>;
+        <span class="ident">drm_ffi::set_capability</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="ident">cap</span> <span class="kw">as</span> <span class="ident">u64</span>, <span class="ident">enable</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// Gets the [BusID](BusID.t.html) of this device.</span>
+    <span class="doccomment">/// Gets the [`BusID`] of this device.</span>
     <span class="kw">fn</span> <span class="ident">get_bus_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">BusID</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffer</span> <span class="op">=</span> [<span class="number">0u8</span>; <span class="number">32</span>];
 
@@ -457,31 +457,31 @@
 
         <span class="kw">let</span> <span class="ident">_busid</span> <span class="op">=</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">slice</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">buffer</span>[..];
-            <span class="kw">let</span> <span class="ident">busid</span> <span class="op">=</span> <span class="ident">drm_ffi</span>::<span class="ident">get_bus_id</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">slice</span>))<span class="question-mark">?</span>;
+            <span class="kw">let</span> <span class="ident">busid</span> <span class="op">=</span> <span class="ident">drm_ffi::get_bus_id</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">slice</span>))<span class="question-mark">?</span>;
             <span class="ident">buffer_len</span> <span class="op">=</span> <span class="ident">slice</span>.<span class="ident">len</span>();
             <span class="ident">busid</span>
         };
 
-        <span class="kw">let</span> <span class="ident">bus_id</span> <span class="op">=</span> <span class="ident">BusID</span>(<span class="ident">SmallOsString</span>::<span class="ident">from_u8_buffer</span>(<span class="ident">buffer</span>, <span class="ident">buffer_len</span>));
+        <span class="kw">let</span> <span class="ident">bus_id</span> <span class="op">=</span> <span class="ident">BusID</span>(<span class="ident">SmallOsString::from_u8_buffer</span>(<span class="ident">buffer</span>, <span class="ident">buffer_len</span>));
 
         <span class="prelude-val">Ok</span>(<span class="ident">bus_id</span>)
     }
 
-    <span class="doccomment">/// Check to see if our [AuthToken](AuthToken.t.html) has been authenticated</span>
+    <span class="doccomment">/// Check to see if our [`AuthToken`] has been authenticated</span>
     <span class="doccomment">/// by the DRM Master</span>
     <span class="kw">fn</span> <span class="ident">authenticated</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">drm_ffi</span>::<span class="ident">get_client</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="number">0</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">drm_ffi::get_client</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="number">0</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">client</span>.<span class="ident">auth</span> <span class="op">=</span><span class="op">=</span> <span class="number">1</span>)
     }
 
     <span class="doccomment">/// Gets the value of a capability.</span>
     <span class="kw">fn</span> <span class="ident">get_driver_capability</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cap</span>: <span class="ident">DriverCapability</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">cap</span> <span class="op">=</span> <span class="ident">drm_ffi</span>::<span class="ident">get_capability</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="ident">cap</span> <span class="kw">as</span> <span class="ident">u64</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">cap</span> <span class="op">=</span> <span class="ident">drm_ffi::get_capability</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="ident">cap</span> <span class="kw">as</span> <span class="ident">u64</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">cap</span>.<span class="ident">value</span>)
     }
 
-    <span class="doccomment">/// Possible errors:</span>
-    <span class="doccomment">///   - EFAULT: Kernel could not copy fields into userspace</span>
+    <span class="doccomment">/// # Possible errors:</span>
+    <span class="doccomment">///   - [`SystemError::MemoryFault`]: Kernel could not copy fields into userspace</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">missing_docs</span>)]</span>
     <span class="kw">fn</span> <span class="ident">get_driver</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Driver</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">name</span> <span class="op">=</span> [<span class="number">0i8</span>; <span class="number">32</span>];
@@ -497,7 +497,7 @@
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">date_slice</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">date</span>[..];
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">desc_slice</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">desc</span>[..];
 
-            <span class="kw">let</span> <span class="ident">version</span> <span class="op">=</span> <span class="ident">drm_ffi</span>::<span class="ident">get_version</span>(
+            <span class="kw">let</span> <span class="ident">version</span> <span class="op">=</span> <span class="ident">drm_ffi::get_version</span>(
                 <span class="self">self</span>.<span class="ident">as_raw_fd</span>(),
                 <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">name_slice</span>),
                 <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">date_slice</span>),
@@ -511,15 +511,11 @@
             <span class="ident">version</span>
         };
 
-        <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">SmallOsString</span>::<span class="ident">from_i8_buffer</span>(<span class="ident">name</span>, <span class="ident">name_len</span>);
-        <span class="kw">let</span> <span class="ident">date</span> <span class="op">=</span> <span class="ident">SmallOsString</span>::<span class="ident">from_i8_buffer</span>(<span class="ident">date</span>, <span class="ident">date_len</span>);
-        <span class="kw">let</span> <span class="ident">desc</span> <span class="op">=</span> <span class="ident">SmallOsString</span>::<span class="ident">from_i8_buffer</span>(<span class="ident">desc</span>, <span class="ident">desc_len</span>);
+        <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">SmallOsString::from_i8_buffer</span>(<span class="ident">name</span>, <span class="ident">name_len</span>);
+        <span class="kw">let</span> <span class="ident">date</span> <span class="op">=</span> <span class="ident">SmallOsString::from_i8_buffer</span>(<span class="ident">date</span>, <span class="ident">date_len</span>);
+        <span class="kw">let</span> <span class="ident">desc</span> <span class="op">=</span> <span class="ident">SmallOsString::from_i8_buffer</span>(<span class="ident">desc</span>, <span class="ident">desc_len</span>);
 
-        <span class="kw">let</span> <span class="ident">driver</span> <span class="op">=</span> <span class="ident">Driver</span> {
-            <span class="ident">name</span>: <span class="ident">name</span>,
-            <span class="ident">date</span>: <span class="ident">date</span>,
-            <span class="ident">desc</span>: <span class="ident">desc</span>,
-        };
+        <span class="kw">let</span> <span class="ident">driver</span> <span class="op">=</span> <span class="ident">Driver</span> { <span class="ident">name</span>, <span class="ident">date</span>, <span class="ident">desc</span> };
 
         <span class="prelude-val">Ok</span>(<span class="ident">driver</span>)
     }
@@ -540,6 +536,7 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AuthToken</span>(<span class="ident">u32</span>);
 
 <span class="doccomment">/// Bus ID of a device.</span>
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::upper_case_acronyms</span>)]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BusID</span>(<span class="ident">SmallOsString</span>);
 
@@ -575,35 +572,36 @@
 }
 
 <span class="doccomment">/// Used to check which capabilities your graphics driver has.</span>
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::upper_case_acronyms</span>)]</span>
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">u64</span>)]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">DriverCapability</span> {
     <span class="doccomment">/// DumbBuffer support for scanout</span>
-    <span class="ident">DumbBuffer</span> <span class="op">=</span> <span class="ident">drm_ffi</span>::<span class="ident">DRM_CAP_DUMB_BUFFER</span> <span class="kw">as</span> <span class="ident">u64</span>,
+    <span class="ident">DumbBuffer</span> <span class="op">=</span> <span class="ident">drm_ffi::DRM_CAP_DUMB_BUFFER</span> <span class="kw">as</span> <span class="ident">u64</span>,
     <span class="doccomment">/// Unknown</span>
-    <span class="ident">VBlankHighCRTC</span> <span class="op">=</span> <span class="ident">drm_ffi</span>::<span class="ident">DRM_CAP_VBLANK_HIGH_CRTC</span> <span class="kw">as</span> <span class="ident">u64</span>,
+    <span class="ident">VBlankHighCRTC</span> <span class="op">=</span> <span class="ident">drm_ffi::DRM_CAP_VBLANK_HIGH_CRTC</span> <span class="kw">as</span> <span class="ident">u64</span>,
     <span class="doccomment">/// Preferred depth to use for dumb buffers</span>
-    <span class="ident">DumbPreferredDepth</span> <span class="op">=</span> <span class="ident">drm_ffi</span>::<span class="ident">DRM_CAP_DUMB_PREFERRED_DEPTH</span> <span class="kw">as</span> <span class="ident">u64</span>,
+    <span class="ident">DumbPreferredDepth</span> <span class="op">=</span> <span class="ident">drm_ffi::DRM_CAP_DUMB_PREFERRED_DEPTH</span> <span class="kw">as</span> <span class="ident">u64</span>,
     <span class="doccomment">/// Unknown</span>
-    <span class="ident">DumbPreferShadow</span> <span class="op">=</span> <span class="ident">drm_ffi</span>::<span class="ident">DRM_CAP_DUMB_PREFER_SHADOW</span> <span class="kw">as</span> <span class="ident">u64</span>,
-    <span class="doccomment">/// PRIME handles are support</span>
-    <span class="ident">Prime</span> <span class="op">=</span> <span class="ident">drm_ffi</span>::<span class="ident">DRM_CAP_PRIME</span> <span class="kw">as</span> <span class="ident">u64</span>,
+    <span class="ident">DumbPreferShadow</span> <span class="op">=</span> <span class="ident">drm_ffi::DRM_CAP_DUMB_PREFER_SHADOW</span> <span class="kw">as</span> <span class="ident">u64</span>,
+    <span class="doccomment">/// PRIME handles are supported</span>
+    <span class="ident">Prime</span> <span class="op">=</span> <span class="ident">drm_ffi::DRM_CAP_PRIME</span> <span class="kw">as</span> <span class="ident">u64</span>,
     <span class="doccomment">/// Unknown</span>
-    <span class="ident">MonotonicTimestamp</span> <span class="op">=</span> <span class="ident">drm_ffi</span>::<span class="ident">DRM_CAP_TIMESTAMP_MONOTONIC</span> <span class="kw">as</span> <span class="ident">u64</span>,
+    <span class="ident">MonotonicTimestamp</span> <span class="op">=</span> <span class="ident">drm_ffi::DRM_CAP_TIMESTAMP_MONOTONIC</span> <span class="kw">as</span> <span class="ident">u64</span>,
     <span class="doccomment">/// Asynchronous page flipping support</span>
-    <span class="ident">ASyncPageFlip</span> <span class="op">=</span> <span class="ident">drm_ffi</span>::<span class="ident">DRM_CAP_ASYNC_PAGE_FLIP</span> <span class="kw">as</span> <span class="ident">u64</span>,
+    <span class="ident">ASyncPageFlip</span> <span class="op">=</span> <span class="ident">drm_ffi::DRM_CAP_ASYNC_PAGE_FLIP</span> <span class="kw">as</span> <span class="ident">u64</span>,
     <span class="doccomment">/// Width of cursor buffers</span>
-    <span class="ident">CursorWidth</span> <span class="op">=</span> <span class="ident">drm_ffi</span>::<span class="ident">DRM_CAP_CURSOR_WIDTH</span> <span class="kw">as</span> <span class="ident">u64</span>,
+    <span class="ident">CursorWidth</span> <span class="op">=</span> <span class="ident">drm_ffi::DRM_CAP_CURSOR_WIDTH</span> <span class="kw">as</span> <span class="ident">u64</span>,
     <span class="doccomment">/// Height of cursor buffers</span>
-    <span class="ident">CursorHeight</span> <span class="op">=</span> <span class="ident">drm_ffi</span>::<span class="ident">DRM_CAP_CURSOR_HEIGHT</span> <span class="kw">as</span> <span class="ident">u64</span>,
-    <span class="doccomment">/// You can create framebuffers with modifiers</span>
-    <span class="ident">AddFB2Modifiers</span> <span class="op">=</span> <span class="ident">drm_ffi</span>::<span class="ident">DRM_CAP_ADDFB2_MODIFIERS</span> <span class="kw">as</span> <span class="ident">u64</span>,
+    <span class="ident">CursorHeight</span> <span class="op">=</span> <span class="ident">drm_ffi::DRM_CAP_CURSOR_HEIGHT</span> <span class="kw">as</span> <span class="ident">u64</span>,
+    <span class="doccomment">/// Create framebuffers with modifiers</span>
+    <span class="ident">AddFB2Modifiers</span> <span class="op">=</span> <span class="ident">drm_ffi::DRM_CAP_ADDFB2_MODIFIERS</span> <span class="kw">as</span> <span class="ident">u64</span>,
     <span class="doccomment">/// Unknown</span>
-    <span class="ident">PageFlipTarget</span> <span class="op">=</span> <span class="ident">drm_ffi</span>::<span class="ident">DRM_CAP_PAGE_FLIP_TARGET</span> <span class="kw">as</span> <span class="ident">u64</span>,
+    <span class="ident">PageFlipTarget</span> <span class="op">=</span> <span class="ident">drm_ffi::DRM_CAP_PAGE_FLIP_TARGET</span> <span class="kw">as</span> <span class="ident">u64</span>,
     <span class="doccomment">/// Uses the CRTC&#39;s ID in vblank events</span>
-    <span class="ident">CRTCInVBlankEvent</span> <span class="op">=</span> <span class="ident">drm_ffi</span>::<span class="ident">DRM_CAP_CRTC_IN_VBLANK_EVENT</span> <span class="kw">as</span> <span class="ident">u64</span>,
+    <span class="ident">CRTCInVBlankEvent</span> <span class="op">=</span> <span class="ident">drm_ffi::DRM_CAP_CRTC_IN_VBLANK_EVENT</span> <span class="kw">as</span> <span class="ident">u64</span>,
     <span class="doccomment">/// SyncObj support</span>
-    <span class="ident">SyncObj</span> <span class="op">=</span> <span class="ident">drm_ffi</span>::<span class="ident">DRM_CAP_SYNCOBJ</span> <span class="kw">as</span> <span class="ident">u64</span>,
+    <span class="ident">SyncObj</span> <span class="op">=</span> <span class="ident">drm_ffi::DRM_CAP_SYNCOBJ</span> <span class="kw">as</span> <span class="ident">u64</span>,
 }
 
 <span class="doccomment">/// Used to enable/disable capabilities for the process.</span>
@@ -611,11 +609,11 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ClientCapability</span> {
     <span class="doccomment">/// The driver provides 3D screen control</span>
-    <span class="ident">Stereo3D</span> <span class="op">=</span> <span class="ident">drm_ffi</span>::<span class="ident">DRM_CLIENT_CAP_STEREO_3D</span> <span class="kw">as</span> <span class="ident">u64</span>,
+    <span class="ident">Stereo3D</span> <span class="op">=</span> <span class="ident">drm_ffi::DRM_CLIENT_CAP_STEREO_3D</span> <span class="kw">as</span> <span class="ident">u64</span>,
     <span class="doccomment">/// The driver provides more plane types for modesetting</span>
-    <span class="ident">UniversalPlanes</span> <span class="op">=</span> <span class="ident">drm_ffi</span>::<span class="ident">DRM_CLIENT_CAP_UNIVERSAL_PLANES</span> <span class="kw">as</span> <span class="ident">u64</span>,
+    <span class="ident">UniversalPlanes</span> <span class="op">=</span> <span class="ident">drm_ffi::DRM_CLIENT_CAP_UNIVERSAL_PLANES</span> <span class="kw">as</span> <span class="ident">u64</span>,
     <span class="doccomment">/// The driver provides atomic modesetting</span>
-    <span class="ident">Atomic</span> <span class="op">=</span> <span class="ident">drm_ffi</span>::<span class="ident">DRM_CLIENT_CAP_ATOMIC</span> <span class="kw">as</span> <span class="ident">u64</span>,
+    <span class="ident">Atomic</span> <span class="op">=</span> <span class="ident">drm_ffi::DRM_CLIENT_CAP_ATOMIC</span> <span class="kw">as</span> <span class="ident">u64</span>,
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "drm";</script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="drm" data-search-index-js="../../search-index.js" data-search-js="../../search.js"></div><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script></body></html>

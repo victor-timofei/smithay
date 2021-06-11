@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["AtomicModeReq",""]]});
+initSidebarItems({"struct":[["AtomicModeReq","Helper struct to construct atomic commit requests"]]});

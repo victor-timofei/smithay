@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/calloop-0.6.2/src/sources/channel.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>channel.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../calloop/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/calloop-0.8.0/src/sources/channel.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>channel.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../calloop/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img src="../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img src="../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -281,19 +283,33 @@
 <span id="281">281</span>
 <span id="282">282</span>
 <span id="283">283</span>
-</pre><div class="example-wrap"><pre class="rust ">
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+</pre><pre class="rust">
 <span class="doccomment">//! An MPSC channel whose receiving end is an event source</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! Create a channel using `Channel::&lt;T&gt;::new()`, which returns a</span>
-<span class="doccomment">//! `Sender&lt;T&gt;` that can be cloned and sent accross threads if `T: Send`,</span>
-<span class="doccomment">//! and a `Channel&lt;T&gt;` that can be inserted into an `EventLoop`. It will generate</span>
-<span class="doccomment">//! one event per message.</span>
+<span class="doccomment">//! Create a channel using [`channel()`](channel), which returns a</span>
+<span class="doccomment">//! [`Sender`] that can be cloned and sent accross threads if `T: Send`,</span>
+<span class="doccomment">//! and a [`Channel`] that can be inserted into an [`EventLoop`](crate::EventLoop).</span>
+<span class="doccomment">//! It will generate one event per message.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! A synchronous version of the channel is provided by [`sync_channel`], in which</span>
+<span class="doccomment">//! the [`SyncSender`] will block when the channel is full.</span>
 
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">mpsc</span>;
+<span class="kw">use</span> <span class="ident">std::sync::mpsc</span>;
 
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">EventSource</span>, <span class="ident">Poll</span>, <span class="ident">Readiness</span>, <span class="ident">Token</span>};
 
-<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">ping</span>::{<span class="ident">make_ping</span>, <span class="ident">Ping</span>, <span class="ident">PingSource</span>};
+<span class="kw">use</span> <span class="kw">super</span><span class="ident">::ping</span>::{<span class="ident">make_ping</span>, <span class="ident">Ping</span>, <span class="ident">PingSource</span>};
 
 <span class="doccomment">/// The events generated by the channel event source</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Event</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
@@ -310,11 +326,11 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// It can be cloned and sent accross threads (if `T` is).</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="ident">sender</span>: <span class="ident">mpsc</span>::<span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+    <span class="ident">sender</span>: <span class="ident">mpsc::Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
     <span class="ident">ping</span>: <span class="ident">Ping</span>,
 }
 
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">tarpaulin</span>, <span class="ident">skip</span>)]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">tarpaulin_include</span>))]</span>
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
         <span class="ident">Sender</span> {
@@ -329,9 +345,8 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This will wake the event loop and deliver an `Event::Msg` to</span>
     <span class="doccomment">/// it containing the provided value.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">t</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">mpsc</span>::<span class="ident">SendError</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">ping</span>.<span class="ident">ping</span>();
-        <span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">send</span>(<span class="ident">t</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">t</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">mpsc::SendError</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">send</span>(<span class="ident">t</span>).<span class="ident">map</span>(<span class="op">|</span>()<span class="op">|</span> <span class="self">self</span>.<span class="ident">ping</span>.<span class="ident">ping</span>())
     }
 }
 
@@ -346,11 +361,11 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// It can be cloned and sent accross threads (if `T` is).</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SyncSender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="ident">sender</span>: <span class="ident">mpsc</span>::<span class="ident">SyncSender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+    <span class="ident">sender</span>: <span class="ident">mpsc::SyncSender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
     <span class="ident">ping</span>: <span class="ident">Ping</span>,
 }
 
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">tarpaulin</span>, <span class="ident">skip</span>)]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">tarpaulin_include</span>))]</span>
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">SyncSender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">SyncSender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
         <span class="ident">SyncSender</span> {
@@ -366,22 +381,31 @@
     <span class="doccomment">/// This will wake the event loop and deliver an `Event::Msg` to</span>
     <span class="doccomment">/// it containing the provided value. If the channel is full, this</span>
     <span class="doccomment">/// function will block until the event loop empties it and it can</span>
-    <span class="doccomment">/// deliver the message. Readiness is signalled to the event loop</span>
-    <span class="doccomment">/// *before* blocking.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">t</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">mpsc</span>::<span class="ident">SendError</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">ping</span>.<span class="ident">ping</span>();
-        <span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">send</span>(<span class="ident">t</span>)
+    <span class="doccomment">/// deliver the message.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Due to the blocking behavior, this method should not be used on the</span>
+    <span class="doccomment">/// same thread as the one running the event loop, as it could cause deadlocks.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">t</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">mpsc::SendError</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">try_send</span>(<span class="ident">t</span>);
+        <span class="kw">match</span> <span class="ident">ret</span> {
+            <span class="prelude-val">Ok</span>(()) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(()),
+            <span class="prelude-val">Err</span>(<span class="ident">mpsc::TrySendError::Full</span>(<span class="ident">t</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">send</span>(<span class="ident">t</span>).<span class="ident">map</span>(<span class="op">|</span>()<span class="op">|</span> <span class="self">self</span>.<span class="ident">ping</span>.<span class="ident">ping</span>()),
+            <span class="prelude-val">Err</span>(<span class="ident">mpsc::TrySendError::Disconnected</span>(<span class="ident">t</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">mpsc::SendError</span>(<span class="ident">t</span>)),
+        }
     }
 
     <span class="doccomment">/// Send a message to the synchronous channel</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This will wake the event loop and deliver an `Event::Msg` to</span>
     <span class="doccomment">/// it containing the provided value. If the channel is full, this</span>
-    <span class="doccomment">/// function will return an error. The event loop will be signalled</span>
-    <span class="doccomment">/// for readinnes in all cases.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_send</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">t</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">mpsc</span>::<span class="ident">TrySendError</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">ping</span>.<span class="ident">ping</span>();
-        <span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">try_send</span>(<span class="ident">t</span>)
+    <span class="doccomment">/// function will return an error, but the event loop will still be</span>
+    <span class="doccomment">/// signaled for readiness.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_send</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">t</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">mpsc::TrySendError</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">try_send</span>(<span class="ident">t</span>);
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(()) <span class="op">|</span> <span class="prelude-val">Err</span>(<span class="ident">mpsc::TrySendError::Full</span>(<span class="kw">_</span>)) <span class="op">=</span> <span class="ident">ret</span> {
+            <span class="self">self</span>.<span class="ident">ping</span>.<span class="ident">ping</span>();
+        }
+        <span class="ident">ret</span>
     }
 }
 
@@ -389,7 +413,7 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// This is the event source to be inserted into your `EventLoop`.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="ident">receiver</span>: <span class="ident">mpsc</span>::<span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+    <span class="ident">receiver</span>: <span class="ident">mpsc::Receiver</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
     <span class="ident">source</span>: <span class="ident">PingSource</span>,
 }
 
@@ -402,19 +426,19 @@
 
 <span class="doccomment">/// Create a new asynchronous channel</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>() <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">Channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) {
-    <span class="kw">let</span> (<span class="ident">sender</span>, <span class="ident">receiver</span>) <span class="op">=</span> <span class="ident">mpsc</span>::<span class="ident">channel</span>();
+    <span class="kw">let</span> (<span class="ident">sender</span>, <span class="ident">receiver</span>) <span class="op">=</span> <span class="ident">mpsc::channel</span>();
     <span class="kw">let</span> (<span class="ident">ping</span>, <span class="ident">source</span>) <span class="op">=</span> <span class="ident">make_ping</span>().<span class="ident">expect</span>(<span class="string">&quot;Failed to create a Ping.&quot;</span>);
     (<span class="ident">Sender</span> { <span class="ident">sender</span>, <span class="ident">ping</span> }, <span class="ident">Channel</span> { <span class="ident">receiver</span>, <span class="ident">source</span> })
 }
 
 <span class="doccomment">/// Create a new synchronous, bounded channel</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sync_channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">bound</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">SyncSender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">Channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) {
-    <span class="kw">let</span> (<span class="ident">sender</span>, <span class="ident">receiver</span>) <span class="op">=</span> <span class="ident">mpsc</span>::<span class="ident">sync_channel</span>(<span class="ident">bound</span>);
+    <span class="kw">let</span> (<span class="ident">sender</span>, <span class="ident">receiver</span>) <span class="op">=</span> <span class="ident">mpsc::sync_channel</span>(<span class="ident">bound</span>);
     <span class="kw">let</span> (<span class="ident">ping</span>, <span class="ident">source</span>) <span class="op">=</span> <span class="ident">make_ping</span>().<span class="ident">expect</span>(<span class="string">&quot;Failed to create a Ping.&quot;</span>);
     (<span class="ident">SyncSender</span> { <span class="ident">sender</span>, <span class="ident">ping</span> }, <span class="ident">Channel</span> { <span class="ident">receiver</span>, <span class="ident">source</span> })
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">EventSource</span> <span class="kw">for</span> <span class="ident">Channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">EventSource</span> <span class="kw">for</span> <span class="ident">Channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Event</span> <span class="op">=</span> <span class="ident">Event</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>;
     <span class="kw">type</span> <span class="ident">Metadata</span> <span class="op">=</span> ();
     <span class="kw">type</span> <span class="ident">Ret</span> <span class="op">=</span> ();
@@ -424,33 +448,33 @@
         <span class="ident">readiness</span>: <span class="ident">Readiness</span>,
         <span class="ident">token</span>: <span class="ident">Token</span>,
         <span class="kw-2">mut</span> <span class="ident">callback</span>: <span class="ident">C</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="ident">C</span>: <span class="ident">FnMut</span>(<span class="self">Self</span>::<span class="ident">Event</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span>::<span class="ident">Metadata</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span>::<span class="ident">Ret</span>,
+        <span class="ident">C</span>: <span class="ident">FnMut</span>(<span class="self">Self</span><span class="ident">::Event</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span><span class="ident">::Metadata</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span><span class="ident">::Ret</span>,
     {
         <span class="kw">let</span> <span class="ident">receiver</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">receiver</span>;
         <span class="self">self</span>.<span class="ident">source</span>
             .<span class="ident">process_events</span>(<span class="ident">readiness</span>, <span class="ident">token</span>, <span class="op">|</span>(), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> ()<span class="op">|</span> <span class="kw">loop</span> {
                 <span class="kw">match</span> <span class="ident">receiver</span>.<span class="ident">try_recv</span>() {
-                    <span class="prelude-val">Ok</span>(<span class="ident">val</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">callback</span>(<span class="ident">Event</span>::<span class="ident">Msg</span>(<span class="ident">val</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> ()),
-                    <span class="prelude-val">Err</span>(<span class="ident">mpsc</span>::<span class="ident">TryRecvError</span>::<span class="ident">Empty</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">break</span>,
-                    <span class="prelude-val">Err</span>(<span class="ident">mpsc</span>::<span class="ident">TryRecvError</span>::<span class="ident">Disconnected</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                        <span class="ident">callback</span>(<span class="ident">Event</span>::<span class="ident">Closed</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> ());
+                    <span class="prelude-val">Ok</span>(<span class="ident">val</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">callback</span>(<span class="ident">Event::Msg</span>(<span class="ident">val</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> ()),
+                    <span class="prelude-val">Err</span>(<span class="ident">mpsc::TryRecvError::Empty</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">break</span>,
+                    <span class="prelude-val">Err</span>(<span class="ident">mpsc::TryRecvError::Disconnected</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">callback</span>(<span class="ident">Event::Closed</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> ());
                         <span class="kw">break</span>;
                     }
                 }
             })
     }
 
-    <span class="kw">fn</span> <span class="ident">register</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token</span>: <span class="ident">Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">register</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token</span>: <span class="ident">Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">source</span>.<span class="ident">register</span>(<span class="ident">poll</span>, <span class="ident">token</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">reregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token</span>: <span class="ident">Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">reregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token</span>: <span class="ident">Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">source</span>.<span class="ident">reregister</span>(<span class="ident">poll</span>, <span class="ident">token</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">unregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">unregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">source</span>.<span class="ident">unregister</span>(<span class="ident">poll</span>)
     }
 }
@@ -461,7 +485,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">basic_channel</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">event_loop</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">EventLoop</span>::<span class="ident">new</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">event_loop</span> <span class="op">=</span> <span class="kw">crate</span><span class="ident">::EventLoop::try_new</span>().<span class="ident">unwrap</span>();
 
         <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">event_loop</span>.<span class="ident">handle</span>();
 
@@ -470,45 +494,45 @@
         <span class="comment">// (got_msg, got_closed)</span>
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">got</span> <span class="op">=</span> (<span class="bool-val">false</span>, <span class="bool-val">false</span>);
 
-        <span class="kw">let</span> <span class="ident">_source</span> <span class="op">=</span> <span class="ident">handle</span>
+        <span class="kw">let</span> <span class="ident">_channel_token</span> <span class="op">=</span> <span class="ident">handle</span>
             .<span class="ident">insert_source</span>(<span class="ident">rx</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">evt</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> (), <span class="ident">got</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> (<span class="ident">bool</span>, <span class="ident">bool</span>)<span class="op">|</span> <span class="kw">match</span> <span class="ident">evt</span> {
-                <span class="ident">Event</span>::<span class="ident">Msg</span>(()) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">Event::Msg</span>(()) <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="ident">got</span>.<span class="number">0</span> <span class="op">=</span> <span class="bool-val">true</span>;
                 }
-                <span class="ident">Event</span>::<span class="ident">Closed</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">Event::Closed</span> <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="ident">got</span>.<span class="number">1</span> <span class="op">=</span> <span class="bool-val">true</span>;
                 }
             })
-            .<span class="ident">map_err</span>(<span class="ident">Into</span>::<span class="op">&lt;</span><span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Error</span><span class="op">&gt;</span>::<span class="ident">into</span>)
+            .<span class="ident">map_err</span>(<span class="ident">Into</span>::<span class="op">&lt;</span><span class="ident">std::io::Error</span><span class="op">&gt;</span><span class="ident">::into</span>)
             .<span class="ident">unwrap</span>();
 
         <span class="comment">// nothing is sent, nothing is received</span>
         <span class="ident">event_loop</span>
-            .<span class="ident">dispatch</span>(<span class="prelude-val">Some</span>(::<span class="ident">std</span>::<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">0</span>)), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">got</span>)
+            .<span class="ident">dispatch</span>(<span class="prelude-val">Some</span>(<span class="ident">::std::time::Duration::from_millis</span>(<span class="number">0</span>)), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">got</span>)
             .<span class="ident">unwrap</span>();
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">got</span>, (<span class="bool-val">false</span>, <span class="bool-val">false</span>));
+        <span class="macro">assert_eq!</span>(<span class="ident">got</span>, (<span class="bool-val">false</span>, <span class="bool-val">false</span>));
 
         <span class="comment">// a message is send</span>
         <span class="ident">tx</span>.<span class="ident">send</span>(()).<span class="ident">unwrap</span>();
         <span class="ident">event_loop</span>
-            .<span class="ident">dispatch</span>(<span class="prelude-val">Some</span>(::<span class="ident">std</span>::<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">0</span>)), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">got</span>)
+            .<span class="ident">dispatch</span>(<span class="prelude-val">Some</span>(<span class="ident">::std::time::Duration::from_millis</span>(<span class="number">0</span>)), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">got</span>)
             .<span class="ident">unwrap</span>();
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">got</span>, (<span class="bool-val">true</span>, <span class="bool-val">false</span>));
+        <span class="macro">assert_eq!</span>(<span class="ident">got</span>, (<span class="bool-val">true</span>, <span class="bool-val">false</span>));
 
         <span class="comment">// the sender is dropped</span>
-        ::<span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">drop</span>(<span class="ident">tx</span>);
+        <span class="ident">::std::mem::drop</span>(<span class="ident">tx</span>);
         <span class="ident">event_loop</span>
-            .<span class="ident">dispatch</span>(<span class="prelude-val">Some</span>(::<span class="ident">std</span>::<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">0</span>)), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">got</span>)
+            .<span class="ident">dispatch</span>(<span class="prelude-val">Some</span>(<span class="ident">::std::time::Duration::from_millis</span>(<span class="number">0</span>)), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">got</span>)
             .<span class="ident">unwrap</span>();
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">got</span>, (<span class="bool-val">true</span>, <span class="bool-val">true</span>));
+        <span class="macro">assert_eq!</span>(<span class="ident">got</span>, (<span class="bool-val">true</span>, <span class="bool-val">true</span>));
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">basic_sync_channel</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">event_loop</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">EventLoop</span>::<span class="ident">new</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">event_loop</span> <span class="op">=</span> <span class="kw">crate</span><span class="ident">::EventLoop::try_new</span>().<span class="ident">unwrap</span>();
 
         <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">event_loop</span>.<span class="ident">handle</span>();
 
@@ -516,54 +540,54 @@
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">received</span> <span class="op">=</span> (<span class="number">0</span>, <span class="bool-val">false</span>);
 
-        <span class="kw">let</span> <span class="ident">_source</span> <span class="op">=</span> <span class="ident">handle</span>
+        <span class="kw">let</span> <span class="ident">_channel_token</span> <span class="op">=</span> <span class="ident">handle</span>
             .<span class="ident">insert_source</span>(
                 <span class="ident">rx</span>,
                 <span class="kw">move</span> <span class="op">|</span><span class="ident">evt</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> (), <span class="ident">received</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> (<span class="ident">u32</span>, <span class="ident">bool</span>)<span class="op">|</span> <span class="kw">match</span> <span class="ident">evt</span> {
-                    <span class="ident">Event</span>::<span class="ident">Msg</span>(()) <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="ident">Event::Msg</span>(()) <span class="op">=</span><span class="op">&gt;</span> {
                         <span class="ident">received</span>.<span class="number">0</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                     }
-                    <span class="ident">Event</span>::<span class="ident">Closed</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="ident">Event::Closed</span> <span class="op">=</span><span class="op">&gt;</span> {
                         <span class="ident">received</span>.<span class="number">1</span> <span class="op">=</span> <span class="bool-val">true</span>;
                     }
                 },
             )
-            .<span class="ident">map_err</span>(<span class="ident">Into</span>::<span class="op">&lt;</span><span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Error</span><span class="op">&gt;</span>::<span class="ident">into</span>)
+            .<span class="ident">map_err</span>(<span class="ident">Into</span>::<span class="op">&lt;</span><span class="ident">std::io::Error</span><span class="op">&gt;</span><span class="ident">::into</span>)
             .<span class="ident">unwrap</span>();
 
         <span class="comment">// nothing is sent, nothing is received</span>
         <span class="ident">event_loop</span>
-            .<span class="ident">dispatch</span>(<span class="prelude-val">Some</span>(::<span class="ident">std</span>::<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">0</span>)), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">received</span>)
+            .<span class="ident">dispatch</span>(<span class="prelude-val">Some</span>(<span class="ident">::std::time::Duration::from_millis</span>(<span class="number">0</span>)), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">received</span>)
             .<span class="ident">unwrap</span>();
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">received</span>.<span class="number">0</span>, <span class="number">0</span>);
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">received</span>.<span class="number">1</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">received</span>.<span class="number">0</span>, <span class="number">0</span>);
+        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">received</span>.<span class="number">1</span>);
 
         <span class="comment">// fill the channel</span>
         <span class="ident">tx</span>.<span class="ident">send</span>(()).<span class="ident">unwrap</span>();
         <span class="ident">tx</span>.<span class="ident">send</span>(()).<span class="ident">unwrap</span>();
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">tx</span>.<span class="ident">try_send</span>(()).<span class="ident">is_err</span>());
+        <span class="macro">assert!</span>(<span class="ident">tx</span>.<span class="ident">try_send</span>(()).<span class="ident">is_err</span>());
 
         <span class="comment">// empty it</span>
         <span class="ident">event_loop</span>
-            .<span class="ident">dispatch</span>(<span class="prelude-val">Some</span>(::<span class="ident">std</span>::<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">0</span>)), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">received</span>)
+            .<span class="ident">dispatch</span>(<span class="prelude-val">Some</span>(<span class="ident">::std::time::Duration::from_millis</span>(<span class="number">0</span>)), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">received</span>)
             .<span class="ident">unwrap</span>();
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">received</span>.<span class="number">0</span>, <span class="number">2</span>);
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">received</span>.<span class="number">1</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">received</span>.<span class="number">0</span>, <span class="number">2</span>);
+        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">received</span>.<span class="number">1</span>);
 
         <span class="comment">// send a final message and drop the sender</span>
         <span class="ident">tx</span>.<span class="ident">send</span>(()).<span class="ident">unwrap</span>();
-        <span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">drop</span>(<span class="ident">tx</span>);
+        <span class="ident">std::mem::drop</span>(<span class="ident">tx</span>);
 
         <span class="comment">// final read of the channel</span>
         <span class="ident">event_loop</span>
-            .<span class="ident">dispatch</span>(<span class="prelude-val">Some</span>(::<span class="ident">std</span>::<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">0</span>)), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">received</span>)
+            .<span class="ident">dispatch</span>(<span class="prelude-val">Some</span>(<span class="ident">::std::time::Duration::from_millis</span>(<span class="number">0</span>)), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">received</span>)
             .<span class="ident">unwrap</span>();
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">received</span>.<span class="number">0</span>, <span class="number">3</span>);
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">received</span>.<span class="number">1</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">received</span>.<span class="number">0</span>, <span class="number">3</span>);
+        <span class="macro">assert!</span>(<span class="ident">received</span>.<span class="number">1</span>);
     }
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "calloop";</script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="calloop" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script></body></html>

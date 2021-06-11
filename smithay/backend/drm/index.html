@@ -1,16 +1,13 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `drm` mod in crate `smithay`."><meta name="keywords" content="rust, rustlang, rust-lang, drm"><title>smithay::backend::drm - Rust</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../smithay/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a><p class='location'>Module drm</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#modules">Modules</a></li><li><a href="#traits">Traits</a></li><li><a href="#functions">Functions</a></li><li><a href="#types">Type Definitions</a></li></ul></div><p class='location'><a href='../../index.html'>smithay</a>::<wbr><a href='../index.html'>backend</a></p><script>window.sidebarCurrent = {name: 'drm', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../../../src/smithay/backend/drm/mod.rs.html#1-391' title='goto source code'>[src]</a></span><span class='in-band'>Module <a href='../../index.html'>smithay</a>::<wbr><a href='../index.html'>backend</a>::<wbr><a class="mod" href=''>drm</a></span></h1><div class='docblock'><p>This module provides Traits reprensentating open devices
-and their surfaces to render contents.</p>
-<h1 id="abstractions" class="section-header"><a href="#abstractions">Abstractions</a></h1>
-<p>This is a model of what the user typically perceives as a <code>Device</code> and a <code>Surface</code>.
-The meaning of these words is very overloaded in the general computer graphics context,
-so let me give you a quick run down, what these mean in the context of smithay's public api:</p>
-<h2 id="device" class="section-header"><a href="#device">Device</a></h2>
-<p>A device is some sort of rendering device. It exposes certain properties, which are directly derived
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="This module represents abstraction on top the linux direct rendering manager api (drm)."><meta name="keywords" content="rust, rustlang, rust-lang, drm"><title>smithay::backend::drm - Rust</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../smithay/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a><p class="location">Module drm</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#traits">Traits</a></li></ul></div><div id="sidebar-vars" data-name="drm" data-ty="mod" data-relpath="./"></div><script defer src="./sidebar-items.js"></script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img src="../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img src="../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class="fqn"><span class="in-band">Module <a href="../../index.html">smithay</a>::<wbr><a href="../index.html">backend</a>::<wbr><a class="mod" href="#">drm</a><button id="copy-path" onclick="copy_path(this)" title="copy path"><img src="../../../clipboard.svg" width="19" height="18" alt="Copy item import" title="Copy item import to clipboard"></button></span><span class="out-of-band"><span id="render-detail"><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span><a class="srclink" href="../../../src/smithay/backend/drm/mod.rs.html#1-161" title="goto source code">[src]</a></span></h1><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>This module represents abstraction on top the linux direct rendering manager api (drm).</p>
+<h2 id="drmdevice" class="section-header"><a href="#drmdevice">DrmDevice</a></h2>
+<p>A device  exposes certain properties, which are directly derived
 from the <em>device</em> as perceived by the direct rendering manager api (drm). These resources consists
 out of connectors, encoders, framebuffers, planes and crtcs.</p>
 <p><a href="../../../drm/control/crtc/index.html"><code>crtc</code></a>s represent scanout engines of the device pointer to one framebuffer.
-Their responsibility is to read the data of the framebuffer and export it into an &quot;Encoder&quot;.
-The number of crtc's represent the number of independent output devices the hardware may handle.</p>
+Their responsibility is to read the data of the framebuffer and export it into an “Encoder”.
+The number of crtc’s represent the number of independent output devices the hardware may handle.</p>
 <p>On modern graphic cards it is better to think about the <code>crtc</code> as some sort of rendering engine.
 You can only have so many different pictures, you may display, as you have <code>crtc</code>s, but a single image
 may be put onto multiple displays.</p>
@@ -19,18 +16,19 @@ E.g. you might have an analog encoder based on a DAG for VGA ports, but another 
 Also not every encoder might be connected to every crtc.</p>
 <p>A <a href="../../../drm/control/connector/index.html"><code>connector</code></a> represents a port on your computer, possibly with a connected monitor, TV, capture card, etc.</p>
 <p>A <a href="../../../drm/control/framebuffer/index.html"><code>framebuffer</code></a> represents a buffer you may be rendering to, see <code>Surface</code> below.</p>
-<p>Planes are another layer on top of the crtcs, which allow us to layer multiple images on top of each other more efficiently
-then by combining the rendered images in the rendering phase, e.g. via OpenGL. They are internally used by smithay to provide
-hardware-accelerated cursors. More features regarding planes may be added in the future, but they are mostly optional and
-mainly provide possibilies for optimizations.</p>
+<p>A <a href="../../../drm/control/plane/index.html"><code>plane</code></a> adds another layer on top of the crtcs, which allow us to layer multiple images on top of each other more efficiently
+then by combining the rendered images in the rendering phase, e.g. via OpenGL. Planes can be explicitly used by the user.
+Every device has at least one primary plane used to display an image to the whole crtc. Additionally cursor and overlay planes may be present.
+Cursor planes are usually very restricted in size and meant to be used for hardware cursors, while overlay planes may
+be used for performance reasons to display any overlay on top of the image, e.g. top-most windows.</p>
 <p>The main functionality of a <code>Device</code> in smithay is to give access to all these properties for the user to
 choose an appropriate rendering configuration. What that means is defined by the requirements and constraints documented
 in the specific device implementations. The second functionality is the creation of a <code>Surface</code>.
-Surface creation requires a <code>crtc</code> (which cannot be the same as another existing <code>Surface</code>'s crtc),
+Surface creation requires a <code>crtc</code> (which cannot be the same as another existing <code>Surface</code>’s crtc), a plane,
 as well as a <code>Mode</code> and a set of <code>connectors</code>.</p>
 <p>smithay does not make sure that <code>connectors</code> are not already in use by another <code>Surface</code>. Overlapping <code>connector</code>-Sets may
 be an error or result in undefined rendering behavior depending on the <code>Surface</code> implementation.</p>
-<h2 id="surface" class="section-header"><a href="#surface">Surface</a></h2>
+<h2 id="drmsurface" class="section-header"><a href="#drmsurface">DrmSurface</a></h2>
 <p>A surface is a part of a <code>Device</code> that may output a picture to a number of connectors. It pumps pictures of buffers to outputs.</p>
 <p>On surface creation a matching encoder for your <code>encoder</code>-<code>connector</code> is automatically selected,
 if it exists, which means you still need to check your configuration.</p>
@@ -38,100 +36,22 @@ if it exists, which means you still need to check your configuration.</p>
 A surface also always needs at least one connector to output the resulting image to as well as a <code>Mode</code> that is valid for the given connector.</p>
 <p>The state of a <code>Surface</code> is double-buffered, meaning all operations that chance the set of <code>connector</code>s or their <code>Mode</code> are stored and
 only applied on the next commit. <code>Surface</code>s do their best to validate these changes, if possible.</p>
-<p>A commit/page_flip may be triggered by any other method the <code>Surface</code> has, but needs to be documented as such.
-The most low-level <code>Surface</code>s also implement <code>RawSurface</code>, which let you trigger a commit explicitly.</p>
-<h2 id="rawdevice" class="section-header"><a href="#rawdevice">RawDevice</a></h2>
-<p>A low-level device that produces not only <code>Surface</code>s, but <code>RawSurface</code>s.</p>
-<h2 id="rawsurface" class="section-header"><a href="#rawsurface">RawSurface</a></h2>
-<p>RawSurfaces provide two additional functions related to rendering: <code>commit</code> and <code>page_flip</code>.
-Both attach the contents of a framebuffer, resulting in it's contents being displayed on the set connectors.</p>
-<p><code>commit</code> also applies any pending changes to the current <code>Mode</code> and <code>connector</code>-Sets.
-You can easily check, if there are pending changes and avoid the costly commit by using <code>commit_pending</code>,
-which compares the current and pending state internally.</p>
-<h1 id="rendering" class="section-header"><a href="#rendering">Rendering</a></h1>
-<p>To perform actual rendering operations you need to render your image to a framebuffer.
-Several types of framebuffers exists.</p>
-<p>The simplest one - the <code>Dumbbuffer</code> is a simple bitmap, usually very slow and not hardware-accelerated.
-It should be avoided at any cost, but works on all devices and can be used directly with a <code>RawSurface</code>.
-Rendering to it can be done manually by coping bitmaps around (cpu rendering).</p>
-<p>Accelerated buffers are usually hardware manufacturer dependent. A problem, which is mostly solved by
-the General Buffer Manager (gbm-)API. <code>gbm::Buffer</code>s can only be rendered to by egl. Appropriate hardware-accelerated
-buffers are picked automatically. gbm even may fall back to <code>Dumbbuffers</code> on unsupported devices and
-egl-support is then provided by Mesa's software renderer <code>llvmpipe</code>.</p>
-<p>An alternative api to <code>gbm</code> is the so called <code>eglstream</code>-api, proposed (and implemented) by nvidia.
-It is currenly only supported by nvidias proprietary driver, which is also not accelerated by gbm, although other
-manufacturers could in theory implement the standard, just like nvidia could implement gbm-support in their driver.
-Ongoing discussions about these api's may result in another (but hopefully unified) api in the future.</p>
-<h1 id="implementations-2" class="section-header"><a href="#implementations-2">Implementations</a></h1>
-<p>Smithay provided these different functionalities as wrappers around many <code>Device</code> and <code>Surface</code> implementations.</p>
-<p>At the low-level we have:</p>
-<ul>
-<li><a href="../../../smithay/backend/drm/atomic/struct.AtomicDrmDevice.html"><code>AtomicDrmDevice</code></a> (and <a href="../../../smithay/backend/drm/atomic/struct.AtomicDrmSurface.html"><code>AtomicDrmSurface</code></a>), which implement the traits directly using the modern atomic drm-api.</li>
-<li><a href="../../../smithay/backend/drm/legacy/struct.LegacyDrmDevice.html"><code>LegacyDrmDevice</code></a> (and <a href="../../../smithay/backend/drm/legacy/struct.LegacyDrmSurface.html"><code>LegacyDrmSurface</code></a>), which implement the traits directly using the outdated drm-api.</li>
-</ul>
-<p>Both of these also implement <code>RawDevice</code> and <code>RawSurface</code>.</p>
-<p>On top of that the following wrappers add buffer allocation apis:</p>
-<ul>
-<li><a href="../../../smithay/backend/drm/gbm/struct.GbmDevice.html"><code>GbmDevice</code></a> (and <a href="../../../smithay/backend/drm/trait.Surface.html"><code>GbmSurface</code></a>), which replace the direct rendering capabilities of any underlying <code>RawSurface</code> with an egl-specific <code>page_flip</code> function.</li>
-<li><a href="../../../smithay/backend/drm/eglstream/struct.EglStreamDevice.html"><code>EglStreamDevice</code></a> (and <a href="../../../smithay/backend/drm/eglstream/struct.EglStreamSurface.html"><code>EglStreamSurface</code></a>), which replace the direct rendering capabilities of any underlying <code>RawSurface</code> with functionality to create EGLStreams.</li>
-</ul>
-<p>On top of that the <a href="../../../smithay/backend/drm/egl/struct.EglDevice.html"><code>EglDevice</code></a> (and <a href="../../../smithay/backend/drm/egl/struct.EglSurface.html"><code>EglSurface</code></a>) replace the manual buffer management
-with an implementation of smithays <a href="::backend::graphics::gl::GLGraphicsBackend"><code>GLGraphicsBackend</code></a> to initialize the OpenGL-API for rendering.</p>
-<p>Additionally the <a href="fallback::FallbackDevice"><code>FallbackDevice</code></a> provides an easy wrapper to automatically pick an appropriate device.
-E.g. it can initialize an <code>AtomicDrmDevice</code> or fallback to a <code>LegacyDrmDevice</code> with the atomic api is not supported by the graphics card.
-It can also check for a loaded nvidia-driver for a given device and choose between an <code>EglStreamDevice</code> or a <code>GbmDevice</code>.</p>
-<p>Any layer of this chain can be implemented and therefore extended by the user. All building blocks are exposed to add addtional
-buffer management solutions or rendering apis out of tree. Additionally all of these implementations can be excluded from a build
-by disabling their corresponding feature.</p>
-<p>The most versatile type currently provided by smithay, that should be able to initialize almost every
-common graphics card is</p>
-
-<div class='information'><div class='tooltip ignore'>ⓘ<span class='tooltiptext'>This example is not tested</span></div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore">
-<span class="kw">type</span> <span class="ident">RenderDevice</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">AsRawFd</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">FallbackDevice</span><span class="op">&lt;</span>
-    <span class="ident">EglDevice</span><span class="op">&lt;</span>
-        <span class="ident">EglGbmBackend</span><span class="op">&lt;</span><span class="ident">FallbackDevice</span><span class="op">&lt;</span><span class="ident">AtomicDrmDevice</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>, <span class="ident">LegacyDrmDevice</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">GbmDevice</span><span class="op">&lt;</span><span class="ident">FallbackDevice</span><span class="op">&lt;</span><span class="ident">AtomicDrmDevice</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>, <span class="ident">LegacyDrmDevice</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="op">&gt;</span>,
-    <span class="ident">EglDevice</span><span class="op">&lt;</span>
-        <span class="ident">EglStreamDeviceBackend</span><span class="op">&lt;</span><span class="ident">FallbackDevice</span><span class="op">&lt;</span><span class="ident">AtomicDrmDevice</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>, <span class="ident">LegacyDrmDevice</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">EglStreamDevice</span><span class="op">&lt;</span><span class="ident">FallbackDevice</span><span class="op">&lt;</span><span class="ident">AtomicDrmDevice</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>, <span class="ident">LegacyDrmDevice</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="op">&gt;</span>
-<span class="op">&gt;</span>;</pre></div>
-<h1 id="event-handling" class="section-header"><a href="#event-handling">Event handling</a></h1>
-<p>Devices can be attached to an eventloop using <code>device_bind</code>.
-Events triggered by a drm-device correspond to finished page-flips.
-After submitting a page_flip (possibly through a high-level api, such as a <code>EglSurface</code>)
-the GPU may take some time until the new framebuffer is displayed. Rendering the next
-frame should be delayed until the flip is done.</p>
-<p>Naive implementations should thus be driven by the drm device events to synchronize rendering
-with the device. More advanced implementations may take into account that, if no change has occurred,
-a page_flip may waste resources and therefore delay rendering until the buffer change from a client
-is received or input is registered, etc. Because a flip may fail (which will result in no event),
-a robust rescheduling implementation for missed frames or intentionally skipped flips should be
-in place.</p>
-</div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
-<table><tr class='module-item'><td><a class="mod" href="atomic/index.html" title='smithay::backend::drm::atomic mod'>atomic</a></td><td class='docblock-short'><p><a href="../../../smithay/backend/drm/trait.RawDevice.html"><code>RawDevice</code></a> and <a href="RawSurface"><code>RawSurface</code></a>
-implementations using the atomic mode-setting infrastructure.</p>
-</td></tr><tr class='module-item'><td><a class="mod" href="common/index.html" title='smithay::backend::drm::common mod'>common</a></td><td class='docblock-short'><p>Module for common/shared types of the various <a href="::backend::drm::Device"><code>Device</code></a>
-and <a href="::backend::drm::Surface"><code>Surface</code></a> implementations of the <code>backend::drm</code> module.</p>
-</td></tr><tr class='module-item'><td><a class="mod" href="egl/index.html" title='smithay::backend::drm::egl mod'>egl</a></td><td class='docblock-short'><p><a href="../../../smithay/backend/drm/trait.Device.html"><code>Device</code></a> and <a href="../../../smithay/backend/drm/trait.Surface.html"><code>Surface</code></a>
-implementations using egl contexts and surfaces for efficient rendering.</p>
-</td></tr><tr class='module-item'><td><a class="mod" href="eglstream/index.html" title='smithay::backend::drm::eglstream mod'>eglstream</a></td><td class='docblock-short'><p><a href="../../../smithay/backend/drm/trait.Device.html"><code>Device</code></a> and <a href="../../../smithay/backend/drm/trait.Surface.html"><code>Surface</code></a> implementations using
-the proposed EGLStream api for efficient rendering.
-Currently this api is only implemented by the proprietary <code>nvidia</code> driver.</p>
-</td></tr><tr class='module-item'><td><a class="mod" href="gbm/index.html" title='smithay::backend::drm::gbm mod'>gbm</a></td><td class='docblock-short'><p><a href="../../../smithay/backend/drm/trait.Device.html"><code>Device</code></a> and <a href="../../../smithay/backend/drm/trait.Surface.html"><code>Surface</code></a>
-implementations using gbm buffers for efficient rendering.</p>
-</td></tr><tr class='module-item'><td><a class="mod" href="legacy/index.html" title='smithay::backend::drm::legacy mod'>legacy</a></td><td class='docblock-short'><p><a href="../../../smithay/backend/drm/trait.RawDevice.html"><code>RawDevice</code></a> and <a href="RawSurface"><code>RawSurface</code></a>
-implementations using the legacy mode-setting infrastructure.</p>
-</td></tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
-<table><tr class='module-item'><td><a class="trait" href="trait.DevPath.html" title='smithay::backend::drm::DevPath trait'>DevPath</a></td><td class='docblock-short'><p>Trait representing open devices that <em>may</em> return a <code>Path</code></p>
-</td></tr><tr class='module-item'><td><a class="trait" href="trait.Device.html" title='smithay::backend::drm::Device trait'>Device</a></td><td class='docblock-short'><p>An open drm device</p>
-</td></tr><tr class='module-item'><td><a class="trait" href="trait.DeviceHandler.html" title='smithay::backend::drm::DeviceHandler trait'>DeviceHandler</a></td><td class='docblock-short'><p>Trait to receive events of a bound <a href="../../../smithay/backend/drm/trait.Device.html" title="`Device`"><code>Device</code></a></p>
-</td></tr><tr class='module-item'><td><a class="trait" href="trait.RawDevice.html" title='smithay::backend::drm::RawDevice trait'>RawDevice</a></td><td class='docblock-short'><p>Marker trait for <a href="../../../smithay/backend/drm/trait.Device.html" title="`Device`"><code>Device</code></a>s able to provide <a href="../../../smithay/backend/drm/trait.RawSurface.html" title="`RawSurface`"><code>RawSurface</code></a>s</p>
-</td></tr><tr class='module-item'><td><a class="trait" href="trait.RawSurface.html" title='smithay::backend::drm::RawSurface trait'>RawSurface</a></td><td class='docblock-short'><p>An open bare crtc without any rendering abstractions</p>
-</td></tr><tr class='module-item'><td><a class="trait" href="trait.Surface.html" title='smithay::backend::drm::Surface trait'>Surface</a></td><td class='docblock-short'><p>An open crtc that can be used for rendering</p>
-</td></tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
-<table><tr class='module-item'><td><a class="fn" href="fn.device_bind.html" title='smithay::backend::drm::device_bind fn'>device_bind</a></td><td class='docblock-short'><p>Bind a <code>Device</code> to an <a href="../../../calloop/loop_logic/struct.EventLoop.html"><code>EventLoop</code></a>,</p>
-</td></tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
-<table><tr class='module-item'><td><a class="type" href="type.DrmSource.html" title='smithay::backend::drm::DrmSource type'>DrmSource</a></td><td class='docblock-short'><p>calloop source associated with a Device</p>
-</td></tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "smithay";</script><script src="../../../main.js"></script><script defer src="../../../search-index.js"></script></body></html>
+<p>A commit/page_flip may be triggered to apply the pending state.</p>
+<h2 id="rendering" class="section-header"><a href="#rendering">Rendering</a></h2>
+<p>The drm infrastructure makes no assumptions about the used renderer and does not interface with them directly.
+It just provides a way to create framebuffers from various buffer types (mainly <code>DumbBuffer</code>s and hardware-backed gbm <code>BufferObject</code>s).</p>
+<p>Buffer management and details about the various types can be found in the <a href="../allocator/index.html"><code>allocator</code>-Module</a> and
+renderering abstractions, which can target these buffers can be found in the <a href="../renderer/index.html"><code>renderer</code>-Module</a>.</p>
+</div></details><h2 id="structs" class="section-header"><a href="#structs">Structs</a></h2>
+<table><tr class="module-item"><td><a class="struct" href="struct.DrmDevice.html" title="smithay::backend::drm::DrmDevice struct">DrmDevice</a></td><td class="docblock-short"><p>An open drm device</p>
+</td></tr><tr class="module-item"><td><a class="struct" href="struct.DrmRenderSurface.html" title="smithay::backend::drm::DrmRenderSurface struct">DrmRenderSurface</a></td><td class="docblock-short"><p>Simplified by limited abstraction to link single <a href="struct.DrmSurface.html" title="DrmSurface"><code>DrmSurface</code></a>s to renderers.</p>
+</td></tr><tr class="module-item"><td><a class="struct" href="struct.DrmSurface.html" title="smithay::backend::drm::DrmSurface struct">DrmSurface</a></td><td class="docblock-short"><p>An open crtc + plane combination that can be used for scan-out</p>
+</td></tr><tr class="module-item"><td><a class="struct" href="struct.Planes.html" title="smithay::backend::drm::Planes struct">Planes</a></td><td class="docblock-short"><p>A set of planes as supported by a crtc</p>
+</td></tr></table><h2 id="enums" class="section-header"><a href="#enums">Enums</a></h2>
+<table><tr class="module-item"><td><a class="enum" href="enum.DrmError.html" title="smithay::backend::drm::DrmError enum">DrmError</a></td><td class="docblock-short"><p>Errors thrown by the <a href="struct.DrmDevice.html"><code>DrmDevice</code></a>
+and the <a href="struct.DrmSurface.html"><code>DrmSurface</code></a>.</p>
+</td></tr><tr class="module-item"><td><a class="enum" href="enum.DrmEvent.html" title="smithay::backend::drm::DrmEvent enum">DrmEvent</a></td><td class="docblock-short"><p>Events that can be generated by a DrmDevice</p>
+</td></tr><tr class="module-item"><td><a class="enum" href="enum.DrmRenderError.html" title="smithay::backend::drm::DrmRenderError enum">DrmRenderError</a></td><td class="docblock-short"><p>Errors thrown by a <a href="struct.DrmRenderSurface.html" title="DrmRenderSurface"><code>DrmRenderSurface</code></a></p>
+</td></tr></table><h2 id="traits" class="section-header"><a href="#traits">Traits</a></h2>
+<table><tr class="module-item"><td><a class="trait" href="trait.DevPath.html" title="smithay::backend::drm::DevPath trait">DevPath</a></td><td class="docblock-short"><p>Trait representing open devices that <em>may</em> return a <code>Path</code></p>
+</td></tr></table></section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="smithay" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div><script src="../../../main.js"></script></body></html>

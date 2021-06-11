@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/runner/.cargo/git/checkouts/drm-rs-9d15058f81d7e55c/e196639/src/control/connector.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>connector.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../drm/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/drm-0.4.0/src/control/connector.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>connector.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../drm/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img src="../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img src="../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -208,10 +210,10 @@
 <span id="208">208</span>
 <span id="209">209</span>
 <span id="210">210</span>
-</pre><div class="example-wrap"><pre class="rust ">
+</pre><pre class="rust">
 <span class="doccomment">//! # Connector</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! Respresents the physical output, such as a DisplayPort or VGA connector.</span>
+<span class="doccomment">//! Represents the physical output, such as a DisplayPort or VGA connector.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! A Connector is the physical connection between the display controller and</span>
 <span class="doccomment">//! a display. These objects keep track of connection information and state,</span>
@@ -223,35 +225,33 @@
 <span class="doccomment">/// A handle to a connector</span>
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">transparent</span>)]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Handle</span>(<span class="ident">control</span>::<span class="ident">RawResourceHandle</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Handle</span>(<span class="ident">control::RawResourceHandle</span>);
 
-<span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">control</span>::<span class="ident">RawResourceHandle</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Handle</span> {
-    <span class="kw">fn</span> <span class="ident">into</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">control</span>::<span class="ident">RawResourceHandle</span> {
-        <span class="self">self</span>.<span class="number">0</span>
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Handle</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">control::RawResourceHandle</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">handle</span>: <span class="ident">Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="ident">handle</span>.<span class="number">0</span>
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Handle</span> {
-    <span class="kw">fn</span> <span class="ident">into</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">into</span>()
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Handle</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">u32</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">handle</span>: <span class="ident">Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="ident">handle</span>.<span class="number">0</span>.<span class="ident">into</span>()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">control</span>::<span class="ident">RawResourceHandle</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Handle</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">handle</span>: <span class="ident">control</span>::<span class="ident">RawResourceHandle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">control::RawResourceHandle</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Handle</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">handle</span>: <span class="ident">control::RawResourceHandle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="ident">Handle</span>(<span class="ident">handle</span>)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">control</span>::<span class="ident">ResourceHandle</span> <span class="kw">for</span> <span class="ident">Handle</span> {
-    <span class="kw">const</span> <span class="ident">FFI_TYPE</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_OBJECT_CONNECTOR</span>;
+<span class="kw">impl</span> <span class="ident">control::ResourceHandle</span> <span class="kw">for</span> <span class="ident">Handle</span> {
+    <span class="kw">const</span> <span class="ident">FFI_TYPE</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_OBJECT_CONNECTOR</span>;
 }
 
-<span class="kw">impl</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Handle</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
-        <span class="ident">f</span>.<span class="ident">debug_tuple</span>(<span class="string">&quot;connector::Handle&quot;</span>)
-            .<span class="ident">field</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>)
-            .<span class="ident">finish</span>()
+<span class="kw">impl</span> <span class="ident">std::fmt::Debug</span> <span class="kw">for</span> <span class="ident">Handle</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+        <span class="ident">f</span>.<span class="ident">debug_tuple</span>(<span class="string">&quot;connector::Handle&quot;</span>).<span class="ident">field</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>).<span class="ident">finish</span>()
     }
 }
 
@@ -263,9 +263,9 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">interface_id</span>: <span class="ident">u32</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">connection</span>: <span class="ident">State</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">size</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">u32</span>, <span class="ident">u32</span>)<span class="op">&gt;</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">modes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">control</span>::<span class="ident">Mode</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">encoders</span>: [<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">control</span>::<span class="ident">encoder</span>::<span class="ident">Handle</span><span class="op">&gt;</span>; <span class="number">3</span>],
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">curr_enc</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">control</span>::<span class="ident">encoder</span>::<span class="ident">Handle</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">modes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">control::Mode</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">encoders</span>: [<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">control::encoder::Handle</span><span class="op">&gt;</span>; <span class="number">3</span>],
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">curr_enc</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">control::encoder::Handle</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Info</span> {
@@ -298,22 +298,24 @@
     }
 
     <span class="doccomment">/// Returns a list of encoders that can be possibly used by this connector.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">encoders</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">control</span>::<span class="ident">encoder</span>::<span class="ident">Handle</span><span class="op">&gt;</span>] {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">encoders</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">control::encoder::Handle</span><span class="op">&gt;</span>] {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">encoders</span>
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">modes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span>  <span class="kw-2">&amp;</span>[<span class="ident">control</span>::<span class="ident">Mode</span>] {
+    <span class="doccomment">/// Returns a list of modes this connector reports as supported.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">modes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">control::Mode</span>] {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">modes</span>
     }
 
     <span class="doccomment">/// Returns the current encoder attached to this connector.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">current_encoder</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">control</span>::<span class="ident">encoder</span>::<span class="ident">Handle</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">current_encoder</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">control::encoder::Handle</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">curr_enc</span>
     }
 }
 
 <span class="doccomment">/// A physical interface type.</span>
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">missing_docs</span>)]</span>
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::upper_case_acronyms</span>)]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Interface</span> {
     <span class="ident">Unknown</span>,
@@ -339,50 +341,50 @@
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Interface</span> {
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">n</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="kw">match</span> <span class="ident">n</span> {
-            <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_Unknown</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface</span>::<span class="ident">Unknown</span>,
-            <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_VGA</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface</span>::<span class="ident">VGA</span>,
-            <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_DVII</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface</span>::<span class="ident">DVII</span>,
-            <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_DVID</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface</span>::<span class="ident">DVID</span>,
-            <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_DVIA</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface</span>::<span class="ident">DVIA</span>,
-            <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_Composite</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface</span>::<span class="ident">Composite</span>,
-            <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_SVIDEO</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface</span>::<span class="ident">SVideo</span>,
-            <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_LVDS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface</span>::<span class="ident">LVDS</span>,
-            <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_Component</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface</span>::<span class="ident">Component</span>,
-            <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_9PinDIN</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface</span>::<span class="ident">NinePinDIN</span>,
-            <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_DisplayPort</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface</span>::<span class="ident">DisplayPort</span>,
-            <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_HDMIA</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface</span>::<span class="ident">HDMIA</span>,
-            <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_HDMIB</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface</span>::<span class="ident">HDMIB</span>,
-            <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_TV</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface</span>::<span class="ident">TV</span>,
-            <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_eDP</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface</span>::<span class="ident">EmbeddedDisplayPort</span>,
-            <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_VIRTUAL</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface</span>::<span class="ident">Virtual</span>,
-            <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_DSI</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface</span>::<span class="ident">DSI</span>,
-            <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_DPI</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface</span>::<span class="ident">DPI</span>,
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface</span>::<span class="ident">Unknown</span>,
+            <span class="ident">ffi::DRM_MODE_CONNECTOR_Unknown</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface::Unknown</span>,
+            <span class="ident">ffi::DRM_MODE_CONNECTOR_VGA</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface::VGA</span>,
+            <span class="ident">ffi::DRM_MODE_CONNECTOR_DVII</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface::DVII</span>,
+            <span class="ident">ffi::DRM_MODE_CONNECTOR_DVID</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface::DVID</span>,
+            <span class="ident">ffi::DRM_MODE_CONNECTOR_DVIA</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface::DVIA</span>,
+            <span class="ident">ffi::DRM_MODE_CONNECTOR_Composite</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface::Composite</span>,
+            <span class="ident">ffi::DRM_MODE_CONNECTOR_SVIDEO</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface::SVideo</span>,
+            <span class="ident">ffi::DRM_MODE_CONNECTOR_LVDS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface::LVDS</span>,
+            <span class="ident">ffi::DRM_MODE_CONNECTOR_Component</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface::Component</span>,
+            <span class="ident">ffi::DRM_MODE_CONNECTOR_9PinDIN</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface::NinePinDIN</span>,
+            <span class="ident">ffi::DRM_MODE_CONNECTOR_DisplayPort</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface::DisplayPort</span>,
+            <span class="ident">ffi::DRM_MODE_CONNECTOR_HDMIA</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface::HDMIA</span>,
+            <span class="ident">ffi::DRM_MODE_CONNECTOR_HDMIB</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface::HDMIB</span>,
+            <span class="ident">ffi::DRM_MODE_CONNECTOR_TV</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface::TV</span>,
+            <span class="ident">ffi::DRM_MODE_CONNECTOR_eDP</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface::EmbeddedDisplayPort</span>,
+            <span class="ident">ffi::DRM_MODE_CONNECTOR_VIRTUAL</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface::Virtual</span>,
+            <span class="ident">ffi::DRM_MODE_CONNECTOR_DSI</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface::DSI</span>,
+            <span class="ident">ffi::DRM_MODE_CONNECTOR_DPI</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface::DPI</span>,
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Interface::Unknown</span>,
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Interface</span> {
-    <span class="kw">fn</span> <span class="ident">into</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Interface</span>::<span class="ident">Unknown</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_Unknown</span>,
-            <span class="ident">Interface</span>::<span class="ident">VGA</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_VGA</span>,
-            <span class="ident">Interface</span>::<span class="ident">DVII</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_DVII</span>,
-            <span class="ident">Interface</span>::<span class="ident">DVID</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_DVID</span>,
-            <span class="ident">Interface</span>::<span class="ident">DVIA</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_DVIA</span>,
-            <span class="ident">Interface</span>::<span class="ident">Composite</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_Composite</span>,
-            <span class="ident">Interface</span>::<span class="ident">SVideo</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_SVIDEO</span>,
-            <span class="ident">Interface</span>::<span class="ident">LVDS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_LVDS</span>,
-            <span class="ident">Interface</span>::<span class="ident">Component</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_Component</span>,
-            <span class="ident">Interface</span>::<span class="ident">NinePinDIN</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_9PinDIN</span>,
-            <span class="ident">Interface</span>::<span class="ident">DisplayPort</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_DisplayPort</span>,
-            <span class="ident">Interface</span>::<span class="ident">HDMIA</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_HDMIA</span>,
-            <span class="ident">Interface</span>::<span class="ident">HDMIB</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_HDMIB</span>,
-            <span class="ident">Interface</span>::<span class="ident">TV</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_TV</span>,
-            <span class="ident">Interface</span>::<span class="ident">EmbeddedDisplayPort</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_eDP</span>,
-            <span class="ident">Interface</span>::<span class="ident">Virtual</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_VIRTUAL</span>,
-            <span class="ident">Interface</span>::<span class="ident">DSI</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_DSI</span>,
-            <span class="ident">Interface</span>::<span class="ident">DPI</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">DRM_MODE_CONNECTOR_DPI</span>,
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Interface</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">u32</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">interface</span>: <span class="ident">Interface</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="kw">match</span> <span class="ident">interface</span> {
+            <span class="ident">Interface::Unknown</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_CONNECTOR_Unknown</span>,
+            <span class="ident">Interface::VGA</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_CONNECTOR_VGA</span>,
+            <span class="ident">Interface::DVII</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_CONNECTOR_DVII</span>,
+            <span class="ident">Interface::DVID</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_CONNECTOR_DVID</span>,
+            <span class="ident">Interface::DVIA</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_CONNECTOR_DVIA</span>,
+            <span class="ident">Interface::Composite</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_CONNECTOR_Composite</span>,
+            <span class="ident">Interface::SVideo</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_CONNECTOR_SVIDEO</span>,
+            <span class="ident">Interface::LVDS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_CONNECTOR_LVDS</span>,
+            <span class="ident">Interface::Component</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_CONNECTOR_Component</span>,
+            <span class="ident">Interface::NinePinDIN</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_CONNECTOR_9PinDIN</span>,
+            <span class="ident">Interface::DisplayPort</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_CONNECTOR_DisplayPort</span>,
+            <span class="ident">Interface::HDMIA</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_CONNECTOR_HDMIA</span>,
+            <span class="ident">Interface::HDMIB</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_CONNECTOR_HDMIB</span>,
+            <span class="ident">Interface::TV</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_CONNECTOR_TV</span>,
+            <span class="ident">Interface::EmbeddedDisplayPort</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_CONNECTOR_eDP</span>,
+            <span class="ident">Interface::Virtual</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_CONNECTOR_VIRTUAL</span>,
+            <span class="ident">Interface::DSI</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_CONNECTOR_DSI</span>,
+            <span class="ident">Interface::DPI</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_CONNECTOR_DPI</span>,
         }
     }
 }
@@ -401,23 +403,23 @@
         <span class="comment">// These variables are not defined in drm_mode.h for some reason.</span>
         <span class="comment">// They were copied from libdrm&#39;s xf86DrmMode.h</span>
         <span class="kw">match</span> <span class="ident">n</span> {
-            <span class="number">1</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">State</span>::<span class="ident">Connected</span>,
-            <span class="number">2</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">State</span>::<span class="ident">Disconnected</span>,
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">State</span>::<span class="ident">Unknown</span>,
+            <span class="number">1</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">State::Connected</span>,
+            <span class="number">2</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">State::Disconnected</span>,
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">State::Unknown</span>,
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">State</span> {
-    <span class="kw">fn</span> <span class="ident">into</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">State</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">u32</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">state</span>: <span class="ident">State</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="comment">// These variables are not defined in drm_mode.h for some reason.</span>
         <span class="comment">// They were copied from libdrm&#39;s xf86DrmMode.h</span>
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">State</span>::<span class="ident">Connected</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">1</span>,
-            <span class="ident">State</span>::<span class="ident">Disconnected</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">2</span>,
-            <span class="ident">State</span>::<span class="ident">Unknown</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">3</span>,
+        <span class="kw">match</span> <span class="ident">state</span> {
+            <span class="ident">State::Connected</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">1</span>,
+            <span class="ident">State::Disconnected</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">2</span>,
+            <span class="ident">State::Unknown</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">3</span>,
         }
     }
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "drm";</script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="drm" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script></body></html>

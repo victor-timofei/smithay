@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/wayland/dmabuf/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script src="../../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../../smithay/index.html'><div class='logo-container'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../../settings.html"><img src="../../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/wayland/dmabuf/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../../storage.js"></script><script src="../../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../../smithay/index.html'><div class='logo-container rust-logo'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img src="../../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../../settings.html" title="settings"><img src="../../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -469,91 +471,32 @@
 <span id="469">469</span>
 <span id="470">470</span>
 <span id="471">471</span>
-<span id="472">472</span>
-<span id="473">473</span>
-<span id="474">474</span>
-<span id="475">475</span>
-<span id="476">476</span>
-<span id="477">477</span>
-<span id="478">478</span>
-<span id="479">479</span>
-<span id="480">480</span>
-<span id="481">481</span>
-<span id="482">482</span>
-<span id="483">483</span>
-<span id="484">484</span>
-<span id="485">485</span>
-<span id="486">486</span>
-<span id="487">487</span>
-<span id="488">488</span>
-<span id="489">489</span>
-<span id="490">490</span>
-<span id="491">491</span>
-<span id="492">492</span>
-<span id="493">493</span>
-<span id="494">494</span>
-<span id="495">495</span>
-<span id="496">496</span>
-<span id="497">497</span>
-<span id="498">498</span>
-<span id="499">499</span>
-<span id="500">500</span>
-<span id="501">501</span>
-<span id="502">502</span>
-<span id="503">503</span>
-</pre><div class="example-wrap"><pre class="rust ">
+</pre><pre class="rust">
 <span class="doccomment">//! Linux DMABUF protocol</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! This module provides helper to handle the linux-dmabuf protocol, which allows clients to submit their</span>
 <span class="doccomment">//! contents as dmabuf file descriptors. These handlers automate the aggregation of the metadata associated</span>
 <span class="doccomment">//! with a dma buffer, and do some basic checking of the sanity of what the client sends.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! This module is only available if the `backend_drm` cargo feature is enabled.</span>
-<span class="doccomment">//!</span>
 <span class="doccomment">//! ## How to use</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! To setup the dmabuf global, you will need to provide 2 things:</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! - a list of the dmabuf formats you wish to support</span>
-<span class="doccomment">//! - an implementation of the `DmabufHandler` trait</span>
+<span class="doccomment">//! - a closure to test if a dmabuf buffer can be imported by your renderer</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! The list of supported format is just a `Vec&lt;Format&gt;`, where you will enter all the (format, modifier)</span>
-<span class="doccomment">//! couples you support.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! The implementation of the `DmabufHandler` trait will be called whenever a client has finished setting up</span>
-<span class="doccomment">//! a dma buffer. You will be handled the full details of the client&#39;s submission as a `BufferInfo` struct,</span>
-<span class="doccomment">//! and you need to validate it and maybe import it into your renderer. The `BufferData` associated type</span>
-<span class="doccomment">//! allows you to store any metadata or handle to the resource you need into the created `wl_buffer`,</span>
-<span class="doccomment">//! user data, to then retrieve it when it is attached to a surface to re-identify the dmabuf.</span>
+<span class="doccomment">//! The list of supported format is just a `Vec&lt;Format&gt;`, where you will enter all the (code, modifier)</span>
+<span class="doccomment">//! couples you support. You can typically receive a list of supported formats for one renderer by calling</span>
+<span class="doccomment">//! [`crate::backend::renderer::ImportDma::dmabuf_formats`].</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//! # extern crate wayland_server;</span>
 <span class="doccomment">//! # extern crate smithay;</span>
-<span class="doccomment">//! use smithay::wayland::dmabuf::{DmabufHandler, BufferInfo, init_dmabuf_global};</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! struct MyDmabufHandler;</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! struct MyBufferData {</span>
-<span class="doccomment">//!     /* ... */</span>
-<span class="doccomment">//! }</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! impl Drop for MyBufferData {</span>
-<span class="doccomment">//!     fn drop(&amp;mut self) {</span>
-<span class="doccomment">//!         // This is called when all handles to this buffer have been dropped,</span>
-<span class="doccomment">//!         // both client-side and server side.</span>
-<span class="doccomment">//!         // You can now free the associated resources in your renderer.</span>
-<span class="doccomment">//!     }</span>
-<span class="doccomment">//! }</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! impl DmabufHandler for MyDmabufHandler {</span>
-<span class="doccomment">//!     type BufferData = MyBufferData;</span>
-<span class="doccomment">//!     fn validate_dmabuf(&amp;mut self, info: BufferInfo) -&gt; Result&lt;Self::BufferData, ()&gt; {</span>
-<span class="doccomment">//!         /* validate the dmabuf and import it into your renderer state */</span>
-<span class="doccomment">//!         Ok(MyBufferData { /* ... */ })</span>
-<span class="doccomment">//!     }</span>
-<span class="doccomment">//! }</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! // Once this is defined, you can in your setup initialize the dmabuf global:</span>
+<span class="doccomment">//! use smithay::{</span>
+<span class="doccomment">//!     backend::allocator::dmabuf::Dmabuf,</span>
+<span class="doccomment">//!     reexports::{wayland_server::protocol::wl_buffer::WlBuffer},</span>
+<span class="doccomment">//!     wayland::dmabuf::init_dmabuf_global,</span>
+<span class="doccomment">//! };</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # let mut display = wayland_server::Display::new();</span>
 <span class="doccomment">//! // define your supported formats</span>
@@ -563,137 +506,59 @@
 <span class="doccomment">//! let dmabuf_global = init_dmabuf_global(</span>
 <span class="doccomment">//!     &amp;mut display,</span>
 <span class="doccomment">//!     formats,</span>
-<span class="doccomment">//!     MyDmabufHandler,</span>
+<span class="doccomment">//!     |buffer, dispatch_data| {</span>
+<span class="doccomment">//!         /* validate the dmabuf and import it into your renderer state */</span>
+<span class="doccomment">//!         true</span>
+<span class="doccomment">//!     },</span>
 <span class="doccomment">//!     None // we don&#39;t provide a logger in this example</span>
 <span class="doccomment">//! );</span>
 <span class="doccomment">//! ```</span>
 
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cell</span>::<span class="ident">RefCell</span>, <span class="ident">os</span>::<span class="ident">unix</span>::<span class="ident">io</span>::<span class="ident">RawFd</span>, <span class="ident">rc</span>::<span class="ident">Rc</span>};
+<span class="kw">use</span> <span class="ident">std</span>::{
+    <span class="ident">cell::RefCell</span>,
+    <span class="ident">convert::TryFrom</span>,
+    <span class="ident">os::unix::io</span>::{<span class="ident">IntoRawFd</span>, <span class="ident">RawFd</span>},
+    <span class="ident">rc::Rc</span>,
+};
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">wayland_protocols</span>::<span class="ident">unstable</span>::<span class="ident">linux_dmabuf</span>::<span class="ident">v1</span>::<span class="ident">server</span>::<span class="ident">zwp_linux_buffer_params_v1</span>::<span class="ident">Flags</span>;
-<span class="kw">use</span> <span class="ident">wayland_protocols</span>::<span class="ident">unstable</span>::<span class="ident">linux_dmabuf</span>::<span class="ident">v1</span>::<span class="ident">server</span>::{
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">wayland_protocols::unstable::linux_dmabuf::v1::server::zwp_linux_buffer_params_v1::Flags</span>;
+<span class="kw">use</span> <span class="ident">wayland_protocols::unstable::linux_dmabuf::v1::server</span>::{
     <span class="ident">zwp_linux_buffer_params_v1</span>::{
         <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">ParamError</span>, <span class="ident">Request</span> <span class="kw">as</span> <span class="ident">ParamsRequest</span>, <span class="ident">ZwpLinuxBufferParamsV1</span> <span class="kw">as</span> <span class="ident">BufferParams</span>,
     },
     <span class="ident">zwp_linux_dmabuf_v1</span>,
 };
-<span class="kw">use</span> <span class="ident">wayland_server</span>::{<span class="ident">protocol</span>::<span class="ident">wl_buffer</span>, <span class="ident">Display</span>, <span class="ident">Filter</span>, <span class="ident">Global</span>, <span class="ident">Main</span>};
+<span class="kw">use</span> <span class="ident">wayland_server</span>::{<span class="ident">protocol::wl_buffer</span>, <span class="ident">DispatchData</span>, <span class="ident">Display</span>, <span class="ident">Filter</span>, <span class="ident">Global</span>, <span class="ident">Main</span>};
 
-<span class="doccomment">/// Representation of a Dmabuf format, as advertized to the client</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Format</span> {
-    <span class="doccomment">/// The format identifier.</span>
-    <span class="kw">pub</span> <span class="ident">format</span>: ::<span class="ident">drm</span>::<span class="ident">buffer</span>::<span class="ident">format</span>::<span class="ident">PixelFormat</span>,
-    <span class="doccomment">/// The supported dmabuf layout modifier.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This is an opaque token. Drivers use this token to express tiling, compression, etc. driver-specific</span>
-    <span class="doccomment">/// modifications to the base format defined by the DRM fourcc code.</span>
-    <span class="kw">pub</span> <span class="ident">modifier</span>: <span class="ident">u64</span>,
-    <span class="doccomment">/// Number of planes used by this format</span>
-    <span class="kw">pub</span> <span class="ident">plane_count</span>: <span class="ident">u32</span>,
-}
-
-<span class="doccomment">/// A plane send by the client</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Plane</span> {
-    <span class="doccomment">/// The file descriptor</span>
-    <span class="kw">pub</span> <span class="ident">fd</span>: <span class="ident">RawFd</span>,
-    <span class="doccomment">/// The plane index</span>
-    <span class="kw">pub</span> <span class="ident">plane_idx</span>: <span class="ident">u32</span>,
-    <span class="doccomment">/// Offset from the start of the Fd</span>
-    <span class="kw">pub</span> <span class="ident">offset</span>: <span class="ident">u32</span>,
-    <span class="doccomment">/// Stride for this plane</span>
-    <span class="kw">pub</span> <span class="ident">stride</span>: <span class="ident">u32</span>,
-    <span class="doccomment">/// Modifier for this plane</span>
-    <span class="kw">pub</span> <span class="ident">modifier</span>: <span class="ident">u64</span>,
-}
-
-<span class="macro">bitflags</span><span class="macro">!</span> {
-    <span class="doccomment">/// Possible flags for a DMA buffer</span>
-    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BufferFlags</span>: <span class="ident">u32</span> {
-        <span class="doccomment">/// The buffer content is Y-inverted</span>
-        <span class="kw">const</span> <span class="ident">Y_INVERT</span> <span class="op">=</span> <span class="number">1</span>;
-        <span class="doccomment">/// The buffer content is interlaced</span>
-        <span class="kw">const</span> <span class="ident">INTERLACED</span> <span class="op">=</span> <span class="number">2</span>;
-        <span class="doccomment">/// The buffer content if interlaced is bottom-field first</span>
-        <span class="kw">const</span> <span class="ident">BOTTOM_FIRST</span> <span class="op">=</span> <span class="number">4</span>;
-    }
-}
-
-<span class="doccomment">/// The complete information provided by the client to create a dmabuf buffer</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BufferInfo</span> {
-    <span class="doccomment">/// The submitted planes</span>
-    <span class="kw">pub</span> <span class="ident">planes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Plane</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// The width of this buffer</span>
-    <span class="kw">pub</span> <span class="ident">width</span>: <span class="ident">i32</span>,
-    <span class="doccomment">/// The height of this buffer</span>
-    <span class="kw">pub</span> <span class="ident">height</span>: <span class="ident">i32</span>,
-    <span class="doccomment">/// The format in use</span>
-    <span class="kw">pub</span> <span class="ident">format</span>: <span class="ident">u32</span>,
-    <span class="doccomment">/// The flags applied to it</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This is a bitflag, to be compared with the `Flags` enum reexported by this module.</span>
-    <span class="kw">pub</span> <span class="ident">flags</span>: <span class="ident">BufferFlags</span>,
-}
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend::allocator</span>::{
+    <span class="ident">dmabuf</span>::{<span class="ident">Dmabuf</span>, <span class="ident">DmabufFlags</span>, <span class="ident">Plane</span>},
+    <span class="ident">Format</span>, <span class="ident">Fourcc</span>, <span class="ident">Modifier</span>,
+};
 
 <span class="doccomment">/// Handler trait for dmabuf validation</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// You need to provide an implementation of this trait that will validate the parameters provided by the</span>
-<span class="doccomment">/// client and import it as a dmabuf.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">DmabufHandler</span> {
-    <span class="doccomment">/// The data of a successfully imported dmabuf.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This will be stored as the `user_data` of the `WlBuffer` associated with this dmabuf. If it has a</span>
-    <span class="doccomment">/// destructor, it will be run when the client has destroyed the buffer and your compositor has dropped</span>
-    <span class="doccomment">/// all of its `WlBuffer` handles to it.</span>
-    <span class="kw">type</span> <span class="ident">BufferData</span>: <span class="lifetime">&#39;static</span>;
-    <span class="doccomment">/// Validate a dmabuf</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// From the information provided by the client, you need to validate and/or import the buffer.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// You can then store any information your compositor will need to handle it later, when the client has</span>
-    <span class="doccomment">/// submitted the buffer by returning `Ok(BufferData)` where `BufferData` is the associated type of this,</span>
-    <span class="doccomment">/// trait, a type of your choosing.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If the buffer could not be imported, whatever the reason, return `Err(())`.</span>
-    <span class="kw">fn</span> <span class="ident">validate_dmabuf</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">info</span>: <span class="ident">BufferInfo</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">BufferData</span>, ()<span class="op">&gt;</span>;
-    <span class="doccomment">/// Create a buffer from validated buffer data.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This method is pre-implemented for you by storing the provided `BufferData` as the `user_data` of the</span>
-    <span class="doccomment">/// provided `WlBuffer`. By default it assumes that your `BufferData` is not threadsafe.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// You can override it if you need your `BufferData` to be threadsafe, or which to register a destructor</span>
-    <span class="doccomment">/// for the `WlBuffer` for example.</span>
-    <span class="kw">fn</span> <span class="ident">create_buffer</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">data</span>: <span class="self">Self</span>::<span class="ident">BufferData</span>,
-        <span class="ident">buffer</span>: <span class="ident">Main</span><span class="op">&lt;</span><span class="ident">wl_buffer</span>::<span class="ident">WlBuffer</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">wl_buffer</span>::<span class="ident">WlBuffer</span> {
-        <span class="ident">buffer</span>.<span class="ident">quick_assign</span>(<span class="op">|</span><span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> {});
-        <span class="ident">buffer</span>.<span class="ident">as_ref</span>().<span class="ident">user_data</span>().<span class="ident">set</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">data</span>);
-        (<span class="kw-2">*</span><span class="ident">buffer</span>).<span class="ident">clone</span>()
-    }
-}
+<span class="doccomment">/// You need to provide an implementation of this trait</span>
 
 <span class="doccomment">/// Initialize a dmabuf global.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// You need to provide a vector of the supported formats, as well as an implementation fo the `DmabufHandler`</span>
-<span class="doccomment">/// trait, which will receive the buffer creation requests from the clients.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">init_dmabuf_global</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">L</span><span class="op">&gt;</span>(
+<span class="doccomment">/// You need to provide a vector of the supported formats, as well as a closure,</span>
+<span class="doccomment">/// that will validate the parameters provided by the client and tests the import as a dmabuf.</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">init_dmabuf_global</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">L</span><span class="op">&gt;</span>(
     <span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Display</span>,
     <span class="ident">formats</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Format</span><span class="op">&gt;</span>,
-    <span class="ident">handler</span>: <span class="ident">H</span>,
+    <span class="ident">handler</span>: <span class="ident">F</span>,
     <span class="ident">logger</span>: <span class="ident">L</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Global</span><span class="op">&lt;</span><span class="ident">zwp_linux_dmabuf_v1</span>::<span class="ident">ZwpLinuxDmabufV1</span><span class="op">&gt;</span>
+) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Global</span><span class="op">&lt;</span><span class="ident">zwp_linux_dmabuf_v1::ZwpLinuxDmabufV1</span><span class="op">&gt;</span>
 <span class="kw">where</span>
-    <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span>::<span class="ident">slog</span>::<span class="ident">Logger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">H</span>: <span class="ident">DmabufHandler</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">::slog::Logger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">F</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">Dmabuf</span>, <span class="ident">DispatchData</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
-    <span class="kw">let</span> <span class="ident">log</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">slog_or_fallback</span>(<span class="ident">logger</span>).<span class="ident">new</span>(<span class="macro">o</span><span class="macro">!</span>(<span class="string">&quot;smithay_module&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;dmabuf_handler&quot;</span>));
+    <span class="kw">let</span> <span class="ident">log</span> <span class="op">=</span> <span class="kw">crate</span><span class="ident">::slog_or_fallback</span>(<span class="ident">logger</span>).<span class="ident">new</span>(<span class="macro">o!</span>(<span class="string">&quot;smithay_module&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;dmabuf_handler&quot;</span>));
 
-    <span class="kw">let</span> <span class="ident">max_planes</span> <span class="op">=</span> <span class="ident">formats</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">plane_count</span>).<span class="ident">max</span>().<span class="ident">unwrap_or</span>(<span class="number">0</span>);
-    <span class="kw">let</span> <span class="ident">formats</span> <span class="op">=</span> <span class="ident">Rc</span>::<span class="ident">new</span>(<span class="ident">formats</span>);
-    <span class="kw">let</span> <span class="ident">handler</span> <span class="op">=</span> <span class="ident">Rc</span>::<span class="ident">new</span>(<span class="ident">RefCell</span>::<span class="ident">new</span>(<span class="ident">handler</span>));
+    <span class="kw">let</span> <span class="ident">formats</span> <span class="op">=</span> <span class="ident">Rc</span>::<span class="op">&lt;</span>[<span class="ident">Format</span>]<span class="op">&gt;</span><span class="ident">::from</span>(<span class="ident">formats</span>);
+    <span class="kw">let</span> <span class="ident">handler</span> <span class="op">=</span> <span class="ident">Rc::new</span>(<span class="ident">RefCell::new</span>(<span class="ident">handler</span>));
 
-    <span class="macro">trace</span><span class="macro">!</span>(
+    <span class="macro">trace!</span>(
         <span class="ident">log</span>,
         <span class="string">&quot;Initializing DMABUF handler with {} supported formats&quot;</span>,
         <span class="ident">formats</span>.<span class="ident">len</span>()
@@ -701,23 +566,23 @@
 
     <span class="ident">display</span>.<span class="ident">create_global</span>(
         <span class="number">3</span>,
-        <span class="ident">Filter</span>::<span class="ident">new</span>(
-            <span class="kw">move</span> <span class="op">|</span>(<span class="ident">dmabuf</span>, <span class="ident">version</span>): (<span class="ident">Main</span><span class="op">&lt;</span><span class="ident">zwp_linux_dmabuf_v1</span>::<span class="ident">ZwpLinuxDmabufV1</span><span class="op">&gt;</span>, <span class="ident">u32</span>), <span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> {
+        <span class="ident">Filter::new</span>(
+            <span class="kw">move</span> <span class="op">|</span>(<span class="ident">dmabuf</span>, <span class="ident">version</span>): (<span class="ident">Main</span><span class="op">&lt;</span><span class="ident">zwp_linux_dmabuf_v1::ZwpLinuxDmabufV1</span><span class="op">&gt;</span>, <span class="ident">u32</span>), <span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> {
                 <span class="kw">let</span> <span class="ident">dma_formats</span> <span class="op">=</span> <span class="ident">formats</span>.<span class="ident">clone</span>();
                 <span class="kw">let</span> <span class="ident">dma_handler</span> <span class="op">=</span> <span class="ident">handler</span>.<span class="ident">clone</span>();
                 <span class="kw">let</span> <span class="ident">dma_log</span> <span class="op">=</span> <span class="ident">log</span>.<span class="ident">clone</span>();
                 <span class="ident">dmabuf</span>.<span class="ident">quick_assign</span>(<span class="kw">move</span> <span class="op">|</span><span class="kw">_</span>, <span class="ident">req</span>, <span class="kw">_</span><span class="op">|</span> {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="ident">zwp_linux_dmabuf_v1</span>::<span class="ident">Request</span>::<span class="ident">CreateParams</span> { <span class="ident">params_id</span> } <span class="op">=</span> <span class="ident">req</span> {
+                    <span class="kw">if</span> <span class="kw">let</span> <span class="ident">zwp_linux_dmabuf_v1::Request::CreateParams</span> { <span class="ident">params_id</span> } <span class="op">=</span> <span class="ident">req</span> {
                         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">handler</span> <span class="op">=</span> <span class="ident">ParamsHandler</span> {
-                            <span class="ident">pending_planes</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
-                            <span class="ident">max_planes</span>,
+                            <span class="ident">pending_planes</span>: <span class="ident">Vec::new</span>(),
+                            <span class="ident">max_planes</span>: <span class="number">4</span>,
                             <span class="ident">used</span>: <span class="bool-val">false</span>,
                             <span class="ident">formats</span>: <span class="ident">dma_formats</span>.<span class="ident">clone</span>(),
                             <span class="ident">handler</span>: <span class="ident">dma_handler</span>.<span class="ident">clone</span>(),
                             <span class="ident">log</span>: <span class="ident">dma_log</span>.<span class="ident">clone</span>(),
                         };
-                        <span class="ident">params_id</span>.<span class="ident">quick_assign</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">params</span>, <span class="ident">req</span>, <span class="kw">_</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">req</span> {
-                            <span class="ident">ParamsRequest</span>::<span class="ident">Add</span> {
+                        <span class="ident">params_id</span>.<span class="ident">quick_assign</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">params</span>, <span class="ident">req</span>, <span class="ident">ddata</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">req</span> {
+                            <span class="ident">ParamsRequest::Add</span> {
                                 <span class="ident">fd</span>,
                                 <span class="ident">plane_idx</span>,
                                 <span class="ident">offset</span>,
@@ -732,19 +597,21 @@
                                 <span class="ident">stride</span>,
                                 ((<span class="ident">modifier_hi</span> <span class="kw">as</span> <span class="ident">u64</span>) <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">32</span>) <span class="op">+</span> (<span class="ident">modifier_lo</span> <span class="kw">as</span> <span class="ident">u64</span>),
                             ),
-                            <span class="ident">ParamsRequest</span>::<span class="ident">Create</span> {
+                            <span class="ident">ParamsRequest::Create</span> {
                                 <span class="ident">width</span>,
                                 <span class="ident">height</span>,
                                 <span class="ident">format</span>,
                                 <span class="ident">flags</span>,
-                            } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">handler</span>.<span class="ident">create</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">params</span>, <span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">format</span>, <span class="ident">flags</span>),
-                            <span class="ident">ParamsRequest</span>::<span class="ident">CreateImmed</span> {
+                            } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">handler</span>.<span class="ident">create</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">params</span>, <span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">format</span>, <span class="ident">flags</span>, <span class="ident">ddata</span>),
+                            <span class="ident">ParamsRequest::CreateImmed</span> {
                                 <span class="ident">buffer_id</span>,
                                 <span class="ident">width</span>,
                                 <span class="ident">height</span>,
                                 <span class="ident">format</span>,
                                 <span class="ident">flags</span>,
-                            } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">handler</span>.<span class="ident">create_immed</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">params</span>, <span class="ident">buffer_id</span>, <span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">format</span>, <span class="ident">flags</span>),
+                            } <span class="op">=</span><span class="op">&gt;</span> {
+                                <span class="ident">handler</span>.<span class="ident">create_immed</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">params</span>, <span class="ident">buffer_id</span>, <span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">format</span>, <span class="ident">flags</span>, <span class="ident">ddata</span>)
+                            }
                             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {}
                         });
                     }
@@ -752,9 +619,13 @@
 
                 <span class="comment">// send the supported formats</span>
                 <span class="kw">for</span> <span class="ident">f</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">formats</span> {
-                    <span class="ident">dmabuf</span>.<span class="ident">format</span>(<span class="ident">f</span>.<span class="ident">format</span>.<span class="ident">as_raw</span>());
+                    <span class="ident">dmabuf</span>.<span class="ident">format</span>(<span class="ident">f</span>.<span class="ident">code</span> <span class="kw">as</span> <span class="ident">u32</span>);
                     <span class="kw">if</span> <span class="ident">version</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">3</span> {
-                        <span class="ident">dmabuf</span>.<span class="ident">modifier</span>(<span class="ident">f</span>.<span class="ident">format</span>.<span class="ident">as_raw</span>(), (<span class="ident">f</span>.<span class="ident">modifier</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">32</span>) <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">f</span>.<span class="ident">modifier</span> <span class="kw">as</span> <span class="ident">u32</span>);
+                        <span class="ident">dmabuf</span>.<span class="ident">modifier</span>(
+                            <span class="ident">f</span>.<span class="ident">code</span> <span class="kw">as</span> <span class="ident">u32</span>,
+                            (<span class="ident">Into</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="ident">::into</span>(<span class="ident">f</span>.<span class="ident">modifier</span>) <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">32</span>) <span class="kw">as</span> <span class="ident">u32</span>,
+                            <span class="ident">Into</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="ident">::into</span>(<span class="ident">f</span>.<span class="ident">modifier</span>) <span class="kw">as</span> <span class="ident">u32</span>,
+                        );
                     }
                 }
             },
@@ -762,16 +633,19 @@
     )
 }
 
-<span class="kw">struct</span> <span class="ident">ParamsHandler</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">DmabufHandler</span><span class="op">&gt;</span> {
+<span class="kw">struct</span> <span class="ident">ParamsHandler</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">Dmabuf</span>, <span class="ident">DispatchData</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
     <span class="ident">pending_planes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Plane</span><span class="op">&gt;</span>,
     <span class="ident">max_planes</span>: <span class="ident">u32</span>,
     <span class="ident">used</span>: <span class="ident">bool</span>,
-    <span class="ident">formats</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Format</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">formats</span>: <span class="ident">Rc</span><span class="op">&lt;</span>[<span class="ident">Format</span>]<span class="op">&gt;</span>,
     <span class="ident">handler</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">log</span>: ::<span class="ident">slog</span>::<span class="ident">Logger</span>,
+    <span class="ident">log</span>: <span class="ident">::slog::Logger</span>,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">DmabufHandler</span><span class="op">&gt;</span> <span class="ident">ParamsHandler</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span> <span class="ident">ParamsHandler</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">H</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">Dmabuf</span>, <span class="ident">DispatchData</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+{
     <span class="kw">fn</span> <span class="ident">add</span>(
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">params</span>: <span class="kw-2">&amp;</span><span class="ident">BufferParams</span>,
@@ -785,7 +659,7 @@
         <span class="comment">// Cannot reuse a params:</span>
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">used</span> {
             <span class="ident">params</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
-                <span class="ident">ParamError</span>::<span class="ident">AlreadyUsed</span> <span class="kw">as</span> <span class="ident">u32</span>,
+                <span class="ident">ParamError::AlreadyUsed</span> <span class="kw">as</span> <span class="ident">u32</span>,
                 <span class="string">&quot;This buffer_params has already been used to create a buffer.&quot;</span>.<span class="ident">into</span>(),
             );
             <span class="kw">return</span>;
@@ -794,92 +668,59 @@
         <span class="kw">if</span> <span class="ident">plane_idx</span> <span class="op">&gt;</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">max_planes</span> {
             <span class="comment">// plane_idx starts at 0</span>
             <span class="ident">params</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
-                <span class="ident">ParamError</span>::<span class="ident">PlaneIdx</span> <span class="kw">as</span> <span class="ident">u32</span>,
-                <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Plane index {} is out of bounds.&quot;</span>, <span class="ident">plane_idx</span>),
+                <span class="ident">ParamError::PlaneIdx</span> <span class="kw">as</span> <span class="ident">u32</span>,
+                <span class="macro">format!</span>(<span class="string">&quot;Plane index {} is out of bounds.&quot;</span>, <span class="ident">plane_idx</span>),
             );
             <span class="kw">return</span>;
         }
         <span class="comment">// plane_idx has already been set</span>
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">pending_planes</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">d</span><span class="op">|</span> <span class="ident">d</span>.<span class="ident">plane_idx</span> <span class="op">=</span><span class="op">=</span> <span class="ident">plane_idx</span>) {
             <span class="ident">params</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
-                <span class="ident">ParamError</span>::<span class="ident">PlaneSet</span> <span class="kw">as</span> <span class="ident">u32</span>,
-                <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Plane index {} is already set.&quot;</span>, <span class="ident">plane_idx</span>),
+                <span class="ident">ParamError::PlaneSet</span> <span class="kw">as</span> <span class="ident">u32</span>,
+                <span class="macro">format!</span>(<span class="string">&quot;Plane index {} is already set.&quot;</span>, <span class="ident">plane_idx</span>),
             );
             <span class="kw">return</span>;
         }
         <span class="comment">// all checks passed, store the plane</span>
         <span class="self">self</span>.<span class="ident">pending_planes</span>.<span class="ident">push</span>(<span class="ident">Plane</span> {
-            <span class="ident">fd</span>,
+            <span class="ident">fd</span>: <span class="prelude-val">Some</span>(<span class="ident">fd</span>),
             <span class="ident">plane_idx</span>,
             <span class="ident">offset</span>,
             <span class="ident">stride</span>,
-            <span class="ident">modifier</span>,
+            <span class="ident">modifier</span>: <span class="ident">Modifier::from</span>(<span class="ident">modifier</span>),
         });
     }
 
-    <span class="kw">fn</span> <span class="ident">create</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">params</span>: <span class="kw-2">&amp;</span><span class="ident">BufferParams</span>, <span class="ident">width</span>: <span class="ident">i32</span>, <span class="ident">height</span>: <span class="ident">i32</span>, <span class="ident">format</span>: <span class="ident">u32</span>, <span class="ident">flags</span>: <span class="ident">u32</span>) {
-        <span class="comment">// Cannot reuse a params:</span>
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">used</span> {
-            <span class="ident">params</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
-                <span class="ident">ParamError</span>::<span class="ident">AlreadyUsed</span> <span class="kw">as</span> <span class="ident">u32</span>,
-                <span class="string">&quot;This buffer_params has already been used to create a buffer.&quot;</span>.<span class="ident">into</span>(),
-            );
-            <span class="kw">return</span>;
-        }
-        <span class="self">self</span>.<span class="ident">used</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">buffer_basic_checks</span>(
-            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">formats</span>,
-            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">pending_planes</span>,
-            <span class="kw-2">&amp;</span><span class="ident">params</span>,
-            <span class="ident">format</span>,
-            <span class="ident">width</span>,
-            <span class="ident">height</span>,
-        ) {
-            <span class="macro">trace</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">log</span>, <span class="string">&quot;Killing client providing bogus dmabuf buffer params.&quot;</span>);
-            <span class="kw">return</span>;
-        }
-        <span class="kw">let</span> <span class="ident">info</span> <span class="op">=</span> <span class="ident">BufferInfo</span> {
-            <span class="ident">planes</span>: ::<span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">pending_planes</span>, <span class="ident">Vec</span>::<span class="ident">new</span>()),
-            <span class="ident">width</span>,
-            <span class="ident">height</span>,
-            <span class="ident">format</span>,
-            <span class="ident">flags</span>: <span class="ident">BufferFlags</span>::<span class="ident">from_bits_truncate</span>(<span class="ident">flags</span>),
-        };
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">handler</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">handler</span>.<span class="ident">borrow_mut</span>();
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">data</span>) <span class="op">=</span> <span class="ident">handler</span>.<span class="ident">validate_dmabuf</span>(<span class="ident">info</span>) {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">buffer</span>) <span class="op">=</span> <span class="ident">params</span>
-                .<span class="ident">as_ref</span>()
-                .<span class="ident">client</span>()
-                .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">create_resource</span>::<span class="op">&lt;</span><span class="ident">wl_buffer</span>::<span class="ident">WlBuffer</span><span class="op">&gt;</span>(<span class="number">1</span>))
-            {
-                <span class="kw">let</span> <span class="ident">buffer</span> <span class="op">=</span> <span class="ident">handler</span>.<span class="ident">create_buffer</span>(<span class="ident">data</span>, <span class="ident">buffer</span>);
-                <span class="macro">trace</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">log</span>, <span class="string">&quot;Creating a new validated dma wl_buffer.&quot;</span>);
-                <span class="ident">params</span>.<span class="ident">created</span>(<span class="kw-2">&amp;</span><span class="ident">buffer</span>);
-            }
-        } <span class="kw">else</span> {
-            <span class="macro">trace</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">log</span>, <span class="string">&quot;Refusing creation of an invalid dma wl_buffer.&quot;</span>);
-            <span class="ident">params</span>.<span class="ident">failed</span>();
-        }
-    }
-
-    <span class="kw">fn</span> <span class="ident">create_immed</span>(
+    <span class="kw">fn</span> <span class="ident">create</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">params</span>: <span class="kw-2">&amp;</span><span class="ident">BufferParams</span>,
-        <span class="ident">buffer_id</span>: <span class="ident">Main</span><span class="op">&lt;</span><span class="ident">wl_buffer</span>::<span class="ident">WlBuffer</span><span class="op">&gt;</span>,
         <span class="ident">width</span>: <span class="ident">i32</span>,
         <span class="ident">height</span>: <span class="ident">i32</span>,
         <span class="ident">format</span>: <span class="ident">u32</span>,
         <span class="ident">flags</span>: <span class="ident">u32</span>,
+        <span class="ident">ddata</span>: <span class="ident">DispatchData</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
     ) {
         <span class="comment">// Cannot reuse a params:</span>
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">used</span> {
             <span class="ident">params</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
-                <span class="ident">ParamError</span>::<span class="ident">AlreadyUsed</span> <span class="kw">as</span> <span class="ident">u32</span>,
+                <span class="ident">ParamError::AlreadyUsed</span> <span class="kw">as</span> <span class="ident">u32</span>,
                 <span class="string">&quot;This buffer_params has already been used to create a buffer.&quot;</span>.<span class="ident">into</span>(),
             );
             <span class="kw">return</span>;
         }
         <span class="self">self</span>.<span class="ident">used</span> <span class="op">=</span> <span class="bool-val">true</span>;
+
+        <span class="kw">let</span> <span class="ident">format</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">Fourcc::try_from</span>(<span class="ident">format</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">format</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">format</span>,
+            <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">params</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
+                    <span class="ident">ParamError::InvalidFormat</span> <span class="kw">as</span> <span class="ident">u32</span>,
+                    <span class="macro">format!</span>(<span class="string">&quot;Format {:x} is not supported&quot;</span>, <span class="ident">format</span>),
+                );
+                <span class="kw">return</span>;
+            }
+        };
+
         <span class="kw">if</span> <span class="op">!</span><span class="ident">buffer_basic_checks</span>(
             <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">formats</span>,
             <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">pending_planes</span>,
@@ -888,27 +729,136 @@
             <span class="ident">width</span>,
             <span class="ident">height</span>,
         ) {
-            <span class="macro">trace</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">log</span>, <span class="string">&quot;Killing client providing bogus dmabuf buffer params.&quot;</span>);
+            <span class="macro">trace!</span>(<span class="self">self</span>.<span class="ident">log</span>, <span class="string">&quot;Killing client providing bogus dmabuf buffer params.&quot;</span>);
             <span class="kw">return</span>;
         }
-        <span class="kw">let</span> <span class="ident">info</span> <span class="op">=</span> <span class="ident">BufferInfo</span> {
-            <span class="ident">planes</span>: ::<span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">pending_planes</span>, <span class="ident">Vec</span>::<span class="ident">new</span>()),
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> <span class="ident">Dmabuf::builder</span>(
+            <span class="ident">width</span> <span class="kw">as</span> <span class="ident">u32</span>,
+            <span class="ident">height</span> <span class="kw">as</span> <span class="ident">u32</span>,
+            <span class="ident">format</span>,
+            <span class="ident">DmabufFlags::from_bits_truncate</span>(<span class="ident">flags</span>),
+        );
+        <span class="kw">let</span> <span class="ident">planes</span> <span class="op">=</span> <span class="ident">::std::mem::replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">pending_planes</span>, <span class="ident">Vec::new</span>());
+        <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">plane</span>) <span class="kw">in</span> <span class="ident">planes</span>.<span class="ident">into_iter</span>().<span class="ident">enumerate</span>() {
+            <span class="kw">let</span> <span class="ident">offset</span> <span class="op">=</span> <span class="ident">plane</span>.<span class="ident">offset</span>;
+            <span class="kw">let</span> <span class="ident">stride</span> <span class="op">=</span> <span class="ident">plane</span>.<span class="ident">stride</span>;
+            <span class="kw">let</span> <span class="ident">modi</span> <span class="op">=</span> <span class="ident">plane</span>.<span class="ident">modifier</span>;
+            <span class="ident">buf</span>.<span class="ident">add_plane</span>(<span class="ident">plane</span>.<span class="ident">into_raw_fd</span>(), <span class="ident">i</span> <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">offset</span>, <span class="ident">stride</span>, <span class="ident">modi</span>);
+        }
+        <span class="kw">let</span> <span class="ident">dmabuf</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">buf</span>.<span class="ident">build</span>() {
+            <span class="prelude-val">Some</span>(<span class="ident">buf</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">buf</span>,
+            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">params</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
+                    <span class="ident">ParamError::Incomplete</span> <span class="kw">as</span> <span class="ident">u32</span>,
+                    <span class="string">&quot;Provided buffer is incomplete, it has zero planes&quot;</span>.<span class="ident">to_string</span>(),
+                );
+                <span class="kw">return</span>;
+            }
+        };
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">handler</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">handler</span>.<span class="ident">borrow_mut</span>();
+        <span class="kw">if</span> <span class="ident">handler</span>(<span class="kw-2">&amp;</span><span class="ident">dmabuf</span>, <span class="ident">ddata</span>) {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">buffer</span>) <span class="op">=</span> <span class="ident">params</span>
+                .<span class="ident">as_ref</span>()
+                .<span class="ident">client</span>()
+                .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">create_resource</span>::<span class="op">&lt;</span><span class="ident">wl_buffer::WlBuffer</span><span class="op">&gt;</span>(<span class="number">1</span>))
+            {
+                <span class="ident">buffer</span>.<span class="ident">as_ref</span>().<span class="ident">user_data</span>().<span class="ident">set_threadsafe</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">dmabuf</span>);
+                <span class="ident">buffer</span>.<span class="ident">quick_assign</span>(<span class="op">|</span><span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> {});
+
+                <span class="macro">trace!</span>(<span class="self">self</span>.<span class="ident">log</span>, <span class="string">&quot;Created a new validated dma wl_buffer.&quot;</span>);
+                <span class="ident">params</span>.<span class="ident">created</span>(<span class="kw-2">&amp;</span><span class="ident">buffer</span>);
+            } <span class="kw">else</span> {
+                <span class="macro">trace!</span>(<span class="self">self</span>.<span class="ident">log</span>, <span class="string">&quot;Failed to create a wl_buffer&quot;</span>);
+                <span class="ident">params</span>.<span class="ident">failed</span>();
+            }
+        } <span class="kw">else</span> {
+            <span class="macro">trace!</span>(<span class="self">self</span>.<span class="ident">log</span>, <span class="string">&quot;Refusing creation of an invalid dma wl_buffer.&quot;</span>);
+            <span class="ident">params</span>.<span class="ident">failed</span>();
+        }
+    }
+
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::clippy::too_many_arguments</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">create_immed</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">params</span>: <span class="kw-2">&amp;</span><span class="ident">BufferParams</span>,
+        <span class="ident">buffer</span>: <span class="ident">Main</span><span class="op">&lt;</span><span class="ident">wl_buffer::WlBuffer</span><span class="op">&gt;</span>,
+        <span class="ident">width</span>: <span class="ident">i32</span>,
+        <span class="ident">height</span>: <span class="ident">i32</span>,
+        <span class="ident">format</span>: <span class="ident">u32</span>,
+        <span class="ident">flags</span>: <span class="ident">u32</span>,
+        <span class="ident">ddata</span>: <span class="ident">DispatchData</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
+    ) {
+        <span class="comment">// Cannot reuse a params:</span>
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">used</span> {
+            <span class="ident">params</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
+                <span class="ident">ParamError::AlreadyUsed</span> <span class="kw">as</span> <span class="ident">u32</span>,
+                <span class="string">&quot;This buffer_params has already been used to create a buffer.&quot;</span>.<span class="ident">into</span>(),
+            );
+            <span class="kw">return</span>;
+        }
+        <span class="self">self</span>.<span class="ident">used</span> <span class="op">=</span> <span class="bool-val">true</span>;
+
+        <span class="kw">let</span> <span class="ident">format</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">Fourcc::try_from</span>(<span class="ident">format</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">format</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">format</span>,
+            <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">params</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
+                    <span class="ident">ParamError::InvalidFormat</span> <span class="kw">as</span> <span class="ident">u32</span>,
+                    <span class="macro">format!</span>(<span class="string">&quot;Format {:x} is not supported&quot;</span>, <span class="ident">format</span>),
+                );
+                <span class="kw">return</span>;
+            }
+        };
+
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">buffer_basic_checks</span>(
+            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">formats</span>,
+            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">pending_planes</span>,
+            <span class="kw-2">&amp;</span><span class="ident">params</span>,
+            <span class="ident">format</span>,
             <span class="ident">width</span>,
             <span class="ident">height</span>,
+        ) {
+            <span class="macro">trace!</span>(<span class="self">self</span>.<span class="ident">log</span>, <span class="string">&quot;Killing client providing bogus dmabuf buffer params.&quot;</span>);
+            <span class="kw">return</span>;
+        }
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> <span class="ident">Dmabuf::builder</span>(
+            <span class="ident">width</span> <span class="kw">as</span> <span class="ident">u32</span>,
+            <span class="ident">height</span> <span class="kw">as</span> <span class="ident">u32</span>,
             <span class="ident">format</span>,
-            <span class="ident">flags</span>: <span class="ident">BufferFlags</span>::<span class="ident">from_bits_truncate</span>(<span class="ident">flags</span>),
+            <span class="ident">DmabufFlags::from_bits_truncate</span>(<span class="ident">flags</span>),
+        );
+        <span class="kw">let</span> <span class="ident">planes</span> <span class="op">=</span> <span class="ident">::std::mem::replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">pending_planes</span>, <span class="ident">Vec::new</span>());
+        <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">plane</span>) <span class="kw">in</span> <span class="ident">planes</span>.<span class="ident">into_iter</span>().<span class="ident">enumerate</span>() {
+            <span class="kw">let</span> <span class="ident">offset</span> <span class="op">=</span> <span class="ident">plane</span>.<span class="ident">offset</span>;
+            <span class="kw">let</span> <span class="ident">stride</span> <span class="op">=</span> <span class="ident">plane</span>.<span class="ident">stride</span>;
+            <span class="kw">let</span> <span class="ident">modi</span> <span class="op">=</span> <span class="ident">plane</span>.<span class="ident">modifier</span>;
+            <span class="ident">buf</span>.<span class="ident">add_plane</span>(<span class="ident">plane</span>.<span class="ident">into_raw_fd</span>(), <span class="ident">i</span> <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">offset</span>, <span class="ident">stride</span>, <span class="ident">modi</span>);
+        }
+        <span class="kw">let</span> <span class="ident">dmabuf</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">buf</span>.<span class="ident">build</span>() {
+            <span class="prelude-val">Some</span>(<span class="ident">buf</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">buf</span>,
+            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">params</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
+                    <span class="ident">ParamError::Incomplete</span> <span class="kw">as</span> <span class="ident">u32</span>,
+                    <span class="string">&quot;Provided buffer is incomplete, it has zero planes&quot;</span>.<span class="ident">to_string</span>(),
+                );
+                <span class="kw">return</span>;
+            }
         };
+
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">handler</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">handler</span>.<span class="ident">borrow_mut</span>();
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">data</span>) <span class="op">=</span> <span class="ident">handler</span>.<span class="ident">validate_dmabuf</span>(<span class="ident">info</span>) {
-            <span class="macro">trace</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">log</span>, <span class="string">&quot;Creating a new validated immediate dma wl_buffer.&quot;</span>);
-            <span class="ident">handler</span>.<span class="ident">create_buffer</span>(<span class="ident">data</span>, <span class="ident">buffer_id</span>);
+        <span class="kw">if</span> <span class="ident">handler</span>(<span class="kw-2">&amp;</span><span class="ident">dmabuf</span>, <span class="ident">ddata</span>) {
+            <span class="ident">buffer</span>.<span class="ident">as_ref</span>().<span class="ident">user_data</span>().<span class="ident">set_threadsafe</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">dmabuf</span>);
+            <span class="ident">buffer</span>.<span class="ident">quick_assign</span>(<span class="op">|</span><span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> {});
+            <span class="macro">trace!</span>(<span class="self">self</span>.<span class="ident">log</span>, <span class="string">&quot;Created a new validated dma wl_buffer.&quot;</span>);
         } <span class="kw">else</span> {
-            <span class="macro">trace</span><span class="macro">!</span>(
+            <span class="macro">trace!</span>(
                 <span class="self">self</span>.<span class="ident">log</span>,
                 <span class="string">&quot;Refusing creation of an invalid immediate dma wl_buffer, killing client.&quot;</span>
             );
             <span class="ident">params</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
-                <span class="ident">ParamError</span>::<span class="ident">InvalidWlBuffer</span> <span class="kw">as</span> <span class="ident">u32</span>,
+                <span class="ident">ParamError::InvalidWlBuffer</span> <span class="kw">as</span> <span class="ident">u32</span>,
                 <span class="string">&quot;create_immed resulted in an invalid buffer.&quot;</span>.<span class="ident">into</span>(),
             );
         }
@@ -919,39 +869,27 @@
     <span class="ident">formats</span>: <span class="kw-2">&amp;</span>[<span class="ident">Format</span>],
     <span class="ident">pending_planes</span>: <span class="kw-2">&amp;</span>[<span class="ident">Plane</span>],
     <span class="ident">params</span>: <span class="kw-2">&amp;</span><span class="ident">BufferParams</span>,
-    <span class="ident">format</span>: <span class="ident">u32</span>,
+    <span class="ident">format</span>: <span class="ident">Fourcc</span>,
     <span class="ident">width</span>: <span class="ident">i32</span>,
     <span class="ident">height</span>: <span class="ident">i32</span>,
 ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
     <span class="comment">// protocol_checks:</span>
     <span class="comment">// This must be a known format</span>
-    <span class="kw">let</span> <span class="ident">format</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">formats</span>.<span class="ident">iter</span>().<span class="ident">find</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">format</span>.<span class="ident">as_raw</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">format</span>) {
+    <span class="kw">let</span> <span class="ident">_format</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">formats</span>.<span class="ident">iter</span>().<span class="ident">find</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">code</span> <span class="op">=</span><span class="op">=</span> <span class="ident">format</span>) {
         <span class="prelude-val">Some</span>(<span class="ident">f</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">f</span>,
         <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> {
             <span class="ident">params</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
-                <span class="ident">ParamError</span>::<span class="ident">InvalidFormat</span> <span class="kw">as</span> <span class="ident">u32</span>,
-                <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Format {:x} is not supported.&quot;</span>, <span class="ident">format</span>),
+                <span class="ident">ParamError::InvalidFormat</span> <span class="kw">as</span> <span class="ident">u32</span>,
+                <span class="macro">format!</span>(<span class="string">&quot;Format {:?}/{:x} is not supported.&quot;</span>, <span class="ident">format</span>, <span class="ident">format</span> <span class="kw">as</span> <span class="ident">u32</span>),
             );
             <span class="kw">return</span> <span class="bool-val">false</span>;
         }
     };
-    <span class="comment">// The number of planes set must match what the format expects</span>
-    <span class="kw">let</span> <span class="ident">max_plane_set</span> <span class="op">=</span> <span class="ident">pending_planes</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">d</span><span class="op">|</span> <span class="ident">d</span>.<span class="ident">plane_idx</span> <span class="op">+</span> <span class="number">1</span>).<span class="ident">max</span>().<span class="ident">unwrap_or</span>(<span class="number">0</span>);
-    <span class="kw">if</span> <span class="ident">max_plane_set</span> <span class="op">!</span><span class="op">=</span> <span class="ident">format</span>.<span class="ident">plane_count</span> <span class="op">|</span><span class="op">|</span> <span class="ident">pending_planes</span>.<span class="ident">len</span>() <span class="op">&lt;</span> <span class="ident">format</span>.<span class="ident">plane_count</span> <span class="kw">as</span> <span class="ident">usize</span> {
-        <span class="ident">params</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
-            <span class="ident">ParamError</span>::<span class="ident">Incomplete</span> <span class="kw">as</span> <span class="ident">u32</span>,
-            <span class="macro">format</span><span class="macro">!</span>(
-                <span class="string">&quot;Format {:?} requires {} planes but got {}.&quot;</span>,
-                <span class="ident">format</span>.<span class="ident">format</span>, <span class="ident">format</span>.<span class="ident">plane_count</span>, <span class="ident">max_plane_set</span>
-            ),
-        );
-        <span class="kw">return</span> <span class="bool-val">false</span>;
-    }
     <span class="comment">// Width and height must be positivie</span>
     <span class="kw">if</span> <span class="ident">width</span> <span class="op">&lt;</span> <span class="number">1</span> <span class="op">|</span><span class="op">|</span> <span class="ident">height</span> <span class="op">&lt;</span> <span class="number">1</span> {
         <span class="ident">params</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
-            <span class="ident">ParamError</span>::<span class="ident">InvalidDimensions</span> <span class="kw">as</span> <span class="ident">u32</span>,
-            <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Dimensions ({},{}) are not valid.&quot;</span>, <span class="ident">width</span>, <span class="ident">height</span>),
+            <span class="ident">ParamError::InvalidDimensions</span> <span class="kw">as</span> <span class="ident">u32</span>,
+            <span class="macro">format!</span>(<span class="string">&quot;Dimensions ({},{}) are not valid.&quot;</span>, <span class="ident">width</span>, <span class="ident">height</span>),
         );
         <span class="kw">return</span> <span class="bool-val">false</span>;
     }
@@ -965,36 +903,36 @@
         {
             <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="ident">params</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
-                    <span class="ident">ParamError</span>::<span class="ident">OutOfBounds</span> <span class="kw">as</span> <span class="ident">u32</span>,
-                    <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Size overflow for plane {}.&quot;</span>, <span class="ident">plane</span>.<span class="ident">plane_idx</span>),
+                    <span class="ident">ParamError::OutOfBounds</span> <span class="kw">as</span> <span class="ident">u32</span>,
+                    <span class="macro">format!</span>(<span class="string">&quot;Size overflow for plane {}.&quot;</span>, <span class="ident">plane</span>.<span class="ident">plane_idx</span>),
                 );
                 <span class="kw">return</span> <span class="bool-val">false</span>;
             }
             <span class="prelude-val">Some</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">e</span>,
         };
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">size</span>) <span class="op">=</span> ::<span class="ident">nix</span>::<span class="ident">unistd</span>::<span class="ident">lseek</span>(<span class="ident">plane</span>.<span class="ident">fd</span>, <span class="number">0</span>, ::<span class="ident">nix</span>::<span class="ident">unistd</span>::<span class="ident">Whence</span>::<span class="ident">SeekEnd</span>) {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">size</span>) <span class="op">=</span> <span class="ident">::nix::unistd::lseek</span>(<span class="ident">plane</span>.<span class="ident">fd</span>.<span class="ident">unwrap</span>(), <span class="number">0</span>, <span class="ident">::nix::unistd::Whence::SeekEnd</span>) {
             <span class="comment">// reset the seek point</span>
-            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> ::<span class="ident">nix</span>::<span class="ident">unistd</span>::<span class="ident">lseek</span>(<span class="ident">plane</span>.<span class="ident">fd</span>, <span class="number">0</span>, ::<span class="ident">nix</span>::<span class="ident">unistd</span>::<span class="ident">Whence</span>::<span class="ident">SeekSet</span>);
+            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">::nix::unistd::lseek</span>(<span class="ident">plane</span>.<span class="ident">fd</span>.<span class="ident">unwrap</span>(), <span class="number">0</span>, <span class="ident">::nix::unistd::Whence::SeekSet</span>);
             <span class="kw">if</span> <span class="ident">plane</span>.<span class="ident">offset</span> <span class="kw">as</span> <span class="ident">i64</span> <span class="op">&gt;</span> <span class="ident">size</span> {
                 <span class="ident">params</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
-                    <span class="ident">ParamError</span>::<span class="ident">OutOfBounds</span> <span class="kw">as</span> <span class="ident">u32</span>,
-                    <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Invalid offset {} for plane {}.&quot;</span>, <span class="ident">plane</span>.<span class="ident">offset</span>, <span class="ident">plane</span>.<span class="ident">plane_idx</span>),
+                    <span class="ident">ParamError::OutOfBounds</span> <span class="kw">as</span> <span class="ident">u32</span>,
+                    <span class="macro">format!</span>(<span class="string">&quot;Invalid offset {} for plane {}.&quot;</span>, <span class="ident">plane</span>.<span class="ident">offset</span>, <span class="ident">plane</span>.<span class="ident">plane_idx</span>),
                 );
                 <span class="kw">return</span> <span class="bool-val">false</span>;
             }
             <span class="kw">if</span> (<span class="ident">plane</span>.<span class="ident">offset</span> <span class="op">+</span> <span class="ident">plane</span>.<span class="ident">stride</span>) <span class="kw">as</span> <span class="ident">i64</span> <span class="op">&gt;</span> <span class="ident">size</span> {
                 <span class="ident">params</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
-                    <span class="ident">ParamError</span>::<span class="ident">OutOfBounds</span> <span class="kw">as</span> <span class="ident">u32</span>,
-                    <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Invalid stride {} for plane {}.&quot;</span>, <span class="ident">plane</span>.<span class="ident">stride</span>, <span class="ident">plane</span>.<span class="ident">plane_idx</span>),
+                    <span class="ident">ParamError::OutOfBounds</span> <span class="kw">as</span> <span class="ident">u32</span>,
+                    <span class="macro">format!</span>(<span class="string">&quot;Invalid stride {} for plane {}.&quot;</span>, <span class="ident">plane</span>.<span class="ident">stride</span>, <span class="ident">plane</span>.<span class="ident">plane_idx</span>),
                 );
                 <span class="kw">return</span> <span class="bool-val">false</span>;
             }
             <span class="comment">// Planes &gt; 0 can be subsampled, in which case &#39;size&#39; will be smaller</span>
             <span class="comment">// than expected.</span>
-            <span class="kw">if</span> <span class="ident">plane</span>.<span class="ident">plane_idx</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">end</span> <span class="kw">as</span> <span class="ident">i64</span> <span class="op">&gt;</span> <span class="ident">size</span> {
+            <span class="kw">if</span> <span class="ident">plane</span>.<span class="ident">plane_idx</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">end</span> <span class="kw">as</span> <span class="ident">i64</span> <span class="op">&gt;</span> <span class="ident">size</span> {
                 <span class="ident">params</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
-                    <span class="ident">ParamError</span>::<span class="ident">OutOfBounds</span> <span class="kw">as</span> <span class="ident">u32</span>,
-                    <span class="macro">format</span><span class="macro">!</span>(
+                    <span class="ident">ParamError::OutOfBounds</span> <span class="kw">as</span> <span class="ident">u32</span>,
+                    <span class="macro">format!</span>(
                         <span class="string">&quot;Invalid stride ({}) or height ({}) for plane {}.&quot;</span>,
                         <span class="ident">plane</span>.<span class="ident">stride</span>, <span class="ident">height</span>, <span class="ident">plane</span>.<span class="ident">plane_idx</span>
                     ),
@@ -1006,4 +944,4 @@
     <span class="bool-val">true</span>
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../../";window.currentCrate = "smithay";</script><script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script><script defer src="../../../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-search-index-js="../../../../search-index.js" data-search-js="../../../../search.js"></div><script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script></body></html>

@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["EglStreamDeviceBackend","Egl Device backend type"]]});

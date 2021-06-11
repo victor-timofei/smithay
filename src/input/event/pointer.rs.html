@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/input-0.5.0/src/event/pointer.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>pointer.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../input/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/input-0.5.0/src/event/pointer.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>pointer.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../input/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img src="../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img src="../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -358,32 +360,32 @@
 <span id="358">358</span>
 <span id="359">359</span>
 <span id="360">360</span>
-</pre><div class="example-wrap"><pre class="rust ">
+</pre><pre class="rust">
 <span class="doccomment">//! Pointer event types</span>
 
-<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">EventTrait</span>;
+<span class="kw">use</span> <span class="kw">super</span><span class="ident">::EventTrait</span>;
 <span class="kw">use</span> {<span class="ident">AsRaw</span>, <span class="ident">Context</span>, <span class="ident">FromRaw</span>};
 <span class="kw">use</span> <span class="ident">ffi</span>;
 
 <span class="doccomment">/// Common functions for all Pointer-Events implement.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">PointerEventTrait</span>: <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">libinput_event_pointer</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Context</span> {
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">PointerEventTrait</span>: <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi::libinput_event_pointer</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Context</span> {
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// The event time for this event</span>
-    <span class="kw">fn</span> <span class="ident">time</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_pointer_get_time</span>, <span class="ident">u32</span>);
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="kw">fn</span> <span class="ident">time</span>, <span class="ident">ffi::libinput_event_pointer_get_time</span>, <span class="ident">u32</span>);
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// The event time for this event in microseconds</span>
-    <span class="kw">fn</span> <span class="ident">time_usec</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_pointer_get_time_usec</span>, <span class="ident">u64</span>);
+    <span class="kw">fn</span> <span class="ident">time_usec</span>, <span class="ident">ffi::libinput_event_pointer_get_time_usec</span>, <span class="ident">u64</span>);
 
     <span class="doccomment">/// Convert into a general `TouchEvent` again</span>
     <span class="kw">fn</span> <span class="ident">into_pointer_event</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PointerEvent</span>
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
     {
-        <span class="kw">unsafe</span> { <span class="ident">PointerEvent</span>::<span class="ident">from_raw</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="self">self</span>.<span class="ident">context</span>()) }
+        <span class="kw">unsafe</span> { <span class="ident">PointerEvent::from_raw</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="self">self</span>.<span class="ident">context</span>()) }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">libinput_event_pointer</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Context</span><span class="op">&gt;</span> <span class="ident">PointerEventTrait</span> <span class="kw">for</span> <span class="ident">T</span> {}
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi::libinput_event_pointer</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Context</span><span class="op">&gt;</span> <span class="ident">PointerEventTrait</span> <span class="kw">for</span> <span class="ident">T</span> {}
 
 <span class="doccomment">/// A pointer related `Event`</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>)]</span>
@@ -400,65 +402,65 @@
 
 <span class="kw">impl</span> <span class="ident">EventTrait</span> <span class="kw">for</span> <span class="ident">PointerEvent</span> {
     <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">as_raw_event</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">libinput_event</span> {
+    <span class="kw">fn</span> <span class="ident">as_raw_event</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::libinput_event</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">PointerEvent</span>::<span class="ident">Motion</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
-            <span class="ident">PointerEvent</span>::<span class="ident">MotionAbsolute</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
-            <span class="ident">PointerEvent</span>::<span class="ident">Button</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
-            <span class="ident">PointerEvent</span>::<span class="ident">Axis</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
+            <span class="ident">PointerEvent::Motion</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
+            <span class="ident">PointerEvent::MotionAbsolute</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
+            <span class="ident">PointerEvent::Button</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
+            <span class="ident">PointerEvent::Axis</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">FromRaw</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">libinput_event_pointer</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PointerEvent</span> {
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">event</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_pointer</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span>::<span class="ident">context</span>::<span class="ident">Libinput</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">base</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_pointer_get_base_event</span>(<span class="ident">event</span>);
-        <span class="kw">match</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_get_type</span>(<span class="ident">base</span>) {
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_POINTER_MOTION</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">PointerEvent</span>::<span class="ident">Motion</span>(<span class="ident">PointerMotionEvent</span>::<span class="ident">from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
+<span class="kw">impl</span> <span class="ident">FromRaw</span><span class="op">&lt;</span><span class="ident">ffi::libinput_event_pointer</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PointerEvent</span> {
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">event</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::libinput_event_pointer</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">::context::Libinput</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="ident">base</span> <span class="op">=</span> <span class="ident">ffi::libinput_event_pointer_get_base_event</span>(<span class="ident">event</span>);
+        <span class="kw">match</span> <span class="ident">ffi::libinput_event_get_type</span>(<span class="ident">base</span>) {
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_POINTER_MOTION</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">PointerEvent::Motion</span>(<span class="ident">PointerMotionEvent::from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
             }
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">PointerEvent</span>::<span class="ident">MotionAbsolute</span>(<span class="ident">PointerMotionAbsoluteEvent</span>::<span class="ident">from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">PointerEvent::MotionAbsolute</span>(<span class="ident">PointerMotionAbsoluteEvent::from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
             }
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_POINTER_BUTTON</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">PointerEvent</span>::<span class="ident">Button</span>(<span class="ident">PointerButtonEvent</span>::<span class="ident">from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_POINTER_BUTTON</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">PointerEvent::Button</span>(<span class="ident">PointerButtonEvent::from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
             }
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_type_LIBINPUT_EVENT_POINTER_AXIS</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">PointerEvent</span>::<span class="ident">Axis</span>(<span class="ident">PointerAxisEvent</span>::<span class="ident">from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_POINTER_AXIS</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">PointerEvent::Axis</span>(<span class="ident">PointerAxisEvent::from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
             }
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>(),
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">libinput_event_pointer</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PointerEvent</span> {
-    <span class="kw">fn</span> <span class="ident">as_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">ffi</span>::<span class="ident">libinput_event_pointer</span> {
+<span class="kw">impl</span> <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi::libinput_event_pointer</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PointerEvent</span> {
+    <span class="kw">fn</span> <span class="ident">as_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">ffi::libinput_event_pointer</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">PointerEvent</span>::<span class="ident">Motion</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
-            <span class="ident">PointerEvent</span>::<span class="ident">MotionAbsolute</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
-            <span class="ident">PointerEvent</span>::<span class="ident">Button</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
-            <span class="ident">PointerEvent</span>::<span class="ident">Axis</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
+            <span class="ident">PointerEvent::Motion</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
+            <span class="ident">PointerEvent::MotionAbsolute</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
+            <span class="ident">PointerEvent::Button</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
+            <span class="ident">PointerEvent::Axis</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Context</span> <span class="kw">for</span> <span class="ident">PointerEvent</span> {
-    <span class="kw">fn</span> <span class="ident">context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>::<span class="ident">Libinput</span> {
+    <span class="kw">fn</span> <span class="ident">context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">::Libinput</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">PointerEvent</span>::<span class="ident">Motion</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
-            <span class="ident">PointerEvent</span>::<span class="ident">MotionAbsolute</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
-            <span class="ident">PointerEvent</span>::<span class="ident">Button</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
-            <span class="ident">PointerEvent</span>::<span class="ident">Axis</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">PointerEvent::Motion</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">PointerEvent::MotionAbsolute</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">PointerEvent::Button</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">PointerEvent::Axis</span>(<span class="kw-2">ref</span> <span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
         }
     }
 }
 
-<span class="macro">ffi_event_struct</span><span class="macro">!</span>(
+<span class="macro">ffi_event_struct!</span>(
 <span class="doccomment">/// An event related to moving a pointer</span>
-<span class="kw">struct</span> <span class="ident">PointerMotionEvent</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_pointer</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_pointer_get_base_event</span>);
+<span class="kw">struct</span> <span class="ident">PointerMotionEvent</span>, <span class="ident">ffi::libinput_event_pointer</span>, <span class="ident">ffi::libinput_event_pointer_get_base_event</span>);
 
 <span class="kw">impl</span> <span class="ident">PointerMotionEvent</span> {
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Return the delta between the last event and the current event.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// If a device employs pointer acceleration, the delta returned by this</span>
@@ -467,8 +469,8 @@
     <span class="doccomment">/// Relative motion deltas are to be interpreted as pixel movement of a</span>
     <span class="doccomment">/// standardized mouse. See [Normalization of relative motion](https://wayland.freedesktop.org/libinput/doc/latest/motion_normalization.html)</span>
     <span class="doccomment">/// for more details.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dx</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_pointer_get_dx</span>, <span class="ident">f64</span>);
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dx</span>, <span class="ident">ffi::libinput_event_pointer_get_dx</span>, <span class="ident">f64</span>);
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Return the relative delta of the unaccelerated motion vector of the</span>
     <span class="doccomment">/// current event.</span>
     <span class="doccomment">///</span>
@@ -480,8 +482,8 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Any rotation applied to the device also applies to unaccelerated motion</span>
     <span class="doccomment">/// (see `Device::rotation_set_angle`).</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dx_unaccelerated</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_pointer_get_dx_unaccelerated</span>, <span class="ident">f64</span>);
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dx_unaccelerated</span>, <span class="ident">ffi::libinput_event_pointer_get_dx_unaccelerated</span>, <span class="ident">f64</span>);
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Return the delta between the last event and the current event.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// If a device employs pointer acceleration, the delta returned by this</span>
@@ -490,8 +492,8 @@
     <span class="doccomment">/// Relative motion deltas are to be interpreted as pixel movement of a</span>
     <span class="doccomment">/// standardized mouse. See [Normalization of relative motion](https://wayland.freedesktop.org/libinput/doc/latest/motion_normalization.html)</span>
     <span class="doccomment">/// for more details.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dy</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_pointer_get_dy</span>, <span class="ident">f64</span>);
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dy</span>, <span class="ident">ffi::libinput_event_pointer_get_dy</span>, <span class="ident">f64</span>);
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Return the relative delta of the unaccelerated motion vector of the</span>
     <span class="doccomment">/// current event.</span>
     <span class="doccomment">///</span>
@@ -503,28 +505,28 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Any rotation applied to the device also applies to unaccelerated motion</span>
     <span class="doccomment">/// (see `Device::rotation_set_angle`).</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dy_unaccelerated</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_pointer_get_dy_unaccelerated</span>, <span class="ident">f64</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dy_unaccelerated</span>, <span class="ident">ffi::libinput_event_pointer_get_dy_unaccelerated</span>, <span class="ident">f64</span>);
 }
 
-<span class="macro">ffi_event_struct</span><span class="macro">!</span>(
+<span class="macro">ffi_event_struct!</span>(
 <span class="doccomment">/// An event related to absolute pointer movement</span>
-<span class="kw">struct</span> <span class="ident">PointerMotionAbsoluteEvent</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_pointer</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_pointer_get_base_event</span>);
+<span class="kw">struct</span> <span class="ident">PointerMotionAbsoluteEvent</span>, <span class="ident">ffi::libinput_event_pointer</span>, <span class="ident">ffi::libinput_event_pointer_get_base_event</span>);
 
 <span class="kw">impl</span> <span class="ident">PointerMotionAbsoluteEvent</span> {
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Return the current absolute x coordinate of the pointer event, in mm from</span>
     <span class="doccomment">/// the top left corner of the device.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// To get the corresponding output screen coordinate, use</span>
     <span class="doccomment">/// `absolute_x_transformed`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">absolute_x</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_pointer_get_absolute_x</span>, <span class="ident">f64</span>);
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">absolute_x</span>, <span class="ident">ffi::libinput_event_pointer_get_absolute_x</span>, <span class="ident">f64</span>);
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Return the current absolute y coordinate of the pointer event, in mm from</span>
     <span class="doccomment">/// the top left corner of the device.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// To get the corresponding output screen coordinate, use</span>
     <span class="doccomment">/// `absolute_y_transformed`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">absolute_y</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_pointer_get_absolute_y</span>, <span class="ident">f64</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">absolute_y</span>, <span class="ident">ffi::libinput_event_pointer_get_absolute_y</span>, <span class="ident">f64</span>);
 
     <span class="doccomment">/// Return the current absolute x coordinate of the pointer event, transformed</span>
     <span class="doccomment">/// to screen coordinates.</span>
@@ -533,7 +535,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// - width - The current output screen width</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">absolute_x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
-        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">libinput_event_pointer_get_absolute_x_transformed</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="ident">width</span>) }
+        <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_event_pointer_get_absolute_x_transformed</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="ident">width</span>) }
     }
 
     <span class="doccomment">/// Return the current absolute y coordinate of the pointer event, transformed</span>
@@ -543,7 +545,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// - height - The current output screen height</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">absolute_y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
-        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">libinput_event_pointer_get_absolute_y_transformed</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="ident">height</span>) }
+        <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_event_pointer_get_absolute_y_transformed</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="ident">height</span>) }
     }
 }
 
@@ -556,25 +558,25 @@
     <span class="ident">Released</span>,
 }
 
-<span class="macro">ffi_event_struct</span><span class="macro">!</span>(
+<span class="macro">ffi_event_struct!</span>(
 <span class="doccomment">/// An event related to button pressed on a pointer device</span>
-<span class="kw">struct</span> <span class="ident">PointerButtonEvent</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_pointer</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_pointer_get_base_event</span>);
+<span class="kw">struct</span> <span class="ident">PointerButtonEvent</span>, <span class="ident">ffi::libinput_event_pointer</span>, <span class="ident">ffi::libinput_event_pointer_get_base_event</span>);
 
 <span class="kw">impl</span> <span class="ident">PointerButtonEvent</span> {
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// Return the button that triggered this event.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">button</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_pointer_get_button</span>, <span class="ident">u32</span>);
-    <span class="macro">ffi_func</span><span class="macro">!</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">button</span>, <span class="ident">ffi::libinput_event_pointer_get_button</span>, <span class="ident">u32</span>);
+    <span class="macro">ffi_func!</span>(
     <span class="doccomment">/// For the button returns the total number of buttons pressed on all devices</span>
     <span class="doccomment">/// on the associated seat after the event was triggered.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">seat_button_count</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_pointer_get_seat_button_count</span>, <span class="ident">u32</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">seat_button_count</span>, <span class="ident">ffi::libinput_event_pointer_get_seat_button_count</span>, <span class="ident">u32</span>);
 
     <span class="doccomment">/// Return the button state that triggered this event.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">button_state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ButtonState</span> {
-        <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">libinput_event_pointer_get_button_state</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) } {
-            <span class="ident">ffi</span>::<span class="ident">libinput_button_state_LIBINPUT_BUTTON_STATE_PRESSED</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ButtonState</span>::<span class="ident">Pressed</span>,
-            <span class="ident">ffi</span>::<span class="ident">libinput_button_state_LIBINPUT_BUTTON_STATE_RELEASED</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ButtonState</span>::<span class="ident">Released</span>,
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_button_state&#39;&quot;</span>),
+        <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_event_pointer_get_button_state</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) } {
+            <span class="ident">ffi::libinput_button_state_LIBINPUT_BUTTON_STATE_PRESSED</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ButtonState::Pressed</span>,
+            <span class="ident">ffi::libinput_button_state_LIBINPUT_BUTTON_STATE_RELEASED</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ButtonState::Released</span>,
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_button_state&#39;&quot;</span>),
         }
     }
 }
@@ -608,9 +610,9 @@
     <span class="ident">Horizontal</span>,
 }
 
-<span class="macro">ffi_event_struct</span><span class="macro">!</span>(
+<span class="macro">ffi_event_struct!</span>(
 <span class="doccomment">/// An event related to moving axis on a pointer device</span>
-<span class="kw">struct</span> <span class="ident">PointerAxisEvent</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_pointer</span>, <span class="ident">ffi</span>::<span class="ident">libinput_event_pointer_get_base_event</span>);
+<span class="kw">struct</span> <span class="ident">PointerAxisEvent</span>, <span class="ident">ffi::libinput_event_pointer</span>, <span class="ident">ffi::libinput_event_pointer_get_base_event</span>);
 
 <span class="kw">impl</span> <span class="ident">PointerAxisEvent</span> {
     <span class="doccomment">/// Check if the event has a valid value for the given axis.</span>
@@ -619,11 +621,11 @@
     <span class="doccomment">/// value of 0, the event is a scroll stop event.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_axis</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">axis</span>: <span class="ident">Axis</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_pointer_has_axis</span>(
+            <span class="ident">ffi::libinput_event_pointer_has_axis</span>(
                 <span class="self">self</span>.<span class="ident">as_raw_mut</span>(),
                 <span class="kw">match</span> <span class="ident">axis</span> {
-                    <span class="ident">Axis</span>::<span class="ident">Vertical</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">libinput_pointer_axis_LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL</span>,
-                    <span class="ident">Axis</span>::<span class="ident">Horizontal</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">libinput_pointer_axis_LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL</span>,
+                    <span class="ident">Axis::Vertical</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::libinput_pointer_axis_LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL</span>,
+                    <span class="ident">Axis::Horizontal</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::libinput_pointer_axis_LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL</span>,
                 },
             ) <span class="op">!</span><span class="op">=</span> <span class="number">0</span>
         }
@@ -659,16 +661,16 @@
     <span class="doccomment">/// Callers should not use this value but instead exclusively refer to the</span>
     <span class="comment">//. value returned by `axis_value_discrete`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">axis_source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">AxisSource</span> {
-        <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">libinput_event_pointer_get_axis_source</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) } {
-            <span class="ident">ffi</span>::<span class="ident">libinput_pointer_axis_source_LIBINPUT_POINTER_AXIS_SOURCE_WHEEL</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AxisSource</span>::<span class="ident">Wheel</span>,
-            <span class="ident">ffi</span>::<span class="ident">libinput_pointer_axis_source_LIBINPUT_POINTER_AXIS_SOURCE_FINGER</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AxisSource</span>::<span class="ident">Finger</span>,
-            <span class="ident">ffi</span>::<span class="ident">libinput_pointer_axis_source_LIBINPUT_POINTER_AXIS_SOURCE_CONTINUOUS</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">AxisSource</span>::<span class="ident">Continuous</span>
+        <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_event_pointer_get_axis_source</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) } {
+            <span class="ident">ffi::libinput_pointer_axis_source_LIBINPUT_POINTER_AXIS_SOURCE_WHEEL</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AxisSource::Wheel</span>,
+            <span class="ident">ffi::libinput_pointer_axis_source_LIBINPUT_POINTER_AXIS_SOURCE_FINGER</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AxisSource::Finger</span>,
+            <span class="ident">ffi::libinput_pointer_axis_source_LIBINPUT_POINTER_AXIS_SOURCE_CONTINUOUS</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">AxisSource::Continuous</span>
             }
-            <span class="ident">ffi</span>::<span class="ident">libinput_pointer_axis_source_LIBINPUT_POINTER_AXIS_SOURCE_WHEEL_TILT</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">AxisSource</span>::<span class="ident">WheelTilt</span>
+            <span class="ident">ffi::libinput_pointer_axis_source_LIBINPUT_POINTER_AXIS_SOURCE_WHEEL_TILT</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">AxisSource::WheelTilt</span>
             }
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_pointer_axis_source&#39;&quot;</span>),
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_pointer_axis_source&#39;&quot;</span>),
         }
     }
 
@@ -683,11 +685,11 @@
     <span class="doccomment">/// that axis.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">axis_value</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">axis</span>: <span class="ident">Axis</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">libinput_event_pointer_get_axis_value</span>(
+            <span class="ident">ffi::libinput_event_pointer_get_axis_value</span>(
                 <span class="self">self</span>.<span class="ident">as_raw_mut</span>(),
                 <span class="kw">match</span> <span class="ident">axis</span> {
-                    <span class="ident">Axis</span>::<span class="ident">Vertical</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">libinput_pointer_axis_LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL</span>,
-                    <span class="ident">Axis</span>::<span class="ident">Horizontal</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">libinput_pointer_axis_LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL</span>,
+                    <span class="ident">Axis::Vertical</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::libinput_pointer_axis_LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL</span>,
+                    <span class="ident">Axis::Horizontal</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::libinput_pointer_axis_LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL</span>,
                 },
             )
         }
@@ -704,14 +706,14 @@
     <span class="doccomment">/// `None`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">axis_value_discrete</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">axis</span>: <span class="ident">Axis</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">axis_source</span>() {
-            <span class="ident">AxisSource</span>::<span class="ident">Continuous</span> <span class="op">|</span> <span class="ident">AxisSource</span>::<span class="ident">Finger</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
+            <span class="ident">AxisSource::Continuous</span> <span class="op">|</span> <span class="ident">AxisSource::Finger</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="kw">unsafe</span> {
-                <span class="ident">ffi</span>::<span class="ident">libinput_event_pointer_get_axis_value_discrete</span>(
+                <span class="ident">ffi::libinput_event_pointer_get_axis_value_discrete</span>(
                     <span class="self">self</span>.<span class="ident">as_raw_mut</span>(),
                     <span class="kw">match</span> <span class="ident">axis</span> {
-                        <span class="ident">Axis</span>::<span class="ident">Vertical</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">libinput_pointer_axis_LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL</span>,
-                        <span class="ident">Axis</span>::<span class="ident">Horizontal</span> <span class="op">=</span><span class="op">&gt;</span> {
-                            <span class="ident">ffi</span>::<span class="ident">libinput_pointer_axis_LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL</span>
+                        <span class="ident">Axis::Vertical</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::libinput_pointer_axis_LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL</span>,
+                        <span class="ident">Axis::Horizontal</span> <span class="op">=</span><span class="op">&gt;</span> {
+                            <span class="ident">ffi::libinput_pointer_axis_LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL</span>
                         }
                     },
                 )
@@ -720,4 +722,4 @@
     }
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "input";</script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="input" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script></body></html>

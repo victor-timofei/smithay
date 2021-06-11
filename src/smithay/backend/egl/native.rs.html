@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/backend/egl/native.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>native.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script src="../../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../../smithay/index.html'><div class='logo-container'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../../settings.html"><img src="../../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/backend/egl/native.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>native.rs - source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../../storage.js"></script><script src="../../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../../smithay/index.html'><div class='logo-container rust-logo'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img src="../../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../../settings.html" title="settings"><img src="../../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -269,216 +271,168 @@
 <span id="269">269</span>
 <span id="270">270</span>
 <span id="271">271</span>
-<span id="272">272</span>
-<span id="273">273</span>
-<span id="274">274</span>
-<span id="275">275</span>
-<span id="276">276</span>
-<span id="277">277</span>
-<span id="278">278</span>
-<span id="279">279</span>
-<span id="280">280</span>
-<span id="281">281</span>
-<span id="282">282</span>
-<span id="283">283</span>
-<span id="284">284</span>
-<span id="285">285</span>
-<span id="286">286</span>
-<span id="287">287</span>
-<span id="288">288</span>
-</pre><div class="example-wrap"><pre class="rust ">
+</pre><pre class="rust">
 <span class="doccomment">//! Type safe native types for safe context/surface creation</span>
 
-<span class="kw">use</span> <span class="kw">super</span>::{
-    <span class="ident">display</span>::<span class="ident">EGLDisplayHandle</span>, <span class="ident">ffi</span>, <span class="ident">wrap_egl_call</span>, <span class="ident">EGLError</span>, <span class="ident">Error</span>, <span class="ident">SurfaceCreationError</span>, <span class="ident">SwapBuffersError</span>,
-};
-<span class="kw">use</span> <span class="ident">nix</span>::<span class="ident">libc</span>::{<span class="ident">c_int</span>, <span class="ident">c_void</span>};
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">Arc</span>;
+<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">display::EGLDisplayHandle</span>, <span class="ident">ffi</span>, <span class="ident">wrap_egl_call</span>, <span class="ident">SwapBuffersError</span>};
+<span class="kw">use</span> <span class="ident">nix::libc</span>::{<span class="ident">c_int</span>, <span class="ident">c_void</span>};
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_gbm&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident">std::os::unix::io::AsRawFd</span>;
+<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">fmt::Debug</span>, <span class="ident">marker::PhantomData</span>, <span class="ident">sync::Arc</span>};
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_winit&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">wayland_egl</span> <span class="kw">as</span> <span class="ident">wegl</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_winit&quot;</span>)]</span>
-<span class="kw">use</span> <span class="ident">winit</span>::<span class="ident">platform</span>::<span class="ident">unix</span>::<span class="ident">WindowExtUnix</span>;
+<span class="kw">use</span> <span class="ident">winit::platform::unix::WindowExtUnix</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_winit&quot;</span>)]</span>
-<span class="kw">use</span> <span class="ident">winit</span>::<span class="ident">window</span>::<span class="ident">Window</span> <span class="kw">as</span> <span class="ident">WinitWindow</span>;
+<span class="kw">use</span> <span class="ident">winit::window::Window</span> <span class="kw">as</span> <span class="ident">WinitWindow</span>;
 
-<span class="doccomment">/// Trait for typed backend variants (X11/Wayland/GBM)</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Backend</span> {
-    <span class="doccomment">/// Surface type created by this backend</span>
-    <span class="kw">type</span> <span class="ident">Surface</span>: <span class="ident">NativeSurface</span><span class="op">&lt;</span><span class="ident">Error</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
-    <span class="doccomment">/// Error type thrown by the surface creation in case of failure.</span>
-    <span class="kw">type</span> <span class="ident">Error</span>: ::<span class="ident">std</span>::<span class="ident">error</span>::<span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_gbm&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident">gbm</span>::{<span class="ident">AsRaw</span>, <span class="ident">Device</span> <span class="kw">as</span> <span class="ident">GbmDevice</span>};
 
-    <span class="doccomment">/// Return an [`EGLDisplay`](ffi::egl::types::EGLDisplay) based on this backend</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Safety</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The returned [`EGLDisplay`](ffi::egl::types::EGLDisplay) needs to be a valid pointer for EGL,</span>
-    <span class="doccomment">/// but there is no way to test that.</span>
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">get_display</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span><span class="op">&gt;</span>(
-        <span class="ident">display</span>: <span class="ident">ffi</span>::<span class="ident">NativeDisplayType</span>,
-        <span class="ident">attribs</span>: <span class="kw-2">&amp;</span>[<span class="ident">ffi</span>::<span class="ident">EGLint</span>],
-        <span class="ident">has_dp_extension</span>: <span class="ident">F</span>,
-        <span class="ident">log</span>: ::<span class="ident">slog</span>::<span class="ident">Logger</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">types</span>::<span class="ident">EGLDisplay</span>, <span class="ident">EGLError</span><span class="op">&gt;</span>;
+<span class="doccomment">/// Create a `EGLPlatform&lt;&#39;a&gt;` for the provided platform.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Arguments</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// * `platform` - The platform defined in `ffi::egl::`</span>
+<span class="doccomment">/// * `native_display` - The native display raw pointer which can be casted to `*mut c_void`</span>
+<span class="doccomment">/// * `required_extensions` - The name of the required EGL Extension for this platform</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Optional Arguments</span>
+<span class="doccomment">/// * `attrib_list` - A list of `ffi::EGLint` like defined in the EGL Extension</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Examples</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```ignore</span>
+<span class="doccomment">/// use smithay::backend::egl::{ffi, native::EGLPlatform};</span>
+<span class="doccomment">/// use smithay::egl_platform;</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// // see: https://www.khronos.org/registry/EGL/extensions/KHR/EGL_KHR_platform_gbm.txt</span>
+<span class="doccomment">/// egl_platform!(PLATFORM_GBM_KHR, native_display, &amp;[&quot;EGL_KHR_platform_gbm&quot;]);</span>
+<span class="doccomment">/// ```</span>
+<span class="attribute">#[<span class="ident">macro_export</span>]</span>
+<span class="macro">macro_rules!</span> <span class="ident">egl_platform</span> {
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">platform</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">native_display</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">required_extensions</span>:<span class="ident">expr</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="macro">egl_platform!</span>(
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">platform</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">native_display</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">required_extensions</span>,
+            <span class="macro">vec!</span>[<span class="ident">ffi::egl::NONE</span> <span class="kw">as</span> <span class="ident">ffi::EGLint</span>]
+        );
+    };
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">platform</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">native_display</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">required_extensions</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">attrib_list</span>:<span class="ident">expr</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">EGLPlatform::new</span>(
+            <span class="ident">ffi::egl</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">platform</span>,
+            <span class="macro">stringify!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">platform</span>),
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">native_display</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">attrib_list</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">required_extensions</span>,
+        )
+    };
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_winit&quot;</span>)]</span>
-<span class="doccomment">/// Wayland backend type</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Wayland</span> {}
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_winit&quot;</span>)]</span>
-<span class="kw">impl</span> <span class="ident">Backend</span> <span class="kw">for</span> <span class="ident">Wayland</span> {
-    <span class="kw">type</span> <span class="ident">Surface</span> <span class="op">=</span> <span class="ident">wegl</span>::<span class="ident">WlEglSurface</span>;
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">Error</span>;
+<span class="doccomment">/// Type, Raw handle and attributes used to call [`eglGetPlatformDisplayEXT`](https://www.khronos.org/registry/EGL/extensions/EXT/EGL_EXT_platform_base.txt)  </span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EGLPlatform</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// Required extensions to use this platform</span>
+    <span class="kw">pub</span> <span class="ident">required_extensions</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>],
+    <span class="doccomment">/// Human readable name of the platform</span>
+    <span class="kw">pub</span> <span class="ident">platform_name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
+    <span class="doccomment">/// Platform type used to call [`eglGetPlatformDisplayEXT`](https://www.khronos.org/registry/EGL/extensions/EXT/EGL_EXT_platform_base.txt)</span>
+    <span class="kw">pub</span> <span class="ident">platform</span>: <span class="ident">ffi::egl::types::EGLenum</span>,
+    <span class="doccomment">/// Raw native display handle used to call [`eglGetPlatformDisplayEXT`](https://www.khronos.org/registry/EGL/extensions/EXT/EGL_EXT_platform_base.txt)</span>
+    <span class="kw">pub</span> <span class="ident">native_display</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>,
+    <span class="doccomment">/// Attributes used to call [`eglGetPlatformDisplayEXT`](https://www.khronos.org/registry/EGL/extensions/EXT/EGL_EXT_platform_base.txt)</span>
+    <span class="kw">pub</span> <span class="ident">attrib_list</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ffi::EGLint</span><span class="op">&gt;</span>,
+    <span class="ident">_phantom</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">c_void</span><span class="op">&gt;</span>,
+}
 
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">get_display</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(
-        <span class="ident">display</span>: <span class="ident">ffi</span>::<span class="ident">NativeDisplayType</span>,
-        <span class="ident">attribs</span>: <span class="kw-2">&amp;</span>[<span class="ident">ffi</span>::<span class="ident">EGLint</span>],
-        <span class="ident">has_dp_extension</span>: <span class="ident">F</span>,
-        <span class="ident">log</span>: ::<span class="ident">slog</span>::<span class="ident">Logger</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">types</span>::<span class="ident">EGLDisplay</span>, <span class="ident">EGLError</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span>,
-    {
-        <span class="kw">if</span> <span class="ident">has_dp_extension</span>(<span class="string">&quot;EGL_KHR_platform_wayland&quot;</span>) <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">GetPlatformDisplay</span>::<span class="ident">is_loaded</span>() {
-            <span class="macro">trace</span><span class="macro">!</span>(<span class="ident">log</span>, <span class="string">&quot;EGL Display Initialization via EGL_KHR_platform_wayland&quot;</span>);
-            <span class="kw">let</span> <span class="ident">attribs</span> <span class="op">=</span> <span class="ident">attribs</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">x</span> <span class="kw">as</span> <span class="ident">isize</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-            <span class="ident">wrap_egl_call</span>(<span class="op">|</span><span class="op">|</span> {
-                <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">GetPlatformDisplay</span>(
-                    <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">PLATFORM_WAYLAND_KHR</span>,
-                    <span class="ident">display</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
-                    <span class="ident">attribs</span>.<span class="ident">as_ptr</span>(),
-                )
-            })
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">has_dp_extension</span>(<span class="string">&quot;EGL_EXT_platform_wayland&quot;</span>) <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">GetPlatformDisplayEXT</span>::<span class="ident">is_loaded</span>()
-        {
-            <span class="macro">trace</span><span class="macro">!</span>(<span class="ident">log</span>, <span class="string">&quot;EGL Display Initialization via EGL_EXT_platform_wayland&quot;</span>);
-            <span class="ident">wrap_egl_call</span>(<span class="op">|</span><span class="op">|</span> {
-                <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">GetPlatformDisplayEXT</span>(
-                    <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">PLATFORM_WAYLAND_EXT</span>,
-                    <span class="ident">display</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
-                    <span class="ident">attribs</span>.<span class="ident">as_ptr</span>(),
-                )
-            })
-        } <span class="kw">else</span> {
-            <span class="macro">trace</span><span class="macro">!</span>(<span class="ident">log</span>, <span class="string">&quot;Default EGL Display Initialization via GetDisplay&quot;</span>);
-            <span class="ident">wrap_egl_call</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">GetDisplay</span>(<span class="ident">display</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>))
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">EGLPlatform</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// Create a `EGLPlatform&lt;&#39;a&gt;` for the provided platform.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Arguments</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// * `platform` - The platform defined in `ffi::egl::`</span>
+    <span class="doccomment">/// * `platform_name` - A human readable representation of the platform</span>
+    <span class="doccomment">/// * `native_display` - The native display raw pointer which can be casted to `*mut c_void`</span>
+    <span class="doccomment">/// * `attrib_list` - A list of `ffi::EGLint` like defined in the EGL Extension</span>
+    <span class="doccomment">/// * `required_extensions` - The names of the required EGL Extensions for this platform</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```ignore</span>
+    <span class="doccomment">/// use smithay::backend::egl::{ffi, native::EGLPlatform};</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// EGLPlatform::new(ffi::egl::PLATFORM_GBM_KHR, &quot;PLATFORM_GBM_KHR&quot;, native_display as *mut _, vec![ffi::egl::NONE as ffi::EGLint], &amp;[&quot;EGL_KHR_platform_gbm&quot;]);</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
+        <span class="ident">platform</span>: <span class="ident">ffi::egl::types::EGLenum</span>,
+        <span class="ident">platform_name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
+        <span class="ident">native_display</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>,
+        <span class="ident">attrib_list</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ffi::EGLint</span><span class="op">&gt;</span>,
+        <span class="ident">required_extensions</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>],
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="ident">EGLPlatform</span> {
+            <span class="ident">platform</span>,
+            <span class="ident">platform_name</span>,
+            <span class="ident">native_display</span>,
+            <span class="ident">attrib_list</span>,
+            <span class="ident">required_extensions</span>,
+            <span class="ident">_phantom</span>: <span class="ident">PhantomData</span>,
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_winit&quot;</span>)]</span>
-<span class="doccomment">/// Typed Xlib window for the `X11` backend</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">XlibWindow</span>(<span class="ident">u64</span>);
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_winit&quot;</span>)]</span>
-<span class="doccomment">/// X11 backend type</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">X11</span> {}
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_winit&quot;</span>)]</span>
-<span class="kw">impl</span> <span class="ident">Backend</span> <span class="kw">for</span> <span class="ident">X11</span> {
-    <span class="kw">type</span> <span class="ident">Surface</span> <span class="op">=</span> <span class="ident">XlibWindow</span>;
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">Error</span>;
-
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">get_display</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(
-        <span class="ident">display</span>: <span class="ident">ffi</span>::<span class="ident">NativeDisplayType</span>,
-        <span class="ident">attribs</span>: <span class="kw-2">&amp;</span>[<span class="ident">ffi</span>::<span class="ident">EGLint</span>],
-        <span class="ident">has_dp_extension</span>: <span class="ident">F</span>,
-        <span class="ident">log</span>: ::<span class="ident">slog</span>::<span class="ident">Logger</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">types</span>::<span class="ident">EGLDisplay</span>, <span class="ident">EGLError</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span>,
-    {
-        <span class="kw">if</span> <span class="ident">has_dp_extension</span>(<span class="string">&quot;EGL_KHR_platform_x11&quot;</span>) <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">GetPlatformDisplay</span>::<span class="ident">is_loaded</span>() {
-            <span class="macro">trace</span><span class="macro">!</span>(<span class="ident">log</span>, <span class="string">&quot;EGL Display Initialization via EGL_KHR_platform_x11&quot;</span>);
-            <span class="kw">let</span> <span class="ident">attribs</span> <span class="op">=</span> <span class="ident">attribs</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">x</span> <span class="kw">as</span> <span class="ident">isize</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-            <span class="ident">wrap_egl_call</span>(<span class="op">|</span><span class="op">|</span> {
-                <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">GetPlatformDisplay</span>(<span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">PLATFORM_X11_KHR</span>, <span class="ident">display</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>, <span class="ident">attribs</span>.<span class="ident">as_ptr</span>())
-            })
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">has_dp_extension</span>(<span class="string">&quot;EGL_EXT_platform_x11&quot;</span>) <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">GetPlatformDisplayEXT</span>::<span class="ident">is_loaded</span>() {
-            <span class="macro">trace</span><span class="macro">!</span>(<span class="ident">log</span>, <span class="string">&quot;EGL Display Initialization via EGL_EXT_platform_x11&quot;</span>);
-            <span class="ident">wrap_egl_call</span>(<span class="op">|</span><span class="op">|</span> {
-                <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">GetPlatformDisplayEXT</span>(
-                    <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">PLATFORM_X11_EXT</span>,
-                    <span class="ident">display</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
-                    <span class="ident">attribs</span>.<span class="ident">as_ptr</span>(),
-                )
-            })
-        } <span class="kw">else</span> {
-            <span class="macro">trace</span><span class="macro">!</span>(<span class="ident">log</span>, <span class="string">&quot;Default EGL Display Initialization via GetDisplay&quot;</span>);
-            <span class="ident">wrap_egl_call</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">GetDisplay</span>(<span class="ident">display</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>))
-        }
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">EGLPlatform</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+        <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;EGLPlatform&quot;</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;platform_name&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">platform_name</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;required_extensions&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">required_extensions</span>)
+            .<span class="ident">finish</span>()
     }
 }
 
-<span class="doccomment">/// Trait for types returning Surfaces which can be used to initialize [`EGLSurface`](super::EGLSurface)s</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Unsafety</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The returned [`NativeDisplayType`](super::ffi::NativeDisplayType) must be valid for EGL and there is no way to test that.</span>
-<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">trait</span> <span class="ident">NativeDisplay</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Arguments used to surface creation.</span>
-    <span class="kw">type</span> <span class="ident">Arguments</span>;
-    <span class="doccomment">/// Because one type might implement multiple [`Backend`]s this function must be called to check</span>
-    <span class="doccomment">/// if the expected [`Backend`] is used at runtime.</span>
-    <span class="kw">fn</span> <span class="ident">is_backend</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span>;
-    <span class="doccomment">/// Return a raw pointer EGL will accept for context creation.</span>
-    <span class="kw">fn</span> <span class="ident">ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">NativeDisplayType</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
-    <span class="doccomment">/// Return attributes that might be used by `B::get_display`</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Default implementation returns an empty list</span>
-    <span class="kw">fn</span> <span class="ident">attributes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">EGLint</span><span class="op">&gt;</span> {
-        <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">NONE</span> <span class="kw">as</span> <span class="ident">ffi</span>::<span class="ident">EGLint</span>]
-    }
+<span class="doccomment">/// Trait describing platform specific functionality to create a valid `EGLDisplay` using the `EGL_EXT_platform_base`(https://www.khronos.org/registry/EGL/extensions/EXT/EGL_EXT_platform_base.txt) extension.</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">EGLNativeDisplay</span>: <span class="ident">Send</span> {
+    <span class="doccomment">/// List of supported platforms that can be used to create a display using [`eglGetPlatformDisplayEXT`](https://www.khronos.org/registry/EGL/extensions/EXT/EGL_EXT_platform_base.txt)</span>
+    <span class="kw">fn</span> <span class="ident">supported_platforms</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EGLPlatform</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+
     <span class="doccomment">/// Type of surfaces created</span>
-    <span class="kw">fn</span> <span class="ident">surface_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ffi</span>::<span class="ident">EGLint</span> {
-        <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">WINDOW_BIT</span> <span class="kw">as</span> <span class="ident">ffi</span>::<span class="ident">EGLint</span>
+    <span class="kw">fn</span> <span class="ident">surface_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ffi::EGLint</span> {
+        <span class="ident">ffi::egl::WINDOW_BIT</span> <span class="kw">as</span> <span class="ident">ffi::EGLint</span>
     }
-    <span class="doccomment">/// Create a surface</span>
-    <span class="kw">fn</span> <span class="ident">create_surface</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">args</span>: <span class="self">Self</span>::<span class="ident">Arguments</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">Surface</span>, <span class="ident">B</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_winit&quot;</span>)]</span>
-<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">NativeDisplay</span><span class="op">&lt;</span><span class="ident">X11</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">WinitWindow</span> {
-    <span class="kw">type</span> <span class="ident">Arguments</span> <span class="op">=</span> ();
-
-    <span class="kw">fn</span> <span class="ident">is_backend</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">xlib_display</span>().<span class="ident">is_some</span>()
-    }
-
-    <span class="kw">fn</span> <span class="ident">ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">NativeDisplayType</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">xlib_display</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">ptr</span><span class="op">|</span> <span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>)
-            .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">Error</span>::<span class="ident">NonMatchingBackend</span>(<span class="string">&quot;X11&quot;</span>))
-    }
-
-    <span class="kw">fn</span> <span class="ident">create_surface</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">_args</span>: ()) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">XlibWindow</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">xlib_window</span>()
-            .<span class="ident">map</span>(<span class="ident">XlibWindow</span>)
-            .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">Error</span>::<span class="ident">NonMatchingBackend</span>(<span class="string">&quot;X11&quot;</span>))
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_gbm&quot;</span>)]</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">EGLNativeDisplay</span> <span class="kw">for</span> <span class="ident">GbmDevice</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">supported_platforms</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EGLPlatform</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="macro">vec!</span>[
+            <span class="comment">// see: https://www.khronos.org/registry/EGL/extensions/KHR/EGL_KHR_platform_gbm.txt</span>
+            <span class="macro">egl_platform!</span>(<span class="ident">PLATFORM_GBM_KHR</span>, <span class="self">self</span>.<span class="ident">as_raw</span>(), <span class="kw-2">&amp;</span>[<span class="string">&quot;EGL_KHR_platform_gbm&quot;</span>]),
+            <span class="comment">// see: https://www.khronos.org/registry/EGL/extensions/MESA/EGL_MESA_platform_gbm.txt</span>
+            <span class="macro">egl_platform!</span>(<span class="ident">PLATFORM_GBM_MESA</span>, <span class="self">self</span>.<span class="ident">as_raw</span>(), <span class="kw-2">&amp;</span>[<span class="string">&quot;EGL_MESA_platform_gbm&quot;</span>]),
+        ]
     }
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_winit&quot;</span>)]</span>
-<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">NativeDisplay</span><span class="op">&lt;</span><span class="ident">Wayland</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">WinitWindow</span> {
-    <span class="kw">type</span> <span class="ident">Arguments</span> <span class="op">=</span> ();
-
-    <span class="kw">fn</span> <span class="ident">is_backend</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">wayland_display</span>().<span class="ident">is_some</span>()
-    }
-
-    <span class="kw">fn</span> <span class="ident">ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">NativeDisplayType</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">wayland_display</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">ptr</span><span class="op">|</span> <span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>)
-            .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">Error</span>::<span class="ident">NonMatchingBackend</span>(<span class="string">&quot;Wayland&quot;</span>))
-    }
-
-    <span class="kw">fn</span> <span class="ident">create_surface</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">_args</span>: ()) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">wegl</span>::<span class="ident">WlEglSurface</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">surface</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">wayland_surface</span>() {
-            <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner_size</span>();
-            <span class="prelude-val">Ok</span>(<span class="kw">unsafe</span> {
-                <span class="ident">wegl</span>::<span class="ident">WlEglSurface</span>::<span class="ident">new_from_raw</span>(<span class="ident">surface</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>, <span class="ident">size</span>.<span class="ident">width</span> <span class="kw">as</span> <span class="ident">i32</span>, <span class="ident">size</span>.<span class="ident">height</span> <span class="kw">as</span> <span class="ident">i32</span>)
-            })
+<span class="kw">impl</span> <span class="ident">EGLNativeDisplay</span> <span class="kw">for</span> <span class="ident">WinitWindow</span> {
+    <span class="kw">fn</span> <span class="ident">supported_platforms</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EGLPlatform</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">display</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">wayland_display</span>() {
+            <span class="macro">vec!</span>[
+                <span class="comment">// see: https://www.khronos.org/registry/EGL/extensions/KHR/EGL_KHR_platform_wayland.txt</span>
+                <span class="macro">egl_platform!</span>(<span class="ident">PLATFORM_WAYLAND_KHR</span>, <span class="ident">display</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;EGL_KHR_platform_wayland&quot;</span>]),
+                <span class="comment">// see: https://www.khronos.org/registry/EGL/extensions/EXT/EGL_EXT_platform_wayland.txt</span>
+                <span class="macro">egl_platform!</span>(<span class="ident">PLATFORM_WAYLAND_EXT</span>, <span class="ident">display</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;EGL_EXT_platform_wayland&quot;</span>]),
+            ]
+        } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">display</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">xlib_display</span>() {
+            <span class="macro">vec!</span>[
+                <span class="comment">// see: https://www.khronos.org/registry/EGL/extensions/KHR/EGL_KHR_platform_x11.txt</span>
+                <span class="macro">egl_platform!</span>(<span class="ident">PLATFORM_X11_KHR</span>, <span class="ident">display</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;EGL_KHR_platform_x11&quot;</span>]),
+                <span class="comment">// see: https://www.khronos.org/registry/EGL/extensions/EXT/EGL_EXT_platform_x11.txt</span>
+                <span class="macro">egl_platform!</span>(<span class="ident">PLATFORM_X11_EXT</span>, <span class="ident">display</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;EGL_EXT_platform_x11&quot;</span>]),
+            ]
         } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">NonMatchingBackend</span>(<span class="string">&quot;Wayland&quot;</span>))
+            <span class="macro">unreachable!</span>(<span class="string">&quot;No backends for winit other then Wayland and X11 are supported&quot;</span>)
         }
     }
 }
@@ -489,22 +443,19 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// The returned [`NativeWindowType`](ffi::NativeWindowType) must be valid for EGL</span>
 <span class="doccomment">/// and there is no way to test that.</span>
-<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">trait</span> <span class="ident">NativeSurface</span> {
+<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">trait</span> <span class="ident">EGLNativeSurface</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> {
     <span class="doccomment">/// Error type thrown by the surface creation in case of failure.</span>
-    <span class="kw">type</span> <span class="ident">Error</span>: ::<span class="ident">std</span>::<span class="ident">error</span>::<span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>;
     <span class="doccomment">/// Create an EGLSurface from the internal native type.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Must be able to deal with re-creation of existing resources,</span>
     <span class="doccomment">/// if `needs_recreation` can return `true`.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// # Safety</span>
-    <span class="doccomment">/// This is usually an unsafe operation returning a raw pointer.</span>
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">create</span>(
+    <span class="kw">fn</span> <span class="ident">create</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">EGLDisplayHandle</span><span class="op">&gt;</span>,
-        <span class="ident">config_id</span>: <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">types</span>::<span class="ident">EGLConfig</span>,
+        <span class="ident">config_id</span>: <span class="ident">ffi::egl::types::EGLConfig</span>,
         <span class="ident">surface_attributes</span>: <span class="kw-2">&amp;</span>[<span class="ident">c_int</span>],
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_void</span>, <span class="ident">SurfaceCreationError</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_void</span>, <span class="kw">super</span><span class="ident">::EGLError</span><span class="op">&gt;</span>;
 
     <span class="doccomment">/// Will be called to check if any internal resources will need</span>
     <span class="doccomment">/// to be recreated. Old resources must be used until `create`</span>
@@ -516,64 +467,81 @@
         <span class="bool-val">false</span>
     }
 
+    <span class="doccomment">/// If the surface supports resizing you may implement and use this function.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The two first arguments (width, height) are the new size of the surface,</span>
+    <span class="doccomment">/// the two others (dx, dy) represent the displacement of the top-left corner of the surface.</span>
+    <span class="doccomment">/// It allows you to control the direction of the resizing if necessary.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Implementations may ignore the dx and dy arguments.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns true if the resize was successful.</span>
+    <span class="kw">fn</span> <span class="ident">resize</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_width</span>: <span class="ident">i32</span>, <span class="ident">_height</span>: <span class="ident">i32</span>, <span class="ident">_dx</span>: <span class="ident">i32</span>, <span class="ident">_dy</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+        <span class="bool-val">false</span>
+    }
+
     <span class="doccomment">/// Adds additional semantics when calling</span>
-    <span class="doccomment">/// [EGLSurface::swap_buffers](::backend::egl::surface::EGLSurface::swap_buffers)</span>
+    <span class="doccomment">/// [EGLSurface::swap_buffers](crate::backend::egl::surface::EGLSurface::swap_buffers)</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Only implement if required by the backend.</span>
     <span class="kw">fn</span> <span class="ident">swap_buffers</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">EGLDisplayHandle</span><span class="op">&gt;</span>,
-        <span class="ident">surface</span>: <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">types</span>::<span class="ident">EGLSurface</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SwapBuffersError</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="ident">surface</span>: <span class="ident">ffi::egl::types::EGLSurface</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SwapBuffersError</span><span class="op">&gt;</span> {
         <span class="ident">wrap_egl_call</span>(<span class="op">|</span><span class="op">|</span> <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">SwapBuffers</span>(<span class="kw-2">*</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">display</span>, <span class="ident">surface</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>);
+            <span class="ident">ffi::egl::SwapBuffers</span>(<span class="kw-2">*</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">display</span>, <span class="ident">surface</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>);
         })
-        .<span class="ident">map_err</span>(<span class="ident">SwapBuffersError</span>::<span class="ident">EGLSwapBuffers</span>)
+        .<span class="ident">map_err</span>(<span class="ident">SwapBuffersError::EGLSwapBuffers</span>)
     }
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_winit&quot;</span>)]</span>
-<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">NativeSurface</span> <span class="kw">for</span> <span class="ident">XlibWindow</span> {
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">Error</span>;
+<span class="doccomment">/// Typed Xlib window for the `X11` backend</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">XlibWindow</span>(<span class="kw">pub</span> <span class="ident">u64</span>);
 
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">create</span>(
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_winit&quot;</span>)]</span>
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">EGLNativeSurface</span> <span class="kw">for</span> <span class="ident">XlibWindow</span> {
+    <span class="kw">fn</span> <span class="ident">create</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">EGLDisplayHandle</span><span class="op">&gt;</span>,
-        <span class="ident">config_id</span>: <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">types</span>::<span class="ident">EGLConfig</span>,
+        <span class="ident">config_id</span>: <span class="ident">ffi::egl::types::EGLConfig</span>,
         <span class="ident">surface_attributes</span>: <span class="kw-2">&amp;</span>[<span class="ident">c_int</span>],
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_void</span>, <span class="ident">SurfaceCreationError</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="ident">wrap_egl_call</span>(<span class="op">|</span><span class="op">|</span> {
-            <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">CreateWindowSurface</span>(
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_void</span>, <span class="kw">super</span><span class="ident">::EGLError</span><span class="op">&gt;</span> {
+        <span class="ident">wrap_egl_call</span>(<span class="op">|</span><span class="op">|</span> <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">id</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>;
+            <span class="ident">ffi::egl::CreatePlatformWindowSurfaceEXT</span>(
                 <span class="ident">display</span>.<span class="ident">handle</span>,
                 <span class="ident">config_id</span>,
-                <span class="self">self</span>.<span class="number">0</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+                (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">id</span>) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u64</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
                 <span class="ident">surface_attributes</span>.<span class="ident">as_ptr</span>(),
             )
         })
-        .<span class="ident">map_err</span>(<span class="ident">SurfaceCreationError</span>::<span class="ident">EGLSurfaceCreationFailed</span>)
     }
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_winit&quot;</span>)]</span>
-<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">NativeSurface</span> <span class="kw">for</span> <span class="ident">wegl</span>::<span class="ident">WlEglSurface</span> {
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">Error</span>;
-
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">create</span>(
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">EGLNativeSurface</span> <span class="kw">for</span> <span class="ident">wegl::WlEglSurface</span> {
+    <span class="kw">fn</span> <span class="ident">create</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">EGLDisplayHandle</span><span class="op">&gt;</span>,
-        <span class="ident">config_id</span>: <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">types</span>::<span class="ident">EGLConfig</span>,
+        <span class="ident">config_id</span>: <span class="ident">ffi::egl::types::EGLConfig</span>,
         <span class="ident">surface_attributes</span>: <span class="kw-2">&amp;</span>[<span class="ident">c_int</span>],
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_void</span>, <span class="ident">SurfaceCreationError</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="ident">wrap_egl_call</span>(<span class="op">|</span><span class="op">|</span> {
-            <span class="ident">ffi</span>::<span class="ident">egl</span>::<span class="ident">CreateWindowSurface</span>(
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_void</span>, <span class="kw">super</span><span class="ident">::EGLError</span><span class="op">&gt;</span> {
+        <span class="ident">wrap_egl_call</span>(<span class="op">|</span><span class="op">|</span> <span class="kw">unsafe</span> {
+            <span class="ident">ffi::egl::CreatePlatformWindowSurfaceEXT</span>(
                 <span class="ident">display</span>.<span class="ident">handle</span>,
                 <span class="ident">config_id</span>,
-                <span class="self">self</span>.<span class="ident">ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+                <span class="self">self</span>.<span class="ident">ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
                 <span class="ident">surface_attributes</span>.<span class="ident">as_ptr</span>(),
             )
         })
-        .<span class="ident">map_err</span>(<span class="ident">SurfaceCreationError</span>::<span class="ident">EGLSurfaceCreationFailed</span>)
+    }
+
+    <span class="kw">fn</span> <span class="ident">resize</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">i32</span>, <span class="ident">height</span>: <span class="ident">i32</span>, <span class="ident">dx</span>: <span class="ident">i32</span>, <span class="ident">dy</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+        <span class="ident">wegl::WlEglSurface::resize</span>(<span class="self">self</span>, <span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">dx</span>, <span class="ident">dy</span>);
+        <span class="bool-val">true</span>
     }
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../../";window.currentCrate = "smithay";</script><script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script><script defer src="../../../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-search-index-js="../../../../search-index.js" data-search-js="../../../../search.js"></div><script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script></body></html>
