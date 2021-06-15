@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/dbus-0.9.2/src/channel.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>channel.rs - source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script id="default-settings"></script><script src="../../storage.js"></script><script src="../../crates.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/dbus-0.9.3/src/channel.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>channel.rs - source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script id="default-settings"></script><script src="../../storage.js"></script><script src="../../crates.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../favicon.svg">
 <link rel="alternate icon" type="image/png" href="../../favicon-16x16.png">
 <link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../dbus/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img src="../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../settings.html" title="settings"><img src="../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
@@ -189,6 +189,12 @@
 <span id="187">187</span>
 <span id="188">188</span>
 <span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Connection base / building block.</span>
 <span class="doccomment">//!</span>
@@ -196,7 +202,6 @@
 
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Message</span>, <span class="ident">to_c_str</span>, <span class="ident">c_str_to_slice</span>, <span class="ident">MessageType</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::message::MatchRule</span>;
-<span class="kw">use</span> <span class="ident">std::os::unix::io::RawFd</span>;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;native-channel&quot;</span>))]</span>
 <span class="kw">mod</span> <span class="ident">ffichannel</span>;
@@ -220,12 +225,19 @@
     <span class="ident">Starter</span> <span class="op">=</span> <span class="ident">ffi::DBusBusType::Starter</span> <span class="kw">as</span> <span class="ident">isize</span>,
 }
 
+<span class="doccomment">/// Platform-specific file descriptor type</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">unix</span>)]</span>
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">WatchFd</span> <span class="op">=</span> <span class="ident">std::os::unix::io::RawFd</span>;
+
+<span class="doccomment">/// Platform-specific file descriptor type</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">WatchFd</span> <span class="op">=</span> <span class="ident">std::os::windows::io::RawSocket</span>;
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>)]</span>
 <span class="doccomment">/// A file descriptor, and an indication whether it should be read from, written to, or both.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Watch</span> {
     <span class="doccomment">/// File descriptor</span>
-    <span class="kw">pub</span> <span class="ident">fd</span>: <span class="ident">RawFd</span>,
+    <span class="kw">pub</span> <span class="ident">fd</span>: <span class="ident">WatchFd</span>,
     <span class="doccomment">/// True if wakeup should happen when the file descriptor is ready for reading</span>
     <span class="kw">pub</span> <span class="ident">read</span>: <span class="ident">bool</span>,
     <span class="doccomment">/// True if wakeup should happen when the file descriptor is ready for writing</span>

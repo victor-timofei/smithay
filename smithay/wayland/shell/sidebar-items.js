@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["legacy","Utilities for handling shell surfaces with the `wl_shell` protocol"],["xdg","Utilities for handling shell surfaces with the `xdg_shell` protocol"]]});
+initSidebarItems({"enum":[["PingError","Represents the possible errors returned from a surface ping"]],"mod":[["legacy","Utilities for handling shell surfaces with the `wl_shell` protocol"],["xdg","Utilities for handling shell surfaces with the `xdg_shell` protocol"]]});

@@ -18,6 +18,21 @@
 <span id="16">16</span>
 <span id="17">17</span>
 <span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Handler utilities for the various shell protocols</span>
 <span class="doccomment">//!</span>
@@ -35,7 +50,22 @@
 <span class="doccomment">//! - The [`legacy`](legacy/index.html) module provides handlers for the `wl_shell` protocol, which</span>
 <span class="doccomment">//!   is now deprecated. You only need it if you want to support apps predating `xdg_shell`.</span>
 
+<span class="kw">use</span> <span class="kw">super</span><span class="ident">::Serial</span>;
+<span class="kw">use</span> <span class="ident">thiserror::Error</span>;
+
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">legacy</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">xdg</span>;
+
+<span class="doccomment">/// Represents the possible errors returned from</span>
+<span class="doccomment">/// a surface ping</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Error</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">PingError</span> {
+    <span class="doccomment">/// The operation failed because the underlying surface has been destroyed</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;the ping failed cause the underlying surface has been destroyed&quot;</span>)]</span>
+    <span class="ident">DeadSurface</span>,
+    <span class="doccomment">/// There is already a pending ping</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;there is already a ping pending `{0:?}`&quot;</span>)]</span>
+    <span class="ident">PingAlreadyPending</span>(<span class="ident">Serial</span>),
+}
 </pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-search-index-js="../../../../search-index.js" data-search-js="../../../../search.js"></div><script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script></body></html>

@@ -279,6 +279,7 @@
 <span id="277">277</span>
 <span id="278">278</span>
 <span id="279">279</span>
+<span id="280">280</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Tools for handling surface roles</span>
 <span class="doccomment">//!</span>
@@ -468,17 +469,17 @@
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">enum_name</span>: <span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {
         <span class="macro">define_roles!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">enum_name</span> <span class="op">=</span><span class="op">&gt;</span>);
     };
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">enum_name</span>:<span class="ident">ident</span> <span class="op">=</span><span class="op">&gt;</span> $([ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">role_name</span>: <span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">role_data</span>: <span class="ident">ty</span>])<span class="kw-2">*</span>) <span class="op">=</span><span class="op">&gt;</span> {
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">enum_name</span>:<span class="ident">ident</span> <span class="op">=</span><span class="op">&gt;</span> $($(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">role_attr</span>:<span class="ident">meta</span>]</span>)<span class="op">*</span> [<span class="macro-nonterminal">$</span><span class="macro-nonterminal">role_name</span>: <span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">role_data</span>: <span class="ident">ty</span>])<span class="kw-2">*</span>) <span class="op">=</span><span class="op">&gt;</span> {
         <span class="macro">define_roles!</span>(<span class="ident">__impl</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">enum_name</span> <span class="op">=</span><span class="op">&gt;</span>
             <span class="comment">// add in subsurface role</span>
             [<span class="ident">Subsurface</span>, <span class="macro-nonterminal">$</span><span class="kw">crate</span><span class="macro-nonterminal">::wayland::compositor::SubsurfaceRole</span>]
-            $([<span class="macro-nonterminal">$</span><span class="macro-nonterminal">role_name</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">role_data</span>])<span class="op">*</span>
+            $($(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">role_attr</span>]</span>)<span class="op">*</span> [<span class="macro-nonterminal">$</span><span class="macro-nonterminal">role_name</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">role_data</span>])<span class="op">*</span>
         );
     };
-    (<span class="ident">__impl</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">enum_name</span>:<span class="ident">ident</span> <span class="op">=</span><span class="op">&gt;</span> $([ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">role_name</span>: <span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">role_data</span>: <span class="ident">ty</span>])<span class="kw-2">*</span>) <span class="op">=</span><span class="op">&gt;</span> {
+    (<span class="ident">__impl</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">enum_name</span>:<span class="ident">ident</span> <span class="op">=</span><span class="op">&gt;</span> $($(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">role_attr</span>:<span class="ident">meta</span>]</span>)<span class="op">*</span> [<span class="macro-nonterminal">$</span><span class="macro-nonterminal">role_name</span>: <span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">role_data</span>: <span class="ident">ty</span>])<span class="kw-2">*</span>) <span class="op">=</span><span class="op">&gt;</span> {
         <span class="kw">pub</span> <span class="kw">enum</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">enum_name</span> {
             <span class="ident">NoRole</span>,
-            $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">role_name</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">role_data</span>)),<span class="op">*</span>
+            $($(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">role_attr</span>]</span>)<span class="op">*</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">role_name</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">role_data</span>)),<span class="op">*</span>
         }
 
         <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">enum_name</span> {
@@ -498,6 +499,7 @@
         }
 
         $(
+            $(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">role_attr</span>]</span>)<span class="op">*</span>
             <span class="kw">impl</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span><span class="macro-nonterminal">::wayland::compositor::roles::Role</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">role_data</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">enum_name</span> {
                 <span class="kw">fn</span> <span class="ident">set_with</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">data</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">role_data</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::std::result::Result</span><span class="op">&lt;</span>(), <span class="macro-nonterminal">$</span><span class="macro-nonterminal">role_data</span><span class="op">&gt;</span> {
                     <span class="kw">if</span> <span class="kw">let</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">enum_name::NoRole</span> <span class="op">=</span> <span class="kw-2">*</span><span class="self">self</span> {

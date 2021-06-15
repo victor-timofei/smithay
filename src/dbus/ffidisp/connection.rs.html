@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/dbus-0.9.2/src/ffidisp/connection.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>connection.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/dbus-0.9.3/src/ffidisp/connection.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>connection.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
 <link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png">
 <link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../dbus/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img src="../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img src="../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
@@ -632,19 +632,14 @@
 <span id="630">630</span>
 <span id="631">631</span>
 <span id="632">632</span>
-<span id="633">633</span>
-<span id="634">634</span>
-<span id="635">635</span>
-<span id="636">636</span>
 </pre><pre class="rust">
-<span class="doccomment">//! Contains structs and traits relevant to the connection itself, and dispatching incoming messages. </span>
+<span class="doccomment">//! Contains structs and traits relevant to the connection itself, and dispatching incoming messages.</span>
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Error</span>, <span class="ident">ffi</span>, <span class="ident">to_c_str</span>, <span class="ident">c_str_to_slice</span>, <span class="ident">Message</span>, <span class="ident">MessageType</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Error</span>, <span class="ident">Message</span>, <span class="ident">MessageType</span>, <span class="ident">c_str_to_slice</span>, <span class="ident">channel::WatchFd</span>, <span class="ident">ffi</span>, <span class="ident">to_c_str</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::ffidisp::ConnPath</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">fmt</span>, <span class="ident">mem</span>, <span class="ident">ptr</span>, <span class="ident">thread</span>, <span class="ident">panic</span>, <span class="ident">ops</span>};
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">collections::VecDeque</span>, <span class="ident">time::Duration</span>};
 <span class="kw">use</span> <span class="ident">std::cell</span>::{<span class="ident">Cell</span>, <span class="ident">RefCell</span>};
-<span class="kw">use</span> <span class="ident">std::os::unix::io::RawFd</span>;
 <span class="kw">use</span> <span class="ident">std::os::raw</span>::{<span class="ident">c_void</span>, <span class="ident">c_char</span>, <span class="ident">c_int</span>, <span class="ident">c_uint</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::strings</span>::{<span class="ident">BusName</span>, <span class="ident">Path</span>};
 <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Watch</span>, <span class="ident">WatchList</span>, <span class="ident">MessageCallback</span>, <span class="ident">ConnectionItem</span>, <span class="ident">MsgHandler</span>, <span class="ident">MsgHandlerList</span>, <span class="ident">MessageReply</span>, <span class="ident">BusType</span>};
@@ -698,8 +693,8 @@
     });
 
     <span class="kw">match</span> <span class="ident">r</span> {
-        <span class="prelude-val">Ok</span>(<span class="bool-val">false</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DBusHandlerResult::NotYetHandled</span>, 
-        <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DBusHandlerResult::Handled</span>, 
+        <span class="prelude-val">Ok</span>(<span class="bool-val">false</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DBusHandlerResult::NotYetHandled</span>,
+        <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DBusHandlerResult::Handled</span>,
         <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> {
             <span class="kw-2">*</span><span class="ident">i</span>.<span class="ident">filter_cb_panic</span>.<span class="ident">borrow_mut</span>() <span class="op">=</span> <span class="prelude-val">Err</span>(<span class="ident">e</span>);
             <span class="ident">ffi::DBusHandlerResult::Handled</span>
@@ -715,7 +710,7 @@
 
 <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">object_path_message_cb</span>(<span class="ident">_conn</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::DBusConnection</span>, <span class="ident">_msg</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::DBusMessage</span>,
     <span class="ident">_user_data</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ffi::DBusHandlerResult</span> {
-    <span class="comment">/* Already pushed in filter_message_cb, so we just set the handled flag here to disable the 
+    <span class="comment">/* Already pushed in filter_message_cb, so we just set the handled flag here to disable the
        &quot;default&quot; handler. */</span>
     <span class="ident">ffi::DBusHandlerResult::Handled</span>
 }
@@ -840,7 +835,7 @@
     <span class="doccomment">/// let done: rc::Rc&lt;cell::Cell&lt;bool&gt;&gt; = Default::default();</span>
     <span class="doccomment">/// let done2 = done.clone();</span>
     <span class="doccomment">/// c.add_handler(c.send_with_reply(m, move |reply| {</span>
-    <span class="doccomment">///     let v: Vec&lt;&amp;str&gt; = reply.unwrap().read1().unwrap(); </span>
+    <span class="doccomment">///     let v: Vec&lt;&amp;str&gt; = reply.unwrap().read1().unwrap();</span>
     <span class="doccomment">///     println!(&quot;The names on the D-Bus are: {:?}&quot;, v);</span>
     <span class="doccomment">///     done2.set(true);</span>
     <span class="doccomment">/// }).unwrap());</span>
@@ -857,7 +852,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// There might be more methods added later on, which give better ways to deal</span>
     <span class="doccomment">/// with the list of MsgHandler currently on the connection. If this would help you,</span>
-    <span class="doccomment">/// please [file an issue](https://github.com/diwic/dbus-rs/issues). </span>
+    <span class="doccomment">/// please [file an issue](https://github.com/diwic/dbus-rs/issues).</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">extract_handler</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">MsgHandler</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">i</span>.<span class="ident">handlers</span>.<span class="ident">borrow_mut</span>().<span class="ident">pop</span>()
     }
@@ -977,11 +972,10 @@
     <span class="doccomment">/// The returned iterator will return pending items only, never block for new events.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// See the `Watch` struct for an example.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">watch_handle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fd</span>: <span class="ident">RawFd</span>, <span class="ident">flags</span>: <span class="ident">c_uint</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ConnectionItems</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">watch_handle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fd</span>: <span class="ident">WatchFd</span>, <span class="ident">flags</span>: <span class="ident">c_uint</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ConnectionItems</span> {
         <span class="self">self</span>.<span class="ident">i</span>.<span class="ident">watches</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>().<span class="ident">watch_handle</span>(<span class="ident">fd</span>, <span class="ident">flags</span>);
         <span class="ident">ConnectionItems::new</span>(<span class="self">self</span>, <span class="prelude-val">None</span>, <span class="bool-val">true</span>)
     }
-
 
     <span class="doccomment">/// Create a convenience struct for easier calling of many methods on the same destination and path.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_path</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">D</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">BusName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">P</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">dest</span>: <span class="ident">D</span>, <span class="ident">path</span>: <span class="ident">P</span>, <span class="ident">timeout_ms</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span>
@@ -992,7 +986,7 @@
     <span class="doccomment">/// Replace the default message callback. Returns the previously set callback.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// By default, when you call ConnectionItems::next, all relevant incoming messages</span>
-    <span class="doccomment">/// are returned through the ConnectionItems iterator, and </span>
+    <span class="doccomment">/// are returned through the ConnectionItems iterator, and</span>
     <span class="doccomment">/// irrelevant messages are passed on to libdbus&#39;s default handler.</span>
     <span class="doccomment">/// If you need to customize this behaviour (i e, to handle all incoming messages yourself),</span>
     <span class="doccomment">/// you can set this message callback yourself. A few caveats apply:</span>
@@ -1067,7 +1061,7 @@
     <span class="doccomment">/// If this ever happens, you&#39;ll get a callback. The watch changed is provided as a parameter.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// In rare cases this might not even happen in the thread calling anything on the connection,</span>
-    <span class="doccomment">/// so the callback needs to be `Send`. </span>
+    <span class="doccomment">/// so the callback needs to be `Send`.</span>
     <span class="doccomment">/// A mutex is held during the callback. If you try to call set_watch_callback from a callback,</span>
     <span class="doccomment">/// you will deadlock.</span>
     <span class="doccomment">///</span>
@@ -1123,7 +1117,7 @@
 <span class="kw">fn</span> <span class="ident">msghandler_process</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">MsgHandlerList</span>, <span class="ident">m</span>: <span class="kw-2">&amp;</span><span class="ident">Message</span>, <span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">Connection</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ii</span>: <span class="ident">isize</span> <span class="op">=</span> <span class="op">-</span><span class="number">1</span>;
     <span class="kw">loop</span> {
-        <span class="ident">ii</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>; 
+        <span class="ident">ii</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
         <span class="kw">let</span> <span class="ident">i</span> <span class="op">=</span> <span class="ident">ii</span> <span class="kw">as</span> <span class="ident">usize</span>;
         <span class="kw">if</span> <span class="ident">i</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">v</span>.<span class="ident">len</span>() { <span class="kw">return</span> <span class="bool-val">false</span> };
 
@@ -1164,14 +1158,14 @@
         <span class="ident">msghandler_process</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">handlers</span>, <span class="ident">m</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">c</span>)
     }
 
-    <span class="doccomment">/// Access and modify message handlers </span>
+    <span class="doccomment">/// Access and modify message handlers</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Note: Likely to changed/refactored/removed in next release</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">msg_handlers</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">MsgHandler</span><span class="op">&gt;</span><span class="op">&gt;</span> { <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">handlers</span> }
 
     <span class="doccomment">/// Creates a new ConnectionItems iterator</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// For io_timeout, setting None means the fds will not be read/written. I e, only pending </span>
+    <span class="doccomment">/// For io_timeout, setting None means the fds will not be read/written. I e, only pending</span>
     <span class="doccomment">/// items in libdbus&#39;s internal queue will be processed.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// For end_on_timeout, setting false will means that the iterator will never finish (unless</span>
@@ -1230,7 +1224,7 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">ops::Deref</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">Connection</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">ConnMsgs</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">Message</span>;
     <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="ident">::Item</span><span class="op">&gt;</span> {
-        
+
         <span class="kw">loop</span> {
             <span class="kw">let</span> <span class="ident">iconn</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">conn</span>.<span class="ident">i</span>;
             <span class="kw">if</span> <span class="ident">iconn</span>.<span class="ident">filter_cb</span>.<span class="ident">borrow</span>().<span class="ident">is_none</span>() { <span class="macro">panic!</span>(<span class="string">&quot;ConnMsgs::next called recursively or with a MessageCallback set to None&quot;</span>); }
@@ -1271,7 +1265,5 @@
     <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="ident">c</span>.<span class="ident">iter</span>(<span class="number">1000</span>).<span class="ident">with</span>(<span class="ident">reply</span>) { <span class="kw">if</span> <span class="ident">quit</span>.<span class="ident">get</span>() { <span class="kw">return</span>; } }
     <span class="macro">assert!</span>(<span class="bool-val">false</span>);
 }
-
-
 </pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="dbus" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script></body></html>

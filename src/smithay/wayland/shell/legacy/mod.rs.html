@@ -330,7 +330,6 @@
 <span id="328">328</span>
 <span id="329">329</span>
 <span id="330">330</span>
-<span id="331">331</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Utilities for handling shell surfaces with the `wl_shell` protocol</span>
 <span class="doccomment">//!</span>
@@ -408,6 +407,8 @@
     <span class="ident">Display</span>, <span class="ident">Filter</span>, <span class="ident">Global</span>,
 };
 
+<span class="kw">use</span> <span class="kw">super</span><span class="ident">::PingError</span>;
+
 <span class="kw">mod</span> <span class="ident">wl_handlers</span>;
 
 <span class="doccomment">/// Metadata associated with the `wl_surface` role</span>
@@ -417,7 +418,7 @@
     <span class="kw">pub</span> <span class="ident">title</span>: <span class="ident">String</span>,
     <span class="doccomment">/// Class of the surface</span>
     <span class="kw">pub</span> <span class="ident">class</span>: <span class="ident">String</span>,
-    <span class="ident">pending_ping</span>: <span class="ident">Serial</span>,
+    <span class="ident">pending_ping</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Serial</span><span class="op">&gt;</span>,
 }
 
 <span class="doccomment">/// A handle to a shell surface</span>
@@ -473,24 +474,21 @@
     <span class="doccomment">/// down to 0 before a pong is received, mark the client as unresponsive.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Fails if this shell client already has a pending ping or is already dead.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send_ping</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">serial</span>: <span class="ident">Serial</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), ()<span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send_ping</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">serial</span>: <span class="ident">Serial</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">PingError</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">alive</span>() {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(());
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PingError::DeadSurface</span>);
         }
-        <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">token</span>.<span class="ident">with_role_data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">wl_surface</span>, <span class="op">|</span><span class="ident">data</span><span class="op">|</span> {
-            <span class="kw">if</span> <span class="ident">data</span>.<span class="ident">pending_ping</span> <span class="op">=</span><span class="op">=</span> <span class="ident">Serial::from</span>(<span class="number">0</span>) {
-                <span class="ident">data</span>.<span class="ident">pending_ping</span> <span class="op">=</span> <span class="ident">serial</span>;
-                <span class="bool-val">true</span>
-            } <span class="kw">else</span> {
-                <span class="bool-val">false</span>
-            }
-        });
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>) <span class="op">=</span> <span class="ident">ret</span> {
-            <span class="self">self</span>.<span class="ident">shell_surface</span>.<span class="ident">ping</span>(<span class="ident">serial</span>.<span class="ident">into</span>());
-            <span class="prelude-val">Ok</span>(())
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(())
-        }
+        <span class="self">self</span>.<span class="ident">token</span>
+            .<span class="ident">with_role_data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">wl_surface</span>, <span class="op">|</span><span class="ident">data</span><span class="op">|</span> {
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pending_ping</span>) <span class="op">=</span> <span class="ident">data</span>.<span class="ident">pending_ping</span> {
+                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PingError::PingAlreadyPending</span>(<span class="ident">pending_ping</span>));
+                }
+                <span class="ident">data</span>.<span class="ident">pending_ping</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">serial</span>);
+                <span class="prelude-val">Ok</span>(())
+            })
+            .<span class="ident">unwrap</span>()<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">shell_surface</span>.<span class="ident">ping</span>(<span class="ident">serial</span>.<span class="ident">into</span>());
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="doccomment">/// Send a configure event to this toplevel surface to suggest it a new configuration</span>

@@ -742,10 +742,112 @@
 <span id="740">740</span>
 <span id="741">741</span>
 <span id="742">742</span>
+<span id="743">743</span>
+<span id="744">744</span>
+<span id="745">745</span>
+<span id="746">746</span>
+<span id="747">747</span>
+<span id="748">748</span>
+<span id="749">749</span>
+<span id="750">750</span>
+<span id="751">751</span>
+<span id="752">752</span>
+<span id="753">753</span>
+<span id="754">754</span>
+<span id="755">755</span>
+<span id="756">756</span>
+<span id="757">757</span>
+<span id="758">758</span>
+<span id="759">759</span>
+<span id="760">760</span>
+<span id="761">761</span>
+<span id="762">762</span>
+<span id="763">763</span>
+<span id="764">764</span>
+<span id="765">765</span>
+<span id="766">766</span>
+<span id="767">767</span>
+<span id="768">768</span>
+<span id="769">769</span>
+<span id="770">770</span>
+<span id="771">771</span>
+<span id="772">772</span>
+<span id="773">773</span>
+<span id="774">774</span>
+<span id="775">775</span>
+<span id="776">776</span>
+<span id="777">777</span>
+<span id="778">778</span>
+<span id="779">779</span>
+<span id="780">780</span>
+<span id="781">781</span>
+<span id="782">782</span>
+<span id="783">783</span>
+<span id="784">784</span>
+<span id="785">785</span>
+<span id="786">786</span>
+<span id="787">787</span>
+<span id="788">788</span>
+<span id="789">789</span>
+<span id="790">790</span>
+<span id="791">791</span>
+<span id="792">792</span>
+<span id="793">793</span>
+<span id="794">794</span>
+<span id="795">795</span>
+<span id="796">796</span>
+<span id="797">797</span>
+<span id="798">798</span>
+<span id="799">799</span>
+<span id="800">800</span>
+<span id="801">801</span>
+<span id="802">802</span>
+<span id="803">803</span>
+<span id="804">804</span>
+<span id="805">805</span>
+<span id="806">806</span>
+<span id="807">807</span>
+<span id="808">808</span>
+<span id="809">809</span>
+<span id="810">810</span>
+<span id="811">811</span>
+<span id="812">812</span>
+<span id="813">813</span>
+<span id="814">814</span>
+<span id="815">815</span>
+<span id="816">816</span>
+<span id="817">817</span>
+<span id="818">818</span>
+<span id="819">819</span>
+<span id="820">820</span>
+<span id="821">821</span>
+<span id="822">822</span>
+<span id="823">823</span>
+<span id="824">824</span>
+<span id="825">825</span>
+<span id="826">826</span>
+<span id="827">827</span>
+<span id="828">828</span>
+<span id="829">829</span>
+<span id="830">830</span>
+<span id="831">831</span>
+<span id="832">832</span>
+<span id="833">833</span>
+<span id="834">834</span>
+<span id="835">835</span>
+<span id="836">836</span>
+<span id="837">837</span>
+<span id="838">838</span>
+<span id="839">839</span>
+<span id="840">840</span>
+<span id="841">841</span>
+<span id="842">842</span>
+<span id="843">843</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cell::RefCell</span>, <span class="ident">ops::Deref</span> <span class="kw">as</span> <span class="kw">_</span>, <span class="ident">sync::Mutex</span>};
 
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland::compositor</span>::{<span class="ident">roles</span>::<span class="kw-2">*</span>, <span class="ident">CompositorToken</span>};
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland::shell::xdg</span>::{<span class="ident">ConfigureError</span>, <span class="ident">PopupState</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland::Serial</span>;
 <span class="kw">use</span> <span class="ident">wayland_protocols</span>::{
     <span class="ident">unstable::xdg_shell::v6::server</span>::{
@@ -758,9 +860,9 @@
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils::Rectangle</span>;
 
 <span class="kw">use</span> <span class="kw">super</span>::{
-    <span class="ident">make_shell_client_data</span>, <span class="ident">PopupConfigure</span>, <span class="ident">PopupKind</span>, <span class="ident">PopupState</span>, <span class="ident">PositionerState</span>, <span class="ident">ShellClient</span>,
-    <span class="ident">ShellClientData</span>, <span class="ident">ShellData</span>, <span class="ident">ToplevelConfigure</span>, <span class="ident">ToplevelKind</span>, <span class="ident">ToplevelState</span>, <span class="ident">XdgRequest</span>,
-    <span class="ident">XdgSurfacePendingState</span>, <span class="ident">XdgSurfaceRole</span>,
+    <span class="ident">make_shell_client_data</span>, <span class="ident">PopupConfigure</span>, <span class="ident">PopupKind</span>, <span class="ident">PositionerState</span>, <span class="ident">ShellClient</span>, <span class="ident">ShellClientData</span>,
+    <span class="ident">ShellData</span>, <span class="ident">ToplevelClientPending</span>, <span class="ident">ToplevelConfigure</span>, <span class="ident">ToplevelKind</span>, <span class="ident">XdgPopupSurfaceRole</span>,
+    <span class="ident">XdgPopupSurfaceRoleAttributes</span>, <span class="ident">XdgRequest</span>, <span class="ident">XdgToplevelSurfaceRole</span>, <span class="ident">XdgToplevelSurfaceRoleAttributes</span>,
 };
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">implement_shell</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(
@@ -768,7 +870,7 @@
     <span class="ident">shell_data</span>: <span class="kw-2">&amp;</span><span class="ident">ShellData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
 ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">zxdg_shell_v6::ZxdgShellV6</span>
 <span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">XdgSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">XdgToplevelSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">XdgPopupSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
     <span class="ident">shell</span>.<span class="ident">quick_assign</span>(<span class="op">|</span><span class="ident">shell</span>, <span class="ident">req</span>, <span class="ident">_data</span><span class="op">|</span> <span class="ident">shell_implementation</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">req</span>, <span class="ident">shell</span>.<span class="ident">deref</span>().<span class="ident">clone</span>()));
     <span class="ident">shell</span>.<span class="ident">as_ref</span>().<span class="ident">user_data</span>().<span class="ident">set</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ShellUserData</span> {
@@ -803,7 +905,7 @@
 
 <span class="kw">fn</span> <span class="ident">shell_implementation</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">request</span>: <span class="ident">zxdg_shell_v6::Request</span>, <span class="ident">shell</span>: <span class="ident">zxdg_shell_v6::ZxdgShellV6</span>)
 <span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">XdgSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">XdgToplevelSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">XdgPopupSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">shell</span>.<span class="ident">as_ref</span>().<span class="ident">user_data</span>().<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ShellUserData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
     <span class="kw">match</span> <span class="ident">request</span> {
@@ -814,24 +916,6 @@
             <span class="ident">implement_positioner</span>(<span class="ident">id</span>);
         }
         <span class="ident">zxdg_shell_v6::Request::GetXdgSurface</span> { <span class="ident">id</span>, <span class="ident">surface</span> } <span class="op">=</span><span class="op">&gt;</span> {
-            <span class="kw">let</span> <span class="ident">role_data</span> <span class="op">=</span> <span class="ident">XdgSurfaceRole</span> {
-                <span class="ident">pending_state</span>: <span class="ident">XdgSurfacePendingState::None</span>,
-                <span class="ident">window_geometry</span>: <span class="prelude-val">None</span>,
-                <span class="ident">pending_configures</span>: <span class="ident">Vec::new</span>(),
-                <span class="ident">configured</span>: <span class="bool-val">false</span>,
-            };
-            <span class="kw">if</span> <span class="ident">data</span>
-                .<span class="ident">shell_data</span>
-                .<span class="ident">compositor_token</span>
-                .<span class="ident">give_role_with</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>, <span class="ident">role_data</span>)
-                .<span class="ident">is_err</span>()
-            {
-                <span class="ident">shell</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
-                    <span class="ident">zxdg_shell_v6::Error::Role</span> <span class="kw">as</span> <span class="ident">u32</span>,
-                    <span class="string">&quot;Surface already has a role.&quot;</span>.<span class="ident">into</span>(),
-                );
-                <span class="kw">return</span>;
-            }
             <span class="ident">id</span>.<span class="ident">quick_assign</span>(<span class="op">|</span><span class="ident">surface</span>, <span class="ident">req</span>, <span class="ident">_data</span><span class="op">|</span> {
                 <span class="ident">xdg_surface_implementation</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">req</span>, <span class="ident">surface</span>.<span class="ident">deref</span>().<span class="ident">clone</span>())
             });
@@ -843,10 +927,11 @@
             });
         }
         <span class="ident">zxdg_shell_v6::Request::Pong</span> { <span class="ident">serial</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="kw">let</span> <span class="ident">serial</span> <span class="op">=</span> <span class="ident">Serial::from</span>(<span class="ident">serial</span>);
             <span class="kw">let</span> <span class="ident">valid</span> <span class="op">=</span> {
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">guard</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">client_data</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-                <span class="kw">if</span> <span class="ident">guard</span>.<span class="ident">pending_ping</span> <span class="op">=</span><span class="op">=</span> <span class="ident">Serial::from</span>(<span class="ident">serial</span>) {
-                    <span class="ident">guard</span>.<span class="ident">pending_ping</span> <span class="op">=</span> <span class="ident">Serial::from</span>(<span class="number">0</span>);
+                <span class="kw">if</span> <span class="ident">guard</span>.<span class="ident">pending_ping</span> <span class="op">=</span><span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">serial</span>) {
+                    <span class="ident">guard</span>.<span class="ident">pending_ping</span> <span class="op">=</span> <span class="prelude-val">None</span>;
                     <span class="bool-val">true</span>
                 } <span class="kw">else</span> {
                     <span class="bool-val">false</span>
@@ -954,7 +1039,7 @@
 
 <span class="kw">fn</span> <span class="ident">destroy_surface</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">surface</span>: <span class="ident">zxdg_surface_v6::ZxdgSurfaceV6</span>)
 <span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">XdgSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">XdgToplevelSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">XdgPopupSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">surface</span>
         .<span class="ident">as_ref</span>()
@@ -967,26 +1052,38 @@
         <span class="comment">// disconnecting client), ignore the protocol check.</span>
         <span class="kw">return</span>;
     }
-    <span class="ident">data</span>.<span class="ident">shell_data</span>
+
+    <span class="kw">if</span> <span class="op">!</span><span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">compositor_token</span>.<span class="ident">has_a_role</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">wl_surface</span>) {
+        <span class="comment">// No role assigned to the surface, we can exit early.</span>
+        <span class="kw">return</span>;
+    }
+
+    <span class="kw">let</span> <span class="ident">has_active_xdg_role</span> <span class="op">=</span> <span class="ident">data</span>
+        .<span class="ident">shell_data</span>
         .<span class="ident">compositor_token</span>
-        .<span class="ident">with_role_data</span>::<span class="op">&lt;</span><span class="ident">XdgSurfaceRole</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">wl_surface</span>, <span class="op">|</span><span class="ident">rdata</span><span class="op">|</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">XdgSurfacePendingState::None</span> <span class="op">=</span> <span class="ident">rdata</span>.<span class="ident">pending_state</span> {
-                <span class="comment">// all is good</span>
-            } <span class="kw">else</span> {
-                <span class="ident">data</span>.<span class="ident">shell</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
-                    <span class="ident">zxdg_shell_v6::Error::Role</span> <span class="kw">as</span> <span class="ident">u32</span>,
-                    <span class="string">&quot;xdg_surface was destroyed before its role object&quot;</span>.<span class="ident">into</span>(),
-                );
-            }
+        .<span class="ident">with_role_data</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">wl_surface</span>, <span class="op">|</span><span class="ident">role</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">XdgToplevelSurfaceRole</span><span class="op">|</span> {
+            <span class="ident">role</span>.<span class="ident">is_some</span>()
         })
-        .<span class="ident">expect</span>(<span class="string">&quot;xdg_surface exists but surface has not shell_surface role?!&quot;</span>);
+        .<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>)
+        <span class="op">|</span><span class="op">|</span> <span class="ident">data</span>
+            .<span class="ident">shell_data</span>
+            .<span class="ident">compositor_token</span>
+            .<span class="ident">with_role_data</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">wl_surface</span>, <span class="op">|</span><span class="ident">role</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">XdgPopupSurfaceRole</span><span class="op">|</span> <span class="ident">role</span>.<span class="ident">is_some</span>())
+            .<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>);
+
+    <span class="kw">if</span> <span class="ident">has_active_xdg_role</span> {
+        <span class="ident">data</span>.<span class="ident">shell</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
+            <span class="ident">zxdg_shell_v6::Error::Role</span> <span class="kw">as</span> <span class="ident">u32</span>,
+            <span class="string">&quot;xdg_surface was destroyed before its role object&quot;</span>.<span class="ident">into</span>(),
+        );
+    }
 }
 
 <span class="kw">fn</span> <span class="ident">xdg_surface_implementation</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(
     <span class="ident">request</span>: <span class="ident">zxdg_surface_v6::Request</span>,
     <span class="ident">xdg_surface</span>: <span class="ident">zxdg_surface_v6::ZxdgSurfaceV6</span>,
 ) <span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">XdgSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">XdgToplevelSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">XdgPopupSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">xdg_surface</span>
         .<span class="ident">as_ref</span>()
@@ -998,18 +1095,25 @@
             <span class="comment">// all is handled by our destructor</span>
         }
         <span class="ident">zxdg_surface_v6::Request::GetToplevel</span> { <span class="ident">id</span> } <span class="op">=</span><span class="op">&gt;</span> {
-            <span class="ident">data</span>.<span class="ident">shell_data</span>
+            <span class="comment">// We now can assign a role to the surface</span>
+            <span class="kw">let</span> <span class="ident">surface</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">wl_surface</span>;
+            <span class="kw">let</span> <span class="ident">shell</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">shell</span>;
+
+            <span class="kw">let</span> <span class="ident">role_data</span> <span class="op">=</span> <span class="ident">XdgToplevelSurfaceRole::Some</span>(<span class="ident">Default::default</span>());
+
+            <span class="kw">if</span> <span class="ident">data</span>
+                .<span class="ident">shell_data</span>
                 .<span class="ident">compositor_token</span>
-                .<span class="ident">with_role_data</span>::<span class="op">&lt;</span><span class="ident">XdgSurfaceRole</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">wl_surface</span>, <span class="op">|</span><span class="ident">data</span><span class="op">|</span> {
-                    <span class="ident">data</span>.<span class="ident">pending_state</span> <span class="op">=</span> <span class="ident">XdgSurfacePendingState::Toplevel</span>(<span class="ident">ToplevelState</span> {
-                        <span class="ident">parent</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">title</span>: <span class="ident">String::new</span>(),
-                        <span class="ident">app_id</span>: <span class="ident">String::new</span>(),
-                        <span class="ident">min_size</span>: (<span class="number">0</span>, <span class="number">0</span>),
-                        <span class="ident">max_size</span>: (<span class="number">0</span>, <span class="number">0</span>),
-                    });
-                })
-                .<span class="ident">expect</span>(<span class="string">&quot;xdg_surface exists but surface has not shell_surface role?!&quot;</span>);
+                .<span class="ident">give_role_with</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>, <span class="ident">role_data</span>)
+                .<span class="ident">is_err</span>()
+            {
+                <span class="ident">shell</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
+                    <span class="ident">zxdg_shell_v6::Error::Role</span> <span class="kw">as</span> <span class="ident">u32</span>,
+                    <span class="string">&quot;Surface already has a role.&quot;</span>.<span class="ident">into</span>(),
+                );
+                <span class="kw">return</span>;
+            }
+
             <span class="ident">id</span>.<span class="ident">quick_assign</span>(<span class="op">|</span><span class="ident">toplevel</span>, <span class="ident">req</span>, <span class="ident">_data</span><span class="op">|</span> {
                 <span class="ident">toplevel_implementation</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">req</span>, <span class="ident">toplevel</span>.<span class="ident">deref</span>().<span class="ident">clone</span>())
             });
@@ -1041,22 +1145,45 @@
                 .<span class="ident">as_ref</span>()
                 .<span class="ident">user_data</span>()
                 .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">PositionerState</span><span class="op">&gt;</span><span class="op">&gt;</span>()
-                .<span class="ident">unwrap</span>();
+                .<span class="ident">unwrap</span>()
+                .<span class="ident">borrow</span>()
+                .<span class="ident">clone</span>();
 
-            <span class="kw">let</span> <span class="ident">parent_data</span> <span class="op">=</span> <span class="ident">parent</span>
-                .<span class="ident">as_ref</span>()
-                .<span class="ident">user_data</span>()
-                .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">XdgSurfaceUserData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span>()
-                .<span class="ident">unwrap</span>();
-            <span class="ident">data</span>.<span class="ident">shell_data</span>
+            <span class="kw">let</span> <span class="ident">parent_surface</span> <span class="op">=</span> {
+                <span class="kw">let</span> <span class="ident">parent_data</span> <span class="op">=</span> <span class="ident">parent</span>
+                    .<span class="ident">as_ref</span>()
+                    .<span class="ident">user_data</span>()
+                    .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">XdgSurfaceUserData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+                    .<span class="ident">unwrap</span>();
+                <span class="ident">parent_data</span>.<span class="ident">wl_surface</span>.<span class="ident">clone</span>()
+            };
+
+            <span class="comment">// We now can assign a role to the surface</span>
+            <span class="kw">let</span> <span class="ident">surface</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">wl_surface</span>;
+            <span class="kw">let</span> <span class="ident">shell</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">shell</span>;
+
+            <span class="kw">let</span> <span class="ident">role_data</span> <span class="op">=</span> <span class="ident">XdgPopupSurfaceRole::Some</span>(<span class="ident">XdgPopupSurfaceRoleAttributes</span> {
+                <span class="ident">parent</span>: <span class="prelude-val">Some</span>(<span class="ident">parent_surface</span>),
+                <span class="ident">server_pending</span>: <span class="prelude-val">Some</span>(<span class="ident">PopupState</span> {
+                    <span class="comment">// Set the positioner data as the popup geometry</span>
+                    <span class="ident">geometry</span>: <span class="ident">positioner_data</span>.<span class="ident">get_geometry</span>(),
+                }),
+                ..<span class="ident">Default::default</span>()
+            });
+
+            <span class="kw">if</span> <span class="ident">data</span>
+                .<span class="ident">shell_data</span>
                 .<span class="ident">compositor_token</span>
-                .<span class="ident">with_role_data</span>::<span class="op">&lt;</span><span class="ident">XdgSurfaceRole</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">wl_surface</span>, <span class="op">|</span><span class="ident">data</span><span class="op">|</span> {
-                    <span class="ident">data</span>.<span class="ident">pending_state</span> <span class="op">=</span> <span class="ident">XdgSurfacePendingState::Popup</span>(<span class="ident">PopupState</span> {
-                        <span class="ident">parent</span>: <span class="prelude-val">Some</span>(<span class="ident">parent_data</span>.<span class="ident">wl_surface</span>.<span class="ident">clone</span>()),
-                        <span class="ident">positioner</span>: <span class="ident">positioner_data</span>.<span class="ident">borrow</span>().<span class="ident">clone</span>(),
-                    });
-                })
-                .<span class="ident">expect</span>(<span class="string">&quot;xdg_surface exists but surface has not shell_surface role?!&quot;</span>);
+                .<span class="ident">give_role_with</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>, <span class="ident">role_data</span>)
+                .<span class="ident">is_err</span>()
+            {
+                <span class="ident">shell</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
+                    <span class="ident">zxdg_shell_v6::Error::Role</span> <span class="kw">as</span> <span class="ident">u32</span>,
+                    <span class="string">&quot;Surface already has a role.&quot;</span>.<span class="ident">into</span>(),
+                );
+                <span class="kw">return</span>;
+            }
+
             <span class="ident">id</span>.<span class="ident">quick_assign</span>(<span class="op">|</span><span class="ident">popup</span>, <span class="ident">req</span>, <span class="ident">_data</span><span class="op">|</span> <span class="ident">popup_implementation</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">req</span>, <span class="ident">popup</span>.<span class="ident">deref</span>().<span class="ident">clone</span>()));
             <span class="ident">id</span>.<span class="ident">assign_destructor</span>(<span class="ident">Filter::new</span>(<span class="op">|</span><span class="ident">popup</span>, <span class="kw">_</span>, <span class="ident">_data</span><span class="op">|</span> <span class="ident">destroy_popup</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">popup</span>)));
             <span class="ident">id</span>.<span class="ident">as_ref</span>().<span class="ident">user_data</span>().<span class="ident">set</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ShellSurfaceUserData</span> {
@@ -1078,40 +1205,93 @@
             (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">XdgRequest::NewPopup</span> { <span class="ident">surface</span>: <span class="ident">handle</span> });
         }
         <span class="ident">zxdg_surface_v6::Request::SetWindowGeometry</span> { <span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">width</span>, <span class="ident">height</span> } <span class="op">=</span><span class="op">&gt;</span> {
-            <span class="ident">data</span>.<span class="ident">shell_data</span>
+            <span class="comment">// Check the role of the surface, this can be either xdg_toplevel</span>
+            <span class="comment">// or xdg_popup. If none of the role matches the xdg_surface has no role set</span>
+            <span class="comment">// which is a protocol error.</span>
+            <span class="kw">let</span> <span class="ident">surface</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">wl_surface</span>;
+
+            <span class="kw">if</span> <span class="op">!</span><span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">compositor_token</span>.<span class="ident">has_a_role</span>(<span class="ident">surface</span>) {
+                <span class="ident">data</span>.<span class="ident">shell</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
+                    <span class="ident">zxdg_surface_v6::Error::NotConstructed</span> <span class="kw">as</span> <span class="ident">u32</span>,
+                    <span class="string">&quot;xdg_surface must have a role.&quot;</span>.<span class="ident">into</span>(),
+                );
+                <span class="kw">return</span>;
+            }
+
+            <span class="comment">// Set the next window geometry here, the geometry will be moved from</span>
+            <span class="comment">// next to the current geometry on a commit. This has to be done currently</span>
+            <span class="comment">// in anvil as the whole commit logic is implemented there until a proper</span>
+            <span class="comment">// abstraction has been found to handle commits within roles. This also</span>
+            <span class="comment">// ensures that a commit for a xdg_surface follows the rules for subsurfaces.</span>
+            <span class="kw">let</span> <span class="ident">has_wrong_role</span> <span class="op">=</span> <span class="ident">data</span>
+                .<span class="ident">shell_data</span>
                 .<span class="ident">compositor_token</span>
-                .<span class="ident">with_role_data</span>::<span class="op">&lt;</span><span class="ident">XdgSurfaceRole</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">wl_surface</span>, <span class="op">|</span><span class="ident">data</span><span class="op">|</span> {
-                    <span class="ident">data</span>.<span class="ident">window_geometry</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Rectangle</span> { <span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">width</span>, <span class="ident">height</span> });
+                .<span class="ident">with_xdg_role</span>(<span class="ident">surface</span>, <span class="op">|</span><span class="ident">role</span><span class="op">|</span> {
+                    <span class="ident">role</span>.<span class="ident">set_window_geometry</span>(<span class="ident">Rectangle</span> { <span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">width</span>, <span class="ident">height</span> })
                 })
-                .<span class="ident">expect</span>(<span class="string">&quot;xdg_surface exists but surface has not shell_surface role?!&quot;</span>);
+                .<span class="ident">is_err</span>();
+
+            <span class="kw">if</span> <span class="ident">has_wrong_role</span> {
+                <span class="ident">data</span>.<span class="ident">shell</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
+                    <span class="ident">zxdg_shell_v6::Error::Role</span> <span class="kw">as</span> <span class="ident">u32</span>,
+                    <span class="string">&quot;xdg_surface must have a role of xdg_toplevel or xdg_popup.&quot;</span>.<span class="ident">into</span>(),
+                );
+            }
         }
         <span class="ident">zxdg_surface_v6::Request::AckConfigure</span> { <span class="ident">serial</span> } <span class="op">=</span><span class="op">&gt;</span> {
-            <span class="ident">data</span>.<span class="ident">shell_data</span>
+            <span class="kw">let</span> <span class="ident">serial</span> <span class="op">=</span> <span class="ident">Serial::from</span>(<span class="ident">serial</span>);
+            <span class="kw">let</span> <span class="ident">surface</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">wl_surface</span>;
+
+            <span class="comment">// Check the role of the surface, this can be either xdg_toplevel</span>
+            <span class="comment">// or xdg_popup. If none of the role matches the xdg_surface has no role set</span>
+            <span class="comment">// which is a protocol error.</span>
+            <span class="kw">if</span> <span class="op">!</span><span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">compositor_token</span>.<span class="ident">has_a_role</span>(<span class="ident">surface</span>) {
+                <span class="ident">data</span>.<span class="ident">shell</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
+                    <span class="ident">zxdg_surface_v6::Error::NotConstructed</span> <span class="kw">as</span> <span class="ident">u32</span>,
+                    <span class="string">&quot;xdg_surface must have a role.&quot;</span>.<span class="ident">into</span>(),
+                );
+                <span class="kw">return</span>;
+            }
+
+            <span class="comment">// Find the correct configure state for the provided serial</span>
+            <span class="comment">// discard all configure states that are older than the provided</span>
+            <span class="comment">// serial.</span>
+            <span class="comment">// If no matching serial can be found raise a protocol error</span>
+            <span class="comment">//</span>
+            <span class="comment">// Invoke the user impl with the found configuration</span>
+            <span class="comment">// This has to include the serial and the role specific data.</span>
+            <span class="comment">// - For xdg_popup there is no data.</span>
+            <span class="comment">// - For xdg_toplevel send the state data including</span>
+            <span class="comment">//   width, height, min/max size, maximized, fullscreen, resizing, activated</span>
+            <span class="comment">//</span>
+            <span class="comment">// This can be used to integrate custom protocol extensions</span>
+            <span class="comment">//</span>
+            <span class="kw">let</span> <span class="ident">configure</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">data</span>
+                .<span class="ident">shell_data</span>
                 .<span class="ident">compositor_token</span>
-                .<span class="ident">with_role_data</span>::<span class="op">&lt;</span><span class="ident">XdgSurfaceRole</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">wl_surface</span>, <span class="op">|</span><span class="ident">role_data</span><span class="op">|</span> {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">found</span> <span class="op">=</span> <span class="bool-val">false</span>;
-                    <span class="ident">role_data</span>.<span class="ident">pending_configures</span>.<span class="ident">retain</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">s</span><span class="op">|</span> {
-                        <span class="kw">if</span> <span class="ident">s</span> <span class="op">=</span><span class="op">=</span> <span class="ident">serial</span> {
-                            <span class="ident">found</span> <span class="op">=</span> <span class="bool-val">true</span>;
-                        }
-                        <span class="ident">s</span> <span class="op">&gt;</span> <span class="ident">serial</span>
-                    });
-                    <span class="kw">if</span> <span class="op">!</span><span class="ident">found</span> {
-                        <span class="comment">// client responded to a non-existing configure</span>
-                        <span class="ident">data</span>.<span class="ident">shell</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
-                            <span class="ident">zxdg_shell_v6::Error::InvalidSurfaceState</span> <span class="kw">as</span> <span class="ident">u32</span>,
-                            <span class="macro">format!</span>(<span class="string">&quot;Wrong configure serial: {}&quot;</span>, <span class="ident">serial</span>),
-                        );
-                    }
-                    <span class="ident">role_data</span>.<span class="ident">configured</span> <span class="op">=</span> <span class="bool-val">true</span>;
-                })
-                .<span class="ident">expect</span>(<span class="string">&quot;xdg_surface exists but surface has not shell_surface role?!&quot;</span>);
+                .<span class="ident">with_xdg_role</span>(<span class="ident">surface</span>, <span class="op">|</span><span class="ident">role</span><span class="op">|</span> <span class="ident">role</span>.<span class="ident">ack_configure</span>(<span class="ident">serial</span>))
+            {
+                <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(<span class="ident">configure</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">configure</span>,
+                <span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(<span class="ident">ConfigureError::SerialNotFound</span>(<span class="ident">serial</span>))) <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="ident">data</span>.<span class="ident">shell</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
+                        <span class="ident">zxdg_shell_v6::Error::InvalidSurfaceState</span> <span class="kw">as</span> <span class="ident">u32</span>,
+                        <span class="macro">format!</span>(<span class="string">&quot;wrong configure serial: {}&quot;</span>, <span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span><span class="ident">::from</span>(<span class="ident">serial</span>)),
+                    );
+                    <span class="kw">return</span>;
+                }
+                <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="ident">data</span>.<span class="ident">shell</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
+                        <span class="ident">zxdg_shell_v6::Error::Role</span> <span class="kw">as</span> <span class="ident">u32</span>,
+                        <span class="string">&quot;xdg_surface must have a role of xdg_toplevel or xdg_popup.&quot;</span>.<span class="ident">into</span>(),
+                    );
+                    <span class="kw">return</span>;
+                }
+            };
 
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_impl</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">user_impl</span>.<span class="ident">borrow_mut</span>();
-            <span class="kw">let</span> <span class="ident">serial</span> <span class="op">=</span> <span class="ident">Serial::from</span>(<span class="ident">serial</span>);
             (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">XdgRequest::AckConfigure</span> {
-                <span class="ident">surface</span>: <span class="ident">data</span>.<span class="ident">wl_surface</span>.<span class="ident">clone</span>(),
-                <span class="ident">serial</span>,
+                <span class="ident">surface</span>: <span class="ident">surface</span>.<span class="ident">clone</span>(),
+                <span class="ident">configure</span>,
             });
         }
         <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
@@ -1130,38 +1310,62 @@
 }
 
 <span class="comment">// Utility functions allowing to factor out a lot of the upcoming logic</span>
-<span class="kw">fn</span> <span class="ident">with_surface_toplevel_data</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">F</span><span class="op">&gt;</span>(<span class="ident">toplevel</span>: <span class="kw-2">&amp;</span><span class="ident">zxdg_toplevel_v6::ZxdgToplevelV6</span>, <span class="ident">f</span>: <span class="ident">F</span>)
+<span class="kw">fn</span> <span class="ident">with_surface_toplevel_role_data</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">F</span>, <span class="ident">T</span><span class="op">&gt;</span>(
+    <span class="ident">shell_data</span>: <span class="kw-2">&amp;</span><span class="ident">ShellData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
+    <span class="ident">toplevel</span>: <span class="kw-2">&amp;</span><span class="ident">zxdg_toplevel_v6::ZxdgToplevelV6</span>,
+    <span class="ident">f</span>: <span class="ident">F</span>,
+) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span>
 <span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">XdgSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-    <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ToplevelState</span>),
+    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">XdgToplevelSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">XdgToplevelSurfaceRoleAttributes</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span>,
 {
     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">toplevel</span>
         .<span class="ident">as_ref</span>()
         .<span class="ident">user_data</span>()
         .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ShellSurfaceUserData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span>()
         .<span class="ident">unwrap</span>();
-    <span class="ident">data</span>.<span class="ident">shell_data</span>
+    <span class="ident">shell_data</span>
         .<span class="ident">compositor_token</span>
-        .<span class="ident">with_role_data</span>::<span class="op">&lt;</span><span class="ident">XdgSurfaceRole</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">wl_surface</span>, <span class="op">|</span><span class="ident">data</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">data</span>.<span class="ident">pending_state</span> {
-            <span class="ident">XdgSurfacePendingState::Toplevel</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">toplevel_data</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">f</span>(<span class="ident">toplevel_data</span>),
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
+        .<span class="ident">with_role_data</span>::<span class="op">&lt;</span><span class="ident">XdgToplevelSurfaceRole</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">wl_surface</span>, <span class="op">|</span><span class="ident">role</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">attributes</span> <span class="op">=</span> <span class="ident">role</span>
+                .<span class="ident">as_mut</span>()
+                .<span class="ident">expect</span>(<span class="string">&quot;xdg_toplevel exists but role has been destroyed?!&quot;</span>);
+            <span class="ident">f</span>(<span class="ident">attributes</span>)
         })
-        .<span class="ident">expect</span>(<span class="string">&quot;xdg_toplevel exists but surface has not shell_surface role?!&quot;</span>);
+        .<span class="ident">expect</span>(<span class="string">&quot;xdg_toplevel exists but surface has not shell_surface role?!&quot;</span>)
+}
+
+<span class="kw">fn</span> <span class="ident">with_surface_toplevel_client_pending</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">F</span>, <span class="ident">T</span><span class="op">&gt;</span>(
+    <span class="ident">shell_data</span>: <span class="kw-2">&amp;</span><span class="ident">ShellData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
+    <span class="ident">toplevel</span>: <span class="kw-2">&amp;</span><span class="ident">zxdg_toplevel_v6::ZxdgToplevelV6</span>,
+    <span class="ident">f</span>: <span class="ident">F</span>,
+) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span>
+<span class="kw">where</span>
+    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">XdgToplevelSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ToplevelClientPending</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span>,
+{
+    <span class="ident">with_surface_toplevel_role_data</span>(<span class="ident">shell_data</span>, <span class="ident">toplevel</span>, <span class="op">|</span><span class="ident">data</span><span class="op">|</span> {
+        <span class="kw">if</span> <span class="ident">data</span>.<span class="ident">client_pending</span>.<span class="ident">is_none</span>() {
+            <span class="ident">data</span>.<span class="ident">client_pending</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Default::default</span>());
+        }
+        <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">data</span>.<span class="ident">client_pending</span>.<span class="ident">as_mut</span>().<span class="ident">unwrap</span>())
+    })
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send_toplevel_configure</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">resource</span>: <span class="kw-2">&amp;</span><span class="ident">zxdg_toplevel_v6::ZxdgToplevelV6</span>, <span class="ident">configure</span>: <span class="ident">ToplevelConfigure</span>)
 <span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">XdgSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">XdgToplevelSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">resource</span>
         .<span class="ident">as_ref</span>()
         .<span class="ident">user_data</span>()
         .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ShellSurfaceUserData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span>()
         .<span class="ident">unwrap</span>();
-    <span class="kw">let</span> (<span class="ident">width</span>, <span class="ident">height</span>) <span class="op">=</span> <span class="ident">configure</span>.<span class="ident">size</span>.<span class="ident">unwrap_or</span>((<span class="number">0</span>, <span class="number">0</span>));
+
+    <span class="kw">let</span> (<span class="ident">width</span>, <span class="ident">height</span>) <span class="op">=</span> <span class="ident">configure</span>.<span class="ident">state</span>.<span class="ident">size</span>.<span class="ident">unwrap_or</span>((<span class="number">0</span>, <span class="number">0</span>));
     <span class="comment">// convert the Vec&lt;State&gt; (which is really a Vec&lt;u32&gt;) into Vec&lt;u8&gt;</span>
     <span class="kw">let</span> <span class="ident">states</span> <span class="op">=</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">states</span> <span class="op">=</span> <span class="ident">configure</span>.<span class="ident">states</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">states</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">xdg_toplevel::State</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">configure</span>.<span class="ident">state</span>.<span class="ident">states</span>.<span class="ident">into</span>();
         <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">states</span>.<span class="ident">as_mut_ptr</span>();
         <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">states</span>.<span class="ident">len</span>();
         <span class="kw">let</span> <span class="ident">cap</span> <span class="op">=</span> <span class="ident">states</span>.<span class="ident">capacity</span>();
@@ -1169,15 +1373,13 @@
         <span class="kw">unsafe</span> { <span class="ident">Vec::from_raw_parts</span>(<span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u8</span>, <span class="ident">len</span> <span class="op">*</span> <span class="number">4</span>, <span class="ident">cap</span> <span class="op">*</span> <span class="number">4</span>) }
     };
     <span class="kw">let</span> <span class="ident">serial</span> <span class="op">=</span> <span class="ident">configure</span>.<span class="ident">serial</span>;
+
+    <span class="comment">// Send the toplevel configure</span>
     <span class="ident">resource</span>.<span class="ident">configure</span>(<span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">states</span>);
+
+    <span class="comment">// Send the base xdg_surface configure event to mark</span>
+    <span class="comment">// The configure as finished</span>
     <span class="ident">data</span>.<span class="ident">xdg_surface</span>.<span class="ident">configure</span>(<span class="ident">serial</span>.<span class="ident">into</span>());
-    <span class="comment">// Add the configure as pending</span>
-    <span class="ident">data</span>.<span class="ident">shell_data</span>
-        .<span class="ident">compositor_token</span>
-        .<span class="ident">with_role_data</span>::<span class="op">&lt;</span><span class="ident">XdgSurfaceRole</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">wl_surface</span>, <span class="op">|</span><span class="ident">data</span><span class="op">|</span> {
-            <span class="ident">data</span>.<span class="ident">pending_configures</span>.<span class="ident">push</span>(<span class="ident">serial</span>.<span class="ident">into</span>())
-        })
-        .<span class="ident">expect</span>(<span class="string">&quot;xdg_toplevel exists but surface has not shell_surface role?!&quot;</span>);
 }
 
 <span class="kw">fn</span> <span class="ident">make_toplevel_handle</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
@@ -1197,7 +1399,7 @@
 
 <span class="kw">fn</span> <span class="ident">toplevel_implementation</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">request</span>: <span class="ident">zxdg_toplevel_v6::Request</span>, <span class="ident">toplevel</span>: <span class="ident">zxdg_toplevel_v6::ZxdgToplevelV6</span>)
 <span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">XdgSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">XdgToplevelSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">toplevel</span>
         .<span class="ident">as_ref</span>()
@@ -1209,8 +1411,8 @@
             <span class="comment">// all it done by the destructor</span>
         }
         <span class="ident">zxdg_toplevel_v6::Request::SetParent</span> { <span class="ident">parent</span> } <span class="op">=</span><span class="op">&gt;</span> {
-            <span class="ident">with_surface_toplevel_data</span>::<span class="op">&lt;</span><span class="ident">R</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>, <span class="op">|</span><span class="ident">toplevel_data</span><span class="op">|</span> {
-                <span class="ident">toplevel_data</span>.<span class="ident">parent</span> <span class="op">=</span> <span class="ident">parent</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">toplevel_surface_parent</span><span class="op">|</span> {
+            <span class="ident">with_surface_toplevel_role_data</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">shell_data</span>, <span class="kw-2">&amp;</span><span class="ident">toplevel</span>, <span class="op">|</span><span class="ident">data</span><span class="op">|</span> {
+                <span class="ident">data</span>.<span class="ident">parent</span> <span class="op">=</span> <span class="ident">parent</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">toplevel_surface_parent</span><span class="op">|</span> {
                     <span class="kw">let</span> <span class="ident">parent_data</span> <span class="op">=</span> <span class="ident">toplevel_surface_parent</span>
                         .<span class="ident">as_ref</span>()
                         .<span class="ident">user_data</span>()
@@ -1221,13 +1423,15 @@
             });
         }
         <span class="ident">zxdg_toplevel_v6::Request::SetTitle</span> { <span class="ident">title</span> } <span class="op">=</span><span class="op">&gt;</span> {
-            <span class="ident">with_surface_toplevel_data</span>::<span class="op">&lt;</span><span class="ident">R</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>, <span class="op">|</span><span class="ident">toplevel_data</span><span class="op">|</span> {
-                <span class="ident">toplevel_data</span>.<span class="ident">title</span> <span class="op">=</span> <span class="ident">title</span>;
+            <span class="comment">// Title is not double buffered, we can set it directly</span>
+            <span class="ident">with_surface_toplevel_role_data</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">shell_data</span>, <span class="kw-2">&amp;</span><span class="ident">toplevel</span>, <span class="op">|</span><span class="ident">data</span><span class="op">|</span> {
+                <span class="ident">data</span>.<span class="ident">title</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">title</span>);
             });
         }
         <span class="ident">zxdg_toplevel_v6::Request::SetAppId</span> { <span class="ident">app_id</span> } <span class="op">=</span><span class="op">&gt;</span> {
-            <span class="ident">with_surface_toplevel_data</span>::<span class="op">&lt;</span><span class="ident">R</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>, <span class="op">|</span><span class="ident">toplevel_data</span><span class="op">|</span> {
-                <span class="ident">toplevel_data</span>.<span class="ident">app_id</span> <span class="op">=</span> <span class="ident">app_id</span>;
+            <span class="comment">// AppId is not double buffered, we can set it directly</span>
+            <span class="ident">with_surface_toplevel_role_data</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">shell_data</span>, <span class="kw-2">&amp;</span><span class="ident">toplevel</span>, <span class="op">|</span><span class="ident">role</span><span class="op">|</span> {
+                <span class="ident">role</span>.<span class="ident">app_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">app_id</span>);
             });
         }
         <span class="ident">zxdg_toplevel_v6::Request::ShowWindowMenu</span> { <span class="ident">seat</span>, <span class="ident">serial</span>, <span class="ident">x</span>, <span class="ident">y</span> } <span class="op">=</span><span class="op">&gt;</span> {
@@ -1265,13 +1469,13 @@
             });
         }
         <span class="ident">zxdg_toplevel_v6::Request::SetMaxSize</span> { <span class="ident">width</span>, <span class="ident">height</span> } <span class="op">=</span><span class="op">&gt;</span> {
-            <span class="ident">with_surface_toplevel_data</span>::<span class="op">&lt;</span><span class="ident">R</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>, <span class="op">|</span><span class="ident">toplevel_data</span><span class="op">|</span> {
-                <span class="ident">toplevel_data</span>.<span class="ident">max_size</span> <span class="op">=</span> (<span class="ident">width</span>, <span class="ident">height</span>);
+            <span class="ident">with_surface_toplevel_client_pending</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">shell_data</span>, <span class="kw-2">&amp;</span><span class="ident">toplevel</span>, <span class="op">|</span><span class="ident">toplevel_data</span><span class="op">|</span> {
+                <span class="ident">toplevel_data</span>.<span class="ident">max_size</span> <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="ident">width</span>, <span class="ident">height</span>));
             });
         }
         <span class="ident">zxdg_toplevel_v6::Request::SetMinSize</span> { <span class="ident">width</span>, <span class="ident">height</span> } <span class="op">=</span><span class="op">&gt;</span> {
-            <span class="ident">with_surface_toplevel_data</span>::<span class="op">&lt;</span><span class="ident">R</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>, <span class="op">|</span><span class="ident">toplevel_data</span><span class="op">|</span> {
-                <span class="ident">toplevel_data</span>.<span class="ident">min_size</span> <span class="op">=</span> (<span class="ident">width</span>, <span class="ident">height</span>);
+            <span class="ident">with_surface_toplevel_client_pending</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">shell_data</span>, <span class="kw-2">&amp;</span><span class="ident">toplevel</span>, <span class="op">|</span><span class="ident">toplevel_data</span><span class="op">|</span> {
+                <span class="ident">toplevel_data</span>.<span class="ident">min_size</span> <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="ident">width</span>, <span class="ident">height</span>));
             });
         }
         <span class="ident">zxdg_toplevel_v6::Request::SetMaximized</span> <span class="op">=</span><span class="op">&gt;</span> {
@@ -1298,6 +1502,8 @@
             (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">XdgRequest::UnFullscreen</span> { <span class="ident">surface</span>: <span class="ident">handle</span> });
         }
         <span class="ident">zxdg_toplevel_v6::Request::SetMinimized</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="comment">// This has to be handled by the compositor, may not be</span>
+            <span class="comment">// supported and just ignored</span>
             <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">make_toplevel_handle</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>);
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_impl</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">user_impl</span>.<span class="ident">borrow_mut</span>();
             (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">XdgRequest::Minimize</span> { <span class="ident">surface</span>: <span class="ident">handle</span> });
@@ -1308,7 +1514,7 @@
 
 <span class="kw">fn</span> <span class="ident">destroy_toplevel</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">toplevel</span>: <span class="ident">zxdg_toplevel_v6::ZxdgToplevelV6</span>)
 <span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">XdgSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">XdgToplevelSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">toplevel</span>
         .<span class="ident">as_ref</span>()
@@ -1322,9 +1528,8 @@
     } <span class="kw">else</span> {
         <span class="ident">data</span>.<span class="ident">shell_data</span>
             .<span class="ident">compositor_token</span>
-            .<span class="ident">with_role_data</span>::<span class="op">&lt;</span><span class="ident">XdgSurfaceRole</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">wl_surface</span>, <span class="op">|</span><span class="ident">data</span><span class="op">|</span> {
-                <span class="ident">data</span>.<span class="ident">pending_state</span> <span class="op">=</span> <span class="ident">XdgSurfacePendingState::None</span>;
-                <span class="ident">data</span>.<span class="ident">configured</span> <span class="op">=</span> <span class="bool-val">false</span>;
+            .<span class="ident">with_role_data</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">wl_surface</span>, <span class="op">|</span><span class="ident">role_data</span><span class="op">|</span> {
+                <span class="kw-2">*</span><span class="ident">role_data</span> <span class="op">=</span> <span class="ident">XdgToplevelSurfaceRole::None</span>;
             })
             .<span class="ident">expect</span>(<span class="string">&quot;xdg_toplevel exists but surface has not shell_surface role?!&quot;</span>);
     }
@@ -1343,25 +1548,23 @@
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">send_popup_configure</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">resource</span>: <span class="kw-2">&amp;</span><span class="ident">zxdg_popup_v6::ZxdgPopupV6</span>, <span class="ident">configure</span>: <span class="ident">PopupConfigure</span>)
 <span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">XdgSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">XdgPopupSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">resource</span>
         .<span class="ident">as_ref</span>()
         .<span class="ident">user_data</span>()
         .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ShellSurfaceUserData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span>()
         .<span class="ident">unwrap</span>();
-    <span class="kw">let</span> (<span class="ident">x</span>, <span class="ident">y</span>) <span class="op">=</span> <span class="ident">configure</span>.<span class="ident">position</span>;
-    <span class="kw">let</span> (<span class="ident">width</span>, <span class="ident">height</span>) <span class="op">=</span> <span class="ident">configure</span>.<span class="ident">size</span>;
+
     <span class="kw">let</span> <span class="ident">serial</span> <span class="op">=</span> <span class="ident">configure</span>.<span class="ident">serial</span>;
-    <span class="ident">resource</span>.<span class="ident">configure</span>(<span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">width</span>, <span class="ident">height</span>);
+    <span class="kw">let</span> <span class="ident">geometry</span> <span class="op">=</span> <span class="ident">configure</span>.<span class="ident">state</span>.<span class="ident">geometry</span>;
+
+    <span class="comment">// Send the popup configure</span>
+    <span class="ident">resource</span>.<span class="ident">configure</span>(<span class="ident">geometry</span>.<span class="ident">x</span>, <span class="ident">geometry</span>.<span class="ident">y</span>, <span class="ident">geometry</span>.<span class="ident">width</span>, <span class="ident">geometry</span>.<span class="ident">height</span>);
+
+    <span class="comment">// Send the base xdg_surface configure event to mark</span>
+    <span class="comment">// the configure as finished</span>
     <span class="ident">data</span>.<span class="ident">xdg_surface</span>.<span class="ident">configure</span>(<span class="ident">serial</span>.<span class="ident">into</span>());
-    <span class="comment">// Add the configure as pending</span>
-    <span class="ident">data</span>.<span class="ident">shell_data</span>
-        .<span class="ident">compositor_token</span>
-        .<span class="ident">with_role_data</span>::<span class="op">&lt;</span><span class="ident">XdgSurfaceRole</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">wl_surface</span>, <span class="op">|</span><span class="ident">data</span><span class="op">|</span> {
-            <span class="ident">data</span>.<span class="ident">pending_configures</span>.<span class="ident">push</span>(<span class="ident">serial</span>.<span class="ident">into</span>())
-        })
-        .<span class="ident">expect</span>(<span class="string">&quot;xdg_toplevel exists but surface has not shell_surface role?!&quot;</span>);
 }
 
 <span class="kw">fn</span> <span class="ident">make_popup_handle</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">resource</span>: <span class="kw-2">&amp;</span><span class="ident">zxdg_popup_v6::ZxdgPopupV6</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw">super</span><span class="ident">::PopupSurface</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
@@ -1379,7 +1582,7 @@
 
 <span class="kw">fn</span> <span class="ident">popup_implementation</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">request</span>: <span class="ident">zxdg_popup_v6::Request</span>, <span class="ident">popup</span>: <span class="ident">zxdg_popup_v6::ZxdgPopupV6</span>)
 <span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">XdgSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">XdgPopupSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">popup</span>
         .<span class="ident">as_ref</span>()
@@ -1406,7 +1609,7 @@
 
 <span class="kw">fn</span> <span class="ident">destroy_popup</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">popup</span>: <span class="ident">zxdg_popup_v6::ZxdgPopupV6</span>)
 <span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">XdgSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">XdgPopupSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">popup</span>
         .<span class="ident">as_ref</span>()
@@ -1420,9 +1623,8 @@
     } <span class="kw">else</span> {
         <span class="ident">data</span>.<span class="ident">shell_data</span>
             .<span class="ident">compositor_token</span>
-            .<span class="ident">with_role_data</span>::<span class="op">&lt;</span><span class="ident">XdgSurfaceRole</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">wl_surface</span>, <span class="op">|</span><span class="ident">data</span><span class="op">|</span> {
-                <span class="ident">data</span>.<span class="ident">pending_state</span> <span class="op">=</span> <span class="ident">XdgSurfacePendingState::None</span>;
-                <span class="ident">data</span>.<span class="ident">configured</span> <span class="op">=</span> <span class="bool-val">false</span>;
+            .<span class="ident">with_role_data</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">wl_surface</span>, <span class="op">|</span><span class="ident">role_data</span><span class="op">|</span> {
+                <span class="kw-2">*</span><span class="ident">role_data</span> <span class="op">=</span> <span class="ident">XdgPopupSurfaceRole::None</span>;
             })
             .<span class="ident">expect</span>(<span class="string">&quot;xdg_popup exists but surface has not shell_surface role?!&quot;</span>);
     }

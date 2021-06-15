@@ -48,7 +48,7 @@
 <span id="46">46</span>
 </pre><pre class="rust">
 <span class="doccomment">/// A rectangle defined by its top-left corner and dimensions</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Default</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Default</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Rectangle</span> {
     <span class="doccomment">/// horizontal position of the top-left corner of the rectangle, in surface coordinates</span>
     <span class="kw">pub</span> <span class="ident">x</span>: <span class="ident">i32</span>,
