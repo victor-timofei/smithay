@@ -157,8 +157,6 @@
 <span id="157">157</span>
 <span id="158">158</span>
 <span id="159">159</span>
-<span id="160">160</span>
-<span id="161">161</span>
 </pre><pre class="rust">
 <span class="doccomment">//! This module represents abstraction on top the linux direct rendering manager api (drm).</span>
 <span class="doccomment">//!</span>
@@ -224,8 +222,6 @@
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod</span> <span class="ident">device</span>;
 <span class="kw">pub</span>(<span class="self">self</span>) <span class="kw">mod</span> <span class="ident">error</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_gbm&quot;</span>)]</span>
-<span class="kw">mod</span> <span class="ident">render</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_session&quot;</span>)]</span>
 <span class="kw">pub</span>(<span class="self">self</span>) <span class="kw">mod</span> <span class="ident">session</span>;
 <span class="kw">pub</span>(<span class="self">self</span>) <span class="kw">mod</span> <span class="ident">surface</span>;
@@ -233,7 +229,7 @@
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">device</span>::{<span class="ident">DevPath</span>, <span class="ident">DrmDevice</span>, <span class="ident">DrmEvent</span>};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">error::Error</span> <span class="kw">as</span> <span class="ident">DrmError</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_gbm&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">render</span>::{<span class="ident">DrmRenderSurface</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">DrmRenderError</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">surface::gbm</span>::{<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">GbmBufferedSurfaceError</span>, <span class="ident">GbmBufferedSurface</span>};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">surface::DrmSurface</span>;
 
 <span class="kw">use</span> <span class="ident">drm::control</span>::{<span class="ident">crtc</span>, <span class="ident">plane</span>, <span class="ident">Device</span> <span class="kw">as</span> <span class="ident">ControlDevice</span>, <span class="ident">PlaneType</span>};

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src&#x2F;backend&#x2F;drm&#x2F;render.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>render.rs - source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../../../storage.js"></script><script src="../../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../../smithay/index.html'><div class='logo-container rust-logo'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input"name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src&#x2F;backend&#x2F;drm&#x2F;surface&#x2F;gbm.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>gbm.rs - source</title><link rel="stylesheet" type="text/css" href="../../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../../../../storage.js"></script><script src="../../../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../../../favicon.svg"><link rel="alternate icon" type="image/png" href="../../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../../../smithay/index.html'><div class='logo-container rust-logo'><img src='../../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input"name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -455,109 +455,6 @@
 <span id="455">455</span>
 <span id="456">456</span>
 <span id="457">457</span>
-<span id="458">458</span>
-<span id="459">459</span>
-<span id="460">460</span>
-<span id="461">461</span>
-<span id="462">462</span>
-<span id="463">463</span>
-<span id="464">464</span>
-<span id="465">465</span>
-<span id="466">466</span>
-<span id="467">467</span>
-<span id="468">468</span>
-<span id="469">469</span>
-<span id="470">470</span>
-<span id="471">471</span>
-<span id="472">472</span>
-<span id="473">473</span>
-<span id="474">474</span>
-<span id="475">475</span>
-<span id="476">476</span>
-<span id="477">477</span>
-<span id="478">478</span>
-<span id="479">479</span>
-<span id="480">480</span>
-<span id="481">481</span>
-<span id="482">482</span>
-<span id="483">483</span>
-<span id="484">484</span>
-<span id="485">485</span>
-<span id="486">486</span>
-<span id="487">487</span>
-<span id="488">488</span>
-<span id="489">489</span>
-<span id="490">490</span>
-<span id="491">491</span>
-<span id="492">492</span>
-<span id="493">493</span>
-<span id="494">494</span>
-<span id="495">495</span>
-<span id="496">496</span>
-<span id="497">497</span>
-<span id="498">498</span>
-<span id="499">499</span>
-<span id="500">500</span>
-<span id="501">501</span>
-<span id="502">502</span>
-<span id="503">503</span>
-<span id="504">504</span>
-<span id="505">505</span>
-<span id="506">506</span>
-<span id="507">507</span>
-<span id="508">508</span>
-<span id="509">509</span>
-<span id="510">510</span>
-<span id="511">511</span>
-<span id="512">512</span>
-<span id="513">513</span>
-<span id="514">514</span>
-<span id="515">515</span>
-<span id="516">516</span>
-<span id="517">517</span>
-<span id="518">518</span>
-<span id="519">519</span>
-<span id="520">520</span>
-<span id="521">521</span>
-<span id="522">522</span>
-<span id="523">523</span>
-<span id="524">524</span>
-<span id="525">525</span>
-<span id="526">526</span>
-<span id="527">527</span>
-<span id="528">528</span>
-<span id="529">529</span>
-<span id="530">530</span>
-<span id="531">531</span>
-<span id="532">532</span>
-<span id="533">533</span>
-<span id="534">534</span>
-<span id="535">535</span>
-<span id="536">536</span>
-<span id="537">537</span>
-<span id="538">538</span>
-<span id="539">539</span>
-<span id="540">540</span>
-<span id="541">541</span>
-<span id="542">542</span>
-<span id="543">543</span>
-<span id="544">544</span>
-<span id="545">545</span>
-<span id="546">546</span>
-<span id="547">547</span>
-<span id="548">548</span>
-<span id="549">549</span>
-<span id="550">550</span>
-<span id="551">551</span>
-<span id="552">552</span>
-<span id="553">553</span>
-<span id="554">554</span>
-<span id="555">555</span>
-<span id="556">556</span>
-<span id="557">557</span>
-<span id="558">558</span>
-<span id="559">559</span>
-<span id="560">560</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std::collections::HashSet</span>;
 <span class="kw">use</span> <span class="ident">std::os::unix::io::AsRawFd</span>;
@@ -565,14 +462,14 @@
 
 <span class="kw">use</span> <span class="ident">drm::buffer::PlanarBuffer</span>;
 <span class="kw">use</span> <span class="ident">drm::control</span>::{<span class="ident">connector</span>, <span class="ident">crtc</span>, <span class="ident">framebuffer</span>, <span class="ident">plane</span>, <span class="ident">Device</span>, <span class="ident">Mode</span>};
-<span class="kw">use</span> <span class="ident">gbm</span>::{<span class="ident">BufferObject</span>, <span class="ident">BufferObjectFlags</span>, <span class="ident">Device</span> <span class="kw">as</span> <span class="ident">GbmDevice</span>};
+<span class="kw">use</span> <span class="ident">gbm</span>::{<span class="ident">BufferObject</span>, <span class="ident">Device</span> <span class="kw">as</span> <span class="ident">GbmDevice</span>};
 
-<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">device::DevPath</span>, <span class="ident">surface::DrmSurfaceInternal</span>, <span class="ident">DrmError</span>, <span class="ident">DrmSurface</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend::allocator</span>::{
     <span class="ident">dmabuf</span>::{<span class="ident">AsDmabuf</span>, <span class="ident">Dmabuf</span>},
-    <span class="ident">Allocator</span>, <span class="ident">Buffer</span>, <span class="ident">Format</span>, <span class="ident">Fourcc</span>, <span class="ident">Modifier</span>, <span class="ident">Slot</span>, <span class="ident">Swapchain</span>,
+    <span class="ident">gbm::GbmConvertError</span>,
+    <span class="ident">Format</span>, <span class="ident">Fourcc</span>, <span class="ident">Modifier</span>, <span class="ident">Slot</span>, <span class="ident">Swapchain</span>,
 };
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend::renderer</span>::{<span class="ident">Bind</span>, <span class="ident">Frame</span>, <span class="ident">Renderer</span>, <span class="ident">Transform</span>};
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend::drm</span>::{<span class="ident">device::DevPath</span>, <span class="ident">surface::DrmSurfaceInternal</span>, <span class="ident">DrmError</span>, <span class="ident">DrmSurface</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend::SwapBuffersError</span>;
 
 <span class="doccomment">/// Simplified by limited abstraction to link single [`DrmSurface`]s to renderers.</span>
@@ -582,22 +479,15 @@
 <span class="doccomment">/// In some scenarios it might be enough to use of a drm-surface as the one and only target</span>
 <span class="doccomment">/// of a single renderer. In these cases `DrmRenderSurface` provides a way to quickly</span>
 <span class="doccomment">/// get up and running without manually handling and binding buffers.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DrmRenderSurface</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>, <span class="ident">A</span>: <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>, <span class="ident">R</span>: <span class="ident">Bind</span><span class="op">&lt;</span><span class="ident">Dmabuf</span><span class="op">&gt;</span>, <span class="ident">B</span>: <span class="ident">Buffer</span><span class="op">&gt;</span> {
-    <span class="ident">buffers</span>: <span class="ident">Buffers</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">B</span><span class="op">&gt;</span>,
-    <span class="ident">swapchain</span>: <span class="ident">Swapchain</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span>, (<span class="ident">Dmabuf</span>, <span class="ident">BufferObject</span><span class="op">&lt;</span><span class="ident">FbHandle</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
-    <span class="ident">renderer</span>: <span class="ident">R</span>,
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GbmBufferedSurface</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
+    <span class="ident">buffers</span>: <span class="ident">Buffers</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>,
+    <span class="ident">swapchain</span>: <span class="ident">Swapchain</span><span class="op">&lt;</span><span class="ident">GbmDevice</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>, <span class="ident">BufferObject</span><span class="op">&lt;</span>()<span class="op">&gt;</span>, (<span class="ident">Dmabuf</span>, <span class="ident">FbHandle</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
     <span class="ident">drm</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">DrmSurface</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">R</span>, <span class="ident">E1</span>, <span class="ident">E2</span>, <span class="ident">E3</span><span class="op">&gt;</span> <span class="ident">DrmRenderSurface</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">A</span>, <span class="ident">R</span>, <span class="ident">B</span><span class="op">&gt;</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span> <span class="ident">GbmBufferedSurface</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>
 <span class="kw">where</span>
     <span class="ident">D</span>: <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-    <span class="ident">A</span>: <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">E1</span><span class="op">&gt;</span>,
-    <span class="ident">B</span>: <span class="ident">Buffer</span> <span class="op">+</span> <span class="ident">AsDmabuf</span><span class="op">&lt;</span><span class="ident">Error</span> <span class="op">=</span> <span class="ident">E2</span><span class="op">&gt;</span>,
-    <span class="ident">R</span>: <span class="ident">Bind</span><span class="op">&lt;</span><span class="ident">Dmabuf</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Renderer</span><span class="op">&lt;</span><span class="ident">Error</span> <span class="op">=</span> <span class="ident">E3</span><span class="op">&gt;</span>,
-    <span class="ident">E1</span>: <span class="ident">std::error::Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-    <span class="ident">E2</span>: <span class="ident">std::error::Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-    <span class="ident">E3</span>: <span class="ident">std::error::Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
     <span class="doccomment">/// Create a new `DrmRendererSurface` from a given compatible combination</span>
     <span class="doccomment">/// of a surface, an allocator and a renderer.</span>
@@ -609,12 +499,15 @@
     <span class="doccomment">/// The function will futhermore check for compatibility by enumerating</span>
     <span class="doccomment">/// supported pixel formats and choosing an appropriate one.</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::type_complexity</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">::slog::Logger</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>(
         <span class="ident">drm</span>: <span class="ident">DrmSurface</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>,
-        <span class="ident">allocator</span>: <span class="ident">A</span>,
-        <span class="kw-2">mut</span> <span class="ident">renderer</span>: <span class="ident">R</span>,
+        <span class="ident">allocator</span>: <span class="ident">GbmDevice</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>,
+        <span class="kw-2">mut</span> <span class="ident">renderer_formats</span>: <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">Format</span><span class="op">&gt;</span>,
         <span class="ident">log</span>: <span class="ident">L</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DrmRenderSurface</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">A</span>, <span class="ident">R</span>, <span class="ident">B</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">E1</span>, <span class="ident">E2</span>, <span class="ident">E3</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">GbmBufferedSurface</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">::slog::Logger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    {
         <span class="comment">// we cannot simply pick the first supported format of the intersection of *all* formats, because:</span>
         <span class="comment">// - we do not want something like Abgr4444, which looses color information</span>
         <span class="comment">// - some formats might perform terribly</span>
@@ -634,15 +527,10 @@
             .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">fmt</span><span class="op">|</span> <span class="ident">fmt</span>.<span class="ident">code</span> <span class="op">=</span><span class="op">=</span> <span class="ident">code</span>)
             .<span class="ident">cloned</span>()
             .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">HashSet</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-        <span class="kw">let</span> <span class="ident">renderer_formats</span> <span class="op">=</span> <span class="ident">Bind</span>::<span class="op">&lt;</span><span class="ident">Dmabuf</span><span class="op">&gt;</span><span class="ident">::supported_formats</span>(<span class="kw-2">&amp;</span><span class="ident">renderer</span>)
-            .<span class="ident">expect</span>(<span class="string">&quot;Dmabuf renderer without formats&quot;</span>)
-            .<span class="ident">iter</span>()
-            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">fmt</span><span class="op">|</span> <span class="ident">fmt</span>.<span class="ident">code</span> <span class="op">=</span><span class="op">=</span> <span class="ident">code</span>)
-            .<span class="ident">cloned</span>()
-            .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">HashSet</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+        <span class="ident">renderer_formats</span>.<span class="ident">retain</span>(<span class="op">|</span><span class="ident">fmt</span><span class="op">|</span> <span class="ident">fmt</span>.<span class="ident">code</span> <span class="op">=</span><span class="op">=</span> <span class="ident">code</span>);
 
-        <span class="macro">debug!</span>(<span class="ident">logger</span>, <span class="string">&quot;Remaining plane formats: {:?}&quot;</span>, <span class="ident">plane_formats</span>);
-        <span class="macro">debug!</span>(<span class="ident">logger</span>, <span class="string">&quot;Remaining renderer formats: {:?}&quot;</span>, <span class="ident">renderer_formats</span>);
+        <span class="macro">trace!</span>(<span class="ident">logger</span>, <span class="string">&quot;Plane formats: {:?}&quot;</span>, <span class="ident">plane_formats</span>);
+        <span class="macro">trace!</span>(<span class="ident">logger</span>, <span class="string">&quot;Renderer formats: {:?}&quot;</span>, <span class="ident">renderer_formats</span>);
         <span class="macro">debug!</span>(
             <span class="ident">logger</span>,
             <span class="string">&quot;Remaining intersected formats: {:?}&quot;</span>,
@@ -656,6 +544,7 @@
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">renderer_formats</span>.<span class="ident">is_empty</span>() {
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::NoSupportedRendererFormat</span>);
         }
+
         <span class="kw">let</span> <span class="ident">formats</span> <span class="op">=</span> {
             <span class="comment">// Special case: if a format supports explicit LINEAR (but no implicit Modifiers)</span>
             <span class="comment">// and the other doesn&#39;t support any modifier, force Implicit.</span>
@@ -688,8 +577,7 @@
 
         <span class="kw">let</span> <span class="ident">mode</span> <span class="op">=</span> <span class="ident">drm</span>.<span class="ident">pending_mode</span>();
 
-        <span class="kw">let</span> <span class="ident">gbm</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">GbmDevice::new_from_fd</span>(<span class="ident">drm</span>.<span class="ident">as_raw_fd</span>())<span class="question-mark">?</span> };
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">swapchain</span> <span class="op">=</span> <span class="ident">Swapchain::new</span>(
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">swapchain</span>: <span class="ident">Swapchain</span><span class="op">&lt;</span><span class="ident">GbmDevice</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>, <span class="ident">BufferObject</span><span class="op">&lt;</span>()<span class="op">&gt;</span>, (<span class="ident">Dmabuf</span>, <span class="ident">FbHandle</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>)<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Swapchain::new</span>(
             <span class="ident">allocator</span>,
             <span class="ident">mode</span>.<span class="ident">size</span>().<span class="number">0</span> <span class="kw">as</span> <span class="ident">u32</span>,
             <span class="ident">mode</span>.<span class="ident">size</span>().<span class="number">1</span> <span class="kw">as</span> <span class="ident">u32</span>,
@@ -698,116 +586,63 @@
         );
 
         <span class="comment">// Test format</span>
-        <span class="kw">let</span> <span class="ident">buffer</span> <span class="op">=</span> <span class="ident">swapchain</span>.<span class="ident">acquire</span>().<span class="ident">map_err</span>(<span class="ident">Error::SwapchainError</span>)<span class="question-mark">?</span>.<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">dmabuf</span> <span class="op">=</span> <span class="ident">buffer</span>.<span class="ident">export</span>().<span class="ident">map_err</span>(<span class="ident">Error::AsDmabufError</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">buffer</span> <span class="op">=</span> <span class="ident">swapchain</span>.<span class="ident">acquire</span>()<span class="question-mark">?</span>.<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="ident">format</span> <span class="op">=</span> <span class="ident">Format</span> {
             <span class="ident">code</span>,
-            <span class="ident">modifier</span>: <span class="ident">buffer</span>.<span class="ident">format</span>().<span class="ident">modifier</span>, <span class="comment">// no guarantee</span>
-                                                <span class="comment">// that this is stable across allocations, but</span>
-                                                <span class="comment">// we want to print that here for debugging proposes.</span>
-                                                <span class="comment">// It has no further use.</span>
+            <span class="ident">modifier</span>: <span class="ident">buffer</span>.<span class="ident">modifier</span>().<span class="ident">unwrap</span>(), <span class="comment">// no guarantee</span>
+                                                  <span class="comment">// that this is stable across allocations, but</span>
+                                                  <span class="comment">// we want to print that here for debugging proposes.</span>
+                                                  <span class="comment">// It has no further use.</span>
         };
 
-        <span class="kw">match</span> <span class="ident">renderer</span>
-            .<span class="ident">bind</span>(<span class="ident">dmabuf</span>.<span class="ident">clone</span>())
-            .<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">E1</span>, <span class="ident">E2</span>, <span class="ident">E3</span><span class="op">&gt;</span><span class="ident">::RenderError</span>)
-            .<span class="ident">and_then</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
-                <span class="ident">renderer</span>
-                    .<span class="ident">render</span>(
-                        <span class="ident">mode</span>.<span class="ident">size</span>().<span class="number">0</span> <span class="kw">as</span> <span class="ident">u32</span>,
-                        <span class="ident">mode</span>.<span class="ident">size</span>().<span class="number">1</span> <span class="kw">as</span> <span class="ident">u32</span>,
-                        <span class="ident">Transform::Normal</span>,
-                        <span class="op">|</span><span class="kw">_</span>, <span class="ident">frame</span><span class="op">|</span> <span class="ident">frame</span>.<span class="ident">clear</span>([<span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">1.0</span>]),
-                    )
-                    .<span class="ident">map_err</span>(<span class="ident">Error::RenderError</span>)
-            })
-            .<span class="ident">and_then</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">renderer</span>.<span class="ident">unbind</span>().<span class="ident">map_err</span>(<span class="ident">Error::RenderError</span>))
-        {
-            <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="kw">let</span> <span class="ident">bo</span> <span class="op">=</span> <span class="ident">import_dmabuf</span>(<span class="kw-2">&amp;</span><span class="ident">drm</span>, <span class="kw-2">&amp;</span><span class="ident">gbm</span>, <span class="kw-2">&amp;</span><span class="ident">dmabuf</span>)<span class="question-mark">?</span>;
-                <span class="kw">let</span> <span class="ident">fb</span> <span class="op">=</span> <span class="ident">bo</span>.<span class="ident">userdata</span>().<span class="ident">unwrap</span>().<span class="ident">unwrap</span>().<span class="ident">fb</span>;
-                <span class="kw-2">*</span><span class="ident">buffer</span>.<span class="ident">userdata</span>() <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="ident">dmabuf</span>, <span class="ident">bo</span>));
+        <span class="kw">let</span> <span class="ident">fb</span> <span class="op">=</span> <span class="ident">attach_framebuffer</span>(<span class="kw-2">&amp;</span><span class="ident">drm</span>, <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">buffer</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">dmabuf</span> <span class="op">=</span> <span class="ident">buffer</span>.<span class="ident">export</span>()<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">fb</span>.<span class="ident">fb</span>;
+        <span class="kw-2">*</span><span class="ident">buffer</span>.<span class="ident">userdata</span>() <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="ident">dmabuf</span>, <span class="ident">fb</span>));
 
-                <span class="kw">match</span> <span class="ident">drm</span>.<span class="ident">test_buffer</span>(<span class="ident">fb</span>, <span class="kw-2">&amp;</span><span class="ident">mode</span>, <span class="bool-val">true</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                        <span class="macro">debug!</span>(<span class="ident">logger</span>, <span class="string">&quot;Success, choosen format: {:?}&quot;</span>, <span class="ident">format</span>);
-                        <span class="kw">let</span> <span class="ident">buffers</span> <span class="op">=</span> <span class="ident">Buffers::new</span>(<span class="ident">drm</span>.<span class="ident">clone</span>(), <span class="ident">gbm</span>, <span class="ident">buffer</span>);
-                        <span class="prelude-val">Ok</span>(<span class="ident">DrmRenderSurface</span> {
-                            <span class="ident">buffers</span>,
-                            <span class="ident">swapchain</span>,
-                            <span class="ident">renderer</span>,
-                            <span class="ident">drm</span>,
-                        })
-                    }
-                    <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                        <span class="macro">warn!</span>(
-                            <span class="ident">logger</span>,
-                            <span class="string">&quot;Mode-setting failed with automatically selected buffer format {:?}: {}&quot;</span>,
-                            <span class="ident">format</span>,
-                            <span class="ident">err</span>
-                        );
-                        <span class="prelude-val">Err</span>(<span class="ident">err</span>).<span class="ident">map_err</span>(<span class="ident">Into::into</span>)
-                    }
-                }
+        <span class="kw">match</span> <span class="ident">drm</span>.<span class="ident">test_buffer</span>(<span class="ident">handle</span>, <span class="kw-2">&amp;</span><span class="ident">mode</span>, <span class="bool-val">true</span>) {
+            <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="macro">debug!</span>(<span class="ident">logger</span>, <span class="string">&quot;Choosen format: {:?}&quot;</span>, <span class="ident">format</span>);
+                <span class="kw">let</span> <span class="ident">buffers</span> <span class="op">=</span> <span class="ident">Buffers::new</span>(<span class="ident">drm</span>.<span class="ident">clone</span>(), <span class="ident">buffer</span>);
+                <span class="prelude-val">Ok</span>(<span class="ident">GbmBufferedSurface</span> {
+                    <span class="ident">buffers</span>,
+                    <span class="ident">swapchain</span>,
+                    <span class="ident">drm</span>,
+                })
             }
             <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="macro">warn!</span>(
                     <span class="ident">logger</span>,
-                    <span class="string">&quot;Rendering failed with automatically selected format {:?}: {}&quot;</span>, <span class="ident">format</span>, <span class="ident">err</span>
+                    <span class="string">&quot;Mode-setting failed with automatically selected buffer format {:?}: {}&quot;</span>, <span class="ident">format</span>, <span class="ident">err</span>
                 );
-                <span class="prelude-val">Err</span>(<span class="ident">err</span>)
+                <span class="prelude-val">Err</span>(<span class="ident">err</span>).<span class="ident">map_err</span>(<span class="ident">Into::into</span>)
             }
         }
     }
 
-    <span class="doccomment">/// Access the underlying renderer</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">renderer</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span> {
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">renderer</span>
+    <span class="doccomment">/// Retrieves the next buffer to be rendered into.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// *Note*: This function can be called multiple times and</span>
+    <span class="doccomment">/// will return the same buffer until it is queued (see [`GbmBufferedSurface::queue_buffer`]).</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">next_buffer</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Dmabuf</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">buffers</span>.<span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">swapchain</span>)
     }
 
-    <span class="doccomment">/// Shortcut to [`Renderer::render`] with the pending mode as dimensions</span>
-    <span class="doccomment">/// and this surface set a the rendering target.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">render</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">S</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">rendering</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">S</span>, <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">E1</span>, <span class="ident">E2</span>, <span class="ident">E3</span><span class="op">&gt;</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="op">&lt;</span><span class="ident">R</span> <span class="kw">as</span> <span class="ident">Renderer</span><span class="op">&gt;</span><span class="ident">::Frame</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">S</span>,
-    {
-        <span class="kw">let</span> <span class="ident">mode</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">drm</span>.<span class="ident">pending_mode</span>();
-        <span class="kw">let</span> (<span class="ident">width</span>, <span class="ident">height</span>) <span class="op">=</span> (<span class="ident">mode</span>.<span class="ident">size</span>().<span class="number">0</span> <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">mode</span>.<span class="ident">size</span>().<span class="number">1</span> <span class="kw">as</span> <span class="ident">u32</span>);
-        <span class="kw">let</span> <span class="ident">slot</span> <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">swapchain</span>
-            .<span class="ident">acquire</span>()
-            .<span class="ident">map_err</span>(<span class="ident">Error::SwapchainError</span>)<span class="question-mark">?</span>
-            .<span class="ident">ok_or</span>(<span class="ident">Error::NoFreeSlotsError</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">dmabuf</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">slot</span>.<span class="ident">userdata</span>() {
-            <span class="prelude-val">Some</span>((<span class="ident">buf</span>, <span class="kw">_</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">buf</span>.<span class="ident">clone</span>(),
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> (<span class="kw-2">*</span><span class="ident">slot</span>).<span class="ident">export</span>().<span class="ident">map_err</span>(<span class="ident">Error::AsDmabufError</span>)<span class="question-mark">?</span>,
-        };
-        <span class="self">self</span>.<span class="ident">renderer</span>.<span class="ident">bind</span>(<span class="ident">dmabuf</span>.<span class="ident">clone</span>()).<span class="ident">map_err</span>(<span class="ident">Error::RenderError</span>)<span class="question-mark">?</span>;
-
-        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">renderer</span>
-            .<span class="ident">render</span>(
-                <span class="ident">width</span>, <span class="ident">height</span>,
-                <span class="ident">Transform::Flipped180</span> <span class="comment">/* TODO: add Add&lt;Transform&gt; implementation to add and correct _transform here */</span>,
-                <span class="ident">rendering</span>,
-            )
-            .<span class="ident">map_err</span>(<span class="ident">Error::RenderError</span>)<span class="question-mark">?</span>;
-
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">buffers</span>.<span class="ident">queue</span>::<span class="op">&lt;</span><span class="ident">E1</span>, <span class="ident">E2</span>, <span class="ident">E3</span><span class="op">&gt;</span>(<span class="ident">slot</span>, <span class="ident">dmabuf</span>) {
-            <span class="prelude-val">Ok</span>(()) <span class="op">=</span><span class="op">&gt;</span> {}
-            <span class="prelude-val">Err</span>(<span class="ident">Error::DrmError</span>(<span class="ident">drm</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">drm</span>.<span class="ident">into</span>()),
-            <span class="prelude-val">Err</span>(<span class="ident">Error::GbmError</span>(<span class="ident">err</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>.<span class="ident">into</span>()),
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
-        }
-
-        <span class="prelude-val">Ok</span>(<span class="ident">result</span>)
+    <span class="doccomment">/// Queues the current buffer for rendering.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// *Note*: This function needs to be followed up with [`GbmBufferedSurface::frame_submitted`]</span>
+    <span class="doccomment">/// when a vblank event is received, that denotes successful scanout of the buffer.</span>
+    <span class="doccomment">/// Otherwise the underlying swapchain will eventually run out of buffers.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">queue_buffer</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">buffers</span>.<span class="ident">queue</span>()
     }
 
     <span class="doccomment">/// Marks the current frame as submitted.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Needs to be called, after the vblank event of the matching [`DrmDevice`](super::DrmDevice)</span>
-    <span class="doccomment">/// was received after calling [`DrmRenderSurface::render`] on this surface.</span>
-    <span class="doccomment">/// Otherwise the rendering will run out of buffers eventually.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">frame_submitted</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">E1</span>, <span class="ident">E2</span>, <span class="ident">E3</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// *Note*: Needs to be called, after the vblank event of the matching [`DrmDevice`](super::DrmDevice)</span>
+    <span class="doccomment">/// was received after calling [`GbmBufferedSurface::queue_buffer`] on this surface.</span>
+    <span class="doccomment">/// Otherwise the underlying swapchain will run out of buffers eventually.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">frame_submitted</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">buffers</span>.<span class="ident">submitted</span>()
     }
 
@@ -827,7 +662,7 @@
     }
 
     <span class="doccomment">/// Returns the pending [`connector`](drm::control::connector)s</span>
-    <span class="doccomment">/// used for the next frame in [`render`](DrmRenderSurface::render)</span>
+    <span class="doccomment">/// used for the next frame queued via [`queue_buffer`](GbmBufferedSurface::queue_buffer).</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pending_connectors</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw">impl</span> <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">connector::Handle</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">drm</span>.<span class="ident">pending_connectors</span>()
     }
@@ -844,13 +679,13 @@
     <span class="doccomment">/// (e.g. no suitable [`encoder`](drm::control::encoder) may be found)</span>
     <span class="doccomment">/// or is not compatible with the currently pending</span>
     <span class="doccomment">/// [`Mode`](drm::control::Mode).</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_connector</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">connector</span>: <span class="ident">connector::Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">E1</span>, <span class="ident">E2</span>, <span class="ident">E3</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_connector</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">connector</span>: <span class="ident">connector::Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">drm</span>.<span class="ident">add_connector</span>(<span class="ident">connector</span>).<span class="ident">map_err</span>(<span class="ident">Error::DrmError</span>)
     }
 
     <span class="doccomment">/// Tries to mark a [`connector`](drm::control::connector)</span>
     <span class="doccomment">/// for removal on the next commit.    </span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove_connector</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">connector</span>: <span class="ident">connector::Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">E1</span>, <span class="ident">E2</span>, <span class="ident">E3</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove_connector</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">connector</span>: <span class="ident">connector::Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">drm</span>.<span class="ident">remove_connector</span>(<span class="ident">connector</span>).<span class="ident">map_err</span>(<span class="ident">Error::DrmError</span>)
     }
 
@@ -860,7 +695,7 @@
     <span class="doccomment">/// (e.g. no suitable [`encoder`](drm::control::encoder) may be found)</span>
     <span class="doccomment">/// or is not compatible with the currently pending</span>
     <span class="doccomment">/// [`Mode`](drm::control::Mode).    </span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_connectors</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">connectors</span>: <span class="kw-2">&amp;</span>[<span class="ident">connector::Handle</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">E1</span>, <span class="ident">E2</span>, <span class="ident">E3</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_connectors</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">connectors</span>: <span class="kw-2">&amp;</span>[<span class="ident">connector::Handle</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">drm</span>.<span class="ident">set_connectors</span>(<span class="ident">connectors</span>).<span class="ident">map_err</span>(<span class="ident">Error::DrmError</span>)
     }
 
@@ -882,7 +717,7 @@
     <span class="doccomment">/// Fails if the mode is not compatible with the underlying</span>
     <span class="doccomment">/// [`crtc`](drm::control::crtc) or any of the</span>
     <span class="doccomment">/// pending [`connector`](drm::control::connector)s.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">use_mode</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">mode</span>: <span class="ident">Mode</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">E1</span>, <span class="ident">E2</span>, <span class="ident">E3</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">use_mode</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">mode</span>: <span class="ident">Mode</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">drm</span>.<span class="ident">use_mode</span>(<span class="ident">mode</span>).<span class="ident">map_err</span>(<span class="ident">Error::DrmError</span>)
     }
 }
@@ -898,65 +733,66 @@
     }
 }
 
-<span class="kw">type</span> <span class="ident">DmabufSlot</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">D</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Slot</span><span class="op">&lt;</span><span class="ident">B</span>, (<span class="ident">Dmabuf</span>, <span class="ident">BufferObject</span><span class="op">&lt;</span><span class="ident">FbHandle</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span><span class="op">&gt;</span>)<span class="op">&gt;</span>;
+<span class="kw">type</span> <span class="ident">DmabufSlot</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Slot</span><span class="op">&lt;</span><span class="ident">BufferObject</span><span class="op">&lt;</span>()<span class="op">&gt;</span>, (<span class="ident">Dmabuf</span>, <span class="ident">FbHandle</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>)<span class="op">&gt;</span>;
 
-<span class="kw">struct</span> <span class="ident">Buffers</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>, <span class="ident">B</span>: <span class="ident">Buffer</span><span class="op">&gt;</span> {
-    <span class="ident">gbm</span>: <span class="ident">GbmDevice</span><span class="op">&lt;</span><span class="ident">gbm::FdWrapper</span><span class="op">&gt;</span>,
+<span class="kw">struct</span> <span class="ident">Buffers</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
     <span class="ident">drm</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">DrmSurface</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">_current_fb</span>: <span class="ident">DmabufSlot</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">D</span><span class="op">&gt;</span>,
-    <span class="ident">pending_fb</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DmabufSlot</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">D</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">queued_fb</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DmabufSlot</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">D</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">_current_fb</span>: <span class="ident">DmabufSlot</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>,
+    <span class="ident">pending_fb</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DmabufSlot</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">queued_fb</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DmabufSlot</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">next_fb</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DmabufSlot</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">B</span><span class="op">&gt;</span> <span class="ident">Buffers</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">B</span><span class="op">&gt;</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span> <span class="ident">Buffers</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>
 <span class="kw">where</span>
-    <span class="ident">B</span>: <span class="ident">Buffer</span> <span class="op">+</span> <span class="ident">AsDmabuf</span>,
     <span class="ident">D</span>: <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
-        <span class="ident">drm</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">DrmSurface</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">gbm</span>: <span class="ident">GbmDevice</span><span class="op">&lt;</span><span class="ident">gbm::FdWrapper</span><span class="op">&gt;</span>,
-        <span class="ident">slot</span>: <span class="ident">Slot</span><span class="op">&lt;</span><span class="ident">B</span>, (<span class="ident">Dmabuf</span>, <span class="ident">BufferObject</span><span class="op">&lt;</span><span class="ident">FbHandle</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Buffers</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">drm</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">DrmSurface</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">slot</span>: <span class="ident">DmabufSlot</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Buffers</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span> {
         <span class="ident">Buffers</span> {
             <span class="ident">drm</span>,
-            <span class="ident">gbm</span>,
             <span class="ident">_current_fb</span>: <span class="ident">slot</span>,
             <span class="ident">pending_fb</span>: <span class="prelude-val">None</span>,
             <span class="ident">queued_fb</span>: <span class="prelude-val">None</span>,
+            <span class="ident">next_fb</span>: <span class="prelude-val">None</span>,
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">queue</span><span class="op">&lt;</span><span class="ident">E1</span>, <span class="ident">E2</span>, <span class="ident">E3</span><span class="op">&gt;</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">next</span>(
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">slot</span>: <span class="ident">Slot</span><span class="op">&lt;</span><span class="ident">B</span>, (<span class="ident">Dmabuf</span>, <span class="ident">BufferObject</span><span class="op">&lt;</span><span class="ident">FbHandle</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
-        <span class="ident">dmabuf</span>: <span class="ident">Dmabuf</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">E1</span>, <span class="ident">E2</span>, <span class="ident">E3</span><span class="op">&gt;</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">B</span>: <span class="ident">AsDmabuf</span><span class="op">&lt;</span><span class="ident">Error</span> <span class="op">=</span> <span class="ident">E2</span><span class="op">&gt;</span>,
-        <span class="ident">E1</span>: <span class="ident">std::error::Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-        <span class="ident">E2</span>: <span class="ident">std::error::Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-        <span class="ident">E3</span>: <span class="ident">std::error::Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-    {
-        <span class="kw">if</span> <span class="ident">slot</span>.<span class="ident">userdata</span>().<span class="ident">is_none</span>() {
-            <span class="kw">let</span> <span class="ident">bo</span> <span class="op">=</span> <span class="ident">import_dmabuf</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">drm</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">gbm</span>, <span class="kw-2">&amp;</span><span class="ident">dmabuf</span>)<span class="question-mark">?</span>;
-            <span class="kw-2">*</span><span class="ident">slot</span>.<span class="ident">userdata</span>() <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="ident">dmabuf</span>, <span class="ident">bo</span>));
+        <span class="ident">swapchain</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Swapchain</span><span class="op">&lt;</span><span class="ident">GbmDevice</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>, <span class="ident">BufferObject</span><span class="op">&lt;</span>()<span class="op">&gt;</span>, (<span class="ident">Dmabuf</span>, <span class="ident">FbHandle</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Dmabuf</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">slot</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">next_fb</span>.<span class="ident">as_ref</span>() {
+            <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">slot</span>.<span class="ident">userdata</span>().<span class="ident">as_ref</span>().<span class="ident">unwrap</span>().<span class="number">0</span>.<span class="ident">clone</span>());
         }
 
-        <span class="self">self</span>.<span class="ident">queued_fb</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">slot</span>);
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">pending_fb</span>.<span class="ident">is_none</span>() {
+        <span class="kw">let</span> <span class="ident">slot</span> <span class="op">=</span> <span class="ident">swapchain</span>.<span class="ident">acquire</span>()<span class="question-mark">?</span>.<span class="ident">ok_or</span>(<span class="ident">Error::NoFreeSlotsError</span>)<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">maybe_buffer</span> <span class="op">=</span> <span class="ident">slot</span>.<span class="ident">userdata</span>().<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">buf</span>, <span class="kw">_</span>)<span class="op">|</span> <span class="ident">buf</span>.<span class="ident">clone</span>());
+        <span class="kw">let</span> <span class="ident">dmabuf</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">maybe_buffer</span> {
+            <span class="prelude-val">Some</span>(<span class="ident">buf</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">buf</span>.<span class="ident">clone</span>(),
+            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="kw">let</span> <span class="ident">dmabuf</span> <span class="op">=</span> <span class="ident">slot</span>.<span class="ident">export</span>()<span class="question-mark">?</span>;
+                <span class="kw">let</span> <span class="ident">fb_handle</span> <span class="op">=</span> <span class="ident">attach_framebuffer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">drm</span>, <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">slot</span>)<span class="question-mark">?</span>;
+                <span class="kw-2">*</span><span class="ident">slot</span>.<span class="ident">userdata</span>() <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="ident">dmabuf</span>.<span class="ident">clone</span>(), <span class="ident">fb_handle</span>));
+                <span class="ident">dmabuf</span>
+            }
+        };
+
+        <span class="self">self</span>.<span class="ident">next_fb</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">slot</span>);
+
+        <span class="prelude-val">Ok</span>(<span class="ident">dmabuf</span>)
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">queue</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">queued_fb</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">next_fb</span>.<span class="ident">take</span>();
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">pending_fb</span>.<span class="ident">is_none</span>() <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">queued_fb</span>.<span class="ident">is_some</span>() {
             <span class="self">self</span>.<span class="ident">submit</span>()
         } <span class="kw">else</span> {
             <span class="prelude-val">Ok</span>(())
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">submitted</span><span class="op">&lt;</span><span class="ident">E1</span>, <span class="ident">E2</span>, <span class="ident">E3</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">E1</span>, <span class="ident">E2</span>, <span class="ident">E3</span><span class="op">&gt;</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">E1</span>: <span class="ident">std::error::Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-        <span class="ident">E2</span>: <span class="ident">std::error::Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-        <span class="ident">E3</span>: <span class="ident">std::error::Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-    {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">submitted</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">pending_fb</span>.<span class="ident">is_none</span>() {
             <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
         }
@@ -968,23 +804,10 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">submit</span><span class="op">&lt;</span><span class="ident">E1</span>, <span class="ident">E2</span>, <span class="ident">E3</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">E1</span>, <span class="ident">E2</span>, <span class="ident">E3</span><span class="op">&gt;</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">E1</span>: <span class="ident">std::error::Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-        <span class="ident">E2</span>: <span class="ident">std::error::Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-        <span class="ident">E3</span>: <span class="ident">std::error::Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-    {
+    <span class="kw">fn</span> <span class="ident">submit</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="comment">// yes it does not look like it, but both of these lines should be safe in all cases.</span>
         <span class="kw">let</span> <span class="ident">slot</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">queued_fb</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">fb</span> <span class="op">=</span> <span class="ident">slot</span>
-            .<span class="ident">userdata</span>()
-            .<span class="ident">as_ref</span>()
-            .<span class="ident">unwrap</span>()
-            .<span class="number">1</span>
-            .<span class="ident">userdata</span>()
-            .<span class="ident">unwrap</span>()
-            .<span class="ident">unwrap</span>()
-            .<span class="ident">fb</span>;
+        <span class="kw">let</span> <span class="ident">fb</span> <span class="op">=</span> <span class="ident">slot</span>.<span class="ident">userdata</span>().<span class="ident">as_ref</span>().<span class="ident">unwrap</span>().<span class="number">1</span>.<span class="ident">fb</span>;
 
         <span class="kw">let</span> <span class="ident">flip</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">drm</span>.<span class="ident">commit_pending</span>() {
             <span class="self">self</span>.<span class="ident">drm</span>.<span class="ident">commit</span>([(<span class="ident">fb</span>, <span class="self">self</span>.<span class="ident">drm</span>.<span class="ident">plane</span>())].<span class="ident">iter</span>(), <span class="bool-val">true</span>)
@@ -998,19 +821,10 @@
     }
 }
 
-<span class="kw">fn</span> <span class="ident">import_dmabuf</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">E1</span>, <span class="ident">E2</span>, <span class="ident">E3</span><span class="op">&gt;</span>(
-    <span class="ident">drm</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">DrmSurface</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">gbm</span>: <span class="kw-2">&amp;</span><span class="ident">GbmDevice</span><span class="op">&lt;</span><span class="ident">gbm::FdWrapper</span><span class="op">&gt;</span>,
-    <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="ident">Dmabuf</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">BufferObject</span><span class="op">&lt;</span><span class="ident">FbHandle</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">E1</span>, <span class="ident">E2</span>, <span class="ident">E3</span><span class="op">&gt;</span><span class="op">&gt;</span>
+<span class="kw">fn</span> <span class="ident">attach_framebuffer</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>(<span class="ident">drm</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">DrmSurface</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bo</span>: <span class="kw-2">&amp;</span><span class="ident">BufferObject</span><span class="op">&lt;</span>()<span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">FbHandle</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span>
 <span class="kw">where</span>
     <span class="ident">A</span>: <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-    <span class="ident">E1</span>: <span class="ident">std::error::Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-    <span class="ident">E2</span>: <span class="ident">std::error::Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-    <span class="ident">E3</span>: <span class="ident">std::error::Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
-    <span class="comment">// TODO check userdata and return early</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bo</span> <span class="op">=</span> <span class="ident">buffer</span>.<span class="ident">import_to</span>(<span class="kw-2">&amp;</span><span class="ident">gbm</span>, <span class="ident">BufferObjectFlags::SCANOUT</span>)<span class="question-mark">?</span>;
     <span class="kw">let</span> <span class="ident">modifier</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">bo</span>.<span class="ident">modifier</span>().<span class="ident">unwrap</span>() {
         <span class="ident">Modifier::Invalid</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
         <span class="ident">x</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">x</span>),
@@ -1029,15 +843,15 @@
             <span class="kw">if</span> <span class="ident">num</span> <span class="op">&gt;</span> <span class="number">2</span> { <span class="ident">modifier</span> } <span class="kw">else</span> { <span class="prelude-val">None</span> },
             <span class="kw">if</span> <span class="ident">num</span> <span class="op">&gt;</span> <span class="number">3</span> { <span class="ident">modifier</span> } <span class="kw">else</span> { <span class="prelude-val">None</span> },
         ];
-        <span class="ident">drm</span>.<span class="ident">add_planar_framebuffer</span>(<span class="kw-2">&amp;</span><span class="ident">bo</span>, <span class="kw-2">&amp;</span><span class="ident">modifiers</span>, <span class="ident">drm_ffi::DRM_MODE_FB_MODIFIERS</span>)
+        <span class="ident">drm</span>.<span class="ident">add_planar_framebuffer</span>(<span class="ident">bo</span>, <span class="kw-2">&amp;</span><span class="ident">modifiers</span>, <span class="ident">drm_ffi::DRM_MODE_FB_MODIFIERS</span>)
     } <span class="kw">else</span> {
-        <span class="ident">drm</span>.<span class="ident">add_planar_framebuffer</span>(<span class="kw-2">&amp;</span><span class="ident">bo</span>, <span class="kw-2">&amp;</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>], <span class="number">0</span>)
+        <span class="ident">drm</span>.<span class="ident">add_planar_framebuffer</span>(<span class="ident">bo</span>, <span class="kw-2">&amp;</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>], <span class="number">0</span>)
     } {
         <span class="prelude-val">Ok</span>(<span class="ident">fb</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">fb</span>,
         <span class="prelude-val">Err</span>(<span class="ident">source</span>) <span class="op">=</span><span class="op">&gt;</span> {
             <span class="comment">// We only support this as a fallback of last resort for ARGB8888 visuals,</span>
             <span class="comment">// like xf86-video-modesetting does.</span>
-            <span class="kw">if</span> <span class="ident">drm::buffer::Buffer::format</span>(<span class="kw-2">&amp;</span><span class="ident">bo</span>) <span class="op">!</span><span class="op">=</span> <span class="ident">Fourcc::Argb8888</span> <span class="op">|</span><span class="op">|</span> <span class="ident">bo</span>.<span class="ident">handles</span>()[<span class="number">1</span>].<span class="ident">is_some</span>() {
+            <span class="kw">if</span> <span class="ident">drm::buffer::Buffer::format</span>(<span class="ident">bo</span>) <span class="op">!</span><span class="op">=</span> <span class="ident">Fourcc::Argb8888</span> <span class="op">|</span><span class="op">|</span> <span class="ident">bo</span>.<span class="ident">handles</span>()[<span class="number">1</span>].<span class="ident">is_some</span>() {
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::DrmError</span>(<span class="ident">DrmError::Access</span> {
                     <span class="ident">errmsg</span>: <span class="string">&quot;Failed to add framebuffer&quot;</span>,
                     <span class="ident">dev</span>: <span class="ident">drm</span>.<span class="ident">dev_path</span>(),
@@ -1045,7 +859,7 @@
                 }));
             }
             <span class="macro">debug!</span>(<span class="ident">logger</span>, <span class="string">&quot;Failed to add framebuffer, trying legacy method&quot;</span>);
-            <span class="ident">drm</span>.<span class="ident">add_framebuffer</span>(<span class="kw-2">&amp;</span><span class="ident">bo</span>, <span class="number">32</span>, <span class="number">32</span>)
+            <span class="ident">drm</span>.<span class="ident">add_framebuffer</span>(<span class="ident">bo</span>, <span class="number">32</span>, <span class="number">32</span>)
                 .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">DrmError::Access</span> {
                     <span class="ident">errmsg</span>: <span class="string">&quot;Failed to add framebuffer&quot;</span>,
                     <span class="ident">dev</span>: <span class="ident">drm</span>.<span class="ident">dev_path</span>(),
@@ -1053,19 +867,12 @@
                 })<span class="question-mark">?</span>
         }
     };
-    <span class="ident">bo</span>.<span class="ident">set_userdata</span>(<span class="ident">FbHandle</span> { <span class="ident">drm</span>: <span class="ident">drm</span>.<span class="ident">clone</span>(), <span class="ident">fb</span> }).<span class="ident">unwrap</span>();
-
-    <span class="prelude-val">Ok</span>(<span class="ident">bo</span>)
+    <span class="prelude-val">Ok</span>(<span class="ident">FbHandle</span> { <span class="ident">drm</span>: <span class="ident">drm</span>.<span class="ident">clone</span>(), <span class="ident">fb</span> })
 }
 
-<span class="doccomment">/// Errors thrown by a [`DrmRenderSurface`]</span>
+<span class="doccomment">/// Errors thrown by a [`GbmBufferedSurface`]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">thiserror::Error</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">E1</span>, <span class="ident">E2</span>, <span class="ident">E3</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">E1</span>: <span class="ident">std::error::Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-    <span class="ident">E2</span>: <span class="ident">std::error::Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-    <span class="ident">E3</span>: <span class="ident">std::error::Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-{
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Error</span> {
     <span class="doccomment">/// No supported pixel format for the given plane could be determined</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;No supported plane buffer format found&quot;</span>)]</span>
     <span class="ident">NoSupportedPlaneFormat</span>,
@@ -1087,24 +894,13 @@
     <span class="doccomment">/// Error importing the rendered buffer to libgbm for scan-out</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;The underlying gbm device encounted an error: {0}&quot;</span>)]</span>
     <span class="ident">GbmError</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">std::io::Error</span>),
-    <span class="doccomment">/// Error allocating or converting newly created buffers</span>
-    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;The swapchain encounted an error: {0}&quot;</span>)]</span>
-    <span class="ident">SwapchainError</span>(<span class="attribute">#[<span class="ident">source</span>]</span> <span class="ident">E1</span>),
     <span class="doccomment">/// Error exporting as Dmabuf</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;The allocated buffer could not be exported as a dmabuf: {0}&quot;</span>)]</span>
-    <span class="ident">AsDmabufError</span>(<span class="attribute">#[<span class="ident">source</span>]</span> <span class="ident">E2</span>),
-    <span class="doccomment">/// Error during rendering</span>
-    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;The renderer encounted an error: {0}&quot;</span>)]</span>
-    <span class="ident">RenderError</span>(<span class="attribute">#[<span class="ident">source</span>]</span> <span class="ident">E3</span>),
+    <span class="ident">AsDmabufError</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">GbmConvertError</span>),
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span>
-        <span class="ident">E1</span>: <span class="ident">std::error::Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-        <span class="ident">E2</span>: <span class="ident">std::error::Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-        <span class="ident">E3</span>: <span class="ident">std::error::Error</span> <span class="op">+</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">SwapBuffersError</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-    <span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">E1</span>, <span class="ident">E2</span>, <span class="ident">E3</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SwapBuffersError</span>
-{
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">E1</span>, <span class="ident">E2</span>, <span class="ident">E3</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">SwapBuffersError</span> {
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SwapBuffersError</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">Error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">SwapBuffersError</span> {
         <span class="kw">match</span> <span class="ident">err</span> {
             <span class="ident">x</span> @ <span class="ident">Error::NoSupportedPlaneFormat</span>
             <span class="op">|</span> <span class="ident">x</span> @ <span class="ident">Error::NoSupportedRendererFormat</span>
@@ -1113,13 +909,11 @@
             <span class="ident">x</span> @ <span class="ident">Error::NoFreeSlotsError</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">SwapBuffersError::TemporaryFailure</span>(<span class="ident">Box::new</span>(<span class="ident">x</span>)),
             <span class="ident">Error::DrmError</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">err</span>.<span class="ident">into</span>(),
             <span class="ident">Error::GbmError</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">SwapBuffersError::ContextLost</span>(<span class="ident">Box::new</span>(<span class="ident">err</span>)),
-            <span class="ident">Error::SwapchainError</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">SwapBuffersError::ContextLost</span>(<span class="ident">Box::new</span>(<span class="ident">err</span>)),
             <span class="ident">Error::AsDmabufError</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">SwapBuffersError::ContextLost</span>(<span class="ident">Box::new</span>(<span class="ident">err</span>)),
-            <span class="ident">Error::RenderError</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">err</span>.<span class="ident">into</span>(),
         }
     }
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-search-index-js="../../../../search-index.js" data-search-js="../../../../search.js"></div>
-    <script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="smithay" data-search-index-js="../../../../../search-index.js" data-search-js="../../../../../search.js"></div>
+    <script src="../../../../../main.js"></script><script src="../../../../../source-script.js"></script><script src="../../../../../source-files.js"></script>
 </body></html>
