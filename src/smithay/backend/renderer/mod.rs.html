@@ -504,6 +504,24 @@
 <span id="504">504</span>
 <span id="505">505</span>
 <span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Rendering functionality and abstractions</span>
 <span class="doccomment">//!</span>
@@ -532,7 +550,10 @@
     <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_egl&quot;</span>,
     <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_system_lib&quot;</span>
 ))]</span>
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend::egl::display::EGLBufferReader</span>;
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend::egl</span>::{
+    <span class="ident">display</span>::{<span class="ident">EGLBufferReader</span>, <span class="ident">BUFFER_READER</span>},
+    <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">EglError</span>,
+};
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
 <span class="doccomment">/// Possible transformations to two-dimensional planes</span>
@@ -788,6 +809,34 @@
 ))]</span>
 <span class="doccomment">/// Trait for Renderers supporting importing wl_drm-based buffers.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">ImportEgl</span>: <span class="ident">Renderer</span> {
+    <span class="doccomment">/// Binds the underlying EGL display to the given Wayland display.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This will allow clients to utilize EGL to create hardware-accelerated</span>
+    <span class="doccomment">/// surfaces. This renderer will thus be able to handle wl_drm-based buffers.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ## Errors</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This might return [`EglExtensionNotSupported`](Error::EglExtensionNotSupported)</span>
+    <span class="doccomment">/// if binding is not supported by the EGL implementation.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This might return [`OtherEGLDisplayAlreadyBound`](Error::OtherEGLDisplayAlreadyBound)</span>
+    <span class="doccomment">/// if called for the same [`Display`] multiple times, as only one egl display may be bound at any given time.</span>
+    <span class="kw">fn</span> <span class="ident">bind_wl_display</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="ident">wayland_server::Display</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">EglError</span><span class="op">&gt;</span>;
+
+    <span class="doccomment">/// Unbinds a previously bound egl display, if existing.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// *Note*: As a result any previously created egl-based WlBuffers will not be readable anymore.</span>
+    <span class="doccomment">/// Your compositor will have to deal with existing buffers of *unknown* type.</span>
+    <span class="kw">fn</span> <span class="ident">unbind_wl_display</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>);
+
+    <span class="doccomment">/// Returns the underlying [`EGLBufferReader`].</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The primary use for this is calling [`buffer_dimensions`] or [`buffer_type`].</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns `None` if no [`Display`] was previously bound to the underlying [`EGLDisplay`]</span>
+    <span class="doccomment">/// (see [`ImportEgl::bind_wl_display`]).</span>
+    <span class="kw">fn</span> <span class="ident">egl_reader</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">EGLBufferReader</span><span class="op">&gt;</span>;
+
     <span class="doccomment">/// Import a given wl_drm-based buffer into the renderer (see [`buffer_type`]).</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Returns a texture_id, which can be used with [`Frame::render_texture`] (or [`Frame::render_texture_at`])</span>
@@ -802,7 +851,6 @@
     <span class="kw">fn</span> <span class="ident">import_egl_buffer</span>(
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="ident">wl_buffer::WlBuffer</span>,
-        <span class="ident">egl</span>: <span class="kw-2">&amp;</span><span class="ident">EGLBufferReader</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Renderer</span><span class="op">&gt;</span><span class="ident">::TextureId</span>, <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Renderer</span><span class="op">&gt;</span><span class="ident">::Error</span><span class="op">&gt;</span>;
 }
 
@@ -858,12 +906,8 @@
 <span class="comment">// pub type ImportAll = Renderer + ImportShm + ImportEgl;</span>
 
 <span class="doccomment">/// Common trait for renderers of any wayland buffer type</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>,
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_egl&quot;</span>,
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_system_lib&quot;</span>
-))]</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">ImportAll</span>: <span class="ident">Renderer</span> <span class="op">+</span> <span class="ident">ImportShm</span> <span class="op">+</span> <span class="ident">ImportEgl</span> {
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">ImportAll</span>: <span class="ident">Renderer</span> {
     <span class="doccomment">/// Import a given buffer into the renderer.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Returns a texture_id, which can be used with [`Frame::render_texture`] (or [`Frame::render_texture_at`])</span>
@@ -887,21 +931,49 @@
         <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="ident">wl_buffer::WlBuffer</span>,
         <span class="ident">surface</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">SurfaceAttributes</span><span class="op">&gt;</span>,
         <span class="ident">damage</span>: <span class="kw-2">&amp;</span>[<span class="ident">Rectangle</span>],
-        <span class="ident">egl</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">EGLBufferReader</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Renderer</span><span class="op">&gt;</span><span class="ident">::TextureId</span>, <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Renderer</span><span class="op">&gt;</span><span class="ident">::Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="ident">buffer_type</span>(<span class="ident">buffer</span>, <span class="ident">egl</span>) {
-            <span class="prelude-val">Some</span>(<span class="ident">BufferType::Shm</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">import_shm_buffer</span>(<span class="ident">buffer</span>, <span class="ident">surface</span>, <span class="ident">damage</span>)),
-            <span class="prelude-val">Some</span>(<span class="ident">BufferType::Egl</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">import_egl_buffer</span>(<span class="ident">buffer</span>, <span class="ident">egl</span>.<span class="ident">unwrap</span>())),
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
-        }
-    }
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Renderer</span><span class="op">&gt;</span><span class="ident">::TextureId</span>, <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Renderer</span><span class="op">&gt;</span><span class="ident">::Error</span><span class="op">&gt;</span><span class="op">&gt;</span>;
 }
+
+<span class="comment">// TODO: Do this with specialization, when possible and do default implementations</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(
     <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>,
     <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_egl&quot;</span>,
     <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_system_lib&quot;</span>
 ))]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Renderer</span> <span class="op">+</span> <span class="ident">ImportShm</span> <span class="op">+</span> <span class="ident">ImportEgl</span><span class="op">&gt;</span> <span class="ident">ImportAll</span> <span class="kw">for</span> <span class="ident">R</span> {}
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Renderer</span> <span class="op">+</span> <span class="ident">ImportShm</span> <span class="op">+</span> <span class="ident">ImportEgl</span> <span class="op">+</span> <span class="ident">ImportDma</span><span class="op">&gt;</span> <span class="ident">ImportAll</span> <span class="kw">for</span> <span class="ident">R</span> {
+    <span class="kw">fn</span> <span class="ident">import_buffer</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="ident">wl_buffer::WlBuffer</span>,
+        <span class="ident">surface</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">SurfaceAttributes</span><span class="op">&gt;</span>,
+        <span class="ident">damage</span>: <span class="kw-2">&amp;</span>[<span class="ident">Rectangle</span>],
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Renderer</span><span class="op">&gt;</span><span class="ident">::TextureId</span>, <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Renderer</span><span class="op">&gt;</span><span class="ident">::Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="ident">buffer_type</span>(<span class="ident">buffer</span>) {
+            <span class="prelude-val">Some</span>(<span class="ident">BufferType::Shm</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">import_shm_buffer</span>(<span class="ident">buffer</span>, <span class="ident">surface</span>, <span class="ident">damage</span>)),
+            <span class="prelude-val">Some</span>(<span class="ident">BufferType::Egl</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">import_egl_buffer</span>(<span class="ident">buffer</span>)),
+            <span class="prelude-val">Some</span>(<span class="ident">BufferType::Dma</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">import_dma_buffer</span>(<span class="ident">buffer</span>)),
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
+        }
+    }
+}
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(
+    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>,
+    <span class="ident">not</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_egl&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_system_lib&quot;</span>))
+))]</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Renderer</span> <span class="op">+</span> <span class="ident">ImportShm</span> <span class="op">+</span> <span class="ident">ImportDma</span><span class="op">&gt;</span> <span class="ident">ImportAll</span> <span class="kw">for</span> <span class="ident">R</span> {
+    <span class="kw">fn</span> <span class="ident">import_buffer</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="ident">wl_buffer::WlBuffer</span>,
+        <span class="ident">surface</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">SurfaceAttributes</span><span class="op">&gt;</span>,
+        <span class="ident">damage</span>: <span class="kw-2">&amp;</span>[<span class="ident">Rectangle</span>],
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Renderer</span><span class="op">&gt;</span><span class="ident">::TextureId</span>, <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Renderer</span><span class="op">&gt;</span><span class="ident">::Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="ident">buffer_type</span>(<span class="ident">buffer</span>) {
+            <span class="prelude-val">Some</span>(<span class="ident">BufferType::Shm</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">import_shm_buffer</span>(<span class="ident">buffer</span>, <span class="ident">surface</span>, <span class="ident">damage</span>)),
+            <span class="prelude-val">Some</span>(<span class="ident">BufferType::Dma</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">import_dma_buffer</span>(<span class="ident">buffer</span>)),
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
+        }
+    }
+}
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
@@ -920,96 +992,60 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// Returns `None` if the type is not known to smithay</span>
 <span class="doccomment">/// or otherwise not supported (e.g. not initialized using one of smithays [`crate::wayland`]-handlers).</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>,
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_egl&quot;</span>,
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_system_lib&quot;</span>
-))]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">buffer_type</span>(
-    <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="ident">wl_buffer::WlBuffer</span>,
-    <span class="ident">egl_buffer_reader</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">EGLBufferReader</span><span class="op">&gt;</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BufferType</span><span class="op">&gt;</span> {
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">buffer_type</span>(<span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="ident">wl_buffer::WlBuffer</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BufferType</span><span class="op">&gt;</span> {
     <span class="kw">if</span> <span class="ident">buffer</span>.<span class="ident">as_ref</span>().<span class="ident">user_data</span>().<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Dmabuf</span><span class="op">&gt;</span>().<span class="ident">is_some</span>() {
-        <span class="prelude-val">Some</span>(<span class="ident">BufferType::Dma</span>)
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">egl_buffer_reader</span>
+        <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">BufferType::Dma</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_egl&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_system_lib&quot;</span>))]</span>
+    <span class="kw">if</span> <span class="ident">BUFFER_READER</span>
+        .<span class="ident">lock</span>()
+        .<span class="ident">unwrap</span>()
         .<span class="ident">as_ref</span>()
+        .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">upgrade</span>())
         .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">egl_buffer_dimensions</span>(<span class="kw-2">&amp;</span><span class="ident">buffer</span>))
         .<span class="ident">is_some</span>()
     {
-        <span class="prelude-val">Some</span>(<span class="ident">BufferType::Egl</span>)
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">crate</span><span class="ident">::wayland::shm::with_buffer_contents</span>(<span class="kw-2">&amp;</span><span class="ident">buffer</span>, <span class="op">|</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> ()).<span class="ident">is_ok</span>() {
-        <span class="prelude-val">Some</span>(<span class="ident">BufferType::Shm</span>)
-    } <span class="kw">else</span> {
-        <span class="prelude-val">None</span>
+        <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">BufferType::Egl</span>);
     }
-}
 
-<span class="doccomment">/// Returns the *type* of a wl_buffer</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Returns `None` if the type is not recognized by smithay or otherwise not supported.</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>,
-    <span class="ident">not</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_egl&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_system_lib&quot;</span>))
-))]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">buffer_type</span>(<span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="ident">wl_buffer::WlBuffer</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BufferType</span><span class="op">&gt;</span> {
-    <span class="kw">if</span> <span class="ident">buffer</span>.<span class="ident">as_ref</span>().<span class="ident">user_data</span>().<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Dmabuf</span><span class="op">&gt;</span>().<span class="ident">is_some</span>() {
-        <span class="prelude-val">Some</span>(<span class="ident">BufferType::Dma</span>)
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">crate</span><span class="ident">::wayland::shm::with_buffer_contents</span>(<span class="kw-2">&amp;</span><span class="ident">buffer</span>, <span class="op">|</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> ()).<span class="ident">is_ok</span>() {
-        <span class="prelude-val">Some</span>(<span class="ident">BufferType::Shm</span>)
-    } <span class="kw">else</span> {
-        <span class="prelude-val">None</span>
+    <span class="kw">if</span> <span class="kw">crate</span><span class="ident">::wayland::shm::with_buffer_contents</span>(<span class="kw-2">&amp;</span><span class="ident">buffer</span>, <span class="op">|</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> ()).<span class="ident">is_ok</span>() {
+        <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">BufferType::Shm</span>);
     }
+
+    <span class="prelude-val">None</span>
 }
 
 <span class="doccomment">/// Returns the dimensions of a wl_buffer</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// *Note*: This will only return dimensions for buffer types known to smithay (see [`buffer_type`])</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>,
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_egl&quot;</span>,
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_system_lib&quot;</span>
-))]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">buffer_dimensions</span>(
-    <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="ident">wl_buffer::WlBuffer</span>,
-    <span class="ident">egl_buffer_reader</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">EGLBufferReader</span><span class="op">&gt;</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">i32</span>, <span class="ident">i32</span>)<span class="op">&gt;</span> {
-    <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend::allocator::Buffer</span>;
-
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">buf</span>) <span class="op">=</span> <span class="ident">buffer</span>.<span class="ident">as_ref</span>().<span class="ident">user_data</span>().<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Dmabuf</span><span class="op">&gt;</span>() {
-        <span class="prelude-val">Some</span>((<span class="ident">buf</span>.<span class="ident">width</span>() <span class="kw">as</span> <span class="ident">i32</span>, <span class="ident">buf</span>.<span class="ident">height</span>() <span class="kw">as</span> <span class="ident">i32</span>))
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">w</span>, <span class="ident">h</span>)) <span class="op">=</span> <span class="ident">egl_buffer_reader</span>
-        .<span class="ident">as_ref</span>()
-        .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">egl_buffer_dimensions</span>(<span class="kw-2">&amp;</span><span class="ident">buffer</span>))
-    {
-        <span class="prelude-val">Some</span>((<span class="ident">w</span>, <span class="ident">h</span>))
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>((<span class="ident">w</span>, <span class="ident">h</span>)) <span class="op">=</span>
-        <span class="kw">crate</span><span class="ident">::wayland::shm::with_buffer_contents</span>(<span class="kw-2">&amp;</span><span class="ident">buffer</span>, <span class="op">|</span><span class="kw">_</span>, <span class="ident">data</span><span class="op">|</span> (<span class="ident">data</span>.<span class="ident">width</span>, <span class="ident">data</span>.<span class="ident">height</span>))
-    {
-        <span class="prelude-val">Some</span>((<span class="ident">w</span>, <span class="ident">h</span>))
-    } <span class="kw">else</span> {
-        <span class="prelude-val">None</span>
-    }
-}
-
-<span class="doccomment">/// Returns the dimensions of a wl_buffer</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// *Note*: This will only return dimensions for buffer types known to smithay (see [`buffer_type`])</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>,
-    <span class="ident">not</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_egl&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_system_lib&quot;</span>))
-))]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">buffer_dimensions</span>(<span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="ident">wl_buffer::WlBuffer</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">i32</span>, <span class="ident">i32</span>)<span class="op">&gt;</span> {
     <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend::allocator::Buffer</span>;
 
     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">buf</span>) <span class="op">=</span> <span class="ident">buffer</span>.<span class="ident">as_ref</span>().<span class="ident">user_data</span>().<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Dmabuf</span><span class="op">&gt;</span>() {
-        <span class="prelude-val">Some</span>((<span class="ident">buf</span>.<span class="ident">width</span>() <span class="kw">as</span> <span class="ident">i32</span>, <span class="ident">buf</span>.<span class="ident">height</span>() <span class="kw">as</span> <span class="ident">i32</span>))
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>((<span class="ident">w</span>, <span class="ident">h</span>)) <span class="op">=</span>
+        <span class="kw">return</span> <span class="prelude-val">Some</span>((<span class="ident">buf</span>.<span class="ident">width</span>() <span class="kw">as</span> <span class="ident">i32</span>, <span class="ident">buf</span>.<span class="ident">height</span>() <span class="kw">as</span> <span class="ident">i32</span>));
+    }
+
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_egl&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_system_lib&quot;</span>))]</span>
+    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">w</span>, <span class="ident">h</span>)) <span class="op">=</span> <span class="ident">BUFFER_READER</span>
+        .<span class="ident">lock</span>()
+        .<span class="ident">unwrap</span>()
+        .<span class="ident">as_ref</span>()
+        .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">upgrade</span>())
+        .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">egl_buffer_dimensions</span>(<span class="kw-2">&amp;</span><span class="ident">buffer</span>))
+    {
+        <span class="kw">return</span> <span class="prelude-val">Some</span>((<span class="ident">w</span>, <span class="ident">h</span>));
+    }
+
+    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>((<span class="ident">w</span>, <span class="ident">h</span>)) <span class="op">=</span>
         <span class="kw">crate</span><span class="ident">::wayland::shm::with_buffer_contents</span>(<span class="kw-2">&amp;</span><span class="ident">buffer</span>, <span class="op">|</span><span class="kw">_</span>, <span class="ident">data</span><span class="op">|</span> (<span class="ident">data</span>.<span class="ident">width</span>, <span class="ident">data</span>.<span class="ident">height</span>))
     {
-        <span class="prelude-val">Some</span>((<span class="ident">w</span>, <span class="ident">h</span>))
-    } <span class="kw">else</span> {
-        <span class="prelude-val">None</span>
+        <span class="kw">return</span> <span class="prelude-val">Some</span>((<span class="ident">w</span>, <span class="ident">h</span>));
     }
+
+    <span class="prelude-val">None</span>
 }
 </pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-search-index-js="../../../../search-index.js" data-search-js="../../../../search.js"></div>
