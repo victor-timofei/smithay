@@ -448,7 +448,6 @@
 <span id="448">448</span>
 <span id="449">449</span>
 <span id="450">450</span>
-<span id="451">451</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">drm::control</span>::{<span class="ident">connector</span>, <span class="ident">crtc</span>, <span class="ident">encoder</span>, <span class="ident">framebuffer</span>, <span class="ident">Device</span> <span class="kw">as</span> <span class="ident">ControlDevice</span>, <span class="ident">Mode</span>, <span class="ident">PageFlipFlags</span>};
 
@@ -824,10 +823,9 @@
             <span class="kw">let</span> <span class="ident">encoders</span> <span class="op">=</span> <span class="ident">info</span>
                 .<span class="ident">encoders</span>()
                 .<span class="ident">iter</span>()
-                .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">enc</span><span class="op">|</span> <span class="ident">enc</span>.<span class="ident">is_some</span>())
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">enc</span><span class="op">|</span> <span class="ident">enc</span>.<span class="ident">unwrap</span>())
+                .<span class="ident">flatten</span>()
                 .<span class="ident">map</span>(<span class="op">|</span><span class="ident">encoder</span><span class="op">|</span> {
-                    <span class="self">self</span>.<span class="ident">fd</span>.<span class="ident">get_encoder</span>(<span class="ident">encoder</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">Error::Access</span> {
+                    <span class="self">self</span>.<span class="ident">fd</span>.<span class="ident">get_encoder</span>(<span class="kw-2">*</span><span class="ident">encoder</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">Error::Access</span> {
                         <span class="ident">errmsg</span>: <span class="string">&quot;Error loading encoder info&quot;</span>,
                         <span class="ident">dev</span>: <span class="self">self</span>.<span class="ident">fd</span>.<span class="ident">dev_path</span>(),
                         <span class="ident">source</span>,

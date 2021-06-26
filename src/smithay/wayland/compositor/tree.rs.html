@@ -451,10 +451,51 @@
 <span id="451">451</span>
 <span id="452">452</span>
 <span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
 </pre><pre class="rust">
-<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">roles</span>::<span class="kw-2">*</span>, <span class="ident">SubsurfaceRole</span>, <span class="ident">SurfaceAttributes</span>};
-<span class="kw">use</span> <span class="ident">std::sync::Mutex</span>;
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland::Serial</span>;
+
+<span class="kw">use</span> <span class="kw">super</span>::{
+    <span class="ident">cache::MultiCache</span>, <span class="ident">get_children</span>, <span class="ident">handlers::is_effectively_sync</span>, <span class="ident">transaction::PendingTransaction</span>,
+    <span class="ident">SurfaceData</span>,
+};
+<span class="kw">use</span> <span class="ident">std::sync</span>::{<span class="ident">atomic::Ordering</span>, <span class="ident">Mutex</span>};
 <span class="kw">use</span> <span class="ident">wayland_server::protocol::wl_surface::WlSurface</span>;
+
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">static</span> <span class="ident">SUBSURFACE_ROLE</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;subsurface&quot;</span>;
 
 <span class="doccomment">/// Node of a subsurface tree, holding some user specified data type U</span>
 <span class="doccomment">/// at each node</span>
@@ -469,12 +510,30 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// Each node also appears within its children list, to allow relative placement</span>
 <span class="doccomment">/// between them.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SurfaceData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PrivateSurfaceData</span> {
     <span class="ident">parent</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">WlSurface</span><span class="op">&gt;</span>,
     <span class="ident">children</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">WlSurface</span><span class="op">&gt;</span>,
-    <span class="ident">role</span>: <span class="ident">R</span>,
-    <span class="ident">attributes</span>: <span class="ident">SurfaceAttributes</span>,
+    <span class="ident">public_data</span>: <span class="ident">SurfaceData</span>,
+    <span class="ident">pending_transaction</span>: <span class="ident">PendingTransaction</span>,
+    <span class="ident">current_txid</span>: <span class="ident">Serial</span>,
+    <span class="ident">commit_hooks</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">fn</span>(<span class="kw-2">&amp;</span><span class="ident">WlSurface</span>)<span class="op">&gt;</span>,
 }
+
+<span class="doccomment">/// An error type signifying that the surface already has a role and</span>
+<span class="doccomment">/// cannot be assigned an other</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Generated if you attempt a role operation on a surface that does</span>
+<span class="doccomment">/// not have the role you asked for.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AlreadyHasRole</span>;
+
+<span class="kw">impl</span> <span class="ident">std::fmt::Display</span> <span class="kw">for</span> <span class="ident">AlreadyHasRole</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+        <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;Surface already has a role.&quot;</span>)
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">std::error::Error</span> <span class="kw">for</span> <span class="ident">AlreadyHasRole</span> {}
 
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Location</span> {
     <span class="ident">Before</span>,
@@ -492,27 +551,28 @@
     <span class="ident">Break</span>,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Default</span><span class="op">&gt;</span> <span class="ident">SurfaceData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">SurfaceData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="ident">Mutex::new</span>(<span class="ident">SurfaceData</span> {
+<span class="kw">impl</span> <span class="ident">PrivateSurfaceData</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">PrivateSurfaceData</span><span class="op">&gt;</span> {
+        <span class="ident">Mutex::new</span>(<span class="ident">PrivateSurfaceData</span> {
             <span class="ident">parent</span>: <span class="prelude-val">None</span>,
             <span class="ident">children</span>: <span class="macro">vec!</span>[],
-            <span class="ident">role</span>: <span class="ident">Default::default</span>(),
-            <span class="ident">attributes</span>: <span class="ident">Default::default</span>(),
+            <span class="ident">public_data</span>: <span class="ident">SurfaceData</span> {
+                <span class="ident">role</span>: <span class="ident">Default::default</span>(),
+                <span class="ident">data_map</span>: <span class="ident">Default::default</span>(),
+                <span class="ident">cached_state</span>: <span class="ident">MultiCache::new</span>(),
+            },
+            <span class="ident">pending_transaction</span>: <span class="ident">Default::default</span>(),
+            <span class="ident">current_txid</span>: <span class="ident">Serial</span>(<span class="number">0</span>),
+            <span class="ident">commit_hooks</span>: <span class="ident">Vec::new</span>(),
         })
     }
-}
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> <span class="ident">SurfaceData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">R</span>: <span class="lifetime">&#39;static</span>,
-{
     <span class="doccomment">/// Initializes the surface, must be called at creation for state coherence</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">init</span>(<span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>) {
         <span class="kw">let</span> <span class="ident">my_data_mutex</span> <span class="op">=</span> <span class="ident">surface</span>
             .<span class="ident">as_ref</span>()
             .<span class="ident">user_data</span>()
-            .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">SurfaceData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+            .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">PrivateSurfaceData</span><span class="op">&gt;</span><span class="op">&gt;</span>()
             .<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">my_data</span> <span class="op">=</span> <span class="ident">my_data_mutex</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
         <span class="macro">debug_assert!</span>(<span class="ident">my_data</span>.<span class="ident">children</span>.<span class="ident">is_empty</span>());
@@ -524,7 +584,7 @@
         <span class="kw">let</span> <span class="ident">my_data_mutex</span> <span class="op">=</span> <span class="ident">surface</span>
             .<span class="ident">as_ref</span>()
             .<span class="ident">user_data</span>()
-            .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">SurfaceData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+            .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">PrivateSurfaceData</span><span class="op">&gt;</span><span class="op">&gt;</span>()
             .<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">my_data</span> <span class="op">=</span> <span class="ident">my_data_mutex</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">old_parent</span>) <span class="op">=</span> <span class="ident">my_data</span>.<span class="ident">parent</span>.<span class="ident">take</span>() {
@@ -532,7 +592,7 @@
             <span class="kw">let</span> <span class="ident">old_parent_mutex</span> <span class="op">=</span> <span class="ident">old_parent</span>
                 .<span class="ident">as_ref</span>()
                 .<span class="ident">user_data</span>()
-                .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">SurfaceData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+                .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">PrivateSurfaceData</span><span class="op">&gt;</span><span class="op">&gt;</span>()
                 .<span class="ident">unwrap</span>();
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">old_parent_guard</span> <span class="op">=</span> <span class="ident">old_parent_mutex</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
             <span class="ident">old_parent_guard</span>
@@ -541,7 +601,11 @@
         }
         <span class="comment">// orphan all our children</span>
         <span class="kw">for</span> <span class="ident">child</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">my_data</span>.<span class="ident">children</span> {
-            <span class="kw">let</span> <span class="ident">child_mutex</span> <span class="op">=</span> <span class="ident">child</span>.<span class="ident">as_ref</span>().<span class="ident">user_data</span>().<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">SurfaceData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
+            <span class="kw">let</span> <span class="ident">child_mutex</span> <span class="op">=</span> <span class="ident">child</span>
+                .<span class="ident">as_ref</span>()
+                .<span class="ident">user_data</span>()
+                .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">PrivateSurfaceData</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+                .<span class="ident">unwrap</span>();
             <span class="kw">if</span> <span class="ident">std::ptr::eq</span>(<span class="ident">child_mutex</span>, <span class="ident">my_data_mutex</span>) {
                 <span class="comment">// This child is ourselves, don&#39;t do anything.</span>
                 <span class="kw">continue</span>;
@@ -551,108 +615,119 @@
             <span class="ident">child_guard</span>.<span class="ident">parent</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         }
     }
-}
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">RoleType</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">SurfaceData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_a_role</span>(<span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-        <span class="macro">debug_assert!</span>(<span class="ident">surface</span>.<span class="ident">as_ref</span>().<span class="ident">is_alive</span>());
-        <span class="kw">let</span> <span class="ident">data_mutex</span> <span class="op">=</span> <span class="ident">surface</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_role</span>(<span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>, <span class="ident">role</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">AlreadyHasRole</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">my_data_mutex</span> <span class="op">=</span> <span class="ident">surface</span>
             .<span class="ident">as_ref</span>()
             .<span class="ident">user_data</span>()
-            .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">SurfaceData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+            .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">PrivateSurfaceData</span><span class="op">&gt;</span><span class="op">&gt;</span>()
             .<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">data_guard</span> <span class="op">=</span> <span class="ident">data_mutex</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-        <span class="op">&lt;</span><span class="ident">R</span> <span class="kw">as</span> <span class="ident">RoleType</span><span class="op">&gt;</span><span class="ident">::has_role</span>(<span class="kw-2">&amp;</span><span class="ident">data_guard</span>.<span class="ident">role</span>)
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">my_data</span> <span class="op">=</span> <span class="ident">my_data_mutex</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+        <span class="kw">if</span> <span class="ident">my_data</span>.<span class="ident">public_data</span>.<span class="ident">role</span>.<span class="ident">is_some</span>() {
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">AlreadyHasRole</span>);
+        }
+        <span class="ident">my_data</span>.<span class="ident">public_data</span>.<span class="ident">role</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">role</span>);
+        <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// Check whether a surface has a given role</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_role</span><span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span>(<span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span>
-    <span class="kw">where</span>
-        <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span>,
-    {
-        <span class="macro">debug_assert!</span>(<span class="ident">surface</span>.<span class="ident">as_ref</span>().<span class="ident">is_alive</span>());
-        <span class="kw">let</span> <span class="ident">data_mutex</span> <span class="op">=</span> <span class="ident">surface</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_role</span>(<span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">my_data_mutex</span> <span class="op">=</span> <span class="ident">surface</span>
             .<span class="ident">as_ref</span>()
             .<span class="ident">user_data</span>()
-            .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">SurfaceData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+            .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">PrivateSurfaceData</span><span class="op">&gt;</span><span class="op">&gt;</span>()
             .<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">data_guard</span> <span class="op">=</span> <span class="ident">data_mutex</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-        <span class="op">&lt;</span><span class="ident">R</span> <span class="kw">as</span> <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::has</span>(<span class="kw-2">&amp;</span><span class="ident">data_guard</span>.<span class="ident">role</span>)
+        <span class="kw">let</span> <span class="ident">my_data</span> <span class="op">=</span> <span class="ident">my_data_mutex</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+        <span class="ident">my_data</span>.<span class="ident">public_data</span>.<span class="ident">role</span>
     }
 
-    <span class="doccomment">/// Register that this surface has a role, fails if it already has one</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">give_role</span><span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span>(<span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">AlreadyHasRole</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span>,
-        <span class="ident">RoleData</span>: <span class="ident">Default</span>,
-    {
-        <span class="macro">debug_assert!</span>(<span class="ident">surface</span>.<span class="ident">as_ref</span>().<span class="ident">is_alive</span>());
-        <span class="kw">let</span> <span class="ident">data_mutex</span> <span class="op">=</span> <span class="ident">surface</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_states</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="ident">SurfaceData</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span> {
+        <span class="kw">let</span> <span class="ident">my_data_mutex</span> <span class="op">=</span> <span class="ident">surface</span>
             .<span class="ident">as_ref</span>()
             .<span class="ident">user_data</span>()
-            .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">SurfaceData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+            .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">PrivateSurfaceData</span><span class="op">&gt;</span><span class="op">&gt;</span>()
             .<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data_guard</span> <span class="op">=</span> <span class="ident">data_mutex</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-        <span class="op">&lt;</span><span class="ident">R</span> <span class="kw">as</span> <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::set</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">data_guard</span>.<span class="ident">role</span>)
+        <span class="kw">let</span> <span class="ident">my_data</span> <span class="op">=</span> <span class="ident">my_data_mutex</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+        <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">my_data</span>.<span class="ident">public_data</span>)
     }
 
-    <span class="doccomment">/// Register that this surface has a role with given data</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Fails if it already has one and returns the data</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">give_role_with</span><span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span>(<span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>, <span class="ident">data</span>: <span class="ident">RoleData</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RoleData</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span>,
-    {
-        <span class="macro">debug_assert!</span>(<span class="ident">surface</span>.<span class="ident">as_ref</span>().<span class="ident">is_alive</span>());
-        <span class="kw">let</span> <span class="ident">data_mutex</span> <span class="op">=</span> <span class="ident">surface</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_commit_hook</span>(<span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>, <span class="ident">hook</span>: <span class="kw">fn</span>(<span class="kw-2">&amp;</span><span class="ident">WlSurface</span>)) {
+        <span class="kw">let</span> <span class="ident">my_data_mutex</span> <span class="op">=</span> <span class="ident">surface</span>
             .<span class="ident">as_ref</span>()
             .<span class="ident">user_data</span>()
-            .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">SurfaceData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+            .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">PrivateSurfaceData</span><span class="op">&gt;</span><span class="op">&gt;</span>()
             .<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data_guard</span> <span class="op">=</span> <span class="ident">data_mutex</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-        <span class="op">&lt;</span><span class="ident">R</span> <span class="kw">as</span> <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::set_with</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">data_guard</span>.<span class="ident">role</span>, <span class="ident">data</span>)
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">my_data</span> <span class="op">=</span> <span class="ident">my_data_mutex</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+        <span class="ident">my_data</span>.<span class="ident">commit_hooks</span>.<span class="ident">push</span>(<span class="ident">hook</span>);
     }
 
-    <span class="doccomment">/// Register that this surface has no role and returns the data</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// It is a noop if this surface already didn&#39;t have one, but fails if</span>
-    <span class="doccomment">/// the role was &quot;subsurface&quot;, it must be removed by the `unset_parent` method.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove_role</span><span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span>(<span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RoleData</span>, <span class="ident">WrongRole</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span>,
-    {
-        <span class="macro">debug_assert!</span>(<span class="ident">surface</span>.<span class="ident">as_ref</span>().<span class="ident">is_alive</span>());
-        <span class="kw">let</span> <span class="ident">data_mutex</span> <span class="op">=</span> <span class="ident">surface</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">invoke_commit_hooks</span>(<span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>) {
+        <span class="comment">// don&#39;t hold the mutex while the hooks are invoked</span>
+        <span class="kw">let</span> <span class="ident">hooks</span> <span class="op">=</span> {
+            <span class="kw">let</span> <span class="ident">my_data_mutex</span> <span class="op">=</span> <span class="ident">surface</span>
+                .<span class="ident">as_ref</span>()
+                .<span class="ident">user_data</span>()
+                .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">PrivateSurfaceData</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+                .<span class="ident">unwrap</span>();
+            <span class="kw">let</span> <span class="ident">my_data</span> <span class="op">=</span> <span class="ident">my_data_mutex</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+            <span class="ident">my_data</span>.<span class="ident">commit_hooks</span>.<span class="ident">clone</span>()
+        };
+        <span class="kw">for</span> <span class="ident">hook</span> <span class="kw">in</span> <span class="ident">hooks</span> {
+            <span class="ident">hook</span>(<span class="ident">surface</span>);
+        }
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">commit</span>(<span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>) {
+        <span class="kw">let</span> <span class="ident">is_sync</span> <span class="op">=</span> <span class="ident">is_effectively_sync</span>(<span class="ident">surface</span>);
+        <span class="kw">let</span> <span class="ident">children</span> <span class="op">=</span> <span class="ident">get_children</span>(<span class="ident">surface</span>);
+        <span class="kw">let</span> <span class="ident">my_data_mutex</span> <span class="op">=</span> <span class="ident">surface</span>
             .<span class="ident">as_ref</span>()
             .<span class="ident">user_data</span>()
-            .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">SurfaceData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+            .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">PrivateSurfaceData</span><span class="op">&gt;</span><span class="op">&gt;</span>()
             .<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data_guard</span> <span class="op">=</span> <span class="ident">data_mutex</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-        <span class="op">&lt;</span><span class="ident">R</span> <span class="kw">as</span> <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::unset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">data_guard</span>.<span class="ident">role</span>)
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">my_data</span> <span class="op">=</span> <span class="ident">my_data_mutex</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+        <span class="comment">// commit our state</span>
+        <span class="kw">let</span> <span class="ident">current_txid</span> <span class="op">=</span> <span class="ident">my_data</span>.<span class="ident">current_txid</span>;
+        <span class="ident">my_data</span>.<span class="ident">public_data</span>.<span class="ident">cached_state</span>.<span class="ident">commit</span>(<span class="prelude-val">Some</span>(<span class="ident">current_txid</span>));
+        <span class="comment">// take all our children state into our pending transaction</span>
+        <span class="kw">for</span> <span class="ident">child</span> <span class="kw">in</span> <span class="ident">children</span> {
+            <span class="kw">let</span> <span class="ident">child_data_mutex</span> <span class="op">=</span> <span class="ident">child</span>
+                .<span class="ident">as_ref</span>()
+                .<span class="ident">user_data</span>()
+                .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">PrivateSurfaceData</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+                .<span class="ident">unwrap</span>();
+            <span class="comment">// if the child is effectively sync, take its state</span>
+            <span class="comment">// this is the case if either we are effectively sync, or the child is explicitly sync</span>
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">child_data</span> <span class="op">=</span> <span class="ident">child_data_mutex</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+            <span class="kw">let</span> <span class="ident">is_child_sync</span> <span class="op">=</span> <span class="op">|</span><span class="op">|</span> {
+                <span class="ident">child_data</span>
+                    .<span class="ident">public_data</span>
+                    .<span class="ident">data_map</span>
+                    .<span class="ident">get</span>::<span class="op">&lt;</span><span class="kw">super</span><span class="ident">::handlers::SubsurfaceState</span><span class="op">&gt;</span>()
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">sync</span>.<span class="ident">load</span>(<span class="ident">Ordering::Acquire</span>))
+                    .<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>)
+            };
+            <span class="kw">if</span> <span class="ident">is_sync</span> <span class="op">|</span><span class="op">|</span> <span class="ident">is_child_sync</span>() {
+                <span class="kw">let</span> <span class="ident">child_tx</span> <span class="op">=</span> <span class="ident">std::mem::take</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">child_data</span>.<span class="ident">pending_transaction</span>);
+                <span class="ident">child_tx</span>.<span class="ident">merge_into</span>(<span class="kw-2">&amp;</span><span class="ident">my_data</span>.<span class="ident">pending_transaction</span>);
+                <span class="ident">child_data</span>.<span class="ident">current_txid</span>.<span class="number">0</span> <span class="op">=</span> <span class="ident">child_data</span>.<span class="ident">current_txid</span>.<span class="number">0</span>.<span class="ident">wrapping_add</span>(<span class="number">1</span>);
+            }
+        }
+        <span class="ident">my_data</span>
+            .<span class="ident">pending_transaction</span>
+            .<span class="ident">insert_state</span>(<span class="ident">surface</span>.<span class="ident">clone</span>(), <span class="ident">my_data</span>.<span class="ident">current_txid</span>);
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">is_sync</span> {
+            <span class="comment">// if we are not sync, apply the transaction immediately</span>
+            <span class="kw">let</span> <span class="ident">tx</span> <span class="op">=</span> <span class="ident">std::mem::take</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">my_data</span>.<span class="ident">pending_transaction</span>);
+            <span class="comment">// release the mutex, as applying the transaction will try to lock it</span>
+            <span class="ident">std::mem::drop</span>(<span class="ident">my_data</span>);
+            <span class="comment">// apply the transaction</span>
+            <span class="ident">tx</span>.<span class="ident">finalize</span>().<span class="ident">apply</span>();
+        }
     }
 
-    <span class="doccomment">/// Access to the role data</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_role_data</span><span class="op">&lt;</span><span class="ident">RoleData</span>, <span class="ident">F</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">WrongRole</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span>,
-        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RoleData</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span>,
-    {
-        <span class="macro">debug_assert!</span>(<span class="ident">surface</span>.<span class="ident">as_ref</span>().<span class="ident">is_alive</span>());
-        <span class="kw">let</span> <span class="ident">data_mutex</span> <span class="op">=</span> <span class="ident">surface</span>
-            .<span class="ident">as_ref</span>()
-            .<span class="ident">user_data</span>()
-            .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">SurfaceData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>()
-            .<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data_guard</span> <span class="op">=</span> <span class="ident">data_mutex</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">R</span> <span class="kw">as</span> <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">RoleData</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::data_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">data_guard</span>.<span class="ident">role</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="ident">f</span>(<span class="ident">data</span>))
-    }
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">RoleType</span> <span class="op">+</span> <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">SubsurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">SurfaceData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Checks if the first surface is an ancestor of the second</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_ancestor</span>(<span class="ident">a</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>, <span class="ident">b</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-        <span class="kw">let</span> <span class="ident">b_mutex</span> <span class="op">=</span> <span class="ident">b</span>.<span class="ident">as_ref</span>().<span class="ident">user_data</span>().<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">SurfaceData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">b_mutex</span> <span class="op">=</span> <span class="ident">b</span>.<span class="ident">as_ref</span>().<span class="ident">user_data</span>().<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">PrivateSurfaceData</span><span class="op">&gt;</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="ident">b_guard</span> <span class="op">=</span> <span class="ident">b_mutex</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">parent</span>) <span class="op">=</span> <span class="ident">b_guard</span>.<span class="ident">parent</span> {
             <span class="kw">if</span> <span class="ident">parent</span>.<span class="ident">as_ref</span>().<span class="ident">equals</span>(<span class="ident">a</span>.<span class="ident">as_ref</span>()) {
@@ -679,10 +754,18 @@
 
         <span class="comment">// change child&#39;s parent</span>
         {
-            <span class="kw">let</span> <span class="ident">child_mutex</span> <span class="op">=</span> <span class="ident">child</span>.<span class="ident">as_ref</span>().<span class="ident">user_data</span>().<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">SurfaceData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
+            <span class="kw">let</span> <span class="ident">child_mutex</span> <span class="op">=</span> <span class="ident">child</span>
+                .<span class="ident">as_ref</span>()
+                .<span class="ident">user_data</span>()
+                .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">PrivateSurfaceData</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+                .<span class="ident">unwrap</span>();
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">child_guard</span> <span class="op">=</span> <span class="ident">child_mutex</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
             <span class="comment">// if surface already has a role, it cannot become a subsurface</span>
-            <span class="op">&lt;</span><span class="ident">R</span> <span class="kw">as</span> <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">SubsurfaceRole</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::set</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">child_guard</span>.<span class="ident">role</span>)<span class="question-mark">?</span>;
+            <span class="kw">if</span> <span class="ident">child_guard</span>.<span class="ident">public_data</span>.<span class="ident">role</span>.<span class="ident">is_some</span>() <span class="op">&amp;&amp;</span> <span class="ident">child_guard</span>.<span class="ident">public_data</span>.<span class="ident">role</span> <span class="op">!</span><span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">SUBSURFACE_ROLE</span>)
+            {
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">AlreadyHasRole</span>);
+            }
+            <span class="ident">child_guard</span>.<span class="ident">public_data</span>.<span class="ident">role</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">SUBSURFACE_ROLE</span>);
             <span class="macro">debug_assert!</span>(<span class="ident">child_guard</span>.<span class="ident">parent</span>.<span class="ident">is_none</span>());
             <span class="ident">child_guard</span>.<span class="ident">parent</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">parent</span>.<span class="ident">clone</span>());
         }
@@ -691,7 +774,7 @@
             <span class="kw">let</span> <span class="ident">parent_mutex</span> <span class="op">=</span> <span class="ident">parent</span>
                 .<span class="ident">as_ref</span>()
                 .<span class="ident">user_data</span>()
-                .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">SurfaceData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+                .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">PrivateSurfaceData</span><span class="op">&gt;</span><span class="op">&gt;</span>()
                 .<span class="ident">unwrap</span>();
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parent_guard</span> <span class="op">=</span> <span class="ident">parent_mutex</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
             <span class="ident">parent_guard</span>.<span class="ident">children</span>.<span class="ident">push</span>(<span class="ident">child</span>.<span class="ident">clone</span>())
@@ -705,22 +788,20 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unset_parent</span>(<span class="ident">child</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>) {
         <span class="macro">debug_assert!</span>(<span class="ident">child</span>.<span class="ident">as_ref</span>().<span class="ident">is_alive</span>());
         <span class="kw">let</span> <span class="ident">old_parent</span> <span class="op">=</span> {
-            <span class="kw">let</span> <span class="ident">child_mutex</span> <span class="op">=</span> <span class="ident">child</span>.<span class="ident">as_ref</span>().<span class="ident">user_data</span>().<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">SurfaceData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
+            <span class="kw">let</span> <span class="ident">child_mutex</span> <span class="op">=</span> <span class="ident">child</span>
+                .<span class="ident">as_ref</span>()
+                .<span class="ident">user_data</span>()
+                .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">PrivateSurfaceData</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+                .<span class="ident">unwrap</span>();
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">child_guard</span> <span class="op">=</span> <span class="ident">child_mutex</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-            <span class="kw">let</span> <span class="ident">old_parent</span> <span class="op">=</span> <span class="ident">child_guard</span>.<span class="ident">parent</span>.<span class="ident">take</span>();
-            <span class="kw">if</span> <span class="ident">old_parent</span>.<span class="ident">is_some</span>() {
-                <span class="comment">// We had a parent, so this does not have a role any more</span>
-                <span class="op">&lt;</span><span class="ident">R</span> <span class="kw">as</span> <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">SubsurfaceRole</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::unset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">child_guard</span>.<span class="ident">role</span>)
-                    .<span class="ident">expect</span>(<span class="string">&quot;Surface had a parent but not the subsurface role?!&quot;</span>);
-            }
-            <span class="ident">old_parent</span>
+            <span class="ident">child_guard</span>.<span class="ident">parent</span>.<span class="ident">take</span>()
         };
         <span class="comment">// unregister from our parent</span>
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">old_parent</span>) <span class="op">=</span> <span class="ident">old_parent</span> {
             <span class="kw">let</span> <span class="ident">parent_mutex</span> <span class="op">=</span> <span class="ident">old_parent</span>
                 .<span class="ident">as_ref</span>()
                 .<span class="ident">user_data</span>()
-                .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">SurfaceData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+                .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">PrivateSurfaceData</span><span class="op">&gt;</span><span class="op">&gt;</span>()
                 .<span class="ident">unwrap</span>();
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parent_guard</span> <span class="op">=</span> <span class="ident">parent_mutex</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
             <span class="ident">parent_guard</span>
@@ -731,7 +812,11 @@
 
     <span class="doccomment">/// Retrieve the parent surface (if any) of this surface</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_parent</span>(<span class="ident">child</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">WlSurface</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">child_mutex</span> <span class="op">=</span> <span class="ident">child</span>.<span class="ident">as_ref</span>().<span class="ident">user_data</span>().<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">SurfaceData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">child_mutex</span> <span class="op">=</span> <span class="ident">child</span>
+            .<span class="ident">as_ref</span>()
+            .<span class="ident">user_data</span>()
+            .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">PrivateSurfaceData</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+            .<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="ident">child_guard</span> <span class="op">=</span> <span class="ident">child_mutex</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
         <span class="ident">child_guard</span>.<span class="ident">parent</span>.<span class="ident">as_ref</span>().<span class="ident">cloned</span>()
     }
@@ -741,7 +826,7 @@
         <span class="kw">let</span> <span class="ident">parent_mutex</span> <span class="op">=</span> <span class="ident">parent</span>
             .<span class="ident">as_ref</span>()
             .<span class="ident">user_data</span>()
-            .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">SurfaceData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+            .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">PrivateSurfaceData</span><span class="op">&gt;</span><span class="op">&gt;</span>()
             .<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="ident">parent_guard</span> <span class="op">=</span> <span class="ident">parent_mutex</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
         <span class="ident">parent_guard</span>
@@ -760,7 +845,7 @@
             <span class="kw">let</span> <span class="ident">data_mutex</span> <span class="op">=</span> <span class="ident">surface</span>
                 .<span class="ident">as_ref</span>()
                 .<span class="ident">user_data</span>()
-                .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">SurfaceData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+                .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">PrivateSurfaceData</span><span class="op">&gt;</span><span class="op">&gt;</span>()
                 .<span class="ident">unwrap</span>();
             <span class="kw">let</span> <span class="ident">data_guard</span> <span class="op">=</span> <span class="ident">data_mutex</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
             <span class="ident">data_guard</span>.<span class="ident">parent</span>.<span class="ident">as_ref</span>().<span class="ident">cloned</span>().<span class="ident">unwrap</span>()
@@ -778,7 +863,7 @@
         <span class="kw">let</span> <span class="ident">parent_mutex</span> <span class="op">=</span> <span class="ident">parent</span>
             .<span class="ident">as_ref</span>()
             .<span class="ident">user_data</span>()
-            .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">SurfaceData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+            .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">PrivateSurfaceData</span><span class="op">&gt;</span><span class="op">&gt;</span>()
             .<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parent_guard</span> <span class="op">=</span> <span class="ident">parent_mutex</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="ident">my_index</span> <span class="op">=</span> <span class="ident">index_of</span>(<span class="ident">surface</span>, <span class="kw-2">&amp;</span><span class="ident">parent_guard</span>.<span class="ident">children</span>).<span class="ident">unwrap</span>();
@@ -799,24 +884,7 @@
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">SurfaceData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Access the attributes associated with a surface</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Note that an internal lock is taken during access of this data,</span>
-    <span class="doccomment">/// so the tree cannot be manipulated at the same time</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_data</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">F</span><span class="op">&gt;</span>(<span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">SurfaceAttributes</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span>,
-    {
-        <span class="kw">let</span> <span class="ident">data_mutex</span> <span class="op">=</span> <span class="ident">surface</span>
-            .<span class="ident">as_ref</span>()
-            .<span class="ident">user_data</span>()
-            .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">SurfaceData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>()
-            .<span class="ident">expect</span>(<span class="string">&quot;Accessing the data of foreign surfaces is not supported.&quot;</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data_guard</span> <span class="op">=</span> <span class="ident">data_mutex</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-        <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">data_guard</span>.<span class="ident">attributes</span>)
-    }
-
+<span class="kw">impl</span> <span class="ident">PrivateSurfaceData</span> {
     <span class="doccomment">/// Access sequentially the attributes associated with a surface tree,</span>
     <span class="doccomment">/// in a depth-first order.</span>
     <span class="doccomment">///</span>
@@ -838,9 +906,9 @@
         <span class="kw-2">mut</span> <span class="ident">post_filter</span>: <span class="ident">F3</span>,
         <span class="ident">reverse</span>: <span class="ident">bool</span>,
     ) <span class="kw">where</span>
-        <span class="ident">F1</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">WlSurface</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">SurfaceAttributes</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">TraversalAction</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-        <span class="ident">F2</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">WlSurface</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">SurfaceAttributes</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>),
-        <span class="ident">F3</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">WlSurface</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">SurfaceAttributes</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span>,
+        <span class="ident">F1</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">WlSurface</span>, <span class="kw-2">&amp;</span><span class="ident">SurfaceData</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">TraversalAction</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+        <span class="ident">F2</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">WlSurface</span>, <span class="kw-2">&amp;</span><span class="ident">SurfaceData</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>),
+        <span class="ident">F3</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">WlSurface</span>, <span class="kw-2">&amp;</span><span class="ident">SurfaceData</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span>,
     {
         <span class="self">Self</span><span class="ident">::map</span>(
             <span class="ident">surface</span>,
@@ -862,25 +930,25 @@
         <span class="ident">reverse</span>: <span class="ident">bool</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span>
     <span class="kw">where</span>
-        <span class="ident">F1</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">WlSurface</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">SurfaceAttributes</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">TraversalAction</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-        <span class="ident">F2</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">WlSurface</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">SurfaceAttributes</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>),
-        <span class="ident">F3</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">WlSurface</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">SurfaceAttributes</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span>,
+        <span class="ident">F1</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">WlSurface</span>, <span class="kw-2">&amp;</span><span class="ident">SurfaceData</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">TraversalAction</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+        <span class="ident">F2</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">WlSurface</span>, <span class="kw-2">&amp;</span><span class="ident">SurfaceData</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>),
+        <span class="ident">F3</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">WlSurface</span>, <span class="kw-2">&amp;</span><span class="ident">SurfaceData</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span>,
     {
         <span class="kw">let</span> <span class="ident">data_mutex</span> <span class="op">=</span> <span class="ident">surface</span>
             .<span class="ident">as_ref</span>()
             .<span class="ident">user_data</span>()
-            .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">SurfaceData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+            .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">PrivateSurfaceData</span><span class="op">&gt;</span><span class="op">&gt;</span>()
             .<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data_guard</span> <span class="op">=</span> <span class="ident">data_mutex</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="ident">data_guard</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">data_guard</span>;
         <span class="comment">// call the filter on ourselves</span>
-        <span class="kw">match</span> <span class="ident">filter</span>(<span class="ident">surface</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">data_guard</span>.<span class="ident">attributes</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">data_guard</span>.<span class="ident">role</span>, <span class="ident">initial</span>) {
+        <span class="kw">match</span> <span class="ident">filter</span>(<span class="ident">surface</span>, <span class="kw-2">&amp;</span><span class="ident">data_guard</span>.<span class="ident">public_data</span>, <span class="ident">initial</span>) {
             <span class="ident">TraversalAction::DoChildren</span>(<span class="ident">t</span>) <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="comment">// loop over children</span>
                 <span class="kw">if</span> <span class="ident">reverse</span> {
                     <span class="kw">for</span> <span class="ident">c</span> <span class="kw">in</span> <span class="ident">data_guard</span>.<span class="ident">children</span>.<span class="ident">iter</span>().<span class="ident">rev</span>() {
                         <span class="kw">if</span> <span class="ident">c</span>.<span class="ident">as_ref</span>().<span class="ident">equals</span>(<span class="ident">surface</span>.<span class="ident">as_ref</span>()) {
-                            <span class="ident">processor</span>(<span class="ident">surface</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">data_guard</span>.<span class="ident">attributes</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">data_guard</span>.<span class="ident">role</span>, <span class="ident">initial</span>);
+                            <span class="ident">processor</span>(<span class="ident">surface</span>, <span class="kw-2">&amp;</span><span class="ident">data_guard</span>.<span class="ident">public_data</span>, <span class="ident">initial</span>);
                         } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="self">Self</span><span class="ident">::map</span>(<span class="ident">c</span>, <span class="kw-2">&amp;</span><span class="ident">t</span>, <span class="ident">filter</span>, <span class="ident">processor</span>, <span class="ident">post_filter</span>, <span class="bool-val">true</span>) {
                             <span class="kw">return</span> <span class="bool-val">false</span>;
                         }
@@ -888,17 +956,17 @@
                 } <span class="kw">else</span> {
                     <span class="kw">for</span> <span class="ident">c</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">data_guard</span>.<span class="ident">children</span> {
                         <span class="kw">if</span> <span class="ident">c</span>.<span class="ident">as_ref</span>().<span class="ident">equals</span>(<span class="ident">surface</span>.<span class="ident">as_ref</span>()) {
-                            <span class="ident">processor</span>(<span class="ident">surface</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">data_guard</span>.<span class="ident">attributes</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">data_guard</span>.<span class="ident">role</span>, <span class="ident">initial</span>);
+                            <span class="ident">processor</span>(<span class="ident">surface</span>, <span class="kw-2">&amp;</span><span class="ident">data_guard</span>.<span class="ident">public_data</span>, <span class="ident">initial</span>);
                         } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="self">Self</span><span class="ident">::map</span>(<span class="ident">c</span>, <span class="kw-2">&amp;</span><span class="ident">t</span>, <span class="ident">filter</span>, <span class="ident">processor</span>, <span class="ident">post_filter</span>, <span class="bool-val">false</span>) {
                             <span class="kw">return</span> <span class="bool-val">false</span>;
                         }
                     }
                 }
-                <span class="ident">post_filter</span>(<span class="ident">surface</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">data_guard</span>.<span class="ident">attributes</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">data_guard</span>.<span class="ident">role</span>, <span class="ident">initial</span>)
+                <span class="ident">post_filter</span>(<span class="ident">surface</span>, <span class="kw-2">&amp;</span><span class="ident">data_guard</span>.<span class="ident">public_data</span>, <span class="ident">initial</span>)
             }
             <span class="ident">TraversalAction::SkipChildren</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="comment">// still process ourselves</span>
-                <span class="ident">processor</span>(<span class="ident">surface</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">data_guard</span>.<span class="ident">attributes</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">data_guard</span>.<span class="ident">role</span>, <span class="ident">initial</span>);
+                <span class="ident">processor</span>(<span class="ident">surface</span>, <span class="kw-2">&amp;</span><span class="ident">data_guard</span>.<span class="ident">public_data</span>, <span class="ident">initial</span>);
                 <span class="bool-val">true</span>
             }
             <span class="ident">TraversalAction::Break</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,

@@ -32,36 +32,36 @@ collect it into, e g, a <code>HashMap</code>.</p>
 <p><code>Signature</code> - a D-Bus signature.</p>
 <p><code>OwnedFd</code> - a file descriptor sent from the remote side.</p>
 </div></details><h2 id="modules" class="section-header"><a href="#modules">Modules</a></h2>
-<table><tr class="module-item"><td><a class="mod" href="messageitem/index.html" title="dbus::arg::messageitem mod">messageitem</a></td><td class="docblock-short"><p>MessageItem - old, enum design that is used as parameters and return values from
+<div class="item-table"><div class="item-left module-item"><a class="mod" href="messageitem/index.html" title="dbus::arg::messageitem mod">messageitem</a></div><div class="item-right docblock-short"><p>MessageItem - old, enum design that is used as parameters and return values from
 method calls, or as data added to a signal.</p>
-</td></tr></table><h2 id="structs" class="section-header"><a href="#structs">Structs</a></h2>
-<table><tr class="module-item"><td><a class="struct" href="struct.Array.html" title="dbus::arg::Array struct">Array</a></td><td class="docblock-short"><p>Represents a D-Bus Array. Maximum flexibility (wraps an iterator of items to append).</p>
-</td></tr><tr class="module-item"><td><a class="struct" href="struct.Dict.html" title="dbus::arg::Dict struct">Dict</a></td><td class="docblock-short"><p>Append a D-Bus dict type (i e, an array of dict entries).</p>
-</td></tr><tr class="module-item"><td><a class="struct" href="struct.Iter.html" title="dbus::arg::Iter struct">Iter</a></td><td class="docblock-short"><p>Helper struct for retrieve one or more arguments from a Message.</p>
-</td></tr><tr class="module-item"><td><a class="struct" href="struct.IterAppend.html" title="dbus::arg::IterAppend struct">IterAppend</a></td><td class="docblock-short"><p>Helper struct for appending one or more arguments to a Message.</p>
-</td></tr><tr class="module-item"><td><a class="struct" href="struct.OwnedFd.html" title="dbus::arg::OwnedFd struct">OwnedFd</a></td><td class="docblock-short"><p>An RAII wrapper around Fd to ensure that file descriptor is closed
+</div></div><h2 id="structs" class="section-header"><a href="#structs">Structs</a></h2>
+<div class="item-table"><div class="item-left module-item"><a class="struct" href="struct.Array.html" title="dbus::arg::Array struct">Array</a></div><div class="item-right docblock-short"><p>Represents a D-Bus Array. Maximum flexibility (wraps an iterator of items to append).</p>
+</div><div class="item-left module-item"><a class="struct" href="struct.Dict.html" title="dbus::arg::Dict struct">Dict</a></div><div class="item-right docblock-short"><p>Append a D-Bus dict type (i e, an array of dict entries).</p>
+</div><div class="item-left module-item"><a class="struct" href="struct.Iter.html" title="dbus::arg::Iter struct">Iter</a></div><div class="item-right docblock-short"><p>Helper struct for retrieve one or more arguments from a Message.</p>
+</div><div class="item-left module-item"><a class="struct" href="struct.IterAppend.html" title="dbus::arg::IterAppend struct">IterAppend</a></div><div class="item-right docblock-short"><p>Helper struct for appending one or more arguments to a Message.</p>
+</div><div class="item-left module-item"><a class="struct" href="struct.OwnedFd.html" title="dbus::arg::OwnedFd struct">OwnedFd</a></div><div class="item-right docblock-short"><p>An RAII wrapper around Fd to ensure that file descriptor is closed
 when the scope ends.</p>
-</td></tr><tr class="module-item"><td><a class="struct" href="struct.TypeMismatchError.html" title="dbus::arg::TypeMismatchError struct">TypeMismatchError</a></td><td class="docblock-short"><p>Error struct to indicate a D-Bus argument type mismatch.</p>
-</td></tr><tr class="module-item"><td><a class="struct" href="struct.Variant.html" title="dbus::arg::Variant struct">Variant</a></td><td class="docblock-short"><p>A simple wrapper to specify a D-Bus variant.</p>
-</td></tr></table><h2 id="enums" class="section-header"><a href="#enums">Enums</a></h2>
-<table><tr class="module-item"><td><a class="enum" href="enum.ArgType.html" title="dbus::arg::ArgType enum">ArgType</a></td><td class="docblock-short"><p>Type of Argument</p>
-</td></tr></table><h2 id="traits" class="section-header"><a href="#traits">Traits</a></h2>
-<table><tr class="module-item"><td><a class="trait" href="trait.Append.html" title="dbus::arg::Append trait">Append</a></td><td class="docblock-short"><p>Types that can be appended to a message as arguments implement this trait.</p>
-</td></tr><tr class="module-item"><td><a class="trait" href="trait.AppendAll.html" title="dbus::arg::AppendAll trait">AppendAll</a></td><td class="docblock-short"><p>Helper trait to append many arguments to a message.</p>
-</td></tr><tr class="module-item"><td><a class="trait" href="trait.Arg.html" title="dbus::arg::Arg trait">Arg</a></td><td class="docblock-short"><p>Types that can represent a D-Bus message argument implement this trait.</p>
-</td></tr><tr class="module-item"><td><a class="trait" href="trait.ArgAll.html" title="dbus::arg::ArgAll trait">ArgAll</a></td><td class="docblock-short"><p>Helper trait to introspect many arguments.</p>
-</td></tr><tr class="module-item"><td><a class="trait" href="trait.DictKey.html" title="dbus::arg::DictKey trait">DictKey</a></td><td class="docblock-short"><p>Types that can be used as keys in a dict type implement this trait.</p>
-</td></tr><tr class="module-item"><td><a class="trait" href="trait.FixedArray.html" title="dbus::arg::FixedArray trait">FixedArray</a></td><td class="docblock-short"><p>If a type implements this trait, it means the size and alignment is the same
+</div><div class="item-left module-item"><a class="struct" href="struct.TypeMismatchError.html" title="dbus::arg::TypeMismatchError struct">TypeMismatchError</a></div><div class="item-right docblock-short"><p>Error struct to indicate a D-Bus argument type mismatch.</p>
+</div><div class="item-left module-item"><a class="struct" href="struct.Variant.html" title="dbus::arg::Variant struct">Variant</a></div><div class="item-right docblock-short"><p>A simple wrapper to specify a D-Bus variant.</p>
+</div></div><h2 id="enums" class="section-header"><a href="#enums">Enums</a></h2>
+<div class="item-table"><div class="item-left module-item"><a class="enum" href="enum.ArgType.html" title="dbus::arg::ArgType enum">ArgType</a></div><div class="item-right docblock-short"><p>Type of Argument</p>
+</div></div><h2 id="traits" class="section-header"><a href="#traits">Traits</a></h2>
+<div class="item-table"><div class="item-left module-item"><a class="trait" href="trait.Append.html" title="dbus::arg::Append trait">Append</a></div><div class="item-right docblock-short"><p>Types that can be appended to a message as arguments implement this trait.</p>
+</div><div class="item-left module-item"><a class="trait" href="trait.AppendAll.html" title="dbus::arg::AppendAll trait">AppendAll</a></div><div class="item-right docblock-short"><p>Helper trait to append many arguments to a message.</p>
+</div><div class="item-left module-item"><a class="trait" href="trait.Arg.html" title="dbus::arg::Arg trait">Arg</a></div><div class="item-right docblock-short"><p>Types that can represent a D-Bus message argument implement this trait.</p>
+</div><div class="item-left module-item"><a class="trait" href="trait.ArgAll.html" title="dbus::arg::ArgAll trait">ArgAll</a></div><div class="item-right docblock-short"><p>Helper trait to introspect many arguments.</p>
+</div><div class="item-left module-item"><a class="trait" href="trait.DictKey.html" title="dbus::arg::DictKey trait">DictKey</a></div><div class="item-right docblock-short"><p>Types that can be used as keys in a dict type implement this trait.</p>
+</div><div class="item-left module-item"><a class="trait" href="trait.FixedArray.html" title="dbus::arg::FixedArray trait">FixedArray</a></div><div class="item-right docblock-short"><p>If a type implements this trait, it means the size and alignment is the same
 as in D-Bus. This means that you can quickly append and get slices of this type.</p>
-</td></tr><tr class="module-item"><td><a class="trait" href="trait.Get.html" title="dbus::arg::Get trait">Get</a></td><td class="docblock-short"><p>Types that can be retrieved from a message as arguments implement this trait.</p>
-</td></tr><tr class="module-item"><td><a class="trait" href="trait.ReadAll.html" title="dbus::arg::ReadAll trait">ReadAll</a></td><td class="docblock-short"><p>Helper trait to read all arguments from a message.</p>
-</td></tr><tr class="module-item"><td><a class="trait" href="trait.RefArg.html" title="dbus::arg::RefArg trait">RefArg</a></td><td class="docblock-short"><p>Object safe version of Arg + Append + Get.</p>
-</td></tr></table><h2 id="functions" class="section-header"><a href="#functions">Functions</a></h2>
-<table><tr class="module-item"><td><a class="fn" href="fn.cast.html" title="dbus::arg::cast fn">cast</a></td><td class="docblock-short"><p>Cast a RefArg as a specific type (shortcut for any + downcast)</p>
-</td></tr><tr class="module-item"><td><a class="fn" href="fn.cast_mut.html" title="dbus::arg::cast_mut fn">cast_mut</a></td><td class="docblock-short"><p>Cast a RefArg as a specific type (shortcut for any_mut + downcast_mut)</p>
-</td></tr><tr class="module-item"><td><a class="fn" href="fn.prop_cast.html" title="dbus::arg::prop_cast fn">prop_cast</a></td><td class="docblock-short"><p>Descend into a hashmap returned by e g “Properties::get_all” to retrieve the value of a property.</p>
-</td></tr></table><h2 id="types" class="section-header"><a href="#types">Type Definitions</a></h2>
-<table><tr class="module-item"><td><a class="type" href="type.PropMap.html" title="dbus::arg::PropMap type">PropMap</a></td><td class="docblock-short"><p>The type typically used for a dictionary of properties.</p>
-</td></tr></table></section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dbus" data-search-index-js="../../search-index.js" data-search-js="../../search.js"></div>
+</div><div class="item-left module-item"><a class="trait" href="trait.Get.html" title="dbus::arg::Get trait">Get</a></div><div class="item-right docblock-short"><p>Types that can be retrieved from a message as arguments implement this trait.</p>
+</div><div class="item-left module-item"><a class="trait" href="trait.ReadAll.html" title="dbus::arg::ReadAll trait">ReadAll</a></div><div class="item-right docblock-short"><p>Helper trait to read all arguments from a message.</p>
+</div><div class="item-left module-item"><a class="trait" href="trait.RefArg.html" title="dbus::arg::RefArg trait">RefArg</a></div><div class="item-right docblock-short"><p>Object safe version of Arg + Append + Get.</p>
+</div></div><h2 id="functions" class="section-header"><a href="#functions">Functions</a></h2>
+<div class="item-table"><div class="item-left module-item"><a class="fn" href="fn.cast.html" title="dbus::arg::cast fn">cast</a></div><div class="item-right docblock-short"><p>Cast a RefArg as a specific type (shortcut for any + downcast)</p>
+</div><div class="item-left module-item"><a class="fn" href="fn.cast_mut.html" title="dbus::arg::cast_mut fn">cast_mut</a></div><div class="item-right docblock-short"><p>Cast a RefArg as a specific type (shortcut for any_mut + downcast_mut)</p>
+</div><div class="item-left module-item"><a class="fn" href="fn.prop_cast.html" title="dbus::arg::prop_cast fn">prop_cast</a></div><div class="item-right docblock-short"><p>Descend into a hashmap returned by e g “Properties::get_all” to retrieve the value of a property.</p>
+</div></div><h2 id="types" class="section-header"><a href="#types">Type Definitions</a></h2>
+<div class="item-table"><div class="item-left module-item"><a class="type" href="type.PropMap.html" title="dbus::arg::PropMap type">PropMap</a></div><div class="item-right docblock-short"><p>The type typically used for a dictionary of properties.</p>
+</div></div></section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dbus" data-search-index-js="../../search-index.js" data-search-js="../../search.js"></div>
     <script src="../../main.js"></script>
 </body></html>

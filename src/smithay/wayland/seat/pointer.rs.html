@@ -736,10 +736,8 @@
 <span id="736">736</span>
 <span id="737">737</span>
 <span id="738">738</span>
-<span id="739">739</span>
-<span id="740">740</span>
 </pre><pre class="rust">
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cell::RefCell</span>, <span class="ident">fmt</span>, <span class="ident">ops::Deref</span> <span class="kw">as</span> <span class="kw">_</span>, <span class="ident">rc::Rc</span>};
+<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cell::RefCell</span>, <span class="ident">fmt</span>, <span class="ident">ops::Deref</span> <span class="kw">as</span> <span class="kw">_</span>, <span class="ident">rc::Rc</span>, <span class="ident">sync::Mutex</span>};
 
 <span class="kw">use</span> <span class="ident">wayland_server</span>::{
     <span class="ident">protocol</span>::{
@@ -749,12 +747,14 @@
     <span class="ident">Filter</span>, <span class="ident">Main</span>,
 };
 
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland::compositor</span>::{<span class="ident">roles::Role</span>, <span class="ident">CompositorToken</span>};
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland::compositor</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland::Serial</span>;
+
+<span class="kw">static</span> <span class="ident">CURSOR_IMAGE_ROLE</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;cursor_image&quot;</span>;
 
 <span class="doccomment">/// The role representing a surface set as the pointer cursor</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Default</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CursorImageRole</span> {
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CursorImageAttributes</span> {
     <span class="doccomment">/// Location of the hotspot of the pointer in the surface</span>
     <span class="kw">pub</span> <span class="ident">hotspot</span>: (<span class="ident">i32</span>, <span class="ident">i32</span>),
 }
@@ -813,9 +813,8 @@
 }
 
 <span class="kw">impl</span> <span class="ident">PointerInternal</span> {
-    <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">token</span>: <span class="ident">CompositorToken</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>, <span class="kw-2">mut</span> <span class="ident">cb</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PointerInternal</span>
+    <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="ident">cb</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PointerInternal</span>
     <span class="kw">where</span>
-        <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">CursorImageRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
         <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">CursorImageStatus</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span>,
     {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">old_status</span> <span class="op">=</span> <span class="ident">CursorImageStatus::Default</span>;
@@ -827,11 +826,7 @@
                     <span class="ident">CursorImageStatus::Image</span>(<span class="kw-2">ref</span> <span class="ident">new_surface</span>) <span class="kw">if</span> <span class="ident">new_surface</span> <span class="op">=</span><span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">surface</span> <span class="op">=</span><span class="op">&gt;</span> {
                         <span class="comment">// don&#39;t remove the role, we are just re-binding the same surface</span>
                     }
-                    <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {
-                        <span class="kw">if</span> <span class="ident">surface</span>.<span class="ident">as_ref</span>().<span class="ident">is_alive</span>() {
-                            <span class="ident">token</span>.<span class="ident">remove_role</span>::<span class="op">&lt;</span><span class="ident">CursorImageRole</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>).<span class="ident">unwrap</span>();
-                        }
-                    }
+                    <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {}
                 }
             }
             <span class="ident">cb</span>(<span class="ident">new_status</span>)
@@ -1307,24 +1302,16 @@
     }
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">create_pointer_handler</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">token</span>: <span class="ident">CompositorToken</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>, <span class="ident">cb</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PointerHandle</span>
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">create_pointer_handler</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="ident">cb</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PointerHandle</span>
 <span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">CursorImageRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
     <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">CursorImageStatus</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
     <span class="ident">PointerHandle</span> {
-        <span class="ident">inner</span>: <span class="ident">Rc::new</span>(<span class="ident">RefCell::new</span>(<span class="ident">PointerInternal::new</span>(<span class="ident">token</span>, <span class="ident">cb</span>))),
+        <span class="ident">inner</span>: <span class="ident">Rc::new</span>(<span class="ident">RefCell::new</span>(<span class="ident">PointerInternal::new</span>(<span class="ident">cb</span>))),
     }
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">implement_pointer</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(
-    <span class="ident">pointer</span>: <span class="ident">Main</span><span class="op">&lt;</span><span class="ident">WlPointer</span><span class="op">&gt;</span>,
-    <span class="ident">handle</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">PointerHandle</span><span class="op">&gt;</span>,
-    <span class="ident">token</span>: <span class="ident">CompositorToken</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">WlPointer</span>
-<span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">CursorImageRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-{
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">implement_pointer</span>(<span class="ident">pointer</span>: <span class="ident">Main</span><span class="op">&lt;</span><span class="ident">WlPointer</span><span class="op">&gt;</span>, <span class="ident">handle</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">PointerHandle</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">WlPointer</span> {
     <span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="ident">handle</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">h</span><span class="op">|</span> <span class="ident">h</span>.<span class="ident">inner</span>.<span class="ident">clone</span>());
     <span class="ident">pointer</span>.<span class="ident">quick_assign</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">pointer</span>, <span class="ident">request</span>, <span class="ident">_data</span><span class="op">|</span> {
         <span class="kw">match</span> <span class="ident">request</span> {
@@ -1347,14 +1334,9 @@
                         <span class="kw">if</span> <span class="ident">focus</span>.<span class="ident">as_ref</span>().<span class="ident">same_client_as</span>(<span class="kw-2">&amp;</span><span class="ident">pointer</span>.<span class="ident">as_ref</span>()) {
                             <span class="kw">match</span> <span class="ident">surface</span> {
                                 <span class="prelude-val">Some</span>(<span class="ident">surface</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                                    <span class="kw">let</span> <span class="ident">role_data</span> <span class="op">=</span> <span class="ident">CursorImageRole</span> {
-                                        <span class="ident">hotspot</span>: (<span class="ident">hotspot_x</span>, <span class="ident">hotspot_y</span>),
-                                    };
-                                    <span class="comment">// we gracefully tolerate the client to provide a surface that</span>
-                                    <span class="comment">// already had the &quot;CursorImage&quot; role, as most clients will</span>
-                                    <span class="comment">// always reuse the same surface (and they are right to do so!)</span>
-                                    <span class="kw">if</span> <span class="ident">token</span>.<span class="ident">with_role_data</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>, <span class="op">|</span><span class="ident">data</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">data</span> <span class="op">=</span> <span class="ident">role_data</span>).<span class="ident">is_err</span>()
-                                        <span class="op">&amp;&amp;</span> <span class="ident">token</span>.<span class="ident">give_role_with</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>, <span class="ident">role_data</span>).<span class="ident">is_err</span>()
+                                    <span class="comment">// tolerate re-using the same surface</span>
+                                    <span class="kw">if</span> <span class="ident">compositor::give_role</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>, <span class="ident">CURSOR_IMAGE_ROLE</span>).<span class="ident">is_err</span>()
+                                        <span class="op">&amp;&amp;</span> <span class="ident">compositor::get_role</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>) <span class="op">!</span><span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">CURSOR_IMAGE_ROLE</span>)
                                     {
                                         <span class="ident">pointer</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
                                             <span class="ident">wl_pointer::Error::Role</span> <span class="kw">as</span> <span class="ident">u32</span>,
@@ -1362,6 +1344,20 @@
                                         );
                                         <span class="kw">return</span>;
                                     }
+                                    <span class="ident">compositor::with_states</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>, <span class="op">|</span><span class="ident">states</span><span class="op">|</span> {
+                                        <span class="ident">states</span>.<span class="ident">data_map</span>.<span class="ident">insert_if_missing_threadsafe</span>(<span class="op">|</span><span class="op">|</span> {
+                                            <span class="ident">Mutex::new</span>(<span class="ident">CursorImageAttributes</span> { <span class="ident">hotspot</span>: (<span class="number">0</span>, <span class="number">0</span>) })
+                                        });
+                                        <span class="ident">states</span>
+                                            .<span class="ident">data_map</span>
+                                            .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">CursorImageAttributes</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+                                            .<span class="ident">unwrap</span>()
+                                            .<span class="ident">lock</span>()
+                                            .<span class="ident">unwrap</span>()
+                                            .<span class="ident">hotspot</span> <span class="op">=</span> (<span class="ident">hotspot_x</span>, <span class="ident">hotspot_y</span>);
+                                    })
+                                    .<span class="ident">unwrap</span>();
+
                                     <span class="ident">image_callback</span>(<span class="ident">CursorImageStatus::Image</span>(<span class="ident">surface</span>));
                                 }
                                 <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> {

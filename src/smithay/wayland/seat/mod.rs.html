@@ -366,34 +366,6 @@
 <span id="366">366</span>
 <span id="367">367</span>
 <span id="368">368</span>
-<span id="369">369</span>
-<span id="370">370</span>
-<span id="371">371</span>
-<span id="372">372</span>
-<span id="373">373</span>
-<span id="374">374</span>
-<span id="375">375</span>
-<span id="376">376</span>
-<span id="377">377</span>
-<span id="378">378</span>
-<span id="379">379</span>
-<span id="380">380</span>
-<span id="381">381</span>
-<span id="382">382</span>
-<span id="383">383</span>
-<span id="384">384</span>
-<span id="385">385</span>
-<span id="386">386</span>
-<span id="387">387</span>
-<span id="388">388</span>
-<span id="389">389</span>
-<span id="390">390</span>
-<span id="391">391</span>
-<span id="392">392</span>
-<span id="393">393</span>
-<span id="394">394</span>
-<span id="395">395</span>
-<span id="396">396</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Seat global utilities</span>
 <span class="doccomment">//!</span>
@@ -406,21 +378,13 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//! # extern crate wayland_server;</span>
-<span class="doccomment">//! # #[macro_use] extern crate smithay;</span>
-<span class="doccomment">//! use smithay::wayland::seat::{Seat, CursorImageRole};</span>
-<span class="doccomment">//! # use smithay::wayland::compositor::compositor_init;</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! // You need to insert the `CursorImageRole` into your roles, to handle requests from clients</span>
-<span class="doccomment">//! // to set a surface as a cursor image</span>
-<span class="doccomment">//! define_roles!(Roles =&gt; [CursorImage, CursorImageRole]);</span>
+<span class="doccomment">//! use smithay::wayland::seat::Seat;</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # let mut display = wayland_server::Display::new();</span>
-<span class="doccomment">//! # let (compositor_token, _, _) = compositor_init::&lt;Roles, _, _&gt;(&amp;mut display, |_, _, _, _| {}, None);</span>
 <span class="doccomment">//! // insert the seat:</span>
 <span class="doccomment">//! let (seat, seat_global) = Seat::new(</span>
 <span class="doccomment">//!     &amp;mut display,             // the display</span>
 <span class="doccomment">//!     &quot;seat-0&quot;.into(),          // the name of the seat, will be advertized to clients</span>
-<span class="doccomment">//!     compositor_token.clone(), // the compositor token</span>
 <span class="doccomment">//!     None                      // insert a logger here</span>
 <span class="doccomment">//! );</span>
 <span class="doccomment">//! ```</span>
@@ -429,13 +393,15 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Once the seat is initialized, you can add capabilities to it.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! Currently, only pointer and keyboard capabilities are supported by</span>
-<span class="doccomment">//! smithay.</span>
+<span class="doccomment">//! Currently, only pointer and keyboard capabilities are supported by smithay.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! You can add these capabilities via methods of the [`Seat`] struct:</span>
-<span class="doccomment">//! [`add_keyboard`](Seat::add_keyboard), [`add_pointer`](Seat::add_pointer).</span>
+<span class="doccomment">//! [`Seat::add_keyboard`] and [`Seat::add_pointer`].</span>
 <span class="doccomment">//! These methods return handles that can be cloned and sent across thread, so you can keep one around</span>
 <span class="doccomment">//! in your event-handling code to forward inputs to your clients.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! This module further defines the `&quot;cursor_image&quot;` role, that is assigned to surfaces used by clients</span>
+<span class="doccomment">//! to change the cursor icon.</span>
 
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cell::RefCell</span>, <span class="ident">fmt</span>, <span class="ident">ops::Deref</span> <span class="kw">as</span> <span class="kw">_</span>, <span class="ident">rc::Rc</span>};
 
@@ -445,12 +411,10 @@
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::{
     <span class="ident">keyboard</span>::{<span class="ident">keysyms</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">KeyboardError</span>, <span class="ident">KeyboardHandle</span>, <span class="ident">Keysym</span>, <span class="ident">ModifiersState</span>, <span class="ident">XkbConfig</span>},
     <span class="ident">pointer</span>::{
-        <span class="ident">AxisFrame</span>, <span class="ident">CursorImageRole</span>, <span class="ident">CursorImageStatus</span>, <span class="ident">GrabStartData</span>, <span class="ident">PointerGrab</span>, <span class="ident">PointerHandle</span>,
+        <span class="ident">AxisFrame</span>, <span class="ident">CursorImageAttributes</span>, <span class="ident">CursorImageStatus</span>, <span class="ident">GrabStartData</span>, <span class="ident">PointerGrab</span>, <span class="ident">PointerHandle</span>,
         <span class="ident">PointerInnerHandle</span>,
     },
 };
-
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland::compositor</span>::{<span class="ident">roles::Role</span>, <span class="ident">CompositorToken</span>};
 
 <span class="kw">use</span> <span class="ident">wayland_server</span>::{
     <span class="ident">protocol</span>::{<span class="ident">wl_seat</span>, <span class="ident">wl_surface</span>},
@@ -527,14 +491,8 @@
     <span class="doccomment">/// You are provided with the state token to retrieve it (allowing</span>
     <span class="doccomment">/// you to add or remove capabilities from it), and the global handle,</span>
     <span class="doccomment">/// in case you want to remove it.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">L</span><span class="op">&gt;</span>(
-        <span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Display</span>,
-        <span class="ident">name</span>: <span class="ident">String</span>,
-        <span class="ident">token</span>: <span class="ident">CompositorToken</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
-        <span class="ident">logger</span>: <span class="ident">L</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Seat</span>, <span class="ident">Global</span><span class="op">&lt;</span><span class="ident">wl_seat::WlSeat</span><span class="op">&gt;</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>(<span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Display</span>, <span class="ident">name</span>: <span class="ident">String</span>, <span class="ident">logger</span>: <span class="ident">L</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Seat</span>, <span class="ident">Global</span><span class="op">&lt;</span><span class="ident">wl_seat::WlSeat</span><span class="op">&gt;</span>)
     <span class="kw">where</span>
-        <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">CursorImageRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
         <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">::slog::Logger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     {
         <span class="kw">let</span> <span class="ident">log</span> <span class="op">=</span> <span class="kw">crate</span><span class="ident">::slog_or_fallback</span>(<span class="ident">logger</span>);
@@ -552,7 +510,7 @@
         <span class="kw">let</span> <span class="ident">global</span> <span class="op">=</span> <span class="ident">display</span>.<span class="ident">create_global</span>(
             <span class="number">5</span>,
             <span class="ident">Filter::new</span>(<span class="kw">move</span> <span class="op">|</span>(<span class="ident">new_seat</span>, <span class="ident">_version</span>), <span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> {
-                <span class="kw">let</span> <span class="ident">seat</span> <span class="op">=</span> <span class="ident">implement_seat</span>(<span class="ident">new_seat</span>, <span class="ident">arc</span>.<span class="ident">clone</span>(), <span class="ident">token</span>);
+                <span class="kw">let</span> <span class="ident">seat</span> <span class="op">=</span> <span class="ident">implement_seat</span>(<span class="ident">new_seat</span>, <span class="ident">arc</span>.<span class="ident">clone</span>());
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inner</span> <span class="op">=</span> <span class="ident">arc</span>.<span class="ident">inner</span>.<span class="ident">borrow_mut</span>();
                 <span class="kw">if</span> <span class="ident">seat</span>.<span class="ident">as_ref</span>().<span class="ident">version</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="number">2</span> {
                     <span class="ident">seat</span>.<span class="ident">name</span>(<span class="ident">arc</span>.<span class="ident">name</span>.<span class="ident">clone</span>());
@@ -594,32 +552,25 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// # extern crate wayland_server;</span>
-    <span class="doccomment">/// # #[macro_use] extern crate smithay;</span>
     <span class="doccomment">/// #</span>
-    <span class="doccomment">/// # use smithay::wayland::{seat::{Seat, CursorImageRole}, compositor::compositor_init};</span>
-    <span class="doccomment">/// #</span>
-    <span class="doccomment">/// # define_roles!(Roles =&gt; [CursorImage, CursorImageRole]);</span>
+    <span class="doccomment">/// # use smithay::wayland::seat::Seat;</span>
     <span class="doccomment">/// #</span>
     <span class="doccomment">/// # let mut display = wayland_server::Display::new();</span>
-    <span class="doccomment">/// # let (compositor_token, _, _) = compositor_init::&lt;Roles, _, _&gt;(&amp;mut display, |_, _, _, _| {}, None);</span>
     <span class="doccomment">/// # let (mut seat, seat_global) = Seat::new(</span>
     <span class="doccomment">/// #     &amp;mut display,</span>
     <span class="doccomment">/// #     &quot;seat-0&quot;.into(),</span>
-    <span class="doccomment">/// #     compositor_token.clone(),</span>
     <span class="doccomment">/// #     None</span>
     <span class="doccomment">/// # );</span>
     <span class="doccomment">/// let pointer_handle = seat.add_pointer(</span>
-    <span class="doccomment">///     compositor_token.clone(),</span>
     <span class="doccomment">///     |new_status| { /* a closure handling requests from clients tot change the cursor icon */ }</span>
     <span class="doccomment">/// );</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_pointer</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">token</span>: <span class="ident">CompositorToken</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>, <span class="ident">cb</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PointerHandle</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_pointer</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">cb</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PointerHandle</span>
     <span class="kw">where</span>
-        <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">CursorImageRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
         <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">CursorImageStatus</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span>,
     {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inner</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">arc</span>.<span class="ident">inner</span>.<span class="ident">borrow_mut</span>();
-        <span class="kw">let</span> <span class="ident">pointer</span> <span class="op">=</span> <span class="self">self</span><span class="ident">::pointer::create_pointer_handler</span>(<span class="ident">token</span>, <span class="ident">cb</span>);
+        <span class="kw">let</span> <span class="ident">pointer</span> <span class="op">=</span> <span class="self">self</span><span class="ident">::pointer::create_pointer_handler</span>(<span class="ident">cb</span>);
         <span class="kw">if</span> <span class="ident">inner</span>.<span class="ident">pointer</span>.<span class="ident">is_some</span>() {
             <span class="comment">// there is already a pointer, remove it and notify the clients</span>
             <span class="comment">// of the change</span>
@@ -741,21 +692,14 @@
     }
 }
 
-<span class="kw">fn</span> <span class="ident">implement_seat</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(
-    <span class="ident">seat</span>: <span class="ident">Main</span><span class="op">&lt;</span><span class="ident">wl_seat::WlSeat</span><span class="op">&gt;</span>,
-    <span class="ident">arc</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">SeatRc</span><span class="op">&gt;</span>,
-    <span class="ident">token</span>: <span class="ident">CompositorToken</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">wl_seat::WlSeat</span>
-<span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">CursorImageRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-{
+<span class="kw">fn</span> <span class="ident">implement_seat</span>(<span class="ident">seat</span>: <span class="ident">Main</span><span class="op">&lt;</span><span class="ident">wl_seat::WlSeat</span><span class="op">&gt;</span>, <span class="ident">arc</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">SeatRc</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">wl_seat::WlSeat</span> {
     <span class="kw">let</span> <span class="ident">dest_arc</span> <span class="op">=</span> <span class="ident">arc</span>.<span class="ident">clone</span>();
     <span class="ident">seat</span>.<span class="ident">quick_assign</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">seat</span>, <span class="ident">request</span>, <span class="kw">_</span><span class="op">|</span> {
         <span class="kw">let</span> <span class="ident">arc</span> <span class="op">=</span> <span class="ident">seat</span>.<span class="ident">as_ref</span>().<span class="ident">user_data</span>().<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">SeatRc</span><span class="op">&gt;</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="ident">arc</span>.<span class="ident">inner</span>.<span class="ident">borrow_mut</span>();
         <span class="kw">match</span> <span class="ident">request</span> {
             <span class="ident">wl_seat::Request::GetPointer</span> { <span class="ident">id</span> } <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="kw">let</span> <span class="ident">pointer</span> <span class="op">=</span> <span class="self">self</span><span class="ident">::pointer::implement_pointer</span>(<span class="ident">id</span>, <span class="ident">inner</span>.<span class="ident">pointer</span>.<span class="ident">as_ref</span>(), <span class="ident">token</span>);
+                <span class="kw">let</span> <span class="ident">pointer</span> <span class="op">=</span> <span class="self">self</span><span class="ident">::pointer::implement_pointer</span>(<span class="ident">id</span>, <span class="ident">inner</span>.<span class="ident">pointer</span>.<span class="ident">as_ref</span>());
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">ptr_handle</span>) <span class="op">=</span> <span class="ident">inner</span>.<span class="ident">pointer</span> {
                     <span class="ident">ptr_handle</span>.<span class="ident">new_pointer</span>(<span class="ident">pointer</span>);
                 } <span class="kw">else</span> {

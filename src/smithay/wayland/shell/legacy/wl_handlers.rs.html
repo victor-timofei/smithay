@@ -213,6 +213,20 @@
 <span id="213">213</span>
 <span id="214">214</span>
 <span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">cell::RefCell</span>,
@@ -226,116 +240,116 @@
     <span class="ident">Filter</span>, <span class="ident">Main</span>,
 };
 
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland::compositor</span>::{<span class="ident">roles::Role</span>, <span class="ident">CompositorToken</span>};
+<span class="kw">static</span> <span class="ident">WL_SHELL_SURFACE_ROLE</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;wl_shell_surface&quot;</span>;
+
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland::compositor</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland::Serial</span>;
 
-<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">ShellRequest</span>, <span class="ident">ShellState</span>, <span class="ident">ShellSurface</span>, <span class="ident">ShellSurfaceKind</span>, <span class="ident">ShellSurfaceRole</span>};
+<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">ShellRequest</span>, <span class="ident">ShellState</span>, <span class="ident">ShellSurface</span>, <span class="ident">ShellSurfaceAttributes</span>, <span class="ident">ShellSurfaceKind</span>};
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">implement_shell</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">Impl</span><span class="op">&gt;</span>(
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">implement_shell</span><span class="op">&lt;</span><span class="ident">Impl</span><span class="op">&gt;</span>(
     <span class="ident">shell</span>: <span class="ident">Main</span><span class="op">&lt;</span><span class="ident">wl_shell::WlShell</span><span class="op">&gt;</span>,
-    <span class="ident">ctoken</span>: <span class="ident">CompositorToken</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
     <span class="ident">implementation</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">Impl</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">state</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">ShellState</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">state</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">ShellState</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 ) <span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">ShellSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-    <span class="ident">Impl</span>: <span class="ident">FnMut</span>(<span class="ident">ShellRequest</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    <span class="ident">Impl</span>: <span class="ident">FnMut</span>(<span class="ident">ShellRequest</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
     <span class="ident">shell</span>.<span class="ident">quick_assign</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">shell</span>, <span class="ident">req</span>, <span class="ident">_data</span><span class="op">|</span> {
         <span class="kw">let</span> (<span class="ident">id</span>, <span class="ident">surface</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">req</span> {
             <span class="ident">wl_shell::Request::GetShellSurface</span> { <span class="ident">id</span>, <span class="ident">surface</span> } <span class="op">=</span><span class="op">&gt;</span> (<span class="ident">id</span>, <span class="ident">surface</span>),
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
         };
-        <span class="kw">let</span> <span class="ident">role_data</span> <span class="op">=</span> <span class="ident">ShellSurfaceRole</span> {
-            <span class="ident">title</span>: <span class="string">&quot;&quot;</span>.<span class="ident">into</span>(),
-            <span class="ident">class</span>: <span class="string">&quot;&quot;</span>.<span class="ident">into</span>(),
-            <span class="ident">pending_ping</span>: <span class="prelude-val">None</span>,
-        };
-        <span class="kw">if</span> <span class="ident">ctoken</span>.<span class="ident">give_role_with</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>, <span class="ident">role_data</span>).<span class="ident">is_err</span>() {
+        <span class="kw">if</span> <span class="ident">compositor::give_role</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>, <span class="ident">WL_SHELL_SURFACE_ROLE</span>).<span class="ident">is_err</span>() {
             <span class="ident">shell</span>
                 .<span class="ident">as_ref</span>()
                 .<span class="ident">post_error</span>(<span class="ident">wl_shell::Error::Role</span> <span class="kw">as</span> <span class="ident">u32</span>, <span class="string">&quot;Surface already has a role.&quot;</span>.<span class="ident">into</span>());
             <span class="kw">return</span>;
         }
-        <span class="kw">let</span> <span class="ident">shell_surface</span> <span class="op">=</span>
-            <span class="ident">implement_shell_surface</span>(<span class="ident">id</span>, <span class="ident">surface</span>, <span class="ident">implementation</span>.<span class="ident">clone</span>(), <span class="ident">ctoken</span>, <span class="ident">state</span>.<span class="ident">clone</span>());
+        <span class="ident">compositor::with_states</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>, <span class="op">|</span><span class="ident">states</span><span class="op">|</span> {
+            <span class="ident">states</span>.<span class="ident">data_map</span>.<span class="ident">insert_if_missing</span>(<span class="op">|</span><span class="op">|</span> {
+                <span class="ident">Mutex::new</span>(<span class="ident">ShellSurfaceAttributes</span> {
+                    <span class="ident">title</span>: <span class="string">&quot;&quot;</span>.<span class="ident">into</span>(),
+                    <span class="ident">class</span>: <span class="string">&quot;&quot;</span>.<span class="ident">into</span>(),
+                    <span class="ident">pending_ping</span>: <span class="prelude-val">None</span>,
+                })
+            })
+        })
+        .<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">shell_surface</span> <span class="op">=</span> <span class="ident">implement_shell_surface</span>(<span class="ident">id</span>, <span class="ident">surface</span>, <span class="ident">implementation</span>.<span class="ident">clone</span>(), <span class="ident">state</span>.<span class="ident">clone</span>());
         <span class="ident">state</span>
             .<span class="ident">lock</span>()
             .<span class="ident">unwrap</span>()
             .<span class="ident">known_surfaces</span>
-            .<span class="ident">push</span>(<span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>, <span class="ident">ctoken</span>));
+            .<span class="ident">push</span>(<span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>));
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">imp</span> <span class="op">=</span> <span class="ident">implementation</span>.<span class="ident">borrow_mut</span>();
         (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">imp</span>)(<span class="ident">ShellRequest::NewShellSurface</span> {
-            <span class="ident">surface</span>: <span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>, <span class="ident">ctoken</span>),
+            <span class="ident">surface</span>: <span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>),
         });
     });
 }
 
-<span class="kw">fn</span> <span class="ident">make_handle</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(
-    <span class="ident">shell_surface</span>: <span class="kw-2">&amp;</span><span class="ident">wl_shell_surface::WlShellSurface</span>,
-    <span class="ident">token</span>: <span class="ident">CompositorToken</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ShellSurface</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">ShellSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-{
+<span class="kw">fn</span> <span class="ident">make_handle</span>(<span class="ident">shell_surface</span>: <span class="kw-2">&amp;</span><span class="ident">wl_shell_surface::WlShellSurface</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ShellSurface</span> {
     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">shell_surface</span>
         .<span class="ident">as_ref</span>()
         .<span class="ident">user_data</span>()
-        .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ShellSurfaceUserData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+        .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ShellSurfaceUserData</span><span class="op">&gt;</span>()
         .<span class="ident">unwrap</span>();
     <span class="ident">ShellSurface</span> {
         <span class="ident">wl_surface</span>: <span class="ident">data</span>.<span class="ident">surface</span>.<span class="ident">clone</span>(),
         <span class="ident">shell_surface</span>: <span class="ident">shell_surface</span>.<span class="ident">clone</span>(),
-        <span class="ident">token</span>,
     }
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">ShellSurfaceUserData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">ShellSurfaceUserData</span> {
     <span class="ident">surface</span>: <span class="ident">wl_surface::WlSurface</span>,
-    <span class="ident">state</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">ShellState</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">state</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">ShellState</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
-<span class="kw">fn</span> <span class="ident">implement_shell_surface</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">Impl</span><span class="op">&gt;</span>(
+<span class="kw">fn</span> <span class="ident">implement_shell_surface</span><span class="op">&lt;</span><span class="ident">Impl</span><span class="op">&gt;</span>(
     <span class="ident">shell_surface</span>: <span class="ident">Main</span><span class="op">&lt;</span><span class="ident">wl_shell_surface::WlShellSurface</span><span class="op">&gt;</span>,
     <span class="ident">surface</span>: <span class="ident">wl_surface::WlSurface</span>,
     <span class="ident">implementation</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">Impl</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">ctoken</span>: <span class="ident">CompositorToken</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
-    <span class="ident">state</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">ShellState</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">state</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">ShellState</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">wl_shell_surface::WlShellSurface</span>
 <span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">Role</span><span class="op">&lt;</span><span class="ident">ShellSurfaceRole</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-    <span class="ident">Impl</span>: <span class="ident">FnMut</span>(<span class="ident">ShellRequest</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    <span class="ident">Impl</span>: <span class="ident">FnMut</span>(<span class="ident">ShellRequest</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">use</span> <span class="self">self</span><span class="ident">::wl_shell_surface::Request</span>;
     <span class="ident">shell_surface</span>.<span class="ident">quick_assign</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">shell_surface</span>, <span class="ident">req</span>, <span class="ident">_data</span><span class="op">|</span> {
         <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">shell_surface</span>
             .<span class="ident">as_ref</span>()
             .<span class="ident">user_data</span>()
-            .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ShellSurfaceUserData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+            .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ShellSurfaceUserData</span><span class="op">&gt;</span>()
             .<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_impl</span> <span class="op">=</span> <span class="ident">implementation</span>.<span class="ident">borrow_mut</span>();
         <span class="kw">match</span> <span class="ident">req</span> {
             <span class="ident">Request::Pong</span> { <span class="ident">serial</span> } <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="kw">let</span> <span class="ident">serial</span> <span class="op">=</span> <span class="ident">Serial::from</span>(<span class="ident">serial</span>);
-                <span class="kw">let</span> <span class="ident">valid</span> <span class="op">=</span> <span class="ident">ctoken</span>
-                    .<span class="ident">with_role_data</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">surface</span>, <span class="op">|</span><span class="ident">data</span><span class="op">|</span> {
-                        <span class="kw">if</span> <span class="ident">data</span>.<span class="ident">pending_ping</span> <span class="op">=</span><span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">serial</span>) {
-                            <span class="ident">data</span>.<span class="ident">pending_ping</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-                            <span class="bool-val">true</span>
-                        } <span class="kw">else</span> {
-                            <span class="bool-val">false</span>
-                        }
-                    })
-                    .<span class="ident">expect</span>(<span class="string">&quot;wl_shell_surface exists but surface has not the right role?&quot;</span>);
+                <span class="kw">let</span> <span class="ident">valid</span> <span class="op">=</span> <span class="ident">compositor::with_states</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">surface</span>, <span class="op">|</span><span class="ident">states</span><span class="op">|</span> {
+                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">guard</span> <span class="op">=</span> <span class="ident">states</span>
+                        .<span class="ident">data_map</span>
+                        .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">ShellSurfaceAttributes</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+                        .<span class="ident">unwrap</span>()
+                        .<span class="ident">lock</span>()
+                        .<span class="ident">unwrap</span>();
+                    <span class="kw">if</span> <span class="ident">guard</span>.<span class="ident">pending_ping</span> <span class="op">=</span><span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">serial</span>) {
+                        <span class="ident">guard</span>.<span class="ident">pending_ping</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+                        <span class="bool-val">true</span>
+                    } <span class="kw">else</span> {
+                        <span class="bool-val">false</span>
+                    }
+                })
+                .<span class="ident">unwrap</span>();
                 <span class="kw">if</span> <span class="ident">valid</span> {
                     (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">ShellRequest::Pong</span> {
-                        <span class="ident">surface</span>: <span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>, <span class="ident">ctoken</span>),
+                        <span class="ident">surface</span>: <span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>),
                     });
                 }
             }
             <span class="ident">Request::Move</span> { <span class="ident">seat</span>, <span class="ident">serial</span> } <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="kw">let</span> <span class="ident">serial</span> <span class="op">=</span> <span class="ident">Serial::from</span>(<span class="ident">serial</span>);
                 (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">ShellRequest::Move</span> {
-                    <span class="ident">surface</span>: <span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>, <span class="ident">ctoken</span>),
+                    <span class="ident">surface</span>: <span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>),
                     <span class="ident">serial</span>,
                     <span class="ident">seat</span>,
                 })
@@ -343,18 +357,18 @@
             <span class="ident">Request::Resize</span> { <span class="ident">seat</span>, <span class="ident">serial</span>, <span class="ident">edges</span> } <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="kw">let</span> <span class="ident">serial</span> <span class="op">=</span> <span class="ident">Serial::from</span>(<span class="ident">serial</span>);
                 (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">ShellRequest::Resize</span> {
-                    <span class="ident">surface</span>: <span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>, <span class="ident">ctoken</span>),
+                    <span class="ident">surface</span>: <span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>),
                     <span class="ident">serial</span>,
                     <span class="ident">seat</span>,
                     <span class="ident">edges</span>,
                 })
             }
             <span class="ident">Request::SetToplevel</span> <span class="op">=</span><span class="op">&gt;</span> (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">ShellRequest::SetKind</span> {
-                <span class="ident">surface</span>: <span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>, <span class="ident">ctoken</span>),
+                <span class="ident">surface</span>: <span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>),
                 <span class="ident">kind</span>: <span class="ident">ShellSurfaceKind::Toplevel</span>,
             }),
             <span class="ident">Request::SetTransient</span> { <span class="ident">parent</span>, <span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">flags</span> } <span class="op">=</span><span class="op">&gt;</span> (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">ShellRequest::SetKind</span> {
-                <span class="ident">surface</span>: <span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>, <span class="ident">ctoken</span>),
+                <span class="ident">surface</span>: <span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>),
                 <span class="ident">kind</span>: <span class="ident">ShellSurfaceKind::Transient</span> {
                     <span class="ident">parent</span>,
                     <span class="ident">location</span>: (<span class="ident">x</span>, <span class="ident">y</span>),
@@ -366,7 +380,7 @@
                 <span class="ident">framerate</span>,
                 <span class="ident">output</span>,
             } <span class="op">=</span><span class="op">&gt;</span> (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">ShellRequest::SetKind</span> {
-                <span class="ident">surface</span>: <span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>, <span class="ident">ctoken</span>),
+                <span class="ident">surface</span>: <span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>),
                 <span class="ident">kind</span>: <span class="ident">ShellSurfaceKind::Fullscreen</span> {
                     <span class="ident">method</span>,
                     <span class="ident">framerate</span>,
@@ -383,7 +397,7 @@
             } <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="kw">let</span> <span class="ident">serial</span> <span class="op">=</span> <span class="ident">Serial::from</span>(<span class="ident">serial</span>);
                 (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">ShellRequest::SetKind</span> {
-                    <span class="ident">surface</span>: <span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>, <span class="ident">ctoken</span>),
+                    <span class="ident">surface</span>: <span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>),
                     <span class="ident">kind</span>: <span class="ident">ShellSurfaceKind::Popup</span> {
                         <span class="ident">parent</span>,
                         <span class="ident">serial</span>,
@@ -394,18 +408,32 @@
                 })
             }
             <span class="ident">Request::SetMaximized</span> { <span class="ident">output</span> } <span class="op">=</span><span class="op">&gt;</span> (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">ShellRequest::SetKind</span> {
-                <span class="ident">surface</span>: <span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>, <span class="ident">ctoken</span>),
+                <span class="ident">surface</span>: <span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>),
                 <span class="ident">kind</span>: <span class="ident">ShellSurfaceKind::Maximized</span> { <span class="ident">output</span> },
             }),
             <span class="ident">Request::SetTitle</span> { <span class="ident">title</span> } <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">ctoken</span>
-                    .<span class="ident">with_role_data</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">surface</span>, <span class="op">|</span><span class="ident">data</span><span class="op">|</span> <span class="ident">data</span>.<span class="ident">title</span> <span class="op">=</span> <span class="ident">title</span>)
-                    .<span class="ident">expect</span>(<span class="string">&quot;wl_shell_surface exists but surface has not shell_surface role?!&quot;</span>);
+                <span class="ident">compositor::with_states</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">surface</span>, <span class="op">|</span><span class="ident">states</span><span class="op">|</span> {
+                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">guard</span> <span class="op">=</span> <span class="ident">states</span>
+                        .<span class="ident">data_map</span>
+                        .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">ShellSurfaceAttributes</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+                        .<span class="ident">unwrap</span>()
+                        .<span class="ident">lock</span>()
+                        .<span class="ident">unwrap</span>();
+                    <span class="ident">guard</span>.<span class="ident">title</span> <span class="op">=</span> <span class="ident">title</span>;
+                })
+                .<span class="ident">unwrap</span>();
             }
             <span class="ident">Request::SetClass</span> { <span class="ident">class_</span> } <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">ctoken</span>
-                    .<span class="ident">with_role_data</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">surface</span>, <span class="op">|</span><span class="ident">data</span><span class="op">|</span> <span class="ident">data</span>.<span class="ident">class</span> <span class="op">=</span> <span class="ident">class_</span>)
-                    .<span class="ident">expect</span>(<span class="string">&quot;wl_shell_surface exists but surface has not shell_surface role?!&quot;</span>);
+                <span class="ident">compositor::with_states</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">surface</span>, <span class="op">|</span><span class="ident">states</span><span class="op">|</span> {
+                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">guard</span> <span class="op">=</span> <span class="ident">states</span>
+                        .<span class="ident">data_map</span>
+                        .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">ShellSurfaceAttributes</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+                        .<span class="ident">unwrap</span>()
+                        .<span class="ident">lock</span>()
+                        .<span class="ident">unwrap</span>();
+                    <span class="ident">guard</span>.<span class="ident">class</span> <span class="op">=</span> <span class="ident">class_</span>;
+                })
+                .<span class="ident">unwrap</span>();
             }
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
         }
@@ -416,7 +444,7 @@
             <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">shell_surface</span>
                 .<span class="ident">as_ref</span>()
                 .<span class="ident">user_data</span>()
-                .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ShellSurfaceUserData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+                .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ShellSurfaceUserData</span><span class="op">&gt;</span>()
                 .<span class="ident">unwrap</span>();
             <span class="ident">data</span>.<span class="ident">state</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>().<span class="ident">cleanup_surfaces</span>();
         },

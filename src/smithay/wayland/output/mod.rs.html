@@ -541,7 +541,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_preferred</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">mode</span>: <span class="ident">Mode</span>) {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inner</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
         <span class="ident">inner</span>.<span class="ident">preferred_mode</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">mode</span>);
-        <span class="kw">if</span> <span class="ident">inner</span>.<span class="ident">modes</span>.<span class="ident">iter</span>().<span class="ident">find</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">m</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">m</span> <span class="op">=</span><span class="op">=</span> <span class="ident">mode</span>).<span class="ident">is_none</span>() {
+        <span class="kw">if</span> <span class="ident">inner</span>.<span class="ident">modes</span>.<span class="ident">iter</span>().<span class="ident">all</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">m</span><span class="op">|</span> <span class="ident">m</span> <span class="op">!</span><span class="op">=</span> <span class="ident">mode</span>) {
             <span class="ident">inner</span>.<span class="ident">modes</span>.<span class="ident">push</span>(<span class="ident">mode</span>);
         }
     }
@@ -549,7 +549,7 @@
     <span class="doccomment">/// Adds a mode to the list of known modes to this output</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_mode</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">mode</span>: <span class="ident">Mode</span>) {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inner</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-        <span class="kw">if</span> <span class="ident">inner</span>.<span class="ident">modes</span>.<span class="ident">iter</span>().<span class="ident">find</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">m</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">m</span> <span class="op">=</span><span class="op">=</span> <span class="ident">mode</span>).<span class="ident">is_none</span>() {
+        <span class="kw">if</span> <span class="ident">inner</span>.<span class="ident">modes</span>.<span class="ident">iter</span>().<span class="ident">all</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">m</span><span class="op">|</span> <span class="ident">m</span> <span class="op">!</span><span class="op">=</span> <span class="ident">mode</span>) {
             <span class="ident">inner</span>.<span class="ident">modes</span>.<span class="ident">push</span>(<span class="ident">mode</span>);
         }
     }
@@ -586,7 +586,7 @@
     ) {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inner</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">mode</span>) <span class="op">=</span> <span class="ident">new_mode</span> {
-            <span class="kw">if</span> <span class="ident">inner</span>.<span class="ident">modes</span>.<span class="ident">iter</span>().<span class="ident">find</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">m</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">m</span> <span class="op">=</span><span class="op">=</span> <span class="ident">mode</span>).<span class="ident">is_none</span>() {
+            <span class="kw">if</span> <span class="ident">inner</span>.<span class="ident">modes</span>.<span class="ident">iter</span>().<span class="ident">all</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">m</span><span class="op">|</span> <span class="ident">m</span> <span class="op">!</span><span class="op">=</span> <span class="ident">mode</span>) {
                 <span class="ident">inner</span>.<span class="ident">modes</span>.<span class="ident">push</span>(<span class="ident">mode</span>);
             }
             <span class="ident">inner</span>.<span class="ident">current_mode</span> <span class="op">=</span> <span class="ident">new_mode</span>;
