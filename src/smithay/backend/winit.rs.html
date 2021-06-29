@@ -796,6 +796,32 @@
 <span id="796">796</span>
 <span id="797">797</span>
 <span id="798">798</span>
+<span id="799">799</span>
+<span id="800">800</span>
+<span id="801">801</span>
+<span id="802">802</span>
+<span id="803">803</span>
+<span id="804">804</span>
+<span id="805">805</span>
+<span id="806">806</span>
+<span id="807">807</span>
+<span id="808">808</span>
+<span id="809">809</span>
+<span id="810">810</span>
+<span id="811">811</span>
+<span id="812">812</span>
+<span id="813">813</span>
+<span id="814">814</span>
+<span id="815">815</span>
+<span id="816">816</span>
+<span id="817">817</span>
+<span id="818">818</span>
+<span id="819">819</span>
+<span id="820">820</span>
+<span id="821">821</span>
+<span id="822">822</span>
+<span id="823">823</span>
+<span id="824">824</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Implementation of backend traits for types provided by `winit`</span>
 
@@ -803,10 +829,10 @@
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend</span>::{
     <span class="ident">egl</span>::{<span class="ident">context::GlAttributes</span>, <span class="ident">native</span>, <span class="ident">EGLContext</span>, <span class="ident">EGLSurface</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">EGLError</span>},
     <span class="ident">input</span>::{
-        <span class="ident">Axis</span>, <span class="ident">AxisSource</span>, <span class="ident">Event</span> <span class="kw">as</span> <span class="ident">BackendEvent</span>, <span class="ident">InputBackend</span>, <span class="ident">InputEvent</span>, <span class="ident">KeyState</span>, <span class="ident">KeyboardKeyEvent</span>,
-        <span class="ident">MouseButton</span>, <span class="ident">MouseButtonState</span>, <span class="ident">PointerAxisEvent</span>, <span class="ident">PointerButtonEvent</span>, <span class="ident">PointerMotionAbsoluteEvent</span>,
-        <span class="ident">Seat</span>, <span class="ident">SeatCapabilities</span>, <span class="ident">TouchCancelEvent</span>, <span class="ident">TouchDownEvent</span>, <span class="ident">TouchMotionEvent</span>, <span class="ident">TouchSlot</span>, <span class="ident">TouchUpEvent</span>,
-        <span class="ident">UnusedEvent</span>,
+        <span class="ident">Axis</span>, <span class="ident">AxisSource</span>, <span class="ident">Device</span>, <span class="ident">DeviceCapability</span>, <span class="ident">Event</span> <span class="kw">as</span> <span class="ident">BackendEvent</span>, <span class="ident">InputBackend</span>, <span class="ident">InputEvent</span>,
+        <span class="ident">KeyState</span>, <span class="ident">KeyboardKeyEvent</span>, <span class="ident">MouseButton</span>, <span class="ident">MouseButtonState</span>, <span class="ident">PointerAxisEvent</span>, <span class="ident">PointerButtonEvent</span>,
+        <span class="ident">PointerMotionAbsoluteEvent</span>, <span class="ident">TouchCancelEvent</span>, <span class="ident">TouchDownEvent</span>, <span class="ident">TouchMotionEvent</span>, <span class="ident">TouchSlot</span>,
+        <span class="ident">TouchUpEvent</span>, <span class="ident">UnusedEvent</span>,
     },
     <span class="ident">renderer</span>::{
         <span class="ident">gles2</span>::{<span class="ident">Gles2Error</span>, <span class="ident">Gles2Frame</span>, <span class="ident">Gles2Renderer</span>},
@@ -876,8 +902,8 @@
     <span class="ident">events_loop</span>: <span class="ident">EventLoop</span><span class="op">&lt;</span>()<span class="op">&gt;</span>,
     <span class="ident">time</span>: <span class="ident">Instant</span>,
     <span class="ident">key_counter</span>: <span class="ident">u32</span>,
-    <span class="ident">seat</span>: <span class="ident">Seat</span>,
     <span class="ident">logger</span>: <span class="ident">::slog::Logger</span>,
+    <span class="ident">initialized</span>: <span class="ident">bool</span>,
     <span class="ident">size</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">WindowSize</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
@@ -999,15 +1025,7 @@
             <span class="ident">egl</span>,
             <span class="ident">time</span>: <span class="ident">Instant::now</span>(),
             <span class="ident">key_counter</span>: <span class="number">0</span>,
-            <span class="ident">seat</span>: <span class="ident">Seat::new</span>(
-                <span class="number">0</span>,
-                <span class="string">&quot;winit&quot;</span>,
-                <span class="ident">SeatCapabilities</span> {
-                    <span class="ident">pointer</span>: <span class="bool-val">true</span>,
-                    <span class="ident">keyboard</span>: <span class="bool-val">true</span>,
-                    <span class="ident">touch</span>: <span class="bool-val">true</span>,
-                },
-            ),
+            <span class="ident">initialized</span>: <span class="bool-val">false</span>,
             <span class="ident">logger</span>: <span class="ident">log</span>.<span class="ident">new</span>(<span class="macro">o!</span>(<span class="string">&quot;smithay_winit_component&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;input&quot;</span>)),
             <span class="ident">size</span>,
         },
@@ -1067,6 +1085,27 @@
     }
 }
 
+<span class="doccomment">/// Virtual input device used by the backend to associate input events</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WinitVirtualDevice</span>;
+
+<span class="kw">impl</span> <span class="ident">Device</span> <span class="kw">for</span> <span class="ident">WinitVirtualDevice</span> {
+    <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+        <span class="ident">String::from</span>(<span class="string">&quot;winit&quot;</span>)
+    }
+
+    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+        <span class="ident">String::from</span>(<span class="string">&quot;winit virtual input&quot;</span>)
+    }
+
+    <span class="kw">fn</span> <span class="ident">has_capability</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">capability</span>: <span class="ident">DeviceCapability</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+        <span class="macro">matches!</span>(
+            <span class="ident">capability</span>,
+            <span class="ident">DeviceCapability::Keyboard</span> <span class="op">|</span> <span class="ident">DeviceCapability::Pointer</span> <span class="op">|</span> <span class="ident">DeviceCapability::Touch</span>
+        )
+    }
+}
+
 <span class="doccomment">/// Errors that may happen when driving the event loop of [`WinitInputBackend`]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">thiserror::Error</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">WinitInputError</span> {
@@ -1086,13 +1125,17 @@
     <span class="ident">state</span>: <span class="ident">ElementState</span>,
 }
 
-<span class="kw">impl</span> <span class="ident">BackendEvent</span> <span class="kw">for</span> <span class="ident">WinitKeyboardInputEvent</span> {
+<span class="kw">impl</span> <span class="ident">BackendEvent</span><span class="op">&lt;</span><span class="ident">WinitInputBackend</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">WinitKeyboardInputEvent</span> {
     <span class="kw">fn</span> <span class="ident">time</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
         <span class="self">self</span>.<span class="ident">time</span>
     }
+
+    <span class="kw">fn</span> <span class="ident">device</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">WinitVirtualDevice</span> {
+        <span class="ident">WinitVirtualDevice</span>
+    }
 }
 
-<span class="kw">impl</span> <span class="ident">KeyboardKeyEvent</span> <span class="kw">for</span> <span class="ident">WinitKeyboardInputEvent</span> {
+<span class="kw">impl</span> <span class="ident">KeyboardKeyEvent</span><span class="op">&lt;</span><span class="ident">WinitInputBackend</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">WinitKeyboardInputEvent</span> {
     <span class="kw">fn</span> <span class="ident">key_code</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
         <span class="self">self</span>.<span class="ident">key</span>
     }
@@ -1114,13 +1157,17 @@
     <span class="ident">logical_position</span>: <span class="ident">LogicalPosition</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>,
 }
 
-<span class="kw">impl</span> <span class="ident">BackendEvent</span> <span class="kw">for</span> <span class="ident">WinitMouseMovedEvent</span> {
+<span class="kw">impl</span> <span class="ident">BackendEvent</span><span class="op">&lt;</span><span class="ident">WinitInputBackend</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">WinitMouseMovedEvent</span> {
     <span class="kw">fn</span> <span class="ident">time</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
         <span class="self">self</span>.<span class="ident">time</span>
     }
+
+    <span class="kw">fn</span> <span class="ident">device</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">WinitVirtualDevice</span> {
+        <span class="ident">WinitVirtualDevice</span>
+    }
 }
 
-<span class="kw">impl</span> <span class="ident">PointerMotionAbsoluteEvent</span> <span class="kw">for</span> <span class="ident">WinitMouseMovedEvent</span> {
+<span class="kw">impl</span> <span class="ident">PointerMotionAbsoluteEvent</span><span class="op">&lt;</span><span class="ident">WinitInputBackend</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">WinitMouseMovedEvent</span> {
     <span class="comment">// TODO: maybe use {Logical, Physical}Position from winit?</span>
     <span class="kw">fn</span> <span class="ident">x</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="kw">let</span> <span class="ident">wsize</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">borrow</span>();
@@ -1152,13 +1199,17 @@
     <span class="ident">delta</span>: <span class="ident">MouseScrollDelta</span>,
 }
 
-<span class="kw">impl</span> <span class="ident">BackendEvent</span> <span class="kw">for</span> <span class="ident">WinitMouseWheelEvent</span> {
+<span class="kw">impl</span> <span class="ident">BackendEvent</span><span class="op">&lt;</span><span class="ident">WinitInputBackend</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">WinitMouseWheelEvent</span> {
     <span class="kw">fn</span> <span class="ident">time</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
         <span class="self">self</span>.<span class="ident">time</span>
     }
+
+    <span class="kw">fn</span> <span class="ident">device</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">WinitVirtualDevice</span> {
+        <span class="ident">WinitVirtualDevice</span>
+    }
 }
 
-<span class="kw">impl</span> <span class="ident">PointerAxisEvent</span> <span class="kw">for</span> <span class="ident">WinitMouseWheelEvent</span> {
+<span class="kw">impl</span> <span class="ident">PointerAxisEvent</span><span class="op">&lt;</span><span class="ident">WinitInputBackend</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">WinitMouseWheelEvent</span> {
     <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">AxisSource</span> {
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">delta</span> {
             <span class="ident">MouseScrollDelta::LineDelta</span>(<span class="kw">_</span>, <span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AxisSource::Wheel</span>,
@@ -1191,13 +1242,17 @@
     <span class="ident">state</span>: <span class="ident">ElementState</span>,
 }
 
-<span class="kw">impl</span> <span class="ident">BackendEvent</span> <span class="kw">for</span> <span class="ident">WinitMouseInputEvent</span> {
+<span class="kw">impl</span> <span class="ident">BackendEvent</span><span class="op">&lt;</span><span class="ident">WinitInputBackend</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">WinitMouseInputEvent</span> {
     <span class="kw">fn</span> <span class="ident">time</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
         <span class="self">self</span>.<span class="ident">time</span>
     }
+
+    <span class="kw">fn</span> <span class="ident">device</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">WinitVirtualDevice</span> {
+        <span class="ident">WinitVirtualDevice</span>
+    }
 }
 
-<span class="kw">impl</span> <span class="ident">PointerButtonEvent</span> <span class="kw">for</span> <span class="ident">WinitMouseInputEvent</span> {
+<span class="kw">impl</span> <span class="ident">PointerButtonEvent</span><span class="op">&lt;</span><span class="ident">WinitInputBackend</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">WinitMouseInputEvent</span> {
     <span class="kw">fn</span> <span class="ident">button</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MouseButton</span> {
         <span class="self">self</span>.<span class="ident">button</span>.<span class="ident">into</span>()
     }
@@ -1216,13 +1271,17 @@
     <span class="ident">id</span>: <span class="ident">u64</span>,
 }
 
-<span class="kw">impl</span> <span class="ident">BackendEvent</span> <span class="kw">for</span> <span class="ident">WinitTouchStartedEvent</span> {
+<span class="kw">impl</span> <span class="ident">BackendEvent</span><span class="op">&lt;</span><span class="ident">WinitInputBackend</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">WinitTouchStartedEvent</span> {
     <span class="kw">fn</span> <span class="ident">time</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
         <span class="self">self</span>.<span class="ident">time</span>
     }
+
+    <span class="kw">fn</span> <span class="ident">device</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">WinitVirtualDevice</span> {
+        <span class="ident">WinitVirtualDevice</span>
+    }
 }
 
-<span class="kw">impl</span> <span class="ident">TouchDownEvent</span> <span class="kw">for</span> <span class="ident">WinitTouchStartedEvent</span> {
+<span class="kw">impl</span> <span class="ident">TouchDownEvent</span><span class="op">&lt;</span><span class="ident">WinitInputBackend</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">WinitTouchStartedEvent</span> {
     <span class="kw">fn</span> <span class="ident">slot</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TouchSlot</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="ident">TouchSlot::new</span>(<span class="self">self</span>.<span class="ident">id</span>))
     }
@@ -1259,13 +1318,17 @@
     <span class="ident">id</span>: <span class="ident">u64</span>,
 }
 
-<span class="kw">impl</span> <span class="ident">BackendEvent</span> <span class="kw">for</span> <span class="ident">WinitTouchMovedEvent</span> {
+<span class="kw">impl</span> <span class="ident">BackendEvent</span><span class="op">&lt;</span><span class="ident">WinitInputBackend</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">WinitTouchMovedEvent</span> {
     <span class="kw">fn</span> <span class="ident">time</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
         <span class="self">self</span>.<span class="ident">time</span>
     }
+
+    <span class="kw">fn</span> <span class="ident">device</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">WinitVirtualDevice</span> {
+        <span class="ident">WinitVirtualDevice</span>
+    }
 }
 
-<span class="kw">impl</span> <span class="ident">TouchMotionEvent</span> <span class="kw">for</span> <span class="ident">WinitTouchMovedEvent</span> {
+<span class="kw">impl</span> <span class="ident">TouchMotionEvent</span><span class="op">&lt;</span><span class="ident">WinitInputBackend</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">WinitTouchMovedEvent</span> {
     <span class="kw">fn</span> <span class="ident">slot</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TouchSlot</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="ident">TouchSlot::new</span>(<span class="self">self</span>.<span class="ident">id</span>))
     }
@@ -1300,13 +1363,17 @@
     <span class="ident">id</span>: <span class="ident">u64</span>,
 }
 
-<span class="kw">impl</span> <span class="ident">BackendEvent</span> <span class="kw">for</span> <span class="ident">WinitTouchEndedEvent</span> {
+<span class="kw">impl</span> <span class="ident">BackendEvent</span><span class="op">&lt;</span><span class="ident">WinitInputBackend</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">WinitTouchEndedEvent</span> {
     <span class="kw">fn</span> <span class="ident">time</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
         <span class="self">self</span>.<span class="ident">time</span>
     }
+
+    <span class="kw">fn</span> <span class="ident">device</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">WinitVirtualDevice</span> {
+        <span class="ident">WinitVirtualDevice</span>
+    }
 }
 
-<span class="kw">impl</span> <span class="ident">TouchUpEvent</span> <span class="kw">for</span> <span class="ident">WinitTouchEndedEvent</span> {
+<span class="kw">impl</span> <span class="ident">TouchUpEvent</span><span class="op">&lt;</span><span class="ident">WinitInputBackend</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">WinitTouchEndedEvent</span> {
     <span class="kw">fn</span> <span class="ident">slot</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TouchSlot</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="ident">TouchSlot::new</span>(<span class="self">self</span>.<span class="ident">id</span>))
     }
@@ -1319,27 +1386,26 @@
     <span class="ident">id</span>: <span class="ident">u64</span>,
 }
 
-<span class="kw">impl</span> <span class="ident">BackendEvent</span> <span class="kw">for</span> <span class="ident">WinitTouchCancelledEvent</span> {
+<span class="kw">impl</span> <span class="ident">BackendEvent</span><span class="op">&lt;</span><span class="ident">WinitInputBackend</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">WinitTouchCancelledEvent</span> {
     <span class="kw">fn</span> <span class="ident">time</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
         <span class="self">self</span>.<span class="ident">time</span>
     }
+
+    <span class="kw">fn</span> <span class="ident">device</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">WinitVirtualDevice</span> {
+        <span class="ident">WinitVirtualDevice</span>
+    }
 }
 
-<span class="kw">impl</span> <span class="ident">TouchCancelEvent</span> <span class="kw">for</span> <span class="ident">WinitTouchCancelledEvent</span> {
+<span class="kw">impl</span> <span class="ident">TouchCancelEvent</span><span class="op">&lt;</span><span class="ident">WinitInputBackend</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">WinitTouchCancelledEvent</span> {
     <span class="kw">fn</span> <span class="ident">slot</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TouchSlot</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="ident">TouchSlot::new</span>(<span class="self">self</span>.<span class="ident">id</span>))
     }
 }
 
-<span class="doccomment">/// Input config for Winit</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This backend does not allow any input configuration, so this type does nothing.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WinitInputConfig</span>;
-
 <span class="kw">impl</span> <span class="ident">InputBackend</span> <span class="kw">for</span> <span class="ident">WinitInputBackend</span> {
     <span class="kw">type</span> <span class="ident">EventError</span> <span class="op">=</span> <span class="ident">WinitInputError</span>;
 
+    <span class="kw">type</span> <span class="ident">Device</span> <span class="op">=</span> <span class="ident">WinitVirtualDevice</span>;
     <span class="kw">type</span> <span class="ident">KeyboardKeyEvent</span> <span class="op">=</span> <span class="ident">WinitKeyboardInputEvent</span>;
     <span class="kw">type</span> <span class="ident">PointerAxisEvent</span> <span class="op">=</span> <span class="ident">WinitMouseWheelEvent</span>;
     <span class="kw">type</span> <span class="ident">PointerButtonEvent</span> <span class="op">=</span> <span class="ident">WinitMouseInputEvent</span>;
@@ -1352,17 +1418,6 @@
     <span class="kw">type</span> <span class="ident">TouchFrameEvent</span> <span class="op">=</span> <span class="ident">UnusedEvent</span>;
 
     <span class="kw">type</span> <span class="ident">SpecialEvent</span> <span class="op">=</span> <span class="ident">WinitEvent</span>;
-    <span class="kw">type</span> <span class="ident">InputConfig</span> <span class="op">=</span> <span class="ident">WinitInputConfig</span>;
-
-    <span class="kw">fn</span> <span class="ident">seats</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Seat</span><span class="op">&gt;</span> {
-        <span class="macro">vec!</span>[<span class="self">self</span>.<span class="ident">seat</span>.<span class="ident">clone</span>()]
-    }
-
-    <span class="kw">fn</span> <span class="ident">input_config</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span><span class="ident">::InputConfig</span> {
-        <span class="doccomment">/// So much effort to return a useless singleton!</span>
-        <span class="kw">static</span> <span class="kw-2">mut</span> <span class="ident">CONFIG</span>: <span class="ident">WinitInputConfig</span> <span class="op">=</span> <span class="ident">WinitInputConfig</span>;
-        <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">CONFIG</span> }
-    }
 
     <span class="doccomment">/// Processes new events of the underlying event loop and calls the provided callback.</span>
     <span class="doccomment">///</span>
@@ -1377,7 +1432,7 @@
     <span class="doccomment">/// not be used anymore as well.</span>
     <span class="kw">fn</span> <span class="ident">dispatch_new_events</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">callback</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::std::result::Result</span><span class="op">&lt;</span>(), <span class="ident">WinitInputError</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">InputEvent</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">WinitInputConfig</span>),
+        <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">InputEvent</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>),
     {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">closed</span> <span class="op">=</span> <span class="bool-val">false</span>;
 
@@ -1390,12 +1445,17 @@
             <span class="kw">let</span> <span class="ident">closed_ptr</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">closed</span>;
             <span class="kw">let</span> <span class="ident">key_counter</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">key_counter</span>;
             <span class="kw">let</span> <span class="ident">time</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">time</span>;
-            <span class="kw">let</span> <span class="ident">seat</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">seat</span>;
             <span class="kw">let</span> <span class="ident">window</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">window</span>;
             <span class="kw">let</span> <span class="ident">egl</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">egl</span>;
             <span class="kw">let</span> <span class="ident">logger</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">logger</span>;
             <span class="kw">let</span> <span class="ident">window_size</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">size</span>;
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">callback</span> <span class="op">=</span> <span class="kw">move</span> <span class="op">|</span><span class="ident">event</span><span class="op">|</span> <span class="ident">callback</span>(<span class="ident">event</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">WinitInputConfig</span>);
+
+            <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">initialized</span> {
+                <span class="ident">callback</span>(<span class="ident">InputEvent::DeviceAdded</span> {
+                    <span class="ident">device</span>: <span class="ident">WinitVirtualDevice</span>,
+                });
+                <span class="self">self</span>.<span class="ident">initialized</span> <span class="op">=</span> <span class="bool-val">true</span>;
+            }
 
             <span class="self">self</span>.<span class="ident">events_loop</span>
                 .<span class="ident">run_return</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">event</span>, <span class="ident">_target</span>, <span class="ident">control_flow</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">event</span> {
@@ -1450,7 +1510,6 @@
                                     }
                                 };
                                 <span class="ident">callback</span>(<span class="ident">InputEvent::Keyboard</span> {
-                                    <span class="ident">seat</span>: <span class="ident">seat</span>.<span class="ident">clone</span>(),
                                     <span class="ident">event</span>: <span class="ident">WinitKeyboardInputEvent</span> {
                                         <span class="ident">time</span>,
                                         <span class="ident">key</span>: <span class="ident">scancode</span>,
@@ -1462,7 +1521,6 @@
                             <span class="ident">WindowEvent::CursorMoved</span> { <span class="ident">position</span>, .. } <span class="op">=</span><span class="op">&gt;</span> {
                                 <span class="kw">let</span> <span class="ident">lpos</span> <span class="op">=</span> <span class="ident">position</span>.<span class="ident">to_logical</span>(<span class="ident">window_size</span>.<span class="ident">borrow</span>().<span class="ident">scale_factor</span>);
                                 <span class="ident">callback</span>(<span class="ident">InputEvent::PointerMotionAbsolute</span> {
-                                    <span class="ident">seat</span>: <span class="ident">seat</span>.<span class="ident">clone</span>(),
                                     <span class="ident">event</span>: <span class="ident">WinitMouseMovedEvent</span> {
                                         <span class="ident">size</span>: <span class="ident">window_size</span>.<span class="ident">clone</span>(),
                                         <span class="ident">time</span>,
@@ -1472,14 +1530,10 @@
                             }
                             <span class="ident">WindowEvent::MouseWheel</span> { <span class="ident">delta</span>, .. } <span class="op">=</span><span class="op">&gt;</span> {
                                 <span class="kw">let</span> <span class="ident">event</span> <span class="op">=</span> <span class="ident">WinitMouseWheelEvent</span> { <span class="ident">time</span>, <span class="ident">delta</span> };
-                                <span class="ident">callback</span>(<span class="ident">InputEvent::PointerAxis</span> {
-                                    <span class="ident">seat</span>: <span class="ident">seat</span>.<span class="ident">clone</span>(),
-                                    <span class="ident">event</span>,
-                                });
+                                <span class="ident">callback</span>(<span class="ident">InputEvent::PointerAxis</span> { <span class="ident">event</span> });
                             }
                             <span class="ident">WindowEvent::MouseInput</span> { <span class="ident">state</span>, <span class="ident">button</span>, .. } <span class="op">=</span><span class="op">&gt;</span> {
                                 <span class="ident">callback</span>(<span class="ident">InputEvent::PointerButton</span> {
-                                    <span class="ident">seat</span>: <span class="ident">seat</span>.<span class="ident">clone</span>(),
                                     <span class="ident">event</span>: <span class="ident">WinitMouseInputEvent</span> { <span class="ident">time</span>, <span class="ident">button</span>, <span class="ident">state</span> },
                                 });
                             }
@@ -1491,7 +1545,6 @@
                                 ..
                             }) <span class="op">=</span><span class="op">&gt;</span> {
                                 <span class="ident">callback</span>(<span class="ident">InputEvent::TouchDown</span> {
-                                    <span class="ident">seat</span>: <span class="ident">seat</span>.<span class="ident">clone</span>(),
                                     <span class="ident">event</span>: <span class="ident">WinitTouchStartedEvent</span> {
                                         <span class="ident">size</span>: <span class="ident">window_size</span>.<span class="ident">clone</span>(),
                                         <span class="ident">time</span>,
@@ -1507,7 +1560,6 @@
                                 ..
                             }) <span class="op">=</span><span class="op">&gt;</span> {
                                 <span class="ident">callback</span>(<span class="ident">InputEvent::TouchMotion</span> {
-                                    <span class="ident">seat</span>: <span class="ident">seat</span>.<span class="ident">clone</span>(),
                                     <span class="ident">event</span>: <span class="ident">WinitTouchMovedEvent</span> {
                                         <span class="ident">size</span>: <span class="ident">window_size</span>.<span class="ident">clone</span>(),
                                         <span class="ident">time</span>,
@@ -1524,7 +1576,6 @@
                                 ..
                             }) <span class="op">=</span><span class="op">&gt;</span> {
                                 <span class="ident">callback</span>(<span class="ident">InputEvent::TouchMotion</span> {
-                                    <span class="ident">seat</span>: <span class="ident">seat</span>.<span class="ident">clone</span>(),
                                     <span class="ident">event</span>: <span class="ident">WinitTouchMovedEvent</span> {
                                         <span class="ident">size</span>: <span class="ident">window_size</span>.<span class="ident">clone</span>(),
                                         <span class="ident">time</span>,
@@ -1533,7 +1584,6 @@
                                     },
                                 });
                                 <span class="ident">callback</span>(<span class="ident">InputEvent::TouchUp</span> {
-                                    <span class="ident">seat</span>: <span class="ident">seat</span>.<span class="ident">clone</span>(),
                                     <span class="ident">event</span>: <span class="ident">WinitTouchEndedEvent</span> { <span class="ident">time</span>, <span class="ident">id</span> },
                                 })
                             }
@@ -1544,11 +1594,13 @@
                                 ..
                             }) <span class="op">=</span><span class="op">&gt;</span> {
                                 <span class="ident">callback</span>(<span class="ident">InputEvent::TouchCancel</span> {
-                                    <span class="ident">seat</span>: <span class="ident">seat</span>.<span class="ident">clone</span>(),
                                     <span class="ident">event</span>: <span class="ident">WinitTouchCancelledEvent</span> { <span class="ident">time</span>, <span class="ident">id</span> },
                                 });
                             }
                             <span class="ident">WindowEvent::CloseRequested</span> <span class="op">|</span> <span class="ident">WindowEvent::Destroyed</span> <span class="op">=</span><span class="op">&gt;</span> {
+                                <span class="ident">callback</span>(<span class="ident">InputEvent::DeviceRemoved</span> {
+                                    <span class="ident">device</span>: <span class="ident">WinitVirtualDevice</span>,
+                                });
                                 <span class="macro">warn!</span>(<span class="ident">logger</span>, <span class="string">&quot;Window closed&quot;</span>);
                                 <span class="kw-2">*</span><span class="ident">closed_ptr</span> <span class="op">=</span> <span class="bool-val">true</span>;
                             }
