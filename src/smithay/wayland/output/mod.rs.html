@@ -313,6 +313,8 @@
 <span id="313">313</span>
 <span id="314">314</span>
 <span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Output advertising capabilities</span>
 <span class="doccomment">//!</span>
@@ -374,6 +376,8 @@
     <span class="ident">protocol::wl_output</span>::{<span class="ident">Mode</span> <span class="kw">as</span> <span class="ident">WMode</span>, <span class="ident">WlOutput</span>},
     <span class="ident">Display</span>, <span class="ident">Filter</span>, <span class="ident">Global</span>, <span class="ident">Main</span>,
 };
+
+<span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">info</span>, <span class="ident">o</span>, <span class="ident">trace</span>, <span class="ident">warn</span>};
 
 <span class="doccomment">/// An output mode</span>
 <span class="doccomment">///</span>

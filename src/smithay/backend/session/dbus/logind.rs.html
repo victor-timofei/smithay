@@ -614,6 +614,8 @@
 <span id="614">614</span>
 <span id="615">615</span>
 <span id="616">616</span>
+<span id="617">617</span>
+<span id="618">618</span>
 </pre><pre class="rust">
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Implementation of the [`Session`](crate::backend::session::Session) trait through the logind dbus interface.</span>
@@ -675,6 +677,8 @@
 };
 
 <span class="kw">use</span> <span class="ident">calloop</span>::{<span class="ident">EventSource</span>, <span class="ident">Poll</span>, <span class="ident">Readiness</span>, <span class="ident">Token</span>};
+
+<span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">debug</span>, <span class="ident">error</span>, <span class="ident">info</span>, <span class="ident">o</span>, <span class="ident">warn</span>};
 
 <span class="kw">use</span> <span class="kw">super</span><span class="ident">::DBusConnection</span>;
 

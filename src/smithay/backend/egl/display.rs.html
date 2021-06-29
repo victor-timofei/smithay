@@ -892,6 +892,8 @@
 <span id="892">892</span>
 <span id="893">893</span>
 <span id="894">894</span>
+<span id="895">895</span>
+<span id="896">896</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Type safe native types for safe egl initialisation</span>
 
@@ -921,8 +923,10 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_system_lib&quot;</span>))]</span>
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend::egl</span>::{<span class="ident">BufferAccessError</span>, <span class="ident">EGLBuffer</span>, <span class="ident">Format</span>};
 
+<span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">debug</span>, <span class="ident">error</span>, <span class="ident">info</span>, <span class="ident">o</span>, <span class="ident">trace</span>, <span class="ident">warn</span>};
+
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_system_lib&quot;</span>))]</span>
-<span class="macro">lazy_static!</span> {
+<span class="macro">lazy_static::lazy_static!</span> {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">BUFFER_READER</span>: <span class="ident">Mutex</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">WeakBufferReader</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Mutex::new</span>(<span class="prelude-val">None</span>);
 }
 

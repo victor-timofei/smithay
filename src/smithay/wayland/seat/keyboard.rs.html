@@ -486,9 +486,11 @@
 <span id="486">486</span>
 <span id="487">487</span>
 <span id="488">488</span>
+<span id="489">489</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend::input::KeyState</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland::Serial</span>;
+<span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">debug</span>, <span class="ident">info</span>, <span class="ident">o</span>, <span class="ident">trace</span>, <span class="ident">warn</span>};
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">cell::RefCell</span>,
     <span class="ident">default::Default</span>,

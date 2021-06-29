@@ -530,6 +530,8 @@
 <span id="530">530</span>
 <span id="531">531</span>
 <span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
 </pre><pre class="rust">
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Implementation of the [`Session`](Session) trait through the legacy vt kernel interface.</span>
@@ -603,6 +605,8 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_udev&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">udev::Device</span> <span class="kw">as</span> <span class="ident">UdevDevice</span>;
 
+<span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">debug</span>, <span class="ident">error</span>, <span class="ident">info</span>, <span class="ident">o</span>, <span class="ident">trace</span>, <span class="ident">warn</span>};
+
 <span class="doccomment">/// This environment variable can be used to specify a tty path</span>
 <span class="doccomment">/// that will be used in [DirectSession::new] in case no explicit</span>
 <span class="doccomment">/// tty path has been provided.</span>
@@ -610,23 +614,23 @@
 
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tty</span> {
-    <span class="macro">ioctl_read_bad!</span>(<span class="ident">kd_get_mode</span>, <span class="number">0x4B3B</span>, <span class="ident">i16</span>);
-    <span class="macro">ioctl_write_int_bad!</span>(<span class="ident">kd_set_mode</span>, <span class="number">0x4B3A</span>);
+    <span class="macro">nix::ioctl_read_bad!</span>(<span class="ident">kd_get_mode</span>, <span class="number">0x4B3B</span>, <span class="ident">i16</span>);
+    <span class="macro">nix::ioctl_write_int_bad!</span>(<span class="ident">kd_set_mode</span>, <span class="number">0x4B3A</span>);
     <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">KD_TEXT</span>: <span class="ident">i16</span> <span class="op">=</span> <span class="number">0x00</span>;
     <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">KD_GRAPHICS</span>: <span class="ident">i16</span> <span class="op">=</span> <span class="number">0x00</span>;
 
-    <span class="macro">ioctl_read_bad!</span>(<span class="ident">kd_get_kb_mode</span>, <span class="number">0x4B44</span>, <span class="ident">i32</span>);
-    <span class="macro">ioctl_write_int_bad!</span>(<span class="ident">kd_set_kb_mode</span>, <span class="number">0x4B45</span>);
+    <span class="macro">nix::ioctl_read_bad!</span>(<span class="ident">kd_get_kb_mode</span>, <span class="number">0x4B44</span>, <span class="ident">i32</span>);
+    <span class="macro">nix::ioctl_write_int_bad!</span>(<span class="ident">kd_set_kb_mode</span>, <span class="number">0x4B45</span>);
     <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">K_RAW</span>: <span class="ident">i32</span> <span class="op">=</span> <span class="number">0x00</span>;
     <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">K_XLATE</span>: <span class="ident">i32</span> <span class="op">=</span> <span class="number">0x01</span>;
     <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">K_MEDIUMRAW</span>: <span class="ident">i32</span> <span class="op">=</span> <span class="number">0x02</span>;
     <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">K_UNICODE</span>: <span class="ident">i32</span> <span class="op">=</span> <span class="number">0x03</span>;
     <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">K_OFF</span>: <span class="ident">i32</span> <span class="op">=</span> <span class="number">0x04</span>;
 
-    <span class="macro">ioctl_write_int_bad!</span>(<span class="ident">vt_activate</span>, <span class="number">0x5606</span>);
-    <span class="macro">ioctl_write_int_bad!</span>(<span class="ident">vt_wait_active</span>, <span class="number">0x5607</span>);
-    <span class="macro">ioctl_write_ptr_bad!</span>(<span class="ident">vt_set_mode</span>, <span class="number">0x5602</span>, <span class="ident">VtMode</span>);
-    <span class="macro">ioctl_write_int_bad!</span>(<span class="ident">vt_rel_disp</span>, <span class="number">0x5605</span>);
+    <span class="macro">nix::ioctl_write_int_bad!</span>(<span class="ident">vt_activate</span>, <span class="number">0x5606</span>);
+    <span class="macro">nix::ioctl_write_int_bad!</span>(<span class="ident">vt_wait_active</span>, <span class="number">0x5607</span>);
+    <span class="macro">nix::ioctl_write_ptr_bad!</span>(<span class="ident">vt_set_mode</span>, <span class="number">0x5602</span>, <span class="ident">VtMode</span>);
+    <span class="macro">nix::ioctl_write_int_bad!</span>(<span class="ident">vt_rel_disp</span>, <span class="number">0x5605</span>);
     <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
     <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Default</span>)]</span>
     <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">VtMode</span> {

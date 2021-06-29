@@ -455,6 +455,8 @@
 <span id="455">455</span>
 <span id="456">456</span>
 <span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std::collections::HashSet</span>;
 <span class="kw">use</span> <span class="ident">std::os::unix::io::AsRawFd</span>;
@@ -471,6 +473,8 @@
 };
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend::drm</span>::{<span class="ident">device::DevPath</span>, <span class="ident">surface::DrmSurfaceInternal</span>, <span class="ident">DrmError</span>, <span class="ident">DrmSurface</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend::SwapBuffersError</span>;
+
+<span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">debug</span>, <span class="ident">error</span>, <span class="ident">o</span>, <span class="ident">trace</span>, <span class="ident">warn</span>};
 
 <span class="doccomment">/// Simplified by limited abstraction to link single [`DrmSurface`]s to renderers.</span>
 <span class="doccomment">///</span>
@@ -769,7 +773,7 @@
 
         <span class="kw">let</span> <span class="ident">maybe_buffer</span> <span class="op">=</span> <span class="ident">slot</span>.<span class="ident">userdata</span>().<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">buf</span>, <span class="kw">_</span>)<span class="op">|</span> <span class="ident">buf</span>.<span class="ident">clone</span>());
         <span class="kw">let</span> <span class="ident">dmabuf</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">maybe_buffer</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">buf</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">buf</span>.<span class="ident">clone</span>(),
+            <span class="prelude-val">Some</span>(<span class="ident">buf</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">buf</span>,
             <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="kw">let</span> <span class="ident">dmabuf</span> <span class="op">=</span> <span class="ident">slot</span>.<span class="ident">export</span>()<span class="question-mark">?</span>;
                 <span class="kw">let</span> <span class="ident">fb_handle</span> <span class="op">=</span> <span class="ident">attach_framebuffer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">drm</span>, <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">slot</span>)<span class="question-mark">?</span>;

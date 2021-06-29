@@ -275,6 +275,8 @@
 <span id="275">275</span>
 <span id="276">276</span>
 <span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend::input</span>::{<span class="self">self</span> <span class="kw">as</span> <span class="ident">backend</span>, <span class="ident">InputEvent</span>};
 <span class="kw">use</span> <span class="ident">input</span> <span class="kw">as</span> <span class="ident">libinput</span>;
@@ -288,6 +290,8 @@
     <span class="ident">collections::hash_map</span>::{<span class="ident">DefaultHasher</span>, <span class="ident">Entry</span>, <span class="ident">HashMap</span>},
     <span class="ident">hash</span>::{<span class="ident">Hash</span>, <span class="ident">Hasher</span>},
 };
+
+<span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">info</span>, <span class="ident">warn</span>};
 
 <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">on_device_event</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(

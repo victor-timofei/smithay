@@ -188,6 +188,8 @@
 <span id="188">188</span>
 <span id="189">189</span>
 <span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
 </pre><pre class="rust">
 <span class="doccomment">//! EGL surface related structs</span>
 
@@ -205,6 +207,8 @@
     <span class="ident">native::EGLNativeSurface</span>,
     <span class="ident">EGLError</span>, <span class="ident">SwapBuffersError</span>,
 };
+
+<span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">debug</span>, <span class="ident">o</span>, <span class="ident">trace</span>};
 
 <span class="doccomment">/// EGL surface of a given EGL context for rendering</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EGLSurface</span> {

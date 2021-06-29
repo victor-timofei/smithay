@@ -412,6 +412,8 @@
 <span id="412">412</span>
 <span id="413">413</span>
 <span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">cell::RefCell</span>,
@@ -433,6 +435,8 @@
     <span class="ident">tree</span>::{<span class="ident">Location</span>, <span class="ident">PrivateSurfaceData</span>},
     <span class="ident">AlreadyHasRole</span>, <span class="ident">BufferAssignment</span>, <span class="ident">Damage</span>, <span class="ident">Rectangle</span>, <span class="ident">RectangleKind</span>, <span class="ident">RegionAttributes</span>, <span class="ident">SurfaceAttributes</span>,
 };
+
+<span class="kw">use</span> <span class="ident">slog::trace</span>;
 
 <span class="comment">/*
  * wl_compositor

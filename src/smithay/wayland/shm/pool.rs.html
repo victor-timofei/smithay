@@ -257,6 +257,8 @@
 <span id="257">257</span>
 <span id="258">258</span>
 <span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">nix</span>::{
     <span class="ident">libc</span>,
@@ -272,6 +274,8 @@
     <span class="ident">ptr</span>,
     <span class="ident">sync</span>::{<span class="ident">Once</span>, <span class="ident">RwLock</span>},
 };
+
+<span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">debug</span>, <span class="ident">trace</span>};
 
 <span class="macro">thread_local!</span>(<span class="kw">static</span> <span class="ident">SIGBUS_GUARD</span>: <span class="ident">Cell</span><span class="op">&lt;</span>(<span class="kw-2">*</span><span class="kw">const</span> <span class="ident">MemMap</span>, <span class="ident">bool</span>)<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Cell::new</span>((<span class="ident">ptr::null_mut</span>(), <span class="bool-val">false</span>)));
 

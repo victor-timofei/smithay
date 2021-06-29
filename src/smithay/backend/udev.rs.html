@@ -291,6 +291,8 @@
 <span id="291">291</span>
 <span id="292">292</span>
 <span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
 </pre><pre class="rust">
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Provides `udev` related functionality for automated device scanning.</span>
@@ -345,6 +347,8 @@
 <span class="kw">use</span> <span class="ident">udev</span>::{<span class="ident">Enumerator</span>, <span class="ident">EventType</span>, <span class="ident">MonitorBuilder</span>, <span class="ident">MonitorSocket</span>};
 
 <span class="kw">use</span> <span class="ident">calloop</span>::{<span class="ident">EventSource</span>, <span class="ident">Interest</span>, <span class="ident">Mode</span>, <span class="ident">Poll</span>, <span class="ident">Readiness</span>, <span class="ident">Token</span>};
+
+<span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">debug</span>, <span class="ident">info</span>, <span class="ident">o</span>, <span class="ident">warn</span>};
 
 <span class="doccomment">/// Backend to monitor available drm devices.</span>
 <span class="doccomment">///</span>

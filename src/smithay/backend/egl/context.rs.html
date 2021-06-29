@@ -380,6 +380,8 @@
 <span id="380">380</span>
 <span id="381">381</span>
 <span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
 </pre><pre class="rust">
 <span class="doccomment">//! EGL context related structs</span>
 <span class="kw">use</span> <span class="ident">std::collections::HashSet</span>;
@@ -390,6 +392,8 @@
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend::allocator::Format</span> <span class="kw">as</span> <span class="ident">DrmFormat</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend::egl::display</span>::{<span class="ident">EGLDisplay</span>, <span class="ident">PixelFormat</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend::egl::EGLSurface</span>;
+
+<span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">info</span>, <span class="ident">o</span>, <span class="ident">trace</span>};
 
 <span class="doccomment">/// EGL context for rendering</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>

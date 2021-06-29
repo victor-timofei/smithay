@@ -502,7 +502,7 @@
                 <span class="ident">keyboard</span>: <span class="prelude-val">None</span>,
                 <span class="ident">known_seats</span>: <span class="ident">Vec::new</span>(),
             }),
-            <span class="ident">log</span>: <span class="ident">log</span>.<span class="ident">new</span>(<span class="macro">o!</span>(<span class="string">&quot;smithay_module&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;seat_handler&quot;</span>, <span class="string">&quot;seat_name&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">name</span>.<span class="ident">clone</span>())),
+            <span class="ident">log</span>: <span class="ident">log</span>.<span class="ident">new</span>(<span class="macro">slog::o!</span>(<span class="string">&quot;smithay_module&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;seat_handler&quot;</span>, <span class="string">&quot;seat_name&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">name</span>.<span class="ident">clone</span>())),
             <span class="ident">name</span>,
             <span class="ident">user_data</span>: <span class="ident">UserDataMap::new</span>(),
         });

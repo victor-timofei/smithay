@@ -469,6 +469,8 @@
 <span id="469">469</span>
 <span id="470">470</span>
 <span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Linux DMABUF protocol</span>
 <span class="doccomment">//!</span>
@@ -527,6 +529,8 @@
     <span class="ident">zwp_linux_dmabuf_v1</span>,
 };
 <span class="kw">use</span> <span class="ident">wayland_server</span>::{<span class="ident">protocol::wl_buffer</span>, <span class="ident">DispatchData</span>, <span class="ident">Display</span>, <span class="ident">Filter</span>, <span class="ident">Global</span>, <span class="ident">Main</span>};
+
+<span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">o</span>, <span class="ident">trace</span>};
 
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend::allocator</span>::{
     <span class="ident">dmabuf</span>::{<span class="ident">Dmabuf</span>, <span class="ident">DmabufFlags</span>, <span class="ident">Plane</span>},

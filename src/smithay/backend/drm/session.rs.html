@@ -170,6 +170,8 @@
 <span id="170">170</span>
 <span id="171">171</span>
 <span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std::os::unix::io</span>::{<span class="ident">AsRawFd</span>, <span class="ident">RawFd</span>};
 <span class="kw">use</span> <span class="ident">std::sync</span>::{
@@ -190,6 +192,8 @@
     <span class="ident">backend::session::Signal</span> <span class="kw">as</span> <span class="ident">SessionSignal</span>,
     <span class="ident">signaling</span>::{<span class="ident">Linkable</span>, <span class="ident">Signaler</span>},
 };
+
+<span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">crit</span>, <span class="ident">error</span>, <span class="ident">info</span>, <span class="ident">o</span>, <span class="ident">warn</span>};
 
 <span class="kw">struct</span> <span class="ident">DrmDeviceObserver</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
     <span class="ident">dev_id</span>: <span class="ident">dev_t</span>,

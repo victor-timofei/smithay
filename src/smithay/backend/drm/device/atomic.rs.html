@@ -286,6 +286,8 @@
 <span id="286">286</span>
 <span id="287">287</span>
 <span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
 <span class="kw">use</span> <span class="ident">std::os::unix::io::AsRawFd</span>;
@@ -302,6 +304,8 @@
 
 <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">DevPath</span>, <span class="ident">FdWrapper</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend::drm::error::Error</span>;
+
+<span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">error</span>, <span class="ident">o</span>, <span class="ident">trace</span>};
 
 <span class="kw">type</span> <span class="ident">OldState</span> <span class="op">=</span> (
     <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">connector::Handle</span>, <span class="ident">PropertyValueSet</span>)<span class="op">&gt;</span>,

@@ -622,10 +622,13 @@
 <span id="622">622</span>
 <span id="623">623</span>
 <span id="624">624</span>
+<span id="625">625</span>
+<span id="626">626</span>
+<span id="627">627</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Common traits for input backends to receive input from.</span>
 
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">error::Error</span>, <span class="ident">string::ToString</span>};
+<span class="kw">use</span> <span class="ident">std::error::Error</span>;
 
 <span class="doccomment">/// A seat describes a group of input devices and at least one</span>
 <span class="doccomment">/// graphics device belonging together.</span>
@@ -646,7 +649,8 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Seat</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">ToString</span><span class="op">&gt;</span>(<span class="ident">id</span>: <span class="ident">u64</span>, <span class="ident">name</span>: <span class="ident">S</span>, <span class="ident">capabilities</span>: <span class="ident">SeatCapabilities</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Seat</span> {
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_winit&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_libinput&quot;</span>))]</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">std::string::ToString</span><span class="op">&gt;</span>(<span class="ident">id</span>: <span class="ident">u64</span>, <span class="ident">name</span>: <span class="ident">S</span>, <span class="ident">capabilities</span>: <span class="ident">SeatCapabilities</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Seat</span> {
         <span class="ident">Seat</span> {
             <span class="ident">id</span>,
             <span class="ident">name</span>: <span class="ident">name</span>.<span class="ident">to_string</span>(),
@@ -654,6 +658,7 @@
         }
     }
 
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_libinput&quot;</span>)]</span>
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">capabilities_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">SeatCapabilities</span> {
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">capabilities</span>
     }
@@ -954,6 +959,7 @@
     <span class="ident">id</span>: <span class="ident">u64</span>,
 }
 
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_winit&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_libinput&quot;</span>))]</span>
 <span class="kw">impl</span> <span class="ident">TouchSlot</span> {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">id</span>: <span class="ident">u64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="ident">TouchSlot</span> { <span class="ident">id</span> }

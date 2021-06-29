@@ -794,6 +794,8 @@
 <span id="794">794</span>
 <span id="795">795</span>
 <span id="796">796</span>
+<span id="797">797</span>
+<span id="798">798</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Implementation of backend traits for types provided by `winit`</span>
 
@@ -824,6 +826,8 @@
     <span class="ident">platform::unix::WindowExtUnix</span>,
     <span class="ident">window</span>::{<span class="ident">Window</span> <span class="kw">as</span> <span class="ident">WinitWindow</span>, <span class="ident">WindowBuilder</span>},
 };
+
+<span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">debug</span>, <span class="ident">error</span>, <span class="ident">info</span>, <span class="ident">o</span>, <span class="ident">trace</span>, <span class="ident">warn</span>};
 
 <span class="doccomment">/// Errors thrown by the `winit` backends</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">thiserror::Error</span>, <span class="ident">Debug</span>)]</span>

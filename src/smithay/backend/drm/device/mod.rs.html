@@ -356,7 +356,11 @@
 <span id="356">356</span>
 <span id="357">357</span>
 <span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
 </pre><pre class="rust">
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_session&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">std::cell::RefCell</span>;
 <span class="kw">use</span> <span class="ident">std::os::unix::io</span>::{<span class="ident">AsRawFd</span>, <span class="ident">RawFd</span>};
 <span class="kw">use</span> <span class="ident">std::path::PathBuf</span>;
@@ -374,6 +378,8 @@
 <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">error::Error</span>, <span class="ident">planes</span>, <span class="ident">Planes</span>};
 <span class="kw">use</span> <span class="ident">atomic::AtomicDrmDevice</span>;
 <span class="kw">use</span> <span class="ident">legacy::LegacyDrmDevice</span>;
+
+<span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">error</span>, <span class="ident">info</span>, <span class="ident">o</span>, <span class="ident">trace</span>, <span class="ident">warn</span>};
 
 <span class="doccomment">/// An open drm device</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DrmDevice</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
