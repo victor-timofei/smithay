@@ -915,14 +915,14 @@
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">size</span>) <span class="op">=</span> <span class="ident">::nix::unistd::lseek</span>(<span class="ident">plane</span>.<span class="ident">fd</span>.<span class="ident">unwrap</span>(), <span class="number">0</span>, <span class="ident">::nix::unistd::Whence::SeekEnd</span>) {
             <span class="comment">// reset the seek point</span>
             <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">::nix::unistd::lseek</span>(<span class="ident">plane</span>.<span class="ident">fd</span>.<span class="ident">unwrap</span>(), <span class="number">0</span>, <span class="ident">::nix::unistd::Whence::SeekSet</span>);
-            <span class="kw">if</span> <span class="ident">plane</span>.<span class="ident">offset</span> <span class="kw">as</span> <span class="ident">i64</span> <span class="op">&gt;</span> <span class="ident">size</span> {
+            <span class="kw">if</span> <span class="ident">plane</span>.<span class="ident">offset</span> <span class="kw">as</span> <span class="ident">libc::off_t</span> <span class="op">&gt;</span> <span class="ident">size</span> {
                 <span class="ident">params</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
                     <span class="ident">ParamError::OutOfBounds</span> <span class="kw">as</span> <span class="ident">u32</span>,
                     <span class="macro">format!</span>(<span class="string">&quot;Invalid offset {} for plane {}.&quot;</span>, <span class="ident">plane</span>.<span class="ident">offset</span>, <span class="ident">plane</span>.<span class="ident">plane_idx</span>),
                 );
                 <span class="kw">return</span> <span class="bool-val">false</span>;
             }
-            <span class="kw">if</span> (<span class="ident">plane</span>.<span class="ident">offset</span> <span class="op">+</span> <span class="ident">plane</span>.<span class="ident">stride</span>) <span class="kw">as</span> <span class="ident">i64</span> <span class="op">&gt;</span> <span class="ident">size</span> {
+            <span class="kw">if</span> (<span class="ident">plane</span>.<span class="ident">offset</span> <span class="op">+</span> <span class="ident">plane</span>.<span class="ident">stride</span>) <span class="kw">as</span> <span class="ident">libc::off_t</span> <span class="op">&gt;</span> <span class="ident">size</span> {
                 <span class="ident">params</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
                     <span class="ident">ParamError::OutOfBounds</span> <span class="kw">as</span> <span class="ident">u32</span>,
                     <span class="macro">format!</span>(<span class="string">&quot;Invalid stride {} for plane {}.&quot;</span>, <span class="ident">plane</span>.<span class="ident">stride</span>, <span class="ident">plane</span>.<span class="ident">plane_idx</span>),
@@ -931,7 +931,7 @@
             }
             <span class="comment">// Planes &gt; 0 can be subsampled, in which case &#39;size&#39; will be smaller</span>
             <span class="comment">// than expected.</span>
-            <span class="kw">if</span> <span class="ident">plane</span>.<span class="ident">plane_idx</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">end</span> <span class="kw">as</span> <span class="ident">i64</span> <span class="op">&gt;</span> <span class="ident">size</span> {
+            <span class="kw">if</span> <span class="ident">plane</span>.<span class="ident">plane_idx</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">end</span> <span class="kw">as</span> <span class="ident">libc::off_t</span> <span class="op">&gt;</span> <span class="ident">size</span> {
                 <span class="ident">params</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
                     <span class="ident">ParamError::OutOfBounds</span> <span class="kw">as</span> <span class="ident">u32</span>,
                     <span class="macro">format!</span>(
