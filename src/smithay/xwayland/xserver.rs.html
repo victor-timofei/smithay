@@ -417,6 +417,15 @@
 <span id="417">417</span>
 <span id="418">418</span>
 <span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
 </pre><pre class="rust">
 <span class="comment">/*
  * Steps of XWayland server creation
@@ -715,7 +724,12 @@
 
 <span class="kw">fn</span> <span class="ident">client_destroy</span><span class="op">&lt;</span><span class="ident">Data</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">map</span>: <span class="kw-2">&amp;</span><span class="ident">::wayland_server::UserDataMap</span>) {
     <span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="ident">map</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">Inner</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
-    <span class="ident">inner</span>.<span class="ident">borrow_mut</span>().<span class="ident">shutdown</span>();
+    <span class="comment">// If we are unable to take a lock we are most likely called during</span>
+    <span class="comment">// a shutdown. This will definitely be the case when the compositor exits</span>
+    <span class="comment">// and the XWayland instance is dropped.</span>
+    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">guard</span>) <span class="op">=</span> <span class="ident">inner</span>.<span class="ident">try_borrow_mut</span>() {
+        <span class="ident">guard</span>.<span class="ident">shutdown</span>();
+    }
 }
 
 <span class="kw">fn</span> <span class="ident">xwayland_ready</span><span class="op">&lt;</span><span class="ident">Data</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">inner</span>: <span class="kw-2">&amp;</span><span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">Inner</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
@@ -742,7 +756,11 @@
         <span class="ident">::std::env::set_var</span>(<span class="string">&quot;DISPLAY&quot;</span>, <span class="macro">format!</span>(<span class="string">&quot;:{}&quot;</span>, <span class="ident">instance</span>.<span class="ident">display_lock</span>.<span class="ident">display</span>()));
 
         <span class="comment">// signal the WM</span>
-        <span class="macro">info!</span>(<span class="ident">guard</span>.<span class="ident">log</span>, <span class="string">&quot;XWayland is ready, signaling the WM.&quot;</span>);
+        <span class="macro">info!</span>(
+            <span class="ident">guard</span>.<span class="ident">log</span>,
+            <span class="string">&quot;XWayland is ready on DISPLAY \&quot;:{}\&quot;, signaling the WM.&quot;</span>,
+            <span class="ident">instance</span>.<span class="ident">display_lock</span>.<span class="ident">display</span>()
+        );
         <span class="comment">// send error occurs if the user dropped the channel... We cannot do much except ignore.</span>
         <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">guard</span>.<span class="ident">sender</span>.<span class="ident">send</span>(<span class="ident">XWaylandEvent::Ready</span> {
             <span class="ident">connection</span>: <span class="ident">instance</span>.<span class="ident">wm_fd</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>(), <span class="comment">// This is a bug if None</span>
