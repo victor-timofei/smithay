@@ -2076,13 +2076,13 @@
         <span class="comment">// gravity specified.</span>
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">gravity_has_edge</span>(<span class="ident">xdg_positioner::Gravity::Top</span>) {
             <span class="ident">geometry</span>.<span class="ident">y</span> <span class="op">-</span><span class="op">=</span> <span class="ident">geometry</span>.<span class="ident">height</span>;
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">gravity_has_edge</span>(<span class="ident">xdg_positioner::Gravity::Bottom</span>) {
+        } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">gravity_has_edge</span>(<span class="ident">xdg_positioner::Gravity::Bottom</span>) {
             <span class="ident">geometry</span>.<span class="ident">y</span> <span class="op">-</span><span class="op">=</span> <span class="ident">geometry</span>.<span class="ident">height</span> <span class="op">/</span> <span class="number">2</span>;
         }
 
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">gravity_has_edge</span>(<span class="ident">xdg_positioner::Gravity::Left</span>) {
             <span class="ident">geometry</span>.<span class="ident">x</span> <span class="op">-</span><span class="op">=</span> <span class="ident">geometry</span>.<span class="ident">width</span>;
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">gravity_has_edge</span>(<span class="ident">xdg_positioner::Gravity::Right</span>) {
+        } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">gravity_has_edge</span>(<span class="ident">xdg_positioner::Gravity::Right</span>) {
             <span class="ident">geometry</span>.<span class="ident">x</span> <span class="op">-</span><span class="op">=</span> <span class="ident">geometry</span>.<span class="ident">width</span> <span class="op">/</span> <span class="number">2</span>;
         }
 
