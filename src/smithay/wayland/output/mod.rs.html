@@ -315,6 +315,43 @@
 <span id="315">315</span>
 <span id="316">316</span>
 <span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Output advertising capabilities</span>
 <span class="doccomment">//!</span>
@@ -371,10 +408,13 @@
     <span class="ident">sync</span>::{<span class="ident">Arc</span>, <span class="ident">Mutex</span>},
 };
 
-<span class="kw">use</span> <span class="ident">wayland_server::protocol::wl_output</span>::{<span class="ident">Subpixel</span>, <span class="ident">Transform</span>};
+<span class="kw">use</span> <span class="ident">wayland_server::protocol</span>::{
+    <span class="ident">wl_output</span>::{<span class="ident">Subpixel</span>, <span class="ident">Transform</span>},
+    <span class="ident">wl_surface</span>,
+};
 <span class="kw">use</span> <span class="ident">wayland_server</span>::{
     <span class="ident">protocol::wl_output</span>::{<span class="ident">Mode</span> <span class="kw">as</span> <span class="ident">WMode</span>, <span class="ident">WlOutput</span>},
-    <span class="ident">Display</span>, <span class="ident">Filter</span>, <span class="ident">Global</span>, <span class="ident">Main</span>,
+    <span class="ident">Client</span>, <span class="ident">Display</span>, <span class="ident">Filter</span>, <span class="ident">Global</span>, <span class="ident">Main</span>,
 };
 
 <span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">info</span>, <span class="ident">o</span>, <span class="ident">trace</span>, <span class="ident">warn</span>};
@@ -631,6 +671,40 @@
             .<span class="ident">instances</span>
             .<span class="ident">iter</span>()
             .<span class="ident">any</span>(<span class="op">|</span><span class="ident">o</span><span class="op">|</span> <span class="ident">o</span>.<span class="ident">as_ref</span>().<span class="ident">equals</span>(<span class="ident">output</span>.<span class="ident">as_ref</span>()))
+    }
+
+    <span class="doccomment">/// This function allows to run a [FnMut] on every</span>
+    <span class="doccomment">/// [WlOutput] matching the same [Client] as provided</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_client_outputs</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">client</span>: <span class="ident">Client</span>, <span class="kw-2">mut</span> <span class="ident">f</span>: <span class="ident">F</span>)
+    <span class="kw">where</span>
+        <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">WlOutput</span>),
+    {
+        <span class="self">self</span>.<span class="ident">inner</span>
+            .<span class="ident">lock</span>()
+            .<span class="ident">unwrap</span>()
+            .<span class="ident">instances</span>
+            .<span class="ident">iter</span>()
+            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">output</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">output</span>.<span class="ident">as_ref</span>().<span class="ident">client</span>() {
+                <span class="prelude-val">Some</span>(<span class="ident">output_client</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">output_client</span>.<span class="ident">equals</span>(<span class="kw-2">&amp;</span><span class="ident">client</span>),
+                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
+            })
+            .<span class="ident">for_each</span>(<span class="op">|</span><span class="ident">output</span><span class="op">|</span> <span class="ident">f</span>(<span class="ident">output</span>))
+    }
+
+    <span class="doccomment">/// Sends `wl_surface.enter` for the provided surface</span>
+    <span class="doccomment">/// with the matching client output</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">enter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">wl_surface::WlSurface</span>) {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">client</span>) <span class="op">=</span> <span class="ident">surface</span>.<span class="ident">as_ref</span>().<span class="ident">client</span>() {
+            <span class="self">self</span>.<span class="ident">with_client_outputs</span>(<span class="ident">client</span>, <span class="op">|</span><span class="ident">output</span><span class="op">|</span> <span class="ident">surface</span>.<span class="ident">enter</span>(<span class="ident">output</span>))
+        }
+    }
+
+    <span class="doccomment">/// Sends `wl_surface.leave` for the provided surface</span>
+    <span class="doccomment">/// with the matching client output</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">leave</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">wl_surface::WlSurface</span>) {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">client</span>) <span class="op">=</span> <span class="ident">surface</span>.<span class="ident">as_ref</span>().<span class="ident">client</span>() {
+            <span class="self">self</span>.<span class="ident">with_client_outputs</span>(<span class="ident">client</span>, <span class="op">|</span><span class="ident">output</span><span class="op">|</span> <span class="ident">surface</span>.<span class="ident">leave</span>(<span class="ident">output</span>))
+        }
     }
 }
 </pre></div>

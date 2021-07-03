@@ -1583,6 +1583,30 @@
 <span id="1583">1583</span>
 <span id="1584">1584</span>
 <span id="1585">1585</span>
+<span id="1586">1586</span>
+<span id="1587">1587</span>
+<span id="1588">1588</span>
+<span id="1589">1589</span>
+<span id="1590">1590</span>
+<span id="1591">1591</span>
+<span id="1592">1592</span>
+<span id="1593">1593</span>
+<span id="1594">1594</span>
+<span id="1595">1595</span>
+<span id="1596">1596</span>
+<span id="1597">1597</span>
+<span id="1598">1598</span>
+<span id="1599">1599</span>
+<span id="1600">1600</span>
+<span id="1601">1601</span>
+<span id="1602">1602</span>
+<span id="1603">1603</span>
+<span id="1604">1604</span>
+<span id="1605">1605</span>
+<span id="1606">1606</span>
+<span id="1607">1607</span>
+<span id="1608">1608</span>
+<span id="1609">1609</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Utilities for handling shell surfaces with the `xdg_shell` protocol</span>
 <span class="doccomment">//!</span>
@@ -2698,6 +2722,30 @@
             <span class="ident">f</span>(<span class="ident">server_pending</span>)
         })
         .<span class="ident">unwrap</span>())
+    }
+
+    <span class="doccomment">/// Gets a copy of the current state of this toplevel</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns `None` if the underlying surface has been</span>
+    <span class="doccomment">/// destroyed</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">current_state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ToplevelState</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">alive</span>() {
+            <span class="kw">return</span> <span class="prelude-val">None</span>;
+        }
+
+        <span class="prelude-val">Some</span>(
+            <span class="ident">compositor::with_states</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">wl_surface</span>, <span class="op">|</span><span class="ident">states</span><span class="op">|</span> {
+                <span class="kw">let</span> <span class="ident">attributes</span> <span class="op">=</span> <span class="ident">states</span>
+                    .<span class="ident">data_map</span>
+                    .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">XdgToplevelSurfaceRoleAttributes</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+                    .<span class="ident">unwrap</span>()
+                    .<span class="ident">lock</span>()
+                    .<span class="ident">unwrap</span>();
+
+                <span class="ident">attributes</span>.<span class="ident">current</span>.<span class="ident">clone</span>()
+            })
+            .<span class="ident">unwrap</span>(),
+        )
     }
 }
 
