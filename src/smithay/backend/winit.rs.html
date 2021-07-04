@@ -822,6 +822,19 @@
 <span id="822">822</span>
 <span id="823">823</span>
 <span id="824">824</span>
+<span id="825">825</span>
+<span id="826">826</span>
+<span id="827">827</span>
+<span id="828">828</span>
+<span id="829">829</span>
+<span id="830">830</span>
+<span id="831">831</span>
+<span id="832">832</span>
+<span id="833">833</span>
+<span id="834">834</span>
+<span id="835">835</span>
+<span id="836">836</span>
+<span id="837">837</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Implementation of backend traits for types provided by `winit`</span>
 
@@ -854,6 +867,7 @@
 };
 
 <span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">debug</span>, <span class="ident">error</span>, <span class="ident">info</span>, <span class="ident">o</span>, <span class="ident">trace</span>, <span class="ident">warn</span>};
+<span class="kw">use</span> <span class="ident">std::cell::Cell</span>;
 
 <span class="doccomment">/// Errors thrown by the `winit` backends</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">thiserror::Error</span>, <span class="ident">Debug</span>)]</span>
@@ -889,6 +903,7 @@
     <span class="ident">egl</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">EGLSurface</span><span class="op">&gt;</span>,
     <span class="ident">window</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">WinitWindow</span><span class="op">&gt;</span>,
     <span class="ident">size</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">WindowSize</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">resize_notification</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">Cell</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">u32</span>, <span class="ident">u32</span>)<span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="doccomment">/// Abstracted event loop of a [`WinitWindow`] implementing the [`InputBackend`] trait</span>
@@ -897,7 +912,6 @@
 <span class="doccomment">/// periodically to receive any events.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WinitInputBackend</span> {
-    <span class="ident">egl</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">EGLSurface</span><span class="op">&gt;</span>,
     <span class="ident">window</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">WinitWindow</span><span class="op">&gt;</span>,
     <span class="ident">events_loop</span>: <span class="ident">EventLoop</span><span class="op">&lt;</span>()<span class="op">&gt;</span>,
     <span class="ident">time</span>: <span class="ident">Instant</span>,
@@ -905,6 +919,7 @@
     <span class="ident">logger</span>: <span class="ident">::slog::Logger</span>,
     <span class="ident">initialized</span>: <span class="ident">bool</span>,
     <span class="ident">size</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">WindowSize</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">resize_notification</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">Cell</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">u32</span>, <span class="ident">u32</span>)<span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="doccomment">/// Create a new [`WinitGraphicsBackend`], which implements the [`Renderer`] trait and a corresponding [`WinitInputBackend`],</span>
@@ -1010,19 +1025,21 @@
     <span class="kw">let</span> <span class="ident">window</span> <span class="op">=</span> <span class="ident">Rc::new</span>(<span class="ident">winit_window</span>);
     <span class="kw">let</span> <span class="ident">egl</span> <span class="op">=</span> <span class="ident">Rc::new</span>(<span class="ident">surface</span>);
     <span class="kw">let</span> <span class="ident">renderer</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">Gles2Renderer::new</span>(<span class="ident">context</span>, <span class="ident">log</span>.<span class="ident">clone</span>())<span class="question-mark">?</span> };
+    <span class="kw">let</span> <span class="ident">resize_notification</span> <span class="op">=</span> <span class="ident">Rc::new</span>(<span class="ident">Cell::new</span>(<span class="prelude-val">None</span>));
 
     <span class="prelude-val">Ok</span>((
         <span class="ident">WinitGraphicsBackend</span> {
             <span class="ident">window</span>: <span class="ident">window</span>.<span class="ident">clone</span>(),
             <span class="ident">display</span>,
-            <span class="ident">egl</span>: <span class="ident">egl</span>.<span class="ident">clone</span>(),
+            <span class="ident">egl</span>,
             <span class="ident">renderer</span>,
             <span class="ident">size</span>: <span class="ident">size</span>.<span class="ident">clone</span>(),
+            <span class="ident">resize_notification</span>: <span class="ident">resize_notification</span>.<span class="ident">clone</span>(),
         },
         <span class="ident">WinitInputBackend</span> {
+            <span class="ident">resize_notification</span>,
             <span class="ident">events_loop</span>,
             <span class="ident">window</span>,
-            <span class="ident">egl</span>,
             <span class="ident">time</span>: <span class="ident">Instant::now</span>(),
             <span class="ident">key_counter</span>: <span class="number">0</span>,
             <span class="ident">initialized</span>: <span class="bool-val">false</span>,
@@ -1070,6 +1087,11 @@
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Gles2Renderer</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Gles2Frame</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">R</span>,
     {
+        <span class="comment">// Were we told to resize?</span>
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">width</span>, <span class="ident">height</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">resize_notification</span>.<span class="ident">take</span>() {
+            <span class="self">self</span>.<span class="ident">egl</span>.<span class="ident">resize</span>(<span class="ident">width</span> <span class="kw">as</span> <span class="ident">i32</span>, <span class="ident">height</span> <span class="kw">as</span> <span class="ident">i32</span>, <span class="number">0</span>, <span class="number">0</span>);
+        }
+
         <span class="kw">let</span> (<span class="ident">width</span>, <span class="ident">height</span>) <span class="op">=</span> {
             <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">borrow</span>();
             <span class="ident">size</span>.<span class="ident">physical_size</span>.<span class="ident">into</span>()
@@ -1446,7 +1468,7 @@
             <span class="kw">let</span> <span class="ident">key_counter</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">key_counter</span>;
             <span class="kw">let</span> <span class="ident">time</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">time</span>;
             <span class="kw">let</span> <span class="ident">window</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">window</span>;
-            <span class="kw">let</span> <span class="ident">egl</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">egl</span>;
+            <span class="kw">let</span> <span class="ident">resize_notification</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">resize_notification</span>;
             <span class="kw">let</span> <span class="ident">logger</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">logger</span>;
             <span class="kw">let</span> <span class="ident">window_size</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">size</span>;
 
@@ -1476,7 +1498,9 @@
                                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">wsize</span> <span class="op">=</span> <span class="ident">window_size</span>.<span class="ident">borrow_mut</span>();
                                 <span class="ident">wsize</span>.<span class="ident">physical_size</span> <span class="op">=</span> <span class="ident">psize</span>;
                                 <span class="ident">wsize</span>.<span class="ident">scale_factor</span> <span class="op">=</span> <span class="ident">scale_factor</span>;
-                                <span class="ident">egl</span>.<span class="ident">resize</span>(<span class="ident">psize</span>.<span class="ident">width</span> <span class="kw">as</span> <span class="ident">i32</span>, <span class="ident">psize</span>.<span class="ident">height</span> <span class="kw">as</span> <span class="ident">i32</span>, <span class="number">0</span>, <span class="number">0</span>);
+
+                                <span class="ident">resize_notification</span>.<span class="ident">set</span>(<span class="prelude-val">Some</span>((<span class="ident">psize</span>.<span class="ident">width</span>, <span class="ident">psize</span>.<span class="ident">height</span>)));
+
                                 <span class="ident">callback</span>(<span class="ident">InputEvent::Special</span>(<span class="ident">WinitEvent::Resized</span> {
                                     <span class="ident">size</span>: <span class="ident">psize</span>.<span class="ident">into</span>(),
                                     <span class="ident">scale_factor</span>,
@@ -1492,7 +1516,9 @@
                             } <span class="op">=</span><span class="op">&gt;</span> {
                                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">wsize</span> <span class="op">=</span> <span class="ident">window_size</span>.<span class="ident">borrow_mut</span>();
                                 <span class="ident">wsize</span>.<span class="ident">scale_factor</span> <span class="op">=</span> <span class="ident">scale_factor</span>;
-                                <span class="ident">egl</span>.<span class="ident">resize</span>(<span class="ident">new_psize</span>.<span class="ident">width</span> <span class="kw">as</span> <span class="ident">i32</span>, <span class="ident">new_psize</span>.<span class="ident">height</span> <span class="kw">as</span> <span class="ident">i32</span>, <span class="number">0</span>, <span class="number">0</span>);
+
+                                <span class="ident">resize_notification</span>.<span class="ident">set</span>(<span class="prelude-val">Some</span>((<span class="ident">new_psize</span>.<span class="ident">width</span>, <span class="ident">new_psize</span>.<span class="ident">height</span>)));
+
                                 <span class="kw">let</span> <span class="ident">psize_f64</span>: (<span class="ident">f64</span>, <span class="ident">f64</span>) <span class="op">=</span> (<span class="ident">new_psize</span>.<span class="ident">width</span>.<span class="ident">into</span>(), <span class="ident">new_psize</span>.<span class="ident">height</span>.<span class="ident">into</span>());
                                 <span class="ident">callback</span>(<span class="ident">InputEvent::Special</span>(<span class="ident">WinitEvent::Resized</span> {
                                     <span class="ident">size</span>: <span class="ident">psize_f64</span>,
