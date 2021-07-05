@@ -430,6 +430,14 @@
 <span id="430">430</span>
 <span id="431">431</span>
 <span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
 </pre><pre class="rust">
 <span class="comment">/*
  * Steps of XWayland server creation
@@ -529,6 +537,9 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Data</span>: <span class="ident">Any</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">XWayland</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Create a new XWayland manager</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This function returns both the [`XWayland`] handle and an [`XWaylandSource`] that needs to be inserted</span>
+    <span class="doccomment">/// into the [`calloop`] event loop, producing the Xwayland startup and shutdown events.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>(
         <span class="ident">handle</span>: <span class="ident">LoopHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">Data</span><span class="op">&gt;</span>,
         <span class="ident">display</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">Display</span><span class="op">&gt;</span><span class="op">&gt;</span>,
@@ -663,6 +674,11 @@
     <span class="prelude-val">Ok</span>(())
 }
 
+<span class="doccomment">/// An event source for monitoring XWayland status</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// You need to insert it in a [`calloop`] event loop to handle the events it produces,</span>
+<span class="doccomment">/// of type [`XWaylandEvent`], which notify you about startup and shutdown of the Xwayland</span>
+<span class="doccomment">/// instance.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">XWaylandSource</span> {
     <span class="ident">channel</span>: <span class="ident">Channel</span><span class="op">&lt;</span><span class="ident">XWaylandEvent</span><span class="op">&gt;</span>,

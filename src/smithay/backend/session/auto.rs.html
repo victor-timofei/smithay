@@ -316,7 +316,7 @@
     <span class="ident">direct</span>::{<span class="self">self</span>, <span class="ident">DirectSession</span>, <span class="ident">DirectSessionNotifier</span>},
     <span class="ident">AsErrno</span>, <span class="ident">Session</span>, <span class="ident">Signal</span> <span class="kw">as</span> <span class="ident">SessionSignal</span>,
 };
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::signaling::Signaler</span>;
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils::signaling::Signaler</span>;
 <span class="kw">use</span> <span class="ident">nix::fcntl::OFlag</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cell::RefCell</span>, <span class="ident">io</span>, <span class="ident">os::unix::io::RawFd</span>, <span class="ident">path::Path</span>, <span class="ident">rc::Rc</span>};
 

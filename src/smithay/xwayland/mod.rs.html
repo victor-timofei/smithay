@@ -22,8 +22,8 @@
 <span class="doccomment">//! This module contains helpers to manage XWayland from your compositor, in order</span>
 <span class="doccomment">//! to support running X11 apps.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! The starting point is the [`XWayland`](struct.XWayland.html) struct, which represents the</span>
-<span class="doccomment">//! running `XWayland` instance. Dropping it will shutdown XWayland.</span>
+<span class="doccomment">//! The starting point is the [`XWayland`] struct, which represents the</span>
+<span class="doccomment">//! running XWayland instance. Dropping it will shutdown XWayland.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! You need to provide an implementation of a X11 Window Manager for XWayland to</span>
 <span class="doccomment">//! function properly. You&#39;ll need to treat XWayland (and all its X11 apps) as one</span>
@@ -34,7 +34,7 @@
 <span class="kw">mod</span> <span class="ident">x11_sockets</span>;
 <span class="kw">mod</span> <span class="ident">xserver</span>;
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::xserver</span>::{<span class="ident">XWayland</span>, <span class="ident">XWaylandEvent</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::xserver</span>::{<span class="ident">XWayland</span>, <span class="ident">XWaylandEvent</span>, <span class="ident">XWaylandSource</span>};
 </pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="smithay" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div>
     <script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script>

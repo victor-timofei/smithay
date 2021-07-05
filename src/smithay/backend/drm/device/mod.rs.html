@@ -404,7 +404,7 @@
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">dev_id</span>: <span class="ident">dev_t</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">internal</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">DrmDeviceInternal</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_session&quot;</span>)]</span>
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">links</span>: <span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">crate</span><span class="ident">::signaling::SignalToken</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">links</span>: <span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">crate</span><span class="ident">::utils::signaling::SignalToken</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">has_universal_planes</span>: <span class="ident">bool</span>,
     <span class="ident">resources</span>: <span class="ident">ResourceHandles</span>,
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">logger</span>: <span class="ident">::slog::Logger</span>,

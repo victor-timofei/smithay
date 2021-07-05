@@ -272,13 +272,11 @@
 <span id="272">272</span>
 <span id="273">273</span>
 <span id="274">274</span>
-<span id="275">275</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Type safe native types for safe context/surface creation</span>
 
 <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">display::EGLDisplayHandle</span>, <span class="ident">ffi</span>, <span class="ident">wrap_egl_call</span>, <span class="ident">SwapBuffersError</span>};
 <span class="kw">use</span> <span class="ident">nix::libc</span>::{<span class="ident">c_int</span>, <span class="ident">c_void</span>};
-<span class="kw">use</span> <span class="ident">std::os::raw</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_gbm&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">std::os::unix::io::AsRawFd</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">fmt::Debug</span>, <span class="ident">marker::PhantomData</span>, <span class="ident">sync::Arc</span>};
@@ -504,7 +502,7 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_winit&quot;</span>)]</span>
 <span class="doccomment">/// Typed Xlib window for the `X11` backend</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">XlibWindow</span>(<span class="kw">pub</span> <span class="ident">raw::c_ulong</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">XlibWindow</span>(<span class="kw">pub</span> <span class="ident">std::os::raw::c_ulong</span>);
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_winit&quot;</span>)]</span>
 <span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">EGLNativeSurface</span> <span class="kw">for</span> <span class="ident">XlibWindow</span> {
@@ -519,7 +517,7 @@
             <span class="ident">ffi::egl::CreatePlatformWindowSurfaceEXT</span>(
                 <span class="ident">display</span>.<span class="ident">handle</span>,
                 <span class="ident">config_id</span>,
-                (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">id</span>) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">raw::c_ulong</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+                (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">id</span>) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">std::os::raw::c_ulong</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
                 <span class="ident">surface_attributes</span>.<span class="ident">as_ptr</span>(),
             )
         })

@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Flags",""]],"fn":[["init_dmabuf_global","Handler trait for dmabuf validation"]]});
+initSidebarItems({"fn":[["init_dmabuf_global","Handler trait for dmabuf validation"]]});

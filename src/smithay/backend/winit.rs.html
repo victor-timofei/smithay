@@ -835,8 +835,46 @@
 <span id="835">835</span>
 <span id="836">836</span>
 <span id="837">837</span>
+<span id="838">838</span>
+<span id="839">839</span>
+<span id="840">840</span>
+<span id="841">841</span>
+<span id="842">842</span>
+<span id="843">843</span>
+<span id="844">844</span>
+<span id="845">845</span>
+<span id="846">846</span>
+<span id="847">847</span>
+<span id="848">848</span>
+<span id="849">849</span>
+<span id="850">850</span>
+<span id="851">851</span>
+<span id="852">852</span>
+<span id="853">853</span>
+<span id="854">854</span>
+<span id="855">855</span>
+<span id="856">856</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Implementation of backend traits for types provided by `winit`</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! This module provides the appropriate implementations of the backend</span>
+<span class="doccomment">//! interfaces for running a compositor as a Wayland of X11 client using [`winit`].</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ## Usage</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The backend is initialized using of of the [`init`], [`init_from_builder`] or</span>
+<span class="doccomment">//! [`init_from_builder_with_gl_attr`] functions, depending on the amount of control</span>
+<span class="doccomment">//! you want on the initialization of the backend. These functions will provide you</span>
+<span class="doccomment">//! with two objects:</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! - a [`WinitGraphicsBackend`], which can give you an implementation of a [`Renderer`]</span>
+<span class="doccomment">//!   (or even [`Gles2Renderer`]) through its `renderer` method in addition to further</span>
+<span class="doccomment">//!   functionality to access and manage the created winit-window.</span>
+<span class="doccomment">//! - a [`WinitInputBackend`], which is an implementation of the [`InputBackend`] trait</span>
+<span class="doccomment">//!   using the input events forwarded from the host graphics server.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The other types in this module are the instances of the associated types of these</span>
+<span class="doccomment">//! two traits for the winit backend.</span>
 
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend::egl::display::EGLDisplay</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend</span>::{

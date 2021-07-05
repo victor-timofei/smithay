@@ -470,7 +470,6 @@
 <span id="470">470</span>
 <span id="471">471</span>
 <span id="472">472</span>
-<span id="473">473</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Linux DMABUF protocol</span>
 <span class="doccomment">//!</span>
@@ -487,7 +486,7 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! The list of supported format is just a `Vec&lt;Format&gt;`, where you will enter all the (code, modifier)</span>
 <span class="doccomment">//! couples you support. You can typically receive a list of supported formats for one renderer by calling</span>
-<span class="doccomment">//! [`crate::backend::renderer::ImportDma::dmabuf_formats`].</span>
+<span class="doccomment">//! [`ImportDma::dmabuf_formats`](crate::backend::renderer::ImportDma::dmabuf_formats).</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//! # extern crate wayland_server;</span>
@@ -521,7 +520,6 @@
     <span class="ident">rc::Rc</span>,
 };
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">wayland_protocols::unstable::linux_dmabuf::v1::server::zwp_linux_buffer_params_v1::Flags</span>;
 <span class="kw">use</span> <span class="ident">wayland_protocols::unstable::linux_dmabuf::v1::server</span>::{
     <span class="ident">zwp_linux_buffer_params_v1</span>::{
         <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">ParamError</span>, <span class="ident">Request</span> <span class="kw">as</span> <span class="ident">ParamsRequest</span>, <span class="ident">ZwpLinuxBufferParamsV1</span> <span class="kw">as</span> <span class="ident">BufferParams</span>,

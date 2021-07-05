@@ -780,6 +780,45 @@
 <span id="780">780</span>
 <span id="781">781</span>
 <span id="782">782</span>
+<span id="783">783</span>
+<span id="784">784</span>
+<span id="785">785</span>
+<span id="786">786</span>
+<span id="787">787</span>
+<span id="788">788</span>
+<span id="789">789</span>
+<span id="790">790</span>
+<span id="791">791</span>
+<span id="792">792</span>
+<span id="793">793</span>
+<span id="794">794</span>
+<span id="795">795</span>
+<span id="796">796</span>
+<span id="797">797</span>
+<span id="798">798</span>
+<span id="799">799</span>
+<span id="800">800</span>
+<span id="801">801</span>
+<span id="802">802</span>
+<span id="803">803</span>
+<span id="804">804</span>
+<span id="805">805</span>
+<span id="806">806</span>
+<span id="807">807</span>
+<span id="808">808</span>
+<span id="809">809</span>
+<span id="810">810</span>
+<span id="811">811</span>
+<span id="812">812</span>
+<span id="813">813</span>
+<span id="814">814</span>
+<span id="815">815</span>
+<span id="816">816</span>
+<span id="817">817</span>
+<span id="818">818</span>
+<span id="819">819</span>
+<span id="820">820</span>
+<span id="821">821</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std::sync::atomic</span>::{<span class="ident">AtomicBool</span>, <span class="ident">Ordering</span>};
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cell::RefCell</span>, <span class="ident">ops::Deref</span> <span class="kw">as</span> <span class="kw">_</span>, <span class="ident">sync::Mutex</span>};
@@ -793,6 +832,7 @@
     },
     <span class="ident">xdg_shell::server</span>::{<span class="ident">xdg_positioner</span>, <span class="ident">xdg_toplevel</span>},
 };
+<span class="kw">use</span> <span class="ident">wayland_server::DispatchData</span>;
 <span class="kw">use</span> <span class="ident">wayland_server</span>::{<span class="ident">protocol::wl_surface</span>, <span class="ident">Filter</span>, <span class="ident">Main</span>};
 
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils::Rectangle</span>;
@@ -809,16 +849,20 @@
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">implement_shell</span>(
     <span class="ident">shell</span>: <span class="ident">Main</span><span class="op">&lt;</span><span class="ident">zxdg_shell_v6::ZxdgShellV6</span><span class="op">&gt;</span>,
     <span class="ident">shell_data</span>: <span class="kw-2">&amp;</span><span class="ident">ShellData</span>,
+    <span class="ident">dispatch_data</span>: <span class="ident">DispatchData</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
 ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">zxdg_shell_v6::ZxdgShellV6</span> {
-    <span class="ident">shell</span>.<span class="ident">quick_assign</span>(<span class="op">|</span><span class="ident">shell</span>, <span class="ident">req</span>, <span class="ident">_data</span><span class="op">|</span> <span class="ident">shell_implementation</span>(<span class="ident">req</span>, <span class="ident">shell</span>.<span class="ident">deref</span>().<span class="ident">clone</span>()));
+    <span class="ident">shell</span>.<span class="ident">quick_assign</span>(<span class="ident">shell_implementation</span>);
     <span class="ident">shell</span>.<span class="ident">as_ref</span>().<span class="ident">user_data</span>().<span class="ident">set</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ShellUserData</span> {
         <span class="ident">shell_data</span>: <span class="ident">shell_data</span>.<span class="ident">clone</span>(),
         <span class="ident">client_data</span>: <span class="ident">Mutex::new</span>(<span class="ident">make_shell_client_data</span>()),
     });
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_impl</span> <span class="op">=</span> <span class="ident">shell_data</span>.<span class="ident">user_impl</span>.<span class="ident">borrow_mut</span>();
-    (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">XdgRequest::NewClient</span> {
-        <span class="ident">client</span>: <span class="ident">make_shell_client</span>(<span class="kw-2">&amp;</span><span class="ident">shell</span>),
-    });
+    (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(
+        <span class="ident">XdgRequest::NewClient</span> {
+            <span class="ident">client</span>: <span class="ident">make_shell_client</span>(<span class="kw-2">&amp;</span><span class="ident">shell</span>),
+        },
+        <span class="ident">dispatch_data</span>,
+    );
     <span class="ident">shell</span>.<span class="ident">deref</span>().<span class="ident">clone</span>()
 }
 
@@ -837,7 +881,11 @@
     }
 }
 
-<span class="kw">fn</span> <span class="ident">shell_implementation</span>(<span class="ident">request</span>: <span class="ident">zxdg_shell_v6::Request</span>, <span class="ident">shell</span>: <span class="ident">zxdg_shell_v6::ZxdgShellV6</span>) {
+<span class="kw">fn</span> <span class="ident">shell_implementation</span>(
+    <span class="ident">shell</span>: <span class="ident">Main</span><span class="op">&lt;</span><span class="ident">zxdg_shell_v6::ZxdgShellV6</span><span class="op">&gt;</span>,
+    <span class="ident">request</span>: <span class="ident">zxdg_shell_v6::Request</span>,
+    <span class="ident">dispatch_data</span>: <span class="ident">DispatchData</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
+) {
     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">shell</span>.<span class="ident">as_ref</span>().<span class="ident">user_data</span>().<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ShellUserData</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
     <span class="kw">match</span> <span class="ident">request</span> {
         <span class="ident">zxdg_shell_v6::Request::Destroy</span> <span class="op">=</span><span class="op">&gt;</span> {
@@ -847,12 +895,12 @@
             <span class="ident">implement_positioner</span>(<span class="ident">id</span>);
         }
         <span class="ident">zxdg_shell_v6::Request::GetXdgSurface</span> { <span class="ident">id</span>, <span class="ident">surface</span> } <span class="op">=</span><span class="op">&gt;</span> {
-            <span class="ident">id</span>.<span class="ident">quick_assign</span>(<span class="op">|</span><span class="ident">surface</span>, <span class="ident">req</span>, <span class="ident">_data</span><span class="op">|</span> <span class="ident">xdg_surface_implementation</span>(<span class="ident">req</span>, <span class="ident">surface</span>.<span class="ident">deref</span>().<span class="ident">clone</span>()));
+            <span class="ident">id</span>.<span class="ident">quick_assign</span>(<span class="ident">xdg_surface_implementation</span>);
             <span class="ident">id</span>.<span class="ident">assign_destructor</span>(<span class="ident">Filter::new</span>(<span class="op">|</span><span class="ident">surface</span>, <span class="kw">_</span>, <span class="ident">_data</span><span class="op">|</span> <span class="ident">destroy_surface</span>(<span class="ident">surface</span>)));
             <span class="ident">id</span>.<span class="ident">as_ref</span>().<span class="ident">user_data</span>().<span class="ident">set</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">XdgSurfaceUserData</span> {
                 <span class="ident">shell_data</span>: <span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">clone</span>(),
                 <span class="ident">wl_surface</span>: <span class="ident">surface</span>,
-                <span class="ident">shell</span>: <span class="ident">shell</span>.<span class="ident">clone</span>(),
+                <span class="ident">shell</span>: <span class="ident">shell</span>.<span class="ident">deref</span>().<span class="ident">clone</span>(),
                 <span class="ident">has_active_role</span>: <span class="ident">AtomicBool::new</span>(<span class="bool-val">false</span>),
             });
         }
@@ -869,9 +917,12 @@
             };
             <span class="kw">if</span> <span class="ident">valid</span> {
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_impl</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">user_impl</span>.<span class="ident">borrow_mut</span>();
-                (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">XdgRequest::ClientPong</span> {
-                    <span class="ident">client</span>: <span class="ident">make_shell_client</span>(<span class="kw-2">&amp;</span><span class="ident">shell</span>),
-                });
+                (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(
+                    <span class="ident">XdgRequest::ClientPong</span> {
+                        <span class="ident">client</span>: <span class="ident">make_shell_client</span>(<span class="kw-2">&amp;</span><span class="ident">shell</span>),
+                    },
+                    <span class="ident">dispatch_data</span>,
+                );
             }
         }
         <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
@@ -991,8 +1042,9 @@
 }
 
 <span class="kw">fn</span> <span class="ident">xdg_surface_implementation</span>(
+    <span class="ident">xdg_surface</span>: <span class="ident">Main</span><span class="op">&lt;</span><span class="ident">zxdg_surface_v6::ZxdgSurfaceV6</span><span class="op">&gt;</span>,
     <span class="ident">request</span>: <span class="ident">zxdg_surface_v6::Request</span>,
-    <span class="ident">xdg_surface</span>: <span class="ident">zxdg_surface_v6::ZxdgSurfaceV6</span>,
+    <span class="ident">dispatch_data</span>: <span class="ident">DispatchData</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
 ) {
     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">xdg_surface</span>
         .<span class="ident">as_ref</span>()
@@ -1027,13 +1079,13 @@
 
             <span class="ident">compositor::add_commit_hook</span>(<span class="ident">surface</span>, <span class="kw">super</span><span class="ident">::ToplevelSurface::commit_hook</span>);
 
-            <span class="ident">id</span>.<span class="ident">quick_assign</span>(<span class="op">|</span><span class="ident">toplevel</span>, <span class="ident">req</span>, <span class="ident">_data</span><span class="op">|</span> <span class="ident">toplevel_implementation</span>(<span class="ident">req</span>, <span class="ident">toplevel</span>.<span class="ident">deref</span>().<span class="ident">clone</span>()));
+            <span class="ident">id</span>.<span class="ident">quick_assign</span>(<span class="ident">toplevel_implementation</span>);
             <span class="ident">id</span>.<span class="ident">assign_destructor</span>(<span class="ident">Filter::new</span>(<span class="op">|</span><span class="ident">toplevel</span>, <span class="kw">_</span>, <span class="ident">_data</span><span class="op">|</span> <span class="ident">destroy_toplevel</span>(<span class="ident">toplevel</span>)));
             <span class="ident">id</span>.<span class="ident">as_ref</span>().<span class="ident">user_data</span>().<span class="ident">set</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ShellSurfaceUserData</span> {
                 <span class="ident">shell_data</span>: <span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">clone</span>(),
                 <span class="ident">wl_surface</span>: <span class="ident">data</span>.<span class="ident">wl_surface</span>.<span class="ident">clone</span>(),
                 <span class="ident">shell</span>: <span class="ident">data</span>.<span class="ident">shell</span>.<span class="ident">clone</span>(),
-                <span class="ident">xdg_surface</span>: <span class="ident">xdg_surface</span>.<span class="ident">clone</span>(),
+                <span class="ident">xdg_surface</span>: <span class="ident">xdg_surface</span>.<span class="ident">deref</span>().<span class="ident">clone</span>(),
             });
 
             <span class="ident">data</span>.<span class="ident">shell_data</span>
@@ -1045,7 +1097,7 @@
 
             <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">make_toplevel_handle</span>(<span class="kw-2">&amp;</span><span class="ident">id</span>);
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_impl</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">user_impl</span>.<span class="ident">borrow_mut</span>();
-            (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">XdgRequest::NewToplevel</span> { <span class="ident">surface</span>: <span class="ident">handle</span> });
+            (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">XdgRequest::NewToplevel</span> { <span class="ident">surface</span>: <span class="ident">handle</span> }, <span class="ident">dispatch_data</span>);
         }
         <span class="ident">zxdg_surface_v6::Request::GetPopup</span> {
             <span class="ident">id</span>,
@@ -1102,13 +1154,13 @@
 
             <span class="ident">compositor::add_commit_hook</span>(<span class="ident">surface</span>, <span class="kw">super</span><span class="ident">::PopupSurface::commit_hook</span>);
 
-            <span class="ident">id</span>.<span class="ident">quick_assign</span>(<span class="op">|</span><span class="ident">popup</span>, <span class="ident">req</span>, <span class="ident">_data</span><span class="op">|</span> <span class="ident">popup_implementation</span>(<span class="ident">req</span>, <span class="ident">popup</span>.<span class="ident">deref</span>().<span class="ident">clone</span>()));
+            <span class="ident">id</span>.<span class="ident">quick_assign</span>(<span class="ident">popup_implementation</span>);
             <span class="ident">id</span>.<span class="ident">assign_destructor</span>(<span class="ident">Filter::new</span>(<span class="op">|</span><span class="ident">popup</span>, <span class="kw">_</span>, <span class="ident">_data</span><span class="op">|</span> <span class="ident">destroy_popup</span>(<span class="ident">popup</span>)));
             <span class="ident">id</span>.<span class="ident">as_ref</span>().<span class="ident">user_data</span>().<span class="ident">set</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ShellSurfaceUserData</span> {
                 <span class="ident">shell_data</span>: <span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">clone</span>(),
                 <span class="ident">wl_surface</span>: <span class="ident">data</span>.<span class="ident">wl_surface</span>.<span class="ident">clone</span>(),
                 <span class="ident">shell</span>: <span class="ident">data</span>.<span class="ident">shell</span>.<span class="ident">clone</span>(),
-                <span class="ident">xdg_surface</span>: <span class="ident">xdg_surface</span>.<span class="ident">clone</span>(),
+                <span class="ident">xdg_surface</span>: <span class="ident">xdg_surface</span>.<span class="ident">deref</span>().<span class="ident">clone</span>(),
             });
 
             <span class="ident">data</span>.<span class="ident">shell_data</span>
@@ -1120,7 +1172,7 @@
 
             <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">make_popup_handle</span>(<span class="kw-2">&amp;</span><span class="ident">id</span>);
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_impl</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">user_impl</span>.<span class="ident">borrow_mut</span>();
-            (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">XdgRequest::NewPopup</span> { <span class="ident">surface</span>: <span class="ident">handle</span> });
+            (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">XdgRequest::NewPopup</span> { <span class="ident">surface</span>: <span class="ident">handle</span> }, <span class="ident">dispatch_data</span>);
         }
         <span class="ident">zxdg_surface_v6::Request::SetWindowGeometry</span> { <span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">width</span>, <span class="ident">height</span> } <span class="op">=</span><span class="op">&gt;</span> {
             <span class="comment">// Check the role of the surface, this can be either xdg_toplevel</span>
@@ -1220,10 +1272,13 @@
             };
 
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_impl</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">user_impl</span>.<span class="ident">borrow_mut</span>();
-            (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">XdgRequest::AckConfigure</span> {
-                <span class="ident">surface</span>: <span class="ident">surface</span>.<span class="ident">clone</span>(),
-                <span class="ident">configure</span>,
-            });
+            (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(
+                <span class="ident">XdgRequest::AckConfigure</span> {
+                    <span class="ident">surface</span>: <span class="ident">surface</span>.<span class="ident">clone</span>(),
+                    <span class="ident">configure</span>,
+                },
+                <span class="ident">dispatch_data</span>,
+            );
         }
         <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
     }
@@ -1315,7 +1370,11 @@
     }
 }
 
-<span class="kw">fn</span> <span class="ident">toplevel_implementation</span>(<span class="ident">request</span>: <span class="ident">zxdg_toplevel_v6::Request</span>, <span class="ident">toplevel</span>: <span class="ident">zxdg_toplevel_v6::ZxdgToplevelV6</span>) {
+<span class="kw">fn</span> <span class="ident">toplevel_implementation</span>(
+    <span class="ident">toplevel</span>: <span class="ident">Main</span><span class="op">&lt;</span><span class="ident">zxdg_toplevel_v6::ZxdgToplevelV6</span><span class="op">&gt;</span>,
+    <span class="ident">request</span>: <span class="ident">zxdg_toplevel_v6::Request</span>,
+    <span class="ident">dispatch_data</span>: <span class="ident">DispatchData</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
+) {
     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">toplevel</span>
         .<span class="ident">as_ref</span>()
         .<span class="ident">user_data</span>()
@@ -1353,22 +1412,28 @@
             <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">make_toplevel_handle</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>);
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_impl</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">user_impl</span>.<span class="ident">borrow_mut</span>();
             <span class="kw">let</span> <span class="ident">serial</span> <span class="op">=</span> <span class="ident">Serial::from</span>(<span class="ident">serial</span>);
-            (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">XdgRequest::ShowWindowMenu</span> {
-                <span class="ident">surface</span>: <span class="ident">handle</span>,
-                <span class="ident">seat</span>,
-                <span class="ident">serial</span>,
-                <span class="ident">location</span>: (<span class="ident">x</span>, <span class="ident">y</span>),
-            });
+            (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(
+                <span class="ident">XdgRequest::ShowWindowMenu</span> {
+                    <span class="ident">surface</span>: <span class="ident">handle</span>,
+                    <span class="ident">seat</span>,
+                    <span class="ident">serial</span>,
+                    <span class="ident">location</span>: (<span class="ident">x</span>, <span class="ident">y</span>),
+                },
+                <span class="ident">dispatch_data</span>,
+            );
         }
         <span class="ident">zxdg_toplevel_v6::Request::Move</span> { <span class="ident">seat</span>, <span class="ident">serial</span> } <span class="op">=</span><span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">make_toplevel_handle</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>);
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_impl</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">user_impl</span>.<span class="ident">borrow_mut</span>();
             <span class="kw">let</span> <span class="ident">serial</span> <span class="op">=</span> <span class="ident">Serial::from</span>(<span class="ident">serial</span>);
-            (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">XdgRequest::Move</span> {
-                <span class="ident">surface</span>: <span class="ident">handle</span>,
-                <span class="ident">seat</span>,
-                <span class="ident">serial</span>,
-            });
+            (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(
+                <span class="ident">XdgRequest::Move</span> {
+                    <span class="ident">surface</span>: <span class="ident">handle</span>,
+                    <span class="ident">seat</span>,
+                    <span class="ident">serial</span>,
+                },
+                <span class="ident">dispatch_data</span>,
+            );
         }
         <span class="ident">zxdg_toplevel_v6::Request::Resize</span> { <span class="ident">seat</span>, <span class="ident">serial</span>, <span class="ident">edges</span> } <span class="op">=</span><span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">edges</span> <span class="op">=</span>
@@ -1376,12 +1441,15 @@
             <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">make_toplevel_handle</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>);
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_impl</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">user_impl</span>.<span class="ident">borrow_mut</span>();
             <span class="kw">let</span> <span class="ident">serial</span> <span class="op">=</span> <span class="ident">Serial::from</span>(<span class="ident">serial</span>);
-            (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">XdgRequest::Resize</span> {
-                <span class="ident">surface</span>: <span class="ident">handle</span>,
-                <span class="ident">seat</span>,
-                <span class="ident">serial</span>,
-                <span class="ident">edges</span>: <span class="ident">zxdg_edges_to_xdg</span>(<span class="ident">edges</span>),
-            });
+            (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(
+                <span class="ident">XdgRequest::Resize</span> {
+                    <span class="ident">surface</span>: <span class="ident">handle</span>,
+                    <span class="ident">seat</span>,
+                    <span class="ident">serial</span>,
+                    <span class="ident">edges</span>: <span class="ident">zxdg_edges_to_xdg</span>(<span class="ident">edges</span>),
+                },
+                <span class="ident">dispatch_data</span>,
+            );
         }
         <span class="ident">zxdg_toplevel_v6::Request::SetMaxSize</span> { <span class="ident">width</span>, <span class="ident">height</span> } <span class="op">=</span><span class="op">&gt;</span> {
             <span class="ident">with_toplevel_pending_state</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>, <span class="op">|</span><span class="ident">toplevel_data</span><span class="op">|</span> {
@@ -1396,32 +1464,35 @@
         <span class="ident">zxdg_toplevel_v6::Request::SetMaximized</span> <span class="op">=</span><span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">make_toplevel_handle</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>);
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_impl</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">user_impl</span>.<span class="ident">borrow_mut</span>();
-            (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">XdgRequest::Maximize</span> { <span class="ident">surface</span>: <span class="ident">handle</span> });
+            (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">XdgRequest::Maximize</span> { <span class="ident">surface</span>: <span class="ident">handle</span> }, <span class="ident">dispatch_data</span>);
         }
         <span class="ident">zxdg_toplevel_v6::Request::UnsetMaximized</span> <span class="op">=</span><span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">make_toplevel_handle</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>);
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_impl</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">user_impl</span>.<span class="ident">borrow_mut</span>();
-            (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">XdgRequest::UnMaximize</span> { <span class="ident">surface</span>: <span class="ident">handle</span> });
+            (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">XdgRequest::UnMaximize</span> { <span class="ident">surface</span>: <span class="ident">handle</span> }, <span class="ident">dispatch_data</span>);
         }
         <span class="ident">zxdg_toplevel_v6::Request::SetFullscreen</span> { <span class="ident">output</span> } <span class="op">=</span><span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">make_toplevel_handle</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>);
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_impl</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">user_impl</span>.<span class="ident">borrow_mut</span>();
-            (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">XdgRequest::Fullscreen</span> {
-                <span class="ident">surface</span>: <span class="ident">handle</span>,
-                <span class="ident">output</span>,
-            });
+            (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(
+                <span class="ident">XdgRequest::Fullscreen</span> {
+                    <span class="ident">surface</span>: <span class="ident">handle</span>,
+                    <span class="ident">output</span>,
+                },
+                <span class="ident">dispatch_data</span>,
+            );
         }
         <span class="ident">zxdg_toplevel_v6::Request::UnsetFullscreen</span> <span class="op">=</span><span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">make_toplevel_handle</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>);
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_impl</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">user_impl</span>.<span class="ident">borrow_mut</span>();
-            (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">XdgRequest::UnFullscreen</span> { <span class="ident">surface</span>: <span class="ident">handle</span> });
+            (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">XdgRequest::UnFullscreen</span> { <span class="ident">surface</span>: <span class="ident">handle</span> }, <span class="ident">dispatch_data</span>);
         }
         <span class="ident">zxdg_toplevel_v6::Request::SetMinimized</span> <span class="op">=</span><span class="op">&gt;</span> {
             <span class="comment">// This has to be handled by the compositor, may not be</span>
             <span class="comment">// supported and just ignored</span>
             <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">make_toplevel_handle</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>);
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_impl</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">user_impl</span>.<span class="ident">borrow_mut</span>();
-            (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">XdgRequest::Minimize</span> { <span class="ident">surface</span>: <span class="ident">handle</span> });
+            (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">XdgRequest::Minimize</span> { <span class="ident">surface</span>: <span class="ident">handle</span> }, <span class="ident">dispatch_data</span>);
         }
         <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
     }
@@ -1479,7 +1550,11 @@
     }
 }
 
-<span class="kw">fn</span> <span class="ident">popup_implementation</span>(<span class="ident">request</span>: <span class="ident">zxdg_popup_v6::Request</span>, <span class="ident">popup</span>: <span class="ident">zxdg_popup_v6::ZxdgPopupV6</span>) {
+<span class="kw">fn</span> <span class="ident">popup_implementation</span>(
+    <span class="ident">popup</span>: <span class="ident">Main</span><span class="op">&lt;</span><span class="ident">zxdg_popup_v6::ZxdgPopupV6</span><span class="op">&gt;</span>,
+    <span class="ident">request</span>: <span class="ident">zxdg_popup_v6::Request</span>,
+    <span class="ident">dispatch_data</span>: <span class="ident">DispatchData</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
+) {
     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">popup</span>.<span class="ident">as_ref</span>().<span class="ident">user_data</span>().<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ShellSurfaceUserData</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
     <span class="kw">match</span> <span class="ident">request</span> {
         <span class="ident">zxdg_popup_v6::Request::Destroy</span> <span class="op">=</span><span class="op">&gt;</span> {
@@ -1489,11 +1564,14 @@
             <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">make_popup_handle</span>(<span class="kw-2">&amp;</span><span class="ident">popup</span>);
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_impl</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">user_impl</span>.<span class="ident">borrow_mut</span>();
             <span class="kw">let</span> <span class="ident">serial</span> <span class="op">=</span> <span class="ident">Serial::from</span>(<span class="ident">serial</span>);
-            (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">XdgRequest::Grab</span> {
-                <span class="ident">surface</span>: <span class="ident">handle</span>,
-                <span class="ident">seat</span>,
-                <span class="ident">serial</span>,
-            });
+            (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(
+                <span class="ident">XdgRequest::Grab</span> {
+                    <span class="ident">surface</span>: <span class="ident">handle</span>,
+                    <span class="ident">seat</span>,
+                    <span class="ident">serial</span>,
+                },
+                <span class="ident">dispatch_data</span>,
+            );
         }
         <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
     }

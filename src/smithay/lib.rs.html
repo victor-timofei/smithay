@@ -47,12 +47,84 @@
 <span id="47">47</span>
 <span id="48">48</span>
 <span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
+<span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
 </pre><pre class="rust">
 <span class="attribute">#![<span class="ident">warn</span>(<span class="ident">missing_docs</span>, <span class="ident">missing_debug_implementations</span>, <span class="ident">rust_2018_idioms</span>)]</span>
 <span class="comment">// Allow acronyms like EGL</span>
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">clippy::upper_case_acronyms</span>)]</span>
 
-<span class="doccomment">//! **Smithay: the Wayland compositor smithy**</span>
+<span class="doccomment">//! # Smithay: the Wayland compositor smithy</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! This crate is a general framework for build wayland compositors. It currently focuses on low-level,</span>
+<span class="doccomment">//! helpers and abstractions, handling most of the system-level and wayland protocol interactions.</span>
+<span class="doccomment">//! The window management and drawing logic is however at the time not provided (but helpers for this</span>
+<span class="doccomment">//! are planned for future version).</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ## Structure of the crate</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The provided helpers are split into two main modules. [`backend`] contains helpers for interacting with</span>
+<span class="doccomment">//! the operating system, such as session management, interactions with the graphic stack and input</span>
+<span class="doccomment">//! processing. On the other hand, [`wayland`] contains helpers for interacting with wayland clients</span>
+<span class="doccomment">//! according to the wayland protocol. In addition, the [`xwayland`] module contains helpers for managing</span>
+<span class="doccomment">//! an XWayland instance if you want to support it. See the documentation of these respective modules for</span>
+<span class="doccomment">//! information about their usage.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ## General principles for using Smithay</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ### The event loop and state handling</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Smithay is built around [`calloop`], a callback-oriented event loop, which fits naturally with the</span>
+<span class="doccomment">//! general behavior of a wayland compositor: waiting for events to occur and react to them (be it</span>
+<span class="doccomment">//! client requests, user input, or hardware events such as `vblank`).</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Using a callback-heavy structure however poses the question of state management: a lot of state needs</span>
+<span class="doccomment">//! to be accessed from many different callbacks. To avoid an heavy requirement on shared pointers such</span>
+<span class="doccomment">//! as `Rc` and `Arc` and the synchronization they require, [`calloop`] allows you to provide a mutable</span>
+<span class="doccomment">//! reference to a value, that will be passed down to most callbacks (possibly under the form of a</span>
+<span class="doccomment">//! [`DispatchData`](::wayland_server::DispatchData) for wayland-related callbacks). This structure provides</span>
+<span class="doccomment">//! an easy access to a centralized mutable state without synchronization (as the callback invocation is</span>
+<span class="doccomment">//! *always* sequential), and is the recommended way to of structuring your compositor.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Several objects, in particular on the wayland clients side, can exist as multiple instances where each</span>
+<span class="doccomment">//! instance has its own associated state. For these situations, these objects provide an interface allowing</span>
+<span class="doccomment">//! you to associate an arbitrary value to them, that you can access at any time from the object itself</span>
+<span class="doccomment">//! (rather than having your own container in which you search for the appropriate value when you need it).</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ### Logging</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Most entry points in the modules can take an optional [`slog::Logger`](::slog::Logger) as argument</span>
 <span class="doccomment">//! that will be used as a drain for logging. If `None` is provided, the behavior depends on</span>
@@ -67,8 +139,6 @@
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">utils</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">wayland</span>;
-
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">signaling</span>;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;xwayland&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">xwayland</span>;

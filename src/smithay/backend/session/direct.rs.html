@@ -590,7 +590,7 @@
 <span class="doccomment">//! a calloop event source to have its events processed.</span>
 
 <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">AsErrno</span>, <span class="ident">Session</span>, <span class="ident">Signal</span> <span class="kw">as</span> <span class="ident">SessionSignal</span>};
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::signaling::Signaler</span>;
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils::signaling::Signaler</span>;
 
 <span class="kw">use</span> <span class="ident">calloop::signals</span>::{<span class="ident">Signal</span>, <span class="ident">Signals</span>};
 <span class="kw">use</span> <span class="ident">nix</span>::{

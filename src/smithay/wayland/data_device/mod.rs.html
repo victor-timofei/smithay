@@ -521,10 +521,6 @@
 <span id="521">521</span>
 <span id="522">522</span>
 <span id="523">523</span>
-<span id="524">524</span>
-<span id="525">525</span>
-<span id="526">526</span>
-<span id="527">527</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Utilities for manipulating the data devices</span>
 <span class="doccomment">//!</span>
@@ -559,7 +555,7 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//! # extern crate wayland_server;</span>
-<span class="doccomment">//! use smithay::wayland::data_device::{init_data_device, default_action_chooser, DnDIconRole};</span>
+<span class="doccomment">//! use smithay::wayland::data_device::{init_data_device, default_action_chooser};</span>
 <span class="doccomment">//! # use smithay::wayland::compositor::compositor_init;</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # let mut display = wayland_server::Display::new();</span>
@@ -631,10 +627,6 @@
         <span class="ident">fd</span>: <span class="ident">RawFd</span>,
     },
 }
-
-<span class="doccomment">/// The role applied to surfaces used as DnD icons</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Default</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DnDIconRole</span>;
 
 <span class="kw">enum</span> <span class="ident">Selection</span> {
     <span class="ident">Empty</span>,
