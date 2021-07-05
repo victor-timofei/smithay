@@ -155,6 +155,9 @@
 <span id="155">155</span>
 <span id="156">156</span>
 <span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std::ops::Deref</span>;
 <span class="kw">use</span> <span class="ident">std::sync</span>::{
@@ -193,6 +196,7 @@
 <span class="doccomment">/// If you have associated resources for each buffer that can be reused (e.g. framebuffer `Handle`s for a `DrmDevice`),</span>
 <span class="doccomment">/// you can store then in the `Slot`s userdata field. If a buffer is re-used, its userdata is preserved for the next time</span>
 <span class="doccomment">/// it is returned by `acquire()`.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Swapchain</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>, <span class="ident">B</span>: <span class="ident">Buffer</span>, <span class="ident">U</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Allocator used by the swapchain</span>
     <span class="kw">pub</span> <span class="ident">allocator</span>: <span class="ident">A</span>,
@@ -210,8 +214,10 @@
 <span class="doccomment">/// Can be cloned and passed around freely, the buffer is marked for re-use</span>
 <span class="doccomment">/// once all copies are dropped. Holding on to this struct will block the</span>
 <span class="doccomment">/// buffer in the swapchain.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Slot</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Buffer</span>, <span class="ident">U</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">InternalSlot</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">U</span><span class="op">&gt;</span><span class="op">&gt;</span>);
 
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">struct</span> <span class="ident">InternalSlot</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Buffer</span>, <span class="ident">U</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
     <span class="ident">buffer</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
     <span class="ident">acquired</span>: <span class="ident">AtomicBool</span>,

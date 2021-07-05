@@ -188,6 +188,7 @@
 <span id="188">188</span>
 <span id="189">189</span>
 <span id="190">190</span>
+<span id="191">191</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
 <span class="kw">use</span> <span class="ident">std::os::unix::io::AsRawFd</span>;
@@ -203,6 +204,7 @@
 
 <span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">error</span>, <span class="ident">info</span>, <span class="ident">o</span>};
 
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">LegacyDrmDevice</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">fd</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">FdWrapper</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">active</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">AtomicBool</span><span class="op">&gt;</span>,

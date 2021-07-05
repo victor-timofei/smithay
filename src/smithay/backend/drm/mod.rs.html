@@ -157,6 +157,7 @@
 <span id="157">157</span>
 <span id="158">158</span>
 <span id="159">159</span>
+<span id="160">160</span>
 </pre><pre class="rust">
 <span class="doccomment">//! This module represents abstraction on top the linux direct rendering manager api (drm).</span>
 <span class="doccomment">//!</span>
@@ -235,6 +236,7 @@
 <span class="kw">use</span> <span class="ident">drm::control</span>::{<span class="ident">crtc</span>, <span class="ident">plane</span>, <span class="ident">Device</span> <span class="kw">as</span> <span class="ident">ControlDevice</span>, <span class="ident">PlaneType</span>};
 
 <span class="doccomment">/// A set of planes as supported by a crtc</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Planes</span> {
     <span class="doccomment">/// The primary plane of the crtc (automatically selected for [DrmDevice::create_surface])</span>
     <span class="kw">pub</span> <span class="ident">primary</span>: <span class="ident">plane::Handle</span>,

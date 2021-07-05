@@ -414,6 +414,7 @@
 <span id="414">414</span>
 <span id="415">415</span>
 <span id="416">416</span>
+<span id="417">417</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">cell::RefCell</span>,
@@ -694,6 +695,7 @@
  */</span>
 
 <span class="doccomment">/// The cached state associated with a subsurface</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SubsurfaceCachedState</span> {
     <span class="doccomment">/// Location of the top-left corner of this subsurface</span>
     <span class="doccomment">/// relative to its parent coordinate space</span>

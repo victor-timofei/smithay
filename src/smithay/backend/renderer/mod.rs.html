@@ -522,6 +522,7 @@
 <span id="522">522</span>
 <span id="523">523</span>
 <span id="524">524</span>
+<span id="525">525</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Rendering functionality and abstractions</span>
 <span class="doccomment">//!</span>
@@ -978,6 +979,7 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
 <span class="doccomment">/// Buffer type of a given wl_buffer, if managed by smithay</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">BufferType</span> {
     <span class="doccomment">/// Buffer is managed by the [`crate::wayland::shm`] global</span>
     <span class="ident">Shm</span>,

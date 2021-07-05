@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `&#x2F;home&#x2F;runner&#x2F;.cargo&#x2F;registry&#x2F;src&#x2F;github.com-1ecc6299db9ec823&#x2F;calloop-0.8.0&#x2F;src&#x2F;sources&#x2F;mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../calloop/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input"name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `&#x2F;home&#x2F;runner&#x2F;.cargo&#x2F;registry&#x2F;src&#x2F;github.com-1ecc6299db9ec823&#x2F;calloop-0.9.0&#x2F;src&#x2F;sources&#x2F;mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../calloop/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input"name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -283,6 +283,36 @@
 <span id="283">283</span>
 <span id="284">284</span>
 <span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">cell</span>::{<span class="ident">Ref</span>, <span class="ident">RefCell</span>, <span class="ident">RefMut</span>},
@@ -290,7 +320,7 @@
     <span class="ident">rc::Rc</span>,
 };
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Poll</span>, <span class="ident">Readiness</span>, <span class="ident">Token</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">sys::TokenFactory</span>, <span class="ident">Poll</span>, <span class="ident">Readiness</span>, <span class="ident">Token</span>};
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">channel</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;executor&quot;</span>)]</span>
@@ -300,6 +330,24 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">signals</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">timer</span>;
+
+<span class="doccomment">/// Possible actions that can be requested to the event loop by an</span>
+<span class="doccomment">/// event source once its events have been processed</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">PostAction</span> {
+    <span class="doccomment">/// Continue listening for events on this source as before</span>
+    <span class="ident">Continue</span>,
+    <span class="doccomment">/// Trigger a re-registration of this source</span>
+    <span class="ident">Reregister</span>,
+    <span class="doccomment">/// Disable this source</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Has the same effect as [`LoopHandle::disable`](crate::LoopHandle#method.disable)</span>
+    <span class="ident">Disable</span>,
+    <span class="doccomment">/// Remove this source from the eventloop</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Has the same effect as [`LoopHandle::kill`](crate::LoopHandle#method.kill)</span>
+    <span class="ident">Remove</span>,
+}
 
 <span class="doccomment">/// Trait representing an event source</span>
 <span class="doccomment">///</span>
@@ -349,7 +397,7 @@
         <span class="ident">readiness</span>: <span class="ident">Readiness</span>,
         <span class="ident">token</span>: <span class="ident">Token</span>,
         <span class="ident">callback</span>: <span class="ident">F</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span><span class="ident">PostAction</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="self">Self</span><span class="ident">::Event</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span><span class="ident">::Metadata</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span><span class="ident">::Ret</span>;
 
@@ -360,14 +408,14 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// If you need to register more than one file descriptor, you can change the</span>
     <span class="doccomment">/// `sub_id` field of the [`Token`](crate::Token) to differentiate between them.</span>
-    <span class="kw">fn</span> <span class="ident">register</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token</span>: <span class="ident">Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">register</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token_factory</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">TokenFactory</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
 
     <span class="doccomment">/// Re-register your file descriptors</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Your should update the registration of all your relevant file descriptor to</span>
     <span class="doccomment">/// the provided [`Poll`](crate::Poll) using its [`Poll::reregister`](crate::Poll#method.reregister),</span>
     <span class="doccomment">/// if necessary.</span>
-    <span class="kw">fn</span> <span class="ident">reregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token</span>: <span class="ident">Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">reregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token_factory</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">TokenFactory</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
 
     <span class="doccomment">/// Unregister your file descriptors</span>
     <span class="doccomment">///</span>
@@ -391,7 +439,7 @@
         <span class="ident">readiness</span>: <span class="ident">Readiness</span>,
         <span class="ident">token</span>: <span class="ident">Token</span>,
         <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Data</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span><span class="ident">PostAction</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">disp</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">borrow_mut</span>();
         <span class="kw">let</span> <span class="ident">DispatcherInner</span> {
             <span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">source</span>,
@@ -400,12 +448,12 @@
         <span class="ident">source</span>.<span class="ident">process_events</span>(<span class="ident">readiness</span>, <span class="ident">token</span>, <span class="op">|</span><span class="ident">event</span>, <span class="ident">meta</span><span class="op">|</span> <span class="ident">callback</span>(<span class="ident">event</span>, <span class="ident">meta</span>, <span class="ident">data</span>))
     }
 
-    <span class="kw">fn</span> <span class="ident">register</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token</span>: <span class="ident">Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">borrow_mut</span>().<span class="ident">source</span>.<span class="ident">register</span>(<span class="ident">poll</span>, <span class="ident">token</span>)
+    <span class="kw">fn</span> <span class="ident">register</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token_factory</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">TokenFactory</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">borrow_mut</span>().<span class="ident">source</span>.<span class="ident">register</span>(<span class="ident">poll</span>, <span class="ident">token_factory</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">reregister</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token</span>: <span class="ident">Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">borrow_mut</span>().<span class="ident">source</span>.<span class="ident">reregister</span>(<span class="ident">poll</span>, <span class="ident">token</span>)
+    <span class="kw">fn</span> <span class="ident">reregister</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token_factory</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">TokenFactory</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">borrow_mut</span>().<span class="ident">source</span>.<span class="ident">reregister</span>(<span class="ident">poll</span>, <span class="ident">token_factory</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">unregister</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
@@ -419,11 +467,11 @@
         <span class="ident">readiness</span>: <span class="ident">Readiness</span>,
         <span class="ident">token</span>: <span class="ident">Token</span>,
         <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Data</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span><span class="ident">PostAction</span><span class="op">&gt;</span>;
 
-    <span class="kw">fn</span> <span class="ident">register</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token</span>: <span class="ident">Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">register</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token_factory</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">TokenFactory</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
 
-    <span class="kw">fn</span> <span class="ident">reregister</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token</span>: <span class="ident">Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">reregister</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token_factory</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">TokenFactory</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
 
     <span class="kw">fn</span> <span class="ident">unregister</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
 }
@@ -471,6 +519,12 @@
 <span class="doccomment">/// Use the `as_source_{ref,mut}` functions to interact with the event source.</span>
 <span class="doccomment">/// Use `into_source_inner` to get the event source back.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Dispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">S</span>, <span class="ident">Data</span><span class="op">&gt;</span>(<span class="ident">Rc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">ErasedDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">S</span>, <span class="ident">Data</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span><span class="op">&gt;</span>);
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">S</span>, <span class="ident">Data</span><span class="op">&gt;</span> <span class="ident">std::fmt::Debug</span> <span class="kw">for</span> <span class="ident">Dispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">S</span>, <span class="ident">Data</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+        <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;Dispatcher { ... }&quot;</span>)
+    }
+}
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">S</span>, <span class="ident">Data</span><span class="op">&gt;</span> <span class="ident">Dispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">S</span>, <span class="ident">Data</span><span class="op">&gt;</span>
 <span class="kw">where</span>
@@ -536,6 +590,12 @@
 <span class="doccomment">/// it will *not* cancel it.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Idle</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span> {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">callback</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">CancellableIdle</span> <span class="op">+</span> <span class="lifetime">&#39;i</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span> <span class="ident">std::fmt::Debug</span> <span class="kw">for</span> <span class="ident">Idle</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+        <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;Idle { ... }&quot;</span>)
+    }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span> <span class="ident">Idle</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span> {

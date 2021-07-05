@@ -1607,6 +1607,8 @@
 <span id="1607">1607</span>
 <span id="1608">1608</span>
 <span id="1609">1609</span>
+<span id="1610">1610</span>
+<span id="1611">1611</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Utilities for handling shell surfaces with the `xdg_shell` protocol</span>
 <span class="doccomment">//!</span>
@@ -1807,6 +1809,7 @@
     <span class="doccomment">/// xdg_surface description).</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Attaching a null buffer to a toplevel unmaps the surface.</span>
+    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
     <span class="ident">XdgToplevelSurfaceRoleAttributes</span> {
         <span class="doccomment">/// The parent field of a toplevel should be used</span>
         <span class="doccomment">/// by the compositor to determine which toplevel</span>
@@ -1882,6 +1885,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// The client must call wl_surface.commit on the corresponding wl_surface</span>
     <span class="doccomment">/// for the xdg_popup state to take effect.</span>
+    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
     <span class="ident">XdgPopupSurfaceRoleAttributes</span> {
         <span class="doccomment">/// Holds the parent for the xdg_popup.</span>
         <span class="doccomment">///</span>

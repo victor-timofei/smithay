@@ -450,6 +450,7 @@
 <span id="450">450</span>
 <span id="451">451</span>
 <span id="452">452</span>
+<span id="453">453</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">drm::control</span>::{<span class="ident">connector</span>, <span class="ident">crtc</span>, <span class="ident">encoder</span>, <span class="ident">framebuffer</span>, <span class="ident">Device</span> <span class="kw">as</span> <span class="ident">ControlDevice</span>, <span class="ident">Mode</span>, <span class="ident">PageFlipFlags</span>};
 
@@ -523,6 +524,7 @@
     }
 }
 
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">LegacyDrmSurface</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">fd</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">DrmDeviceInternal</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">active</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">AtomicBool</span><span class="op">&gt;</span>,

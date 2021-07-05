@@ -253,6 +253,7 @@
 <span id="253">253</span>
 <span id="254">254</span>
 <span id="255">255</span>
+<span id="256">256</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Module for [dmabuf](https://01.org/linuxgraphics/gfx-docs/drm/driver-api/dma-buf.html) buffers.</span>
 <span class="doccomment">//!</span>
@@ -380,6 +381,7 @@
 }
 
 <span class="doccomment">/// Builder for Dmabufs</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DmabufBuilder</span> {
     <span class="ident">internal</span>: <span class="ident">DmabufInternal</span>,
 }

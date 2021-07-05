@@ -320,7 +320,7 @@
     <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">framebuffer::Handle</span>, <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">property::Handle</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">plane::Handle</span>, <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">property::Handle</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 );
-
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AtomicDrmDevice</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">fd</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">FdWrapper</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">active</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">AtomicBool</span><span class="op">&gt;</span>,

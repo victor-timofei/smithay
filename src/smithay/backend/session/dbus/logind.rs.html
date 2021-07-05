@@ -676,7 +676,7 @@
     <span class="ident">sync::atomic</span>::{<span class="ident">AtomicBool</span>, <span class="ident">Ordering</span>},
 };
 
-<span class="kw">use</span> <span class="ident">calloop</span>::{<span class="ident">EventSource</span>, <span class="ident">Poll</span>, <span class="ident">Readiness</span>, <span class="ident">Token</span>};
+<span class="kw">use</span> <span class="ident">calloop</span>::{<span class="ident">EventSource</span>, <span class="ident">Poll</span>, <span class="ident">PostAction</span>, <span class="ident">Readiness</span>, <span class="ident">Token</span>, <span class="ident">TokenFactory</span>};
 
 <span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">debug</span>, <span class="ident">error</span>, <span class="ident">info</span>, <span class="ident">o</span>, <span class="ident">warn</span>};
 
@@ -1079,7 +1079,7 @@
     <span class="kw">type</span> <span class="ident">Metadata</span> <span class="op">=</span> ();
     <span class="kw">type</span> <span class="ident">Ret</span> <span class="op">=</span> ();
 
-    <span class="kw">fn</span> <span class="ident">process_events</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">readiness</span>: <span class="ident">Readiness</span>, <span class="ident">token</span>: <span class="ident">Token</span>, <span class="kw">_</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">process_events</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">readiness</span>: <span class="ident">Readiness</span>, <span class="ident">token</span>: <span class="ident">Token</span>, <span class="kw">_</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span><span class="ident">PostAction</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="ident">FnMut</span>((), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> ()),
     {
@@ -1097,15 +1097,15 @@
             }
         }
 
-        <span class="prelude-val">Ok</span>(())
+        <span class="prelude-val">Ok</span>(<span class="ident">PostAction::Continue</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">register</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token</span>: <span class="ident">Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">conn</span>.<span class="ident">borrow_mut</span>().<span class="ident">register</span>(<span class="ident">poll</span>, <span class="ident">token</span>)
+    <span class="kw">fn</span> <span class="ident">register</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">factory</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">TokenFactory</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">conn</span>.<span class="ident">borrow_mut</span>().<span class="ident">register</span>(<span class="ident">poll</span>, <span class="ident">factory</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">reregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token</span>: <span class="ident">Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">conn</span>.<span class="ident">borrow_mut</span>().<span class="ident">reregister</span>(<span class="ident">poll</span>, <span class="ident">token</span>)
+    <span class="kw">fn</span> <span class="ident">reregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">factory</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">TokenFactory</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">conn</span>.<span class="ident">borrow_mut</span>().<span class="ident">reregister</span>(<span class="ident">poll</span>, <span class="ident">factory</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">unregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {

@@ -272,6 +272,7 @@
 <span id="272">272</span>
 <span id="273">273</span>
 <span id="274">274</span>
+<span id="275">275</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Type safe native types for safe context/surface creation</span>
 
@@ -502,6 +503,7 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_winit&quot;</span>)]</span>
 <span class="doccomment">/// Typed Xlib window for the `X11` backend</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">XlibWindow</span>(<span class="kw">pub</span> <span class="ident">raw::c_ulong</span>);
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_winit&quot;</span>)]</span>

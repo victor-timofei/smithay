@@ -142,6 +142,7 @@
 <span id="142">142</span>
 <span id="143">143</span>
 <span id="144">144</span>
+<span id="145">145</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">io</span>::{<span class="ident">Read</span>, <span class="ident">Write</span>},
@@ -171,6 +172,7 @@
     ))
 }
 
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">X11Lock</span> {
     <span class="ident">display</span>: <span class="ident">u32</span>,
     <span class="ident">log</span>: <span class="ident">::slog::Logger</span>,

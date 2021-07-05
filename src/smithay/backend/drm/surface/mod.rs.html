@@ -450,6 +450,8 @@
 <span id="450">450</span>
 <span id="451">451</span>
 <span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
 </pre><pre class="rust">
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_session&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">std::cell::RefCell</span>;
@@ -475,6 +477,7 @@
 <span class="kw">use</span> <span class="ident">slog::trace</span>;
 
 <span class="doccomment">/// An open crtc + plane combination that can be used for scan-out</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DrmSurface</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
     <span class="comment">// This field is only read when &#39;backend_session&#39; is enabled</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
@@ -487,6 +490,7 @@
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">links</span>: <span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">crate</span><span class="ident">::signaling::SignalToken</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">DrmSurfaceInternal</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
     <span class="ident">Atomic</span>(<span class="ident">AtomicDrmSurface</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>),
     <span class="ident">Legacy</span>(<span class="ident">LegacyDrmSurface</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>),

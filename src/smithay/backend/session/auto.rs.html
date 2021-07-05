@@ -320,7 +320,7 @@
 <span class="kw">use</span> <span class="ident">nix::fcntl::OFlag</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cell::RefCell</span>, <span class="ident">io</span>, <span class="ident">os::unix::io::RawFd</span>, <span class="ident">path::Path</span>, <span class="ident">rc::Rc</span>};
 
-<span class="kw">use</span> <span class="ident">calloop</span>::{<span class="ident">EventSource</span>, <span class="ident">Poll</span>, <span class="ident">Readiness</span>, <span class="ident">Token</span>};
+<span class="kw">use</span> <span class="ident">calloop</span>::{<span class="ident">EventSource</span>, <span class="ident">Poll</span>, <span class="ident">PostAction</span>, <span class="ident">Readiness</span>, <span class="ident">Token</span>, <span class="ident">TokenFactory</span>};
 
 <span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">error</span>, <span class="ident">info</span>, <span class="ident">o</span>, <span class="ident">warn</span>};
 
@@ -481,7 +481,7 @@
     <span class="kw">type</span> <span class="ident">Metadata</span> <span class="op">=</span> ();
     <span class="kw">type</span> <span class="ident">Ret</span> <span class="op">=</span> ();
 
-    <span class="kw">fn</span> <span class="ident">process_events</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">readiness</span>: <span class="ident">Readiness</span>, <span class="ident">token</span>: <span class="ident">Token</span>, <span class="ident">callback</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">process_events</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">readiness</span>: <span class="ident">Readiness</span>, <span class="ident">token</span>: <span class="ident">Token</span>, <span class="ident">callback</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">PostAction</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="ident">FnMut</span>((), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> ()),
     {
@@ -494,23 +494,23 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">register</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token</span>: <span class="ident">Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">register</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">factory</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">TokenFactory</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_session_logind&quot;</span>)]</span>
-            <span class="ident">AutoSessionNotifier::Logind</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EventSource::register</span>(<span class="ident">s</span>, <span class="ident">poll</span>, <span class="ident">token</span>),
-            <span class="ident">AutoSessionNotifier::Direct</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EventSource::register</span>(<span class="ident">s</span>, <span class="ident">poll</span>, <span class="ident">token</span>),
+            <span class="ident">AutoSessionNotifier::Logind</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EventSource::register</span>(<span class="ident">s</span>, <span class="ident">poll</span>, <span class="ident">factory</span>),
+            <span class="ident">AutoSessionNotifier::Direct</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EventSource::register</span>(<span class="ident">s</span>, <span class="ident">poll</span>, <span class="ident">factory</span>),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_session_libseat&quot;</span>)]</span>
-            <span class="ident">AutoSessionNotifier::LibSeat</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EventSource::register</span>(<span class="ident">s</span>, <span class="ident">poll</span>, <span class="ident">token</span>),
+            <span class="ident">AutoSessionNotifier::LibSeat</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EventSource::register</span>(<span class="ident">s</span>, <span class="ident">poll</span>, <span class="ident">factory</span>),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">reregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token</span>: <span class="ident">Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">reregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">factory</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">TokenFactory</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_session_logind&quot;</span>)]</span>
-            <span class="ident">AutoSessionNotifier::Logind</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EventSource::reregister</span>(<span class="ident">s</span>, <span class="ident">poll</span>, <span class="ident">token</span>),
-            <span class="ident">AutoSessionNotifier::Direct</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EventSource::reregister</span>(<span class="ident">s</span>, <span class="ident">poll</span>, <span class="ident">token</span>),
+            <span class="ident">AutoSessionNotifier::Logind</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EventSource::reregister</span>(<span class="ident">s</span>, <span class="ident">poll</span>, <span class="ident">factory</span>),
+            <span class="ident">AutoSessionNotifier::Direct</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EventSource::reregister</span>(<span class="ident">s</span>, <span class="ident">poll</span>, <span class="ident">factory</span>),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_session_libseat&quot;</span>)]</span>
-            <span class="ident">AutoSessionNotifier::LibSeat</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EventSource::reregister</span>(<span class="ident">s</span>, <span class="ident">poll</span>, <span class="ident">token</span>),
+            <span class="ident">AutoSessionNotifier::LibSeat</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EventSource::reregister</span>(<span class="ident">s</span>, <span class="ident">poll</span>, <span class="ident">factory</span>),
         }
     }
 

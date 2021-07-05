@@ -1046,6 +1046,7 @@
 <span id="1046">1046</span>
 <span id="1047">1047</span>
 <span id="1048">1048</span>
+<span id="1049">1049</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">drm::control::atomic::AtomicModeReq</span>;
 <span class="kw">use</span> <span class="ident">drm::control::Device</span> <span class="kw">as</span> <span class="ident">ControlDevice</span>;
@@ -1156,6 +1157,7 @@
     <span class="ident">h</span>: <span class="ident">u32</span>,
 }
 
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AtomicDrmSurface</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">fd</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">DrmDeviceInternal</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">active</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">AtomicBool</span><span class="op">&gt;</span>,

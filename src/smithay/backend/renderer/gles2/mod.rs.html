@@ -1160,6 +1160,15 @@
 <span id="1160">1160</span>
 <span id="1161">1161</span>
 <span id="1162">1162</span>
+<span id="1163">1163</span>
+<span id="1164">1164</span>
+<span id="1165">1165</span>
+<span id="1166">1166</span>
+<span id="1167">1167</span>
+<span id="1168">1168</span>
+<span id="1169">1169</span>
+<span id="1170">1170</span>
+<span id="1171">1171</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Implementation of the rendering traits using OpenGL ES 2</span>
 
@@ -1203,7 +1212,7 @@
 
 <span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">debug</span>, <span class="ident">error</span>, <span class="ident">info</span>, <span class="ident">o</span>, <span class="ident">trace</span>, <span class="ident">warn</span>};
 
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::all</span>, <span class="ident">missing_docs</span>)]</span>
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::all</span>, <span class="ident">missing_docs</span>, <span class="ident">missing_debug_implementations</span>)]</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">ffi</span> {
     <span class="macro">include!</span>(<span class="macro">concat!</span>(<span class="macro">env!</span>(<span class="string">&quot;OUT_DIR&quot;</span>), <span class="string">&quot;/gl_bindings.rs&quot;</span>));
 }
@@ -1333,6 +1342,15 @@
     <span class="ident">current_projection</span>: <span class="ident">Matrix3</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>,
     <span class="ident">gl</span>: <span class="ident">ffi::Gles2</span>,
     <span class="ident">programs</span>: [<span class="ident">Gles2Program</span>; <span class="ident">shaders::FRAGMENT_COUNT</span>],
+}
+
+<span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">Gles2Frame</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt::Result</span> {
+        <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Gles2Frame&quot;</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;current_projection&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">current_projection</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;programs&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">programs</span>)
+            .<span class="ident">finish_non_exhaustive</span>()
+    }
 }
 
 <span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">Gles2Renderer</span> {
