@@ -2,9 +2,21 @@
 <p>Returns the new proximity state of a tool from a proximity event.
 Used to check whether or not a tool came in or out of proximity during an
 event of type @ref LIBINPUT_EVENT_TABLET_TOOL_PROXIMITY.</p>
-<p>See @ref tablet-fake-proximity for recommendations on proximity handling.</p>
+<p>The proximity state represents the logical proximity state which does not
+necessarily match when a tool comes into sensor range or leaves the
+sensor range. On some tools this range does not represent the physical
+range but a reduced tool-specific logical range. If the range is reduced,
+this is done transparent to the caller.</p>
+<p>For example, the Wacom mouse and lens cursor tools are usually
+used in relative mode, lying flat on the tablet. Movement typically follows
+the interaction normal mouse movements have, i.e. slightly lift the tool and
+place it in a separate location. The proximity detection on Wacom
+tablets however extends further than the user may lift the mouse, i.e. the
+tool may not be lifted out of physical proximity. For such tools, libinput
+provides software-emulated proximity.</p>
 <p>@param event The libinput tablet tool event
-@return The new proximity state of the tool from the event. </p>
+@return The new proximity state of the tool from the event.</p>
+<p>@since 1.2</p>
 </div></details></section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="input" data-search-index-js="../../search-index.js" data-search-js="../../search.js"></div>
     <script src="../../main.js"></script>
 </body></html>

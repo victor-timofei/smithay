@@ -854,6 +854,18 @@
 <span id="854">854</span>
 <span id="855">855</span>
 <span id="856">856</span>
+<span id="857">857</span>
+<span id="858">858</span>
+<span id="859">859</span>
+<span id="860">860</span>
+<span id="861">861</span>
+<span id="862">862</span>
+<span id="863">863</span>
+<span id="864">864</span>
+<span id="865">865</span>
+<span id="866">866</span>
+<span id="867">867</span>
+<span id="868">868</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Implementation of backend traits for types provided by `winit`</span>
 <span class="doccomment">//!</span>
@@ -880,8 +892,8 @@
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend</span>::{
     <span class="ident">egl</span>::{<span class="ident">context::GlAttributes</span>, <span class="ident">native</span>, <span class="ident">EGLContext</span>, <span class="ident">EGLSurface</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">EGLError</span>},
     <span class="ident">input</span>::{
-        <span class="ident">Axis</span>, <span class="ident">AxisSource</span>, <span class="ident">Device</span>, <span class="ident">DeviceCapability</span>, <span class="ident">Event</span> <span class="kw">as</span> <span class="ident">BackendEvent</span>, <span class="ident">InputBackend</span>, <span class="ident">InputEvent</span>,
-        <span class="ident">KeyState</span>, <span class="ident">KeyboardKeyEvent</span>, <span class="ident">MouseButton</span>, <span class="ident">MouseButtonState</span>, <span class="ident">PointerAxisEvent</span>, <span class="ident">PointerButtonEvent</span>,
+        <span class="ident">Axis</span>, <span class="ident">AxisSource</span>, <span class="ident">ButtonState</span>, <span class="ident">Device</span>, <span class="ident">DeviceCapability</span>, <span class="ident">Event</span> <span class="kw">as</span> <span class="ident">BackendEvent</span>, <span class="ident">InputBackend</span>,
+        <span class="ident">InputEvent</span>, <span class="ident">KeyState</span>, <span class="ident">KeyboardKeyEvent</span>, <span class="ident">MouseButton</span>, <span class="ident">PointerAxisEvent</span>, <span class="ident">PointerButtonEvent</span>,
         <span class="ident">PointerMotionAbsoluteEvent</span>, <span class="ident">TouchCancelEvent</span>, <span class="ident">TouchDownEvent</span>, <span class="ident">TouchMotionEvent</span>, <span class="ident">TouchSlot</span>,
         <span class="ident">TouchUpEvent</span>, <span class="ident">UnusedEvent</span>,
     },
@@ -890,7 +902,7 @@
         <span class="ident">Bind</span>, <span class="ident">Renderer</span>, <span class="ident">Transform</span>, <span class="ident">Unbind</span>,
     },
 };
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cell::RefCell</span>, <span class="ident">rc::Rc</span>, <span class="ident">time::Instant</span>};
+<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cell::RefCell</span>, <span class="ident">path::PathBuf</span>, <span class="ident">rc::Rc</span>, <span class="ident">time::Instant</span>};
 <span class="kw">use</span> <span class="ident">wayland_egl</span> <span class="kw">as</span> <span class="ident">wegl</span>;
 <span class="kw">use</span> <span class="ident">winit</span>::{
     <span class="ident">dpi</span>::{<span class="ident">LogicalPosition</span>, <span class="ident">LogicalSize</span>, <span class="ident">PhysicalSize</span>},
@@ -1164,6 +1176,14 @@
             <span class="ident">DeviceCapability::Keyboard</span> <span class="op">|</span> <span class="ident">DeviceCapability::Pointer</span> <span class="op">|</span> <span class="ident">DeviceCapability::Touch</span>
         )
     }
+
+    <span class="kw">fn</span> <span class="ident">usb_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">u32</span>, <span class="ident">u32</span>)<span class="op">&gt;</span> {
+        <span class="prelude-val">None</span>
+    }
+
+    <span class="kw">fn</span> <span class="ident">syspath</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span> {
+        <span class="prelude-val">None</span>
+    }
 }
 
 <span class="doccomment">/// Errors that may happen when driving the event loop of [`WinitInputBackend`]</span>
@@ -1317,7 +1337,7 @@
         <span class="self">self</span>.<span class="ident">button</span>.<span class="ident">into</span>()
     }
 
-    <span class="kw">fn</span> <span class="ident">state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MouseButtonState</span> {
+    <span class="kw">fn</span> <span class="ident">state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ButtonState</span> {
         <span class="self">self</span>.<span class="ident">state</span>.<span class="ident">into</span>()
     }
 }
@@ -1476,6 +1496,10 @@
     <span class="kw">type</span> <span class="ident">TouchMotionEvent</span> <span class="op">=</span> <span class="ident">WinitTouchMovedEvent</span>;
     <span class="kw">type</span> <span class="ident">TouchCancelEvent</span> <span class="op">=</span> <span class="ident">WinitTouchCancelledEvent</span>;
     <span class="kw">type</span> <span class="ident">TouchFrameEvent</span> <span class="op">=</span> <span class="ident">UnusedEvent</span>;
+    <span class="kw">type</span> <span class="ident">TabletToolAxisEvent</span> <span class="op">=</span> <span class="ident">UnusedEvent</span>;
+    <span class="kw">type</span> <span class="ident">TabletToolProximityEvent</span> <span class="op">=</span> <span class="ident">UnusedEvent</span>;
+    <span class="kw">type</span> <span class="ident">TabletToolTipEvent</span> <span class="op">=</span> <span class="ident">UnusedEvent</span>;
+    <span class="kw">type</span> <span class="ident">TabletToolButtonEvent</span> <span class="op">=</span> <span class="ident">UnusedEvent</span>;
 
     <span class="kw">type</span> <span class="ident">SpecialEvent</span> <span class="op">=</span> <span class="ident">WinitEvent</span>;
 
@@ -1703,11 +1727,11 @@
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">ElementState</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">MouseButtonState</span> {
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">ElementState</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ButtonState</span> {
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">state</span>: <span class="ident">ElementState</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="kw">match</span> <span class="ident">state</span> {
-            <span class="ident">ElementState::Pressed</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">MouseButtonState::Pressed</span>,
-            <span class="ident">ElementState::Released</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">MouseButtonState::Released</span>,
+            <span class="ident">ElementState::Pressed</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ButtonState::Pressed</span>,
+            <span class="ident">ElementState::Released</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ButtonState::Released</span>,
         }
     }
 }

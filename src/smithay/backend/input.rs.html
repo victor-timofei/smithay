@@ -560,10 +560,65 @@
 <span id="560">560</span>
 <span id="561">561</span>
 <span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+<span id="593">593</span>
+<span id="594">594</span>
+<span id="595">595</span>
+<span id="596">596</span>
+<span id="597">597</span>
+<span id="598">598</span>
+<span id="599">599</span>
+<span id="600">600</span>
+<span id="601">601</span>
+<span id="602">602</span>
+<span id="603">603</span>
+<span id="604">604</span>
+<span id="605">605</span>
+<span id="606">606</span>
+<span id="607">607</span>
+<span id="608">608</span>
+<span id="609">609</span>
+<span id="610">610</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Common traits for input backends to receive input from.</span>
 
-<span class="kw">use</span> <span class="ident">std::error::Error</span>;
+<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">error::Error</span>, <span class="ident">path::PathBuf</span>};
+
+<span class="kw">mod</span> <span class="ident">tablet</span>;
+
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">tablet</span>::{
+    <span class="ident">ProximityState</span>, <span class="ident">TabletToolAxisEvent</span>, <span class="ident">TabletToolButtonEvent</span>, <span class="ident">TabletToolCapabilitys</span>, <span class="ident">TabletToolDescriptor</span>,
+    <span class="ident">TabletToolEvent</span>, <span class="ident">TabletToolProximityEvent</span>, <span class="ident">TabletToolTipEvent</span>, <span class="ident">TabletToolTipState</span>, <span class="ident">TabletToolType</span>,
+};
 
 <span class="doccomment">/// Trait for generic functions every input device does provide</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Device</span>: <span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">std::hash::Hash</span> {
@@ -575,6 +630,14 @@
     <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span>;
     <span class="doccomment">/// Test if this device has a specific capability</span>
     <span class="kw">fn</span> <span class="ident">has_capability</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">capability</span>: <span class="ident">DeviceCapability</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span>;
+
+    <span class="doccomment">/// Returns device USB (product,vendor) id</span>
+    <span class="kw">fn</span> <span class="ident">usb_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">u32</span>, <span class="ident">u32</span>)<span class="op">&gt;</span>;
+
+    <span class="doccomment">/// Returns the syspath of the device.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The path is an absolute path and includes the sys mount point.</span>
+    <span class="kw">fn</span> <span class="ident">syspath</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span>;
 }
 
 <span class="doccomment">/// Set of input types a device may provide</span>
@@ -668,9 +731,9 @@
     <span class="ident">Other</span>(<span class="ident">u8</span>),
 }
 
-<span class="doccomment">/// State of a button on a mouse. Either pressed or released</span>
+<span class="doccomment">/// State of a button on a pointer device, like mouse or tablet tool. Either pressed or released</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">MouseButtonState</span> {
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ButtonState</span> {
     <span class="doccomment">/// Button is released</span>
     <span class="ident">Released</span>,
     <span class="doccomment">/// Button is pressed</span>
@@ -682,7 +745,7 @@
     <span class="doccomment">/// Pressed button of the event</span>
     <span class="kw">fn</span> <span class="ident">button</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MouseButton</span>;
     <span class="doccomment">/// State of the button</span>
-    <span class="kw">fn</span> <span class="ident">state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MouseButtonState</span>;
+    <span class="kw">fn</span> <span class="ident">state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ButtonState</span>;
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">InputBackend</span><span class="op">&gt;</span> <span class="ident">PointerButtonEvent</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">UnusedEvent</span> {
@@ -690,7 +753,7 @@
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {}
     }
 
-    <span class="kw">fn</span> <span class="ident">state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MouseButtonState</span> {
+    <span class="kw">fn</span> <span class="ident">state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ButtonState</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {}
     }
 }
@@ -1044,6 +1107,14 @@
     <span class="kw">type</span> <span class="ident">TouchCancelEvent</span>: <span class="ident">TouchCancelEvent</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>;
     <span class="doccomment">/// Type representing touch frame events</span>
     <span class="kw">type</span> <span class="ident">TouchFrameEvent</span>: <span class="ident">TouchFrameEvent</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>;
+    <span class="doccomment">/// Type representing axis events on tablet devices</span>
+    <span class="kw">type</span> <span class="ident">TabletToolAxisEvent</span>: <span class="ident">TabletToolAxisEvent</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>;
+    <span class="doccomment">/// Type representing proximity events on tablet devices</span>
+    <span class="kw">type</span> <span class="ident">TabletToolProximityEvent</span>: <span class="ident">TabletToolProximityEvent</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>;
+    <span class="doccomment">/// Type representing tip events on tablet devices</span>
+    <span class="kw">type</span> <span class="ident">TabletToolTipEvent</span>: <span class="ident">TabletToolTipEvent</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>;
+    <span class="doccomment">/// Type representing button events on tablet tool devices</span>
+    <span class="kw">type</span> <span class="ident">TabletToolButtonEvent</span>: <span class="ident">TabletToolButtonEvent</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>;
 
     <span class="doccomment">/// Special events that are custom to this backend</span>
     <span class="kw">type</span> <span class="ident">SpecialEvent</span>;
@@ -1120,6 +1191,31 @@
         <span class="doccomment">/// The touch frame event</span>
         <span class="ident">event</span>: <span class="ident">B::TouchFrameEvent</span>,
     },
+
+    <span class="doccomment">/// A tablet tool axis was emited</span>
+    <span class="ident">TabletToolAxis</span> {
+        <span class="doccomment">/// The tablet tool axis event</span>
+        <span class="ident">event</span>: <span class="ident">B::TabletToolAxisEvent</span>,
+    },
+
+    <span class="doccomment">/// A tablet tool proximity was emited</span>
+    <span class="ident">TabletToolProximity</span> {
+        <span class="doccomment">/// The tablet tool proximity  event</span>
+        <span class="ident">event</span>: <span class="ident">B::TabletToolProximityEvent</span>,
+    },
+
+    <span class="doccomment">/// A tablet tool tip event was emited</span>
+    <span class="ident">TabletToolTip</span> {
+        <span class="doccomment">/// The tablet tool axis event</span>
+        <span class="ident">event</span>: <span class="ident">B::TabletToolTipEvent</span>,
+    },
+
+    <span class="doccomment">/// A tablet tool button was pressed or released</span>
+    <span class="ident">TabletToolButton</span> {
+        <span class="doccomment">/// The pointer button event</span>
+        <span class="ident">event</span>: <span class="ident">B::TabletToolButtonEvent</span>,
+    },
+
     <span class="doccomment">/// Special event specific of this backend</span>
     <span class="ident">Special</span>(<span class="ident">B::SpecialEvent</span>),
 }
