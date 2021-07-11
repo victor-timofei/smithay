@@ -272,6 +272,10 @@
 <span id="272">272</span>
 <span id="273">273</span>
 <span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Type safe native types for safe context/surface creation</span>
 
@@ -457,7 +461,6 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">EGLDisplayHandle</span><span class="op">&gt;</span>,
         <span class="ident">config_id</span>: <span class="ident">ffi::egl::types::EGLConfig</span>,
-        <span class="ident">surface_attributes</span>: <span class="kw-2">&amp;</span>[<span class="ident">c_int</span>],
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_void</span>, <span class="kw">super</span><span class="ident">::EGLError</span><span class="op">&gt;</span>;
 
     <span class="doccomment">/// Will be called to check if any internal resources will need</span>
@@ -500,6 +503,13 @@
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_winit&quot;</span>)]</span>
+<span class="kw">static</span> <span class="ident">WINIT_SURFACE_ATTRIBUTES</span>: [<span class="ident">c_int</span>; <span class="number">3</span>] <span class="op">=</span> [
+    <span class="ident">ffi::egl::RENDER_BUFFER</span> <span class="kw">as</span> <span class="ident">c_int</span>,
+    <span class="ident">ffi::egl::BACK_BUFFER</span> <span class="kw">as</span> <span class="ident">c_int</span>,
+    <span class="ident">ffi::egl::NONE</span> <span class="kw">as</span> <span class="ident">c_int</span>,
+];
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_winit&quot;</span>)]</span>
 <span class="doccomment">/// Typed Xlib window for the `X11` backend</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">XlibWindow</span>(<span class="kw">pub</span> <span class="ident">std::os::raw::c_ulong</span>);
@@ -510,7 +520,6 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">EGLDisplayHandle</span><span class="op">&gt;</span>,
         <span class="ident">config_id</span>: <span class="ident">ffi::egl::types::EGLConfig</span>,
-        <span class="ident">surface_attributes</span>: <span class="kw-2">&amp;</span>[<span class="ident">c_int</span>],
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_void</span>, <span class="kw">super</span><span class="ident">::EGLError</span><span class="op">&gt;</span> {
         <span class="ident">wrap_egl_call</span>(<span class="op">|</span><span class="op">|</span> <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">id</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>;
@@ -518,7 +527,7 @@
                 <span class="ident">display</span>.<span class="ident">handle</span>,
                 <span class="ident">config_id</span>,
                 (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">id</span>) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">std::os::raw::c_ulong</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
-                <span class="ident">surface_attributes</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">WINIT_SURFACE_ATTRIBUTES</span>.<span class="ident">as_ptr</span>(),
             )
         })
     }
@@ -530,14 +539,13 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">EGLDisplayHandle</span><span class="op">&gt;</span>,
         <span class="ident">config_id</span>: <span class="ident">ffi::egl::types::EGLConfig</span>,
-        <span class="ident">surface_attributes</span>: <span class="kw-2">&amp;</span>[<span class="ident">c_int</span>],
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_void</span>, <span class="kw">super</span><span class="ident">::EGLError</span><span class="op">&gt;</span> {
         <span class="ident">wrap_egl_call</span>(<span class="op">|</span><span class="op">|</span> <span class="kw">unsafe</span> {
             <span class="ident">ffi::egl::CreatePlatformWindowSurfaceEXT</span>(
                 <span class="ident">display</span>.<span class="ident">handle</span>,
                 <span class="ident">config_id</span>,
                 <span class="self">self</span>.<span class="ident">ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
-                <span class="ident">surface_attributes</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">WINIT_SURFACE_ATTRIBUTES</span>.<span class="ident">as_ptr</span>(),
             )
         })
     }

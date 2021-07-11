@@ -378,10 +378,6 @@
 <span id="378">378</span>
 <span id="379">379</span>
 <span id="380">380</span>
-<span id="381">381</span>
-<span id="382">382</span>
-<span id="383">383</span>
-<span id="384">384</span>
 </pre><pre class="rust">
 <span class="doccomment">//! EGL context related structs</span>
 <span class="kw">use</span> <span class="ident">std::collections::HashSet</span>;
@@ -685,9 +681,6 @@
     <span class="kw">pub</span> <span class="ident">depth_bits</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Minimum number of bits for the depth buffer. `None` means &quot;don&#39;t care&quot;. The default value is `None`.</span>
     <span class="kw">pub</span> <span class="ident">stencil_bits</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// If `true`, only double-buffered formats will be considered. If `false`, only single-buffer formats.</span>
-    <span class="doccomment">/// `None` means &quot;don&#39;t care&quot;. The default is `None`.</span>
-    <span class="kw">pub</span> <span class="ident">double_buffer</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Contains the minimum number of samples per pixel in the color, depth and stencil buffers.</span>
     <span class="doccomment">/// `None` means &quot;don&#39;t care&quot;. Default is `None`. A value of `Some(0)` indicates that multisampling must not be enabled.</span>
     <span class="kw">pub</span> <span class="ident">multisampling</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
@@ -702,7 +695,6 @@
             <span class="ident">alpha_bits</span>: <span class="prelude-val">Some</span>(<span class="number">8</span>),
             <span class="ident">depth_bits</span>: <span class="prelude-val">Some</span>(<span class="number">24</span>),
             <span class="ident">stencil_bits</span>: <span class="prelude-val">Some</span>(<span class="number">8</span>),
-            <span class="ident">double_buffer</span>: <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
             <span class="ident">multisampling</span>: <span class="prelude-val">None</span>,
         }
     }
