@@ -864,6 +864,19 @@
 <span id="864">864</span>
 <span id="865">865</span>
 <span id="866">866</span>
+<span id="867">867</span>
+<span id="868">868</span>
+<span id="869">869</span>
+<span id="870">870</span>
+<span id="871">871</span>
+<span id="872">872</span>
+<span id="873">873</span>
+<span id="874">874</span>
+<span id="875">875</span>
+<span id="876">876</span>
+<span id="877">877</span>
+<span id="878">878</span>
+<span id="879">879</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Implementation of backend traits for types provided by `winit`</span>
 <span class="doccomment">//!</span>
@@ -886,24 +899,28 @@
 <span class="doccomment">//! The other types in this module are the instances of the associated types of these</span>
 <span class="doccomment">//! two traits for the winit backend.</span>
 
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend::egl::display::EGLDisplay</span>;
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend</span>::{
-    <span class="ident">egl</span>::{<span class="ident">context::GlAttributes</span>, <span class="ident">native</span>, <span class="ident">EGLContext</span>, <span class="ident">EGLSurface</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">EGLError</span>},
-    <span class="ident">input</span>::{
-        <span class="ident">Axis</span>, <span class="ident">AxisSource</span>, <span class="ident">ButtonState</span>, <span class="ident">Device</span>, <span class="ident">DeviceCapability</span>, <span class="ident">Event</span> <span class="kw">as</span> <span class="ident">BackendEvent</span>, <span class="ident">InputBackend</span>,
-        <span class="ident">InputEvent</span>, <span class="ident">KeyState</span>, <span class="ident">KeyboardKeyEvent</span>, <span class="ident">MouseButton</span>, <span class="ident">PointerAxisEvent</span>, <span class="ident">PointerButtonEvent</span>,
-        <span class="ident">PointerMotionAbsoluteEvent</span>, <span class="ident">TouchCancelEvent</span>, <span class="ident">TouchDownEvent</span>, <span class="ident">TouchMotionEvent</span>, <span class="ident">TouchSlot</span>,
-        <span class="ident">TouchUpEvent</span>, <span class="ident">UnusedEvent</span>,
+<span class="kw">use</span> <span class="kw">crate</span>::{
+    <span class="ident">backend</span>::{
+        <span class="ident">egl</span>::{
+            <span class="ident">context::GlAttributes</span>, <span class="ident">display::EGLDisplay</span>, <span class="ident">native</span>, <span class="ident">EGLContext</span>, <span class="ident">EGLSurface</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">EGLError</span>,
+        },
+        <span class="ident">input</span>::{
+            <span class="ident">Axis</span>, <span class="ident">AxisSource</span>, <span class="ident">ButtonState</span>, <span class="ident">Device</span>, <span class="ident">DeviceCapability</span>, <span class="ident">Event</span> <span class="kw">as</span> <span class="ident">BackendEvent</span>, <span class="ident">InputBackend</span>,
+            <span class="ident">InputEvent</span>, <span class="ident">KeyState</span>, <span class="ident">KeyboardKeyEvent</span>, <span class="ident">MouseButton</span>, <span class="ident">PointerAxisEvent</span>, <span class="ident">PointerButtonEvent</span>,
+            <span class="ident">PointerMotionAbsoluteEvent</span>, <span class="ident">TouchCancelEvent</span>, <span class="ident">TouchDownEvent</span>, <span class="ident">TouchMotionEvent</span>, <span class="ident">TouchSlot</span>,
+            <span class="ident">TouchUpEvent</span>, <span class="ident">UnusedEvent</span>,
+        },
+        <span class="ident">renderer</span>::{
+            <span class="ident">gles2</span>::{<span class="ident">Gles2Error</span>, <span class="ident">Gles2Frame</span>, <span class="ident">Gles2Renderer</span>},
+            <span class="ident">Bind</span>, <span class="ident">Renderer</span>, <span class="ident">Transform</span>, <span class="ident">Unbind</span>,
+        },
     },
-    <span class="ident">renderer</span>::{
-        <span class="ident">gles2</span>::{<span class="ident">Gles2Error</span>, <span class="ident">Gles2Frame</span>, <span class="ident">Gles2Renderer</span>},
-        <span class="ident">Bind</span>, <span class="ident">Renderer</span>, <span class="ident">Transform</span>, <span class="ident">Unbind</span>,
-    },
+    <span class="ident">utils</span>::{<span class="ident">Logical</span>, <span class="ident">Physical</span>, <span class="ident">Size</span>},
 };
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cell::RefCell</span>, <span class="ident">path::PathBuf</span>, <span class="ident">rc::Rc</span>, <span class="ident">time::Instant</span>};
 <span class="kw">use</span> <span class="ident">wayland_egl</span> <span class="kw">as</span> <span class="ident">wegl</span>;
 <span class="kw">use</span> <span class="ident">winit</span>::{
-    <span class="ident">dpi</span>::{<span class="ident">LogicalPosition</span>, <span class="ident">LogicalSize</span>, <span class="ident">PhysicalSize</span>},
+    <span class="ident">dpi</span>::{<span class="ident">LogicalPosition</span>, <span class="ident">LogicalSize</span>},
     <span class="ident">event</span>::{
         <span class="ident">ElementState</span>, <span class="ident">Event</span>, <span class="ident">KeyboardInput</span>, <span class="ident">MouseButton</span> <span class="kw">as</span> <span class="ident">WinitMouseButton</span>, <span class="ident">MouseScrollDelta</span>, <span class="ident">Touch</span>,
         <span class="ident">TouchPhase</span>, <span class="ident">WindowEvent</span>,
@@ -938,9 +955,15 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WindowSize</span> {
     <span class="doccomment">/// Pixel side of the window</span>
-    <span class="kw">pub</span> <span class="ident">physical_size</span>: <span class="ident">PhysicalSize</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">physical_size</span>: <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Physical</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Scaling factor of the window</span>
     <span class="kw">pub</span> <span class="ident">scale_factor</span>: <span class="ident">f64</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">WindowSize</span> {
+    <span class="kw">fn</span> <span class="ident">logical_size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">f64</span>, <span class="ident">Logical</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">physical_size</span>.<span class="ident">to_f64</span>().<span class="ident">to_logical</span>(<span class="self">self</span>.<span class="ident">scale_factor</span>)
+    }
 }
 
 <span class="doccomment">/// Window with an active EGL Context created by `winit`. Implements the [`Renderer`] trait</span>
@@ -951,7 +974,7 @@
     <span class="ident">egl</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">EGLSurface</span><span class="op">&gt;</span>,
     <span class="ident">window</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">WinitWindow</span><span class="op">&gt;</span>,
     <span class="ident">size</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">WindowSize</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">resize_notification</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">Cell</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">u32</span>, <span class="ident">u32</span>)<span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">resize_notification</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">Cell</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Physical</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="doccomment">/// Abstracted event loop of a [`WinitWindow`] implementing the [`InputBackend`] trait</span>
@@ -967,7 +990,7 @@
     <span class="ident">logger</span>: <span class="ident">::slog::Logger</span>,
     <span class="ident">initialized</span>: <span class="ident">bool</span>,
     <span class="ident">size</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">WindowSize</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">resize_notification</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">Cell</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">u32</span>, <span class="ident">u32</span>)<span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">resize_notification</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">Cell</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Physical</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="doccomment">/// Create a new [`WinitGraphicsBackend`], which implements the [`Renderer`] trait and a corresponding [`WinitInputBackend`],</span>
@@ -1063,8 +1086,9 @@
         (<span class="ident">display</span>, <span class="ident">context</span>, <span class="ident">surface</span>)
     };
 
+    <span class="kw">let</span> (<span class="ident">w</span>, <span class="ident">h</span>): (<span class="ident">u32</span>, <span class="ident">u32</span>) <span class="op">=</span> <span class="ident">winit_window</span>.<span class="ident">inner_size</span>().<span class="ident">into</span>();
     <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">Rc::new</span>(<span class="ident">RefCell::new</span>(<span class="ident">WindowSize</span> {
-        <span class="ident">physical_size</span>: <span class="ident">winit_window</span>.<span class="ident">inner_size</span>(), <span class="comment">// TODO: original code check if window is alive or not using inner_size().expect()</span>
+        <span class="ident">physical_size</span>: (<span class="ident">w</span> <span class="kw">as</span> <span class="ident">i32</span>, <span class="ident">h</span> <span class="kw">as</span> <span class="ident">i32</span>).<span class="ident">into</span>(),
         <span class="ident">scale_factor</span>: <span class="ident">winit_window</span>.<span class="ident">scale_factor</span>(),
     }));
 
@@ -1101,7 +1125,7 @@
     <span class="doccomment">/// The window has been resized</span>
     <span class="ident">Resized</span> {
         <span class="doccomment">/// The new physical size (in pixels)</span>
-        <span class="ident">size</span>: (<span class="ident">f64</span>, <span class="ident">f64</span>),
+        <span class="ident">size</span>: <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Physical</span><span class="op">&gt;</span>,
         <span class="doccomment">/// The new scale factor</span>
         <span class="ident">scale_factor</span>: <span class="ident">f64</span>,
     },
@@ -1134,19 +1158,17 @@
         <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Gles2Renderer</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Gles2Frame</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">R</span>,
     {
         <span class="comment">// Were we told to resize?</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">width</span>, <span class="ident">height</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">resize_notification</span>.<span class="ident">take</span>() {
-            <span class="self">self</span>.<span class="ident">egl</span>.<span class="ident">resize</span>(<span class="ident">width</span> <span class="kw">as</span> <span class="ident">i32</span>, <span class="ident">height</span> <span class="kw">as</span> <span class="ident">i32</span>, <span class="number">0</span>, <span class="number">0</span>);
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">size</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">resize_notification</span>.<span class="ident">take</span>() {
+            <span class="self">self</span>.<span class="ident">egl</span>.<span class="ident">resize</span>(<span class="ident">size</span>.<span class="ident">w</span>, <span class="ident">size</span>.<span class="ident">h</span>, <span class="number">0</span>, <span class="number">0</span>);
         }
 
-        <span class="kw">let</span> (<span class="ident">width</span>, <span class="ident">height</span>) <span class="op">=</span> {
+        <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> {
             <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">borrow</span>();
-            <span class="ident">size</span>.<span class="ident">physical_size</span>.<span class="ident">into</span>()
+            <span class="ident">size</span>.<span class="ident">physical_size</span>
         };
 
         <span class="self">self</span>.<span class="ident">renderer</span>.<span class="ident">bind</span>(<span class="self">self</span>.<span class="ident">egl</span>.<span class="ident">clone</span>())<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">renderer</span>
-            .<span class="ident">render</span>(<span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">Transform::Normal</span>, <span class="ident">rendering</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">renderer</span>.<span class="ident">render</span>(<span class="ident">size</span>, <span class="ident">Transform::Normal</span>, <span class="ident">rendering</span>)<span class="question-mark">?</span>;
         <span class="self">self</span>.<span class="ident">egl</span>.<span class="ident">swap_buffers</span>()<span class="question-mark">?</span>;
         <span class="self">self</span>.<span class="ident">renderer</span>.<span class="ident">unbind</span>()<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">result</span>)
@@ -1257,13 +1279,13 @@
 
     <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="kw">let</span> <span class="ident">wsize</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">borrow</span>();
-        <span class="kw">let</span> <span class="ident">w_width</span> <span class="op">=</span> <span class="ident">wsize</span>.<span class="ident">physical_size</span>.<span class="ident">to_logical</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>(<span class="ident">wsize</span>.<span class="ident">scale_factor</span>).<span class="ident">width</span>;
+        <span class="kw">let</span> <span class="ident">w_width</span> <span class="op">=</span> <span class="ident">wsize</span>.<span class="ident">logical_size</span>().<span class="ident">w</span>;
         <span class="ident">f64::max</span>(<span class="self">self</span>.<span class="ident">logical_position</span>.<span class="ident">x</span> <span class="op">*</span> <span class="ident">width</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">w_width</span>, <span class="number">0.0</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="kw">let</span> <span class="ident">wsize</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">borrow</span>();
-        <span class="kw">let</span> <span class="ident">w_height</span> <span class="op">=</span> <span class="ident">wsize</span>.<span class="ident">physical_size</span>.<span class="ident">to_logical</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>(<span class="ident">wsize</span>.<span class="ident">scale_factor</span>).<span class="ident">height</span>;
+        <span class="kw">let</span> <span class="ident">w_height</span> <span class="op">=</span> <span class="ident">wsize</span>.<span class="ident">logical_size</span>().<span class="ident">h</span>;
         <span class="ident">f64::max</span>(<span class="self">self</span>.<span class="ident">logical_position</span>.<span class="ident">y</span> <span class="op">*</span> <span class="ident">height</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">w_height</span>, <span class="number">0.0</span>)
     }
 }
@@ -1343,7 +1365,7 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WinitTouchStartedEvent</span> {
     <span class="ident">size</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">WindowSize</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">time</span>: <span class="ident">u32</span>,
-    <span class="ident">location</span>: (<span class="ident">f64</span>, <span class="ident">f64</span>),
+    <span class="ident">location</span>: <span class="ident">LogicalPosition</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>,
     <span class="ident">id</span>: <span class="ident">u64</span>,
 }
 
@@ -1364,24 +1386,24 @@
 
     <span class="kw">fn</span> <span class="ident">x</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="kw">let</span> <span class="ident">wsize</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">borrow</span>();
-        <span class="self">self</span>.<span class="ident">location</span>.<span class="number">0</span> <span class="op">*</span> <span class="ident">wsize</span>.<span class="ident">scale_factor</span>
+        <span class="self">self</span>.<span class="ident">location</span>.<span class="ident">x</span> <span class="op">*</span> <span class="ident">wsize</span>.<span class="ident">scale_factor</span>
     }
 
     <span class="kw">fn</span> <span class="ident">y</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="kw">let</span> <span class="ident">wsize</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">borrow</span>();
-        <span class="self">self</span>.<span class="ident">location</span>.<span class="number">1</span> <span class="op">*</span> <span class="ident">wsize</span>.<span class="ident">scale_factor</span>
+        <span class="self">self</span>.<span class="ident">location</span>.<span class="ident">y</span> <span class="op">*</span> <span class="ident">wsize</span>.<span class="ident">scale_factor</span>
     }
 
     <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="kw">let</span> <span class="ident">wsize</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">borrow</span>();
-        <span class="kw">let</span> <span class="ident">w_width</span> <span class="op">=</span> <span class="ident">wsize</span>.<span class="ident">physical_size</span>.<span class="ident">to_logical</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>(<span class="ident">wsize</span>.<span class="ident">scale_factor</span>).<span class="ident">width</span>;
-        <span class="ident">f64::max</span>(<span class="self">self</span>.<span class="ident">location</span>.<span class="number">0</span> <span class="op">*</span> <span class="ident">width</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">w_width</span>, <span class="number">0.0</span>)
+        <span class="kw">let</span> <span class="ident">w_width</span> <span class="op">=</span> <span class="ident">wsize</span>.<span class="ident">logical_size</span>().<span class="ident">w</span>;
+        <span class="ident">f64::max</span>(<span class="self">self</span>.<span class="ident">location</span>.<span class="ident">x</span> <span class="op">*</span> <span class="ident">width</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">w_width</span>, <span class="number">0.0</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="kw">let</span> <span class="ident">wsize</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">borrow</span>();
-        <span class="kw">let</span> <span class="ident">w_height</span> <span class="op">=</span> <span class="ident">wsize</span>.<span class="ident">physical_size</span>.<span class="ident">to_logical</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>(<span class="ident">wsize</span>.<span class="ident">scale_factor</span>).<span class="ident">height</span>;
-        <span class="ident">f64::max</span>(<span class="self">self</span>.<span class="ident">location</span>.<span class="number">1</span> <span class="op">*</span> <span class="ident">height</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">w_height</span>, <span class="number">0.0</span>)
+        <span class="kw">let</span> <span class="ident">w_height</span> <span class="op">=</span> <span class="ident">wsize</span>.<span class="ident">logical_size</span>().<span class="ident">h</span>;
+        <span class="ident">f64::max</span>(<span class="self">self</span>.<span class="ident">location</span>.<span class="ident">y</span> <span class="op">*</span> <span class="ident">height</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">w_height</span>, <span class="number">0.0</span>)
     }
 }
 
@@ -1390,7 +1412,7 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WinitTouchMovedEvent</span> {
     <span class="ident">size</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">WindowSize</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">time</span>: <span class="ident">u32</span>,
-    <span class="ident">location</span>: (<span class="ident">f64</span>, <span class="ident">f64</span>),
+    <span class="ident">location</span>: <span class="ident">LogicalPosition</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>,
     <span class="ident">id</span>: <span class="ident">u64</span>,
 }
 
@@ -1411,24 +1433,24 @@
 
     <span class="kw">fn</span> <span class="ident">x</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="kw">let</span> <span class="ident">wsize</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">borrow</span>();
-        <span class="self">self</span>.<span class="ident">location</span>.<span class="number">0</span> <span class="op">*</span> <span class="ident">wsize</span>.<span class="ident">scale_factor</span>
+        <span class="self">self</span>.<span class="ident">location</span>.<span class="ident">x</span> <span class="op">*</span> <span class="ident">wsize</span>.<span class="ident">scale_factor</span>
     }
 
     <span class="kw">fn</span> <span class="ident">y</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="kw">let</span> <span class="ident">wsize</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">borrow</span>();
-        <span class="self">self</span>.<span class="ident">location</span>.<span class="number">1</span> <span class="op">*</span> <span class="ident">wsize</span>.<span class="ident">scale_factor</span>
+        <span class="self">self</span>.<span class="ident">location</span>.<span class="ident">y</span> <span class="op">*</span> <span class="ident">wsize</span>.<span class="ident">scale_factor</span>
     }
 
     <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="kw">let</span> <span class="ident">wsize</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">borrow</span>();
-        <span class="kw">let</span> <span class="ident">w_width</span> <span class="op">=</span> <span class="ident">wsize</span>.<span class="ident">physical_size</span>.<span class="ident">to_logical</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>(<span class="ident">wsize</span>.<span class="ident">scale_factor</span>).<span class="ident">width</span>;
-        <span class="ident">f64::max</span>(<span class="self">self</span>.<span class="ident">location</span>.<span class="number">0</span> <span class="op">*</span> <span class="ident">width</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">w_width</span>, <span class="number">0.0</span>)
+        <span class="kw">let</span> <span class="ident">w_width</span> <span class="op">=</span> <span class="ident">wsize</span>.<span class="ident">logical_size</span>().<span class="ident">w</span>;
+        <span class="ident">f64::max</span>(<span class="self">self</span>.<span class="ident">location</span>.<span class="ident">x</span> <span class="op">*</span> <span class="ident">width</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">w_width</span>, <span class="number">0.0</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="kw">let</span> <span class="ident">wsize</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">borrow</span>();
-        <span class="kw">let</span> <span class="ident">w_height</span> <span class="op">=</span> <span class="ident">wsize</span>.<span class="ident">physical_size</span>.<span class="ident">to_logical</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>(<span class="ident">wsize</span>.<span class="ident">scale_factor</span>).<span class="ident">height</span>;
-        <span class="ident">f64::max</span>(<span class="self">self</span>.<span class="ident">location</span>.<span class="number">1</span> <span class="op">*</span> <span class="ident">height</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">w_height</span>, <span class="number">0.0</span>)
+        <span class="kw">let</span> <span class="ident">w_height</span> <span class="op">=</span> <span class="ident">wsize</span>.<span class="ident">logical_size</span>().<span class="ident">h</span>;
+        <span class="ident">f64::max</span>(<span class="self">self</span>.<span class="ident">location</span>.<span class="ident">y</span> <span class="op">*</span> <span class="ident">height</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">w_height</span>, <span class="number">0.0</span>)
     }
 }
 
@@ -1554,13 +1576,14 @@
                                 <span class="macro">trace!</span>(<span class="ident">logger</span>, <span class="string">&quot;Resizing window to {:?}&quot;</span>, <span class="ident">psize</span>);
                                 <span class="kw">let</span> <span class="ident">scale_factor</span> <span class="op">=</span> <span class="ident">window</span>.<span class="ident">scale_factor</span>();
                                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">wsize</span> <span class="op">=</span> <span class="ident">window_size</span>.<span class="ident">borrow_mut</span>();
-                                <span class="ident">wsize</span>.<span class="ident">physical_size</span> <span class="op">=</span> <span class="ident">psize</span>;
+                                <span class="kw">let</span> (<span class="ident">pw</span>, <span class="ident">ph</span>): (<span class="ident">u32</span>, <span class="ident">u32</span>) <span class="op">=</span> <span class="ident">psize</span>.<span class="ident">into</span>();
+                                <span class="ident">wsize</span>.<span class="ident">physical_size</span> <span class="op">=</span> (<span class="ident">pw</span> <span class="kw">as</span> <span class="ident">i32</span>, <span class="ident">ph</span> <span class="kw">as</span> <span class="ident">i32</span>).<span class="ident">into</span>();
                                 <span class="ident">wsize</span>.<span class="ident">scale_factor</span> <span class="op">=</span> <span class="ident">scale_factor</span>;
 
-                                <span class="ident">resize_notification</span>.<span class="ident">set</span>(<span class="prelude-val">Some</span>((<span class="ident">psize</span>.<span class="ident">width</span>, <span class="ident">psize</span>.<span class="ident">height</span>)));
+                                <span class="ident">resize_notification</span>.<span class="ident">set</span>(<span class="prelude-val">Some</span>(<span class="ident">wsize</span>.<span class="ident">physical_size</span>));
 
                                 <span class="ident">callback</span>(<span class="ident">InputEvent::Special</span>(<span class="ident">WinitEvent::Resized</span> {
-                                    <span class="ident">size</span>: <span class="ident">psize</span>.<span class="ident">into</span>(),
+                                    <span class="ident">size</span>: <span class="ident">wsize</span>.<span class="ident">physical_size</span>,
                                     <span class="ident">scale_factor</span>,
                                 }));
                             }
@@ -1575,11 +1598,11 @@
                                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">wsize</span> <span class="op">=</span> <span class="ident">window_size</span>.<span class="ident">borrow_mut</span>();
                                 <span class="ident">wsize</span>.<span class="ident">scale_factor</span> <span class="op">=</span> <span class="ident">scale_factor</span>;
 
-                                <span class="ident">resize_notification</span>.<span class="ident">set</span>(<span class="prelude-val">Some</span>((<span class="ident">new_psize</span>.<span class="ident">width</span>, <span class="ident">new_psize</span>.<span class="ident">height</span>)));
+                                <span class="kw">let</span> (<span class="ident">pw</span>, <span class="ident">ph</span>): (<span class="ident">u32</span>, <span class="ident">u32</span>) <span class="op">=</span> (<span class="kw-2">*</span><span class="ident">new_psize</span>).<span class="ident">into</span>();
+                                <span class="ident">resize_notification</span>.<span class="ident">set</span>(<span class="prelude-val">Some</span>((<span class="ident">pw</span> <span class="kw">as</span> <span class="ident">i32</span>, <span class="ident">ph</span> <span class="kw">as</span> <span class="ident">i32</span>).<span class="ident">into</span>()));
 
-                                <span class="kw">let</span> <span class="ident">psize_f64</span>: (<span class="ident">f64</span>, <span class="ident">f64</span>) <span class="op">=</span> (<span class="ident">new_psize</span>.<span class="ident">width</span>.<span class="ident">into</span>(), <span class="ident">new_psize</span>.<span class="ident">height</span>.<span class="ident">into</span>());
                                 <span class="ident">callback</span>(<span class="ident">InputEvent::Special</span>(<span class="ident">WinitEvent::Resized</span> {
-                                    <span class="ident">size</span>: <span class="ident">psize_f64</span>,
+                                    <span class="ident">size</span>: (<span class="ident">pw</span> <span class="kw">as</span> <span class="ident">i32</span>, <span class="ident">ph</span> <span class="kw">as</span> <span class="ident">i32</span>).<span class="ident">into</span>(),
                                     <span class="ident">scale_factor</span>: <span class="ident">wsize</span>.<span class="ident">scale_factor</span>,
                                 }));
                             }
@@ -1628,11 +1651,12 @@
                                 <span class="ident">id</span>,
                                 ..
                             }) <span class="op">=</span><span class="op">&gt;</span> {
+                                <span class="kw">let</span> <span class="ident">location</span> <span class="op">=</span> <span class="ident">location</span>.<span class="ident">to_logical</span>(<span class="ident">window_size</span>.<span class="ident">borrow</span>().<span class="ident">scale_factor</span>);
                                 <span class="ident">callback</span>(<span class="ident">InputEvent::TouchDown</span> {
                                     <span class="ident">event</span>: <span class="ident">WinitTouchStartedEvent</span> {
                                         <span class="ident">size</span>: <span class="ident">window_size</span>.<span class="ident">clone</span>(),
                                         <span class="ident">time</span>,
-                                        <span class="ident">location</span>: <span class="ident">location</span>.<span class="ident">into</span>(),
+                                        <span class="ident">location</span>,
                                         <span class="ident">id</span>,
                                     },
                                 });
@@ -1643,11 +1667,12 @@
                                 <span class="ident">id</span>,
                                 ..
                             }) <span class="op">=</span><span class="op">&gt;</span> {
+                                <span class="kw">let</span> <span class="ident">location</span> <span class="op">=</span> <span class="ident">location</span>.<span class="ident">to_logical</span>(<span class="ident">window_size</span>.<span class="ident">borrow</span>().<span class="ident">scale_factor</span>);
                                 <span class="ident">callback</span>(<span class="ident">InputEvent::TouchMotion</span> {
                                     <span class="ident">event</span>: <span class="ident">WinitTouchMovedEvent</span> {
                                         <span class="ident">size</span>: <span class="ident">window_size</span>.<span class="ident">clone</span>(),
                                         <span class="ident">time</span>,
-                                        <span class="ident">location</span>: <span class="ident">location</span>.<span class="ident">into</span>(),
+                                        <span class="ident">location</span>,
                                         <span class="ident">id</span>,
                                     },
                                 });
@@ -1659,11 +1684,12 @@
                                 <span class="ident">id</span>,
                                 ..
                             }) <span class="op">=</span><span class="op">&gt;</span> {
+                                <span class="kw">let</span> <span class="ident">location</span> <span class="op">=</span> <span class="ident">location</span>.<span class="ident">to_logical</span>(<span class="ident">window_size</span>.<span class="ident">borrow</span>().<span class="ident">scale_factor</span>);
                                 <span class="ident">callback</span>(<span class="ident">InputEvent::TouchMotion</span> {
                                     <span class="ident">event</span>: <span class="ident">WinitTouchMovedEvent</span> {
                                         <span class="ident">size</span>: <span class="ident">window_size</span>.<span class="ident">clone</span>(),
                                         <span class="ident">time</span>,
-                                        <span class="ident">location</span>: <span class="ident">location</span>.<span class="ident">into</span>(),
+                                        <span class="ident">location</span>,
                                         <span class="ident">id</span>,
                                     },
                                 });

@@ -501,70 +501,6 @@
 <span id="501">501</span>
 <span id="502">502</span>
 <span id="503">503</span>
-<span id="504">504</span>
-<span id="505">505</span>
-<span id="506">506</span>
-<span id="507">507</span>
-<span id="508">508</span>
-<span id="509">509</span>
-<span id="510">510</span>
-<span id="511">511</span>
-<span id="512">512</span>
-<span id="513">513</span>
-<span id="514">514</span>
-<span id="515">515</span>
-<span id="516">516</span>
-<span id="517">517</span>
-<span id="518">518</span>
-<span id="519">519</span>
-<span id="520">520</span>
-<span id="521">521</span>
-<span id="522">522</span>
-<span id="523">523</span>
-<span id="524">524</span>
-<span id="525">525</span>
-<span id="526">526</span>
-<span id="527">527</span>
-<span id="528">528</span>
-<span id="529">529</span>
-<span id="530">530</span>
-<span id="531">531</span>
-<span id="532">532</span>
-<span id="533">533</span>
-<span id="534">534</span>
-<span id="535">535</span>
-<span id="536">536</span>
-<span id="537">537</span>
-<span id="538">538</span>
-<span id="539">539</span>
-<span id="540">540</span>
-<span id="541">541</span>
-<span id="542">542</span>
-<span id="543">543</span>
-<span id="544">544</span>
-<span id="545">545</span>
-<span id="546">546</span>
-<span id="547">547</span>
-<span id="548">548</span>
-<span id="549">549</span>
-<span id="550">550</span>
-<span id="551">551</span>
-<span id="552">552</span>
-<span id="553">553</span>
-<span id="554">554</span>
-<span id="555">555</span>
-<span id="556">556</span>
-<span id="557">557</span>
-<span id="558">558</span>
-<span id="559">559</span>
-<span id="560">560</span>
-<span id="561">561</span>
-<span id="562">562</span>
-<span id="563">563</span>
-<span id="564">564</span>
-<span id="565">565</span>
-<span id="566">566</span>
-<span id="567">567</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Utilities for handling surfaces, subsurfaces and regions</span>
 <span class="doccomment">//!</span>
@@ -661,7 +597,7 @@
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::handlers::SubsurfaceCachedState</span>;
 <span class="kw">use</span> <span class="self">self</span><span class="ident">::tree::PrivateSurfaceData</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::tree</span>::{<span class="ident">AlreadyHasRole</span>, <span class="ident">TraversalAction</span>};
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils</span>::{<span class="ident">DeadResource</span>, <span class="ident">Rectangle</span>};
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils</span>::{<span class="ident">Buffer</span>, <span class="ident">DeadResource</span>, <span class="ident">Logical</span>, <span class="ident">Point</span>, <span class="ident">Rectangle</span>};
 <span class="kw">use</span> <span class="ident">wayland_server</span>::{
     <span class="ident">protocol</span>::{
         <span class="ident">wl_buffer</span>, <span class="ident">wl_callback</span>, <span class="ident">wl_compositor</span>, <span class="ident">wl_output</span>, <span class="ident">wl_region</span>, <span class="ident">wl_subcompositor</span>, <span class="ident">wl_surface::WlSurface</span>,
@@ -674,11 +610,11 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Damage</span> {
     <span class="doccomment">/// A rectangle containing the damaged zone, in surface coordinates</span>
-    <span class="ident">Surface</span>(<span class="ident">Rectangle</span>),
+    <span class="ident">Surface</span>(<span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>),
     <span class="doccomment">/// A rectangle containing the damaged zone, in buffer coordinates</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Note: Buffer scaling must be taken into consideration</span>
-    <span class="ident">Buffer</span>(<span class="ident">Rectangle</span>),
+    <span class="ident">Buffer</span>(<span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Buffer</span><span class="op">&gt;</span>),
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Default</span>)]</span>
@@ -723,7 +659,7 @@
         <span class="doccomment">/// The buffer object</span>
         <span class="ident">buffer</span>: <span class="ident">wl_buffer::WlBuffer</span>,
         <span class="doccomment">/// location of the new buffer relative to the previous one</span>
-        <span class="ident">delta</span>: (<span class="ident">i32</span>, <span class="ident">i32</span>),
+        <span class="ident">delta</span>: <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>,
     },
 }
 
@@ -795,29 +731,6 @@
     }
 }
 
-<span class="doccomment">/// Attributes defining the behaviour of a sub-surface relative to its parent</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SubsurfaceRole</span> {
-    <span class="doccomment">/// Location of the top-left corner of this sub-surface relative to</span>
-    <span class="doccomment">/// the top-left corner of its parent</span>
-    <span class="kw">pub</span> <span class="ident">location</span>: (<span class="ident">i32</span>, <span class="ident">i32</span>),
-    <span class="doccomment">/// Sync status of this sub-surface</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If `true`, this surface should be repainted synchronously with its parent</span>
-    <span class="doccomment">/// if `false`, it should be considered independent of its parent regarding</span>
-    <span class="doccomment">/// repaint timings.</span>
-    <span class="kw">pub</span> <span class="ident">sync</span>: <span class="ident">bool</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">SubsurfaceRole</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">SubsurfaceRole</span> {
-        <span class="ident">SubsurfaceRole</span> {
-            <span class="ident">location</span>: (<span class="number">0</span>, <span class="number">0</span>),
-            <span class="ident">sync</span>: <span class="bool-val">true</span>,
-        }
-    }
-}
-
 <span class="doccomment">/// Kind of a rectangle part of a region</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">RectangleKind</span> {
@@ -838,7 +751,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RegionAttributes</span> {
     <span class="doccomment">/// List of rectangle part of this region</span>
-    <span class="kw">pub</span> <span class="ident">rects</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">RectangleKind</span>, <span class="ident">Rectangle</span>)<span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">rects</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">RectangleKind</span>, <span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">RegionAttributes</span> {
@@ -849,7 +762,8 @@
 
 <span class="kw">impl</span> <span class="ident">RegionAttributes</span> {
     <span class="doccomment">/// Checks whether given point is inside the region.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">point</span>: (<span class="ident">i32</span>, <span class="ident">i32</span>)) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">contains</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Point</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">point</span>: <span class="ident">P</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">let</span> <span class="ident">point</span>: <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">point</span>.<span class="ident">into</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">contains</span> <span class="op">=</span> <span class="bool-val">false</span>;
         <span class="kw">for</span> (<span class="ident">kind</span>, <span class="ident">rect</span>) <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">rects</span> {
             <span class="kw">if</span> <span class="ident">rect</span>.<span class="ident">contains</span>(<span class="ident">point</span>) {
@@ -1051,15 +965,7 @@
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">region_attributes_add</span>() {
         <span class="kw">let</span> <span class="ident">region</span> <span class="op">=</span> <span class="ident">RegionAttributes</span> {
-            <span class="ident">rects</span>: <span class="macro">vec!</span>[(
-                <span class="ident">RectangleKind::Add</span>,
-                <span class="ident">Rectangle</span> {
-                    <span class="ident">x</span>: <span class="number">0</span>,
-                    <span class="ident">y</span>: <span class="number">0</span>,
-                    <span class="ident">width</span>: <span class="number">10</span>,
-                    <span class="ident">height</span>: <span class="number">10</span>,
-                },
-            )],
+            <span class="ident">rects</span>: <span class="macro">vec!</span>[(<span class="ident">RectangleKind::Add</span>, <span class="ident">Rectangle::from_loc_and_size</span>((<span class="number">0</span>, <span class="number">0</span>), (<span class="number">10</span>, <span class="number">10</span>)))],
         };
 
         <span class="macro">assert_eq!</span>(<span class="ident">region</span>.<span class="ident">contains</span>((<span class="number">0</span>, <span class="number">0</span>)), <span class="bool-val">true</span>);
@@ -1069,23 +975,10 @@
     <span class="kw">fn</span> <span class="ident">region_attributes_add_subtract</span>() {
         <span class="kw">let</span> <span class="ident">region</span> <span class="op">=</span> <span class="ident">RegionAttributes</span> {
             <span class="ident">rects</span>: <span class="macro">vec!</span>[
-                (
-                    <span class="ident">RectangleKind::Add</span>,
-                    <span class="ident">Rectangle</span> {
-                        <span class="ident">x</span>: <span class="number">0</span>,
-                        <span class="ident">y</span>: <span class="number">0</span>,
-                        <span class="ident">width</span>: <span class="number">10</span>,
-                        <span class="ident">height</span>: <span class="number">10</span>,
-                    },
-                ),
+                (<span class="ident">RectangleKind::Add</span>, <span class="ident">Rectangle::from_loc_and_size</span>((<span class="number">0</span>, <span class="number">0</span>), (<span class="number">10</span>, <span class="number">10</span>))),
                 (
                     <span class="ident">RectangleKind::Subtract</span>,
-                    <span class="ident">Rectangle</span> {
-                        <span class="ident">x</span>: <span class="number">0</span>,
-                        <span class="ident">y</span>: <span class="number">0</span>,
-                        <span class="ident">width</span>: <span class="number">5</span>,
-                        <span class="ident">height</span>: <span class="number">5</span>,
-                    },
+                    <span class="ident">Rectangle::from_loc_and_size</span>((<span class="number">0</span>, <span class="number">0</span>), (<span class="number">5</span>, <span class="number">5</span>)),
                 ),
             ],
         };
@@ -1098,33 +991,12 @@
     <span class="kw">fn</span> <span class="ident">region_attributes_add_subtract_add</span>() {
         <span class="kw">let</span> <span class="ident">region</span> <span class="op">=</span> <span class="ident">RegionAttributes</span> {
             <span class="ident">rects</span>: <span class="macro">vec!</span>[
-                (
-                    <span class="ident">RectangleKind::Add</span>,
-                    <span class="ident">Rectangle</span> {
-                        <span class="ident">x</span>: <span class="number">0</span>,
-                        <span class="ident">y</span>: <span class="number">0</span>,
-                        <span class="ident">width</span>: <span class="number">10</span>,
-                        <span class="ident">height</span>: <span class="number">10</span>,
-                    },
-                ),
+                (<span class="ident">RectangleKind::Add</span>, <span class="ident">Rectangle::from_loc_and_size</span>((<span class="number">0</span>, <span class="number">0</span>), (<span class="number">10</span>, <span class="number">10</span>))),
                 (
                     <span class="ident">RectangleKind::Subtract</span>,
-                    <span class="ident">Rectangle</span> {
-                        <span class="ident">x</span>: <span class="number">0</span>,
-                        <span class="ident">y</span>: <span class="number">0</span>,
-                        <span class="ident">width</span>: <span class="number">5</span>,
-                        <span class="ident">height</span>: <span class="number">5</span>,
-                    },
+                    <span class="ident">Rectangle::from_loc_and_size</span>((<span class="number">0</span>, <span class="number">0</span>), (<span class="number">5</span>, <span class="number">5</span>)),
                 ),
-                (
-                    <span class="ident">RectangleKind::Add</span>,
-                    <span class="ident">Rectangle</span> {
-                        <span class="ident">x</span>: <span class="number">2</span>,
-                        <span class="ident">y</span>: <span class="number">2</span>,
-                        <span class="ident">width</span>: <span class="number">2</span>,
-                        <span class="ident">height</span>: <span class="number">2</span>,
-                    },
-                ),
+                (<span class="ident">RectangleKind::Add</span>, <span class="ident">Rectangle::from_loc_and_size</span>((<span class="number">2</span>, <span class="number">2</span>), (<span class="number">2</span>, <span class="number">2</span>))),
             ],
         };
 

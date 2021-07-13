@@ -954,7 +954,7 @@
                         <span class="string">&quot;Invalid size for positioner.&quot;</span>.<span class="ident">into</span>(),
                     );
                 } <span class="kw">else</span> {
-                    <span class="ident">state</span>.<span class="ident">rect_size</span> <span class="op">=</span> (<span class="ident">width</span>, <span class="ident">height</span>);
+                    <span class="ident">state</span>.<span class="ident">rect_size</span> <span class="op">=</span> (<span class="ident">width</span>, <span class="ident">height</span>).<span class="ident">into</span>();
                 }
             }
             <span class="ident">zxdg_positioner_v6::Request::SetAnchorRect</span> { <span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">width</span>, <span class="ident">height</span> } <span class="op">=</span><span class="op">&gt;</span> {
@@ -964,7 +964,7 @@
                         <span class="string">&quot;Invalid size for positioner&#39;s anchor rectangle.&quot;</span>.<span class="ident">into</span>(),
                     );
                 } <span class="kw">else</span> {
-                    <span class="ident">state</span>.<span class="ident">anchor_rect</span> <span class="op">=</span> <span class="ident">Rectangle</span> { <span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">width</span>, <span class="ident">height</span> };
+                    <span class="ident">state</span>.<span class="ident">anchor_rect</span> <span class="op">=</span> <span class="ident">Rectangle::from_loc_and_size</span>((<span class="ident">x</span>, <span class="ident">y</span>), (<span class="ident">width</span>, <span class="ident">height</span>));
                 }
             }
             <span class="ident">zxdg_positioner_v6::Request::SetAnchor</span> { <span class="ident">anchor</span> } <span class="op">=</span><span class="op">&gt;</span> {
@@ -995,7 +995,7 @@
                 <span class="ident">state</span>.<span class="ident">constraint_adjustment</span> <span class="op">=</span> <span class="ident">zxdg_constraints_adg_to_xdg</span>(<span class="ident">constraint_adjustment</span>);
             }
             <span class="ident">zxdg_positioner_v6::Request::SetOffset</span> { <span class="ident">x</span>, <span class="ident">y</span> } <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">state</span>.<span class="ident">offset</span> <span class="op">=</span> (<span class="ident">x</span>, <span class="ident">y</span>);
+                <span class="ident">state</span>.<span class="ident">offset</span> <span class="op">=</span> (<span class="ident">x</span>, <span class="ident">y</span>).<span class="ident">into</span>();
             }
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
         }
@@ -1003,7 +1003,7 @@
     <span class="ident">positioner</span>
         .<span class="ident">as_ref</span>()
         .<span class="ident">user_data</span>()
-        .<span class="ident">set</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">RefCell::new</span>(<span class="ident">PositionerState::new</span>()));
+        .<span class="ident">set</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">RefCell::new</span>(<span class="ident">PositionerState::default</span>()));
 
     <span class="ident">positioner</span>.<span class="ident">deref</span>().<span class="ident">clone</span>()
 }
@@ -1199,7 +1199,7 @@
 
             <span class="ident">compositor::with_states</span>(<span class="ident">surface</span>, <span class="op">|</span><span class="ident">states</span><span class="op">|</span> {
                 <span class="ident">states</span>.<span class="ident">cached_state</span>.<span class="ident">pending</span>::<span class="op">&lt;</span><span class="ident">SurfaceCachedState</span><span class="op">&gt;</span>().<span class="ident">geometry</span> <span class="op">=</span>
-                    <span class="prelude-val">Some</span>(<span class="ident">Rectangle</span> { <span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">width</span>, <span class="ident">height</span> });
+                    <span class="prelude-val">Some</span>(<span class="ident">Rectangle::from_loc_and_size</span>((<span class="ident">x</span>, <span class="ident">y</span>), (<span class="ident">width</span>, <span class="ident">height</span>)));
             })
             .<span class="ident">unwrap</span>();
         }
@@ -1338,7 +1338,7 @@
         .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ShellSurfaceUserData</span><span class="op">&gt;</span>()
         .<span class="ident">unwrap</span>();
 
-    <span class="kw">let</span> (<span class="ident">width</span>, <span class="ident">height</span>) <span class="op">=</span> <span class="ident">configure</span>.<span class="ident">state</span>.<span class="ident">size</span>.<span class="ident">unwrap_or</span>((<span class="number">0</span>, <span class="number">0</span>));
+    <span class="kw">let</span> (<span class="ident">width</span>, <span class="ident">height</span>) <span class="op">=</span> <span class="ident">configure</span>.<span class="ident">state</span>.<span class="ident">size</span>.<span class="ident">unwrap_or_default</span>().<span class="ident">into</span>();
     <span class="comment">// convert the Vec&lt;State&gt; (which is really a Vec&lt;u32&gt;) into Vec&lt;u8&gt;</span>
     <span class="kw">let</span> <span class="ident">states</span> <span class="op">=</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">states</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">xdg_toplevel::State</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">configure</span>.<span class="ident">state</span>.<span class="ident">states</span>.<span class="ident">into</span>();
@@ -1417,7 +1417,7 @@
                     <span class="ident">surface</span>: <span class="ident">handle</span>,
                     <span class="ident">seat</span>,
                     <span class="ident">serial</span>,
-                    <span class="ident">location</span>: (<span class="ident">x</span>, <span class="ident">y</span>),
+                    <span class="ident">location</span>: (<span class="ident">x</span>, <span class="ident">y</span>).<span class="ident">into</span>(),
                 },
                 <span class="ident">dispatch_data</span>,
             );
@@ -1453,12 +1453,12 @@
         }
         <span class="ident">zxdg_toplevel_v6::Request::SetMaxSize</span> { <span class="ident">width</span>, <span class="ident">height</span> } <span class="op">=</span><span class="op">&gt;</span> {
             <span class="ident">with_toplevel_pending_state</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>, <span class="op">|</span><span class="ident">toplevel_data</span><span class="op">|</span> {
-                <span class="ident">toplevel_data</span>.<span class="ident">max_size</span> <span class="op">=</span> (<span class="ident">width</span>, <span class="ident">height</span>);
+                <span class="ident">toplevel_data</span>.<span class="ident">max_size</span> <span class="op">=</span> (<span class="ident">width</span>, <span class="ident">height</span>).<span class="ident">into</span>();
             });
         }
         <span class="ident">zxdg_toplevel_v6::Request::SetMinSize</span> { <span class="ident">width</span>, <span class="ident">height</span> } <span class="op">=</span><span class="op">&gt;</span> {
             <span class="ident">with_toplevel_pending_state</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>, <span class="op">|</span><span class="ident">toplevel_data</span><span class="op">|</span> {
-                <span class="ident">toplevel_data</span>.<span class="ident">min_size</span> <span class="op">=</span> (<span class="ident">width</span>, <span class="ident">height</span>);
+                <span class="ident">toplevel_data</span>.<span class="ident">min_size</span> <span class="op">=</span> (<span class="ident">width</span>, <span class="ident">height</span>).<span class="ident">into</span>();
             });
         }
         <span class="ident">zxdg_toplevel_v6::Request::SetMaximized</span> <span class="op">=</span><span class="op">&gt;</span> {
@@ -1531,7 +1531,7 @@
     <span class="kw">let</span> <span class="ident">geometry</span> <span class="op">=</span> <span class="ident">configure</span>.<span class="ident">state</span>.<span class="ident">geometry</span>;
 
     <span class="comment">// Send the popup configure</span>
-    <span class="ident">resource</span>.<span class="ident">configure</span>(<span class="ident">geometry</span>.<span class="ident">x</span>, <span class="ident">geometry</span>.<span class="ident">y</span>, <span class="ident">geometry</span>.<span class="ident">width</span>, <span class="ident">geometry</span>.<span class="ident">height</span>);
+    <span class="ident">resource</span>.<span class="ident">configure</span>(<span class="ident">geometry</span>.<span class="ident">loc</span>.<span class="ident">x</span>, <span class="ident">geometry</span>.<span class="ident">loc</span>.<span class="ident">y</span>, <span class="ident">geometry</span>.<span class="ident">size</span>.<span class="ident">w</span>, <span class="ident">geometry</span>.<span class="ident">size</span>.<span class="ident">h</span>);
 
     <span class="comment">// Send the base xdg_surface configure event to mark</span>
     <span class="comment">// the configure as finished</span>

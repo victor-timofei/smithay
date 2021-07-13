@@ -1586,24 +1586,6 @@
 <span id="1586">1586</span>
 <span id="1587">1587</span>
 <span id="1588">1588</span>
-<span id="1589">1589</span>
-<span id="1590">1590</span>
-<span id="1591">1591</span>
-<span id="1592">1592</span>
-<span id="1593">1593</span>
-<span id="1594">1594</span>
-<span id="1595">1595</span>
-<span id="1596">1596</span>
-<span id="1597">1597</span>
-<span id="1598">1598</span>
-<span id="1599">1599</span>
-<span id="1600">1600</span>
-<span id="1601">1601</span>
-<span id="1602">1602</span>
-<span id="1603">1603</span>
-<span id="1604">1604</span>
-<span id="1605">1605</span>
-<span id="1606">1606</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Utilities for handling shell surfaces with the `xdg_shell` protocol</span>
 <span class="doccomment">//!</span>
@@ -1669,7 +1651,7 @@
 <span class="doccomment">//! that you are given (in an `Arc&lt;Mutex&lt;_&gt;&gt;`) as return value of the `init` function.</span>
 
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils::DeadResource</span>;
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils::Rectangle</span>;
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils</span>::{<span class="ident">Logical</span>, <span class="ident">Point</span>, <span class="ident">Rectangle</span>, <span class="ident">Size</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland::compositor</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland::compositor::Cacheable</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland</span>::{<span class="ident">Serial</span>, <span class="ident">SERIAL_COUNTER</span>};
@@ -1827,11 +1809,11 @@
         <span class="doccomment">/// Minimum size requested for this surface</span>
         <span class="doccomment">///</span>
         <span class="doccomment">/// A value of 0 on an axis means this axis is not constrained</span>
-        <span class="kw">pub</span> <span class="ident">min_size</span>: (<span class="ident">i32</span>, <span class="ident">i32</span>),
+        <span class="kw">pub</span> <span class="ident">min_size</span>: <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>,
         <span class="doccomment">/// Maximum size requested for this surface</span>
         <span class="doccomment">///</span>
         <span class="doccomment">/// A value of 0 on an axis means this axis is not constrained</span>
-        <span class="kw">pub</span> <span class="ident">max_size</span>: (<span class="ident">i32</span>, <span class="ident">i32</span>),
+        <span class="kw">pub</span> <span class="ident">max_size</span>: <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>,
         <span class="doccomment">/// Holds the pending state as set by the server.</span>
         <span class="kw">pub</span> <span class="ident">server_pending</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ToplevelState</span><span class="op">&gt;</span>,
         <span class="doccomment">/// Holds the last server_pending state that has been acknowledged</span>
@@ -1922,7 +1904,7 @@
     <span class="doccomment">/// `Rectangle::x` and `Rectangle::y` holds the position of the popup</span>
     <span class="doccomment">/// The position is relative to the window geometry as defined by</span>
     <span class="doccomment">/// xdg_surface.set_window_geometry of the parent surface.</span>
-    <span class="kw">pub</span> <span class="ident">geometry</span>: <span class="ident">Rectangle</span>,
+    <span class="kw">pub</span> <span class="ident">geometry</span>: <span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">PopupState</span> {
@@ -1937,10 +1919,10 @@
 <span class="doccomment">/// The state of a positioner, as set by the client</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PositionerState</span> {
     <span class="doccomment">/// Size of the rectangle that needs to be positioned</span>
-    <span class="kw">pub</span> <span class="ident">rect_size</span>: (<span class="ident">i32</span>, <span class="ident">i32</span>),
+    <span class="kw">pub</span> <span class="ident">rect_size</span>: <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Anchor rectangle in the parent surface coordinates</span>
     <span class="doccomment">/// relative to which the surface must be positioned</span>
-    <span class="kw">pub</span> <span class="ident">anchor_rect</span>: <span class="ident">Rectangle</span>,
+    <span class="kw">pub</span> <span class="ident">anchor_rect</span>: <span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Edges defining the anchor point</span>
     <span class="kw">pub</span> <span class="ident">anchor_edges</span>: <span class="ident">xdg_positioner::Anchor</span>,
     <span class="doccomment">/// Gravity direction for positioning the child surface</span>
@@ -1950,7 +1932,7 @@
     <span class="doccomment">/// surface</span>
     <span class="kw">pub</span> <span class="ident">constraint_adjustment</span>: <span class="ident">xdg_positioner::ConstraintAdjustment</span>,
     <span class="doccomment">/// Offset placement relative to the anchor point</span>
-    <span class="kw">pub</span> <span class="ident">offset</span>: (<span class="ident">i32</span>, <span class="ident">i32</span>),
+    <span class="kw">pub</span> <span class="ident">offset</span>: <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">PositionerState</span> {
@@ -1960,29 +1942,13 @@
             <span class="ident">anchor_rect</span>: <span class="ident">Default::default</span>(),
             <span class="ident">constraint_adjustment</span>: <span class="ident">xdg_positioner::ConstraintAdjustment::empty</span>(),
             <span class="ident">gravity</span>: <span class="ident">xdg_positioner::Gravity::None</span>,
-            <span class="ident">offset</span>: (<span class="number">0</span>, <span class="number">0</span>),
-            <span class="ident">rect_size</span>: (<span class="number">0</span>, <span class="number">0</span>),
+            <span class="ident">offset</span>: <span class="ident">Default::default</span>(),
+            <span class="ident">rect_size</span>: <span class="ident">Default::default</span>(),
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">PositionerState</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PositionerState</span> {
-        <span class="ident">PositionerState</span> {
-            <span class="ident">rect_size</span>: (<span class="number">0</span>, <span class="number">0</span>),
-            <span class="ident">anchor_rect</span>: <span class="ident">Rectangle</span> {
-                <span class="ident">x</span>: <span class="number">0</span>,
-                <span class="ident">y</span>: <span class="number">0</span>,
-                <span class="ident">width</span>: <span class="number">0</span>,
-                <span class="ident">height</span>: <span class="number">0</span>,
-            },
-            <span class="ident">anchor_edges</span>: <span class="ident">xdg_positioner::Anchor::None</span>,
-            <span class="ident">gravity</span>: <span class="ident">xdg_positioner::Gravity::None</span>,
-            <span class="ident">constraint_adjustment</span>: <span class="ident">xdg_positioner::ConstraintAdjustment::None</span>,
-            <span class="ident">offset</span>: (<span class="number">0</span>, <span class="number">0</span>),
-        }
-    }
-
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">anchor_has_edge</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">edge</span>: <span class="ident">xdg_positioner::Anchor</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
         <span class="kw">match</span> <span class="ident">edge</span> {
             <span class="ident">xdg_positioner::Anchor::Top</span> <span class="op">=</span><span class="op">&gt;</span> {
@@ -2047,7 +2013,7 @@
     <span class="doccomment">/// The `constraint_adjustment` will not be considered by this</span>
     <span class="doccomment">/// implementation and the position and size should be re-calculated</span>
     <span class="doccomment">/// in the compositor if the compositor implements `constraint_adjustment`</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">get_geometry</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Rectangle</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">get_geometry</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span> {
         <span class="comment">// From the `xdg_shell` prococol specification:</span>
         <span class="comment">//</span>
         <span class="comment">// set_offset:</span>
@@ -2058,10 +2024,8 @@
         <span class="comment">//  has the gravity bottom|right, and the offset is (ox, oy), the calculated</span>
         <span class="comment">//  surface position will be (x + ox, y + oy)</span>
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">geometry</span> <span class="op">=</span> <span class="ident">Rectangle</span> {
-            <span class="ident">x</span>: <span class="self">self</span>.<span class="ident">offset</span>.<span class="number">0</span>,
-            <span class="ident">y</span>: <span class="self">self</span>.<span class="ident">offset</span>.<span class="number">1</span>,
-            <span class="ident">width</span>: <span class="self">self</span>.<span class="ident">rect_size</span>.<span class="number">0</span>,
-            <span class="ident">height</span>: <span class="self">self</span>.<span class="ident">rect_size</span>.<span class="number">1</span>,
+            <span class="ident">loc</span>: <span class="self">self</span>.<span class="ident">offset</span>,
+            <span class="ident">size</span>: <span class="self">self</span>.<span class="ident">rect_size</span>,
         };
 
         <span class="comment">// Defines the anchor point for the anchor rectangle. The specified anchor</span>
@@ -2071,19 +2035,19 @@
         <span class="comment">// otherwise, the derived anchor point will be centered on the specified</span>
         <span class="comment">// edge, or in the center of the anchor rectangle if no edge is specified.</span>
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">anchor_has_edge</span>(<span class="ident">xdg_positioner::Anchor::Top</span>) {
-            <span class="ident">geometry</span>.<span class="ident">y</span> <span class="op">+</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">anchor_rect</span>.<span class="ident">y</span>;
+            <span class="ident">geometry</span>.<span class="ident">loc</span>.<span class="ident">y</span> <span class="op">+</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">anchor_rect</span>.<span class="ident">loc</span>.<span class="ident">y</span>;
         } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">anchor_has_edge</span>(<span class="ident">xdg_positioner::Anchor::Bottom</span>) {
-            <span class="ident">geometry</span>.<span class="ident">y</span> <span class="op">+</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">anchor_rect</span>.<span class="ident">y</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">anchor_rect</span>.<span class="ident">height</span>;
+            <span class="ident">geometry</span>.<span class="ident">loc</span>.<span class="ident">y</span> <span class="op">+</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">anchor_rect</span>.<span class="ident">loc</span>.<span class="ident">y</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">anchor_rect</span>.<span class="ident">size</span>.<span class="ident">h</span>;
         } <span class="kw">else</span> {
-            <span class="ident">geometry</span>.<span class="ident">y</span> <span class="op">+</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">anchor_rect</span>.<span class="ident">y</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">anchor_rect</span>.<span class="ident">height</span> <span class="op">/</span> <span class="number">2</span>;
+            <span class="ident">geometry</span>.<span class="ident">loc</span>.<span class="ident">y</span> <span class="op">+</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">anchor_rect</span>.<span class="ident">loc</span>.<span class="ident">y</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">anchor_rect</span>.<span class="ident">size</span>.<span class="ident">h</span> <span class="op">/</span> <span class="number">2</span>;
         }
 
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">anchor_has_edge</span>(<span class="ident">xdg_positioner::Anchor::Left</span>) {
-            <span class="ident">geometry</span>.<span class="ident">x</span> <span class="op">+</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">anchor_rect</span>.<span class="ident">x</span>;
+            <span class="ident">geometry</span>.<span class="ident">loc</span>.<span class="ident">x</span> <span class="op">+</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">anchor_rect</span>.<span class="ident">loc</span>.<span class="ident">x</span>;
         } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">anchor_has_edge</span>(<span class="ident">xdg_positioner::Anchor::Right</span>) {
-            <span class="ident">geometry</span>.<span class="ident">x</span> <span class="op">+</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">anchor_rect</span>.<span class="ident">x</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">anchor_rect</span>.<span class="ident">width</span>;
+            <span class="ident">geometry</span>.<span class="ident">loc</span>.<span class="ident">x</span> <span class="op">+</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">anchor_rect</span>.<span class="ident">loc</span>.<span class="ident">x</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">anchor_rect</span>.<span class="ident">size</span>.<span class="ident">w</span>;
         } <span class="kw">else</span> {
-            <span class="ident">geometry</span>.<span class="ident">x</span> <span class="op">+</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">anchor_rect</span>.<span class="ident">x</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">anchor_rect</span>.<span class="ident">width</span> <span class="op">/</span> <span class="number">2</span>;
+            <span class="ident">geometry</span>.<span class="ident">loc</span>.<span class="ident">x</span> <span class="op">+</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">anchor_rect</span>.<span class="ident">loc</span>.<span class="ident">x</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">anchor_rect</span>.<span class="ident">size</span>.<span class="ident">w</span> <span class="op">/</span> <span class="number">2</span>;
         }
 
         <span class="comment">// Defines in what direction a surface should be positioned, relative to</span>
@@ -2093,15 +2057,15 @@
         <span class="comment">// surface will be centered over the anchor point on any axis that had no</span>
         <span class="comment">// gravity specified.</span>
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">gravity_has_edge</span>(<span class="ident">xdg_positioner::Gravity::Top</span>) {
-            <span class="ident">geometry</span>.<span class="ident">y</span> <span class="op">-</span><span class="op">=</span> <span class="ident">geometry</span>.<span class="ident">height</span>;
+            <span class="ident">geometry</span>.<span class="ident">loc</span>.<span class="ident">y</span> <span class="op">-</span><span class="op">=</span> <span class="ident">geometry</span>.<span class="ident">size</span>.<span class="ident">h</span>;
         } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">gravity_has_edge</span>(<span class="ident">xdg_positioner::Gravity::Bottom</span>) {
-            <span class="ident">geometry</span>.<span class="ident">y</span> <span class="op">-</span><span class="op">=</span> <span class="ident">geometry</span>.<span class="ident">height</span> <span class="op">/</span> <span class="number">2</span>;
+            <span class="ident">geometry</span>.<span class="ident">loc</span>.<span class="ident">y</span> <span class="op">-</span><span class="op">=</span> <span class="ident">geometry</span>.<span class="ident">size</span>.<span class="ident">h</span> <span class="op">/</span> <span class="number">2</span>;
         }
 
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">gravity_has_edge</span>(<span class="ident">xdg_positioner::Gravity::Left</span>) {
-            <span class="ident">geometry</span>.<span class="ident">x</span> <span class="op">-</span><span class="op">=</span> <span class="ident">geometry</span>.<span class="ident">width</span>;
+            <span class="ident">geometry</span>.<span class="ident">loc</span>.<span class="ident">x</span> <span class="op">-</span><span class="op">=</span> <span class="ident">geometry</span>.<span class="ident">size</span>.<span class="ident">w</span>;
         } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">gravity_has_edge</span>(<span class="ident">xdg_positioner::Gravity::Right</span>) {
-            <span class="ident">geometry</span>.<span class="ident">x</span> <span class="op">-</span><span class="op">=</span> <span class="ident">geometry</span>.<span class="ident">width</span> <span class="op">/</span> <span class="number">2</span>;
+            <span class="ident">geometry</span>.<span class="ident">loc</span>.<span class="ident">x</span> <span class="op">-</span><span class="op">=</span> <span class="ident">geometry</span>.<span class="ident">size</span>.<span class="ident">w</span> <span class="op">/</span> <span class="number">2</span>;
         }
 
         <span class="ident">geometry</span>
@@ -2112,7 +2076,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ToplevelState</span> {
     <span class="doccomment">/// The suggested size of the surface</span>
-    <span class="kw">pub</span> <span class="ident">size</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">i32</span>, <span class="ident">i32</span>)<span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">size</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 
     <span class="doccomment">/// The states for this surface</span>
     <span class="kw">pub</span> <span class="ident">states</span>: <span class="ident">ToplevelStateSet</span>,
@@ -2210,29 +2174,29 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SurfaceCachedState</span> {
     <span class="doccomment">/// Holds the double-buffered geometry that may be specified</span>
     <span class="doccomment">/// by xdg_surface.set_window_geometry.</span>
-    <span class="kw">pub</span> <span class="ident">geometry</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Rectangle</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">geometry</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Minimum size requested for this surface</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// A value of 0 on an axis means this axis is not constrained</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This is only relevant for xdg_toplevel, and will always be</span>
     <span class="doccomment">/// `(0, 0)` for xdg_popup.</span>
-    <span class="kw">pub</span> <span class="ident">min_size</span>: (<span class="ident">i32</span>, <span class="ident">i32</span>),
+    <span class="kw">pub</span> <span class="ident">min_size</span>: <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Maximum size requested for this surface</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// A value of 0 on an axis means this axis is not constrained</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This is only relevant for xdg_toplevel, and will always be</span>
     <span class="doccomment">/// `(0, 0)` for xdg_popup.</span>
-    <span class="kw">pub</span> <span class="ident">max_size</span>: (<span class="ident">i32</span>, <span class="ident">i32</span>),
+    <span class="kw">pub</span> <span class="ident">max_size</span>: <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">SurfaceCachedState</span> {
     <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">geometry</span>: <span class="prelude-val">None</span>,
-            <span class="ident">min_size</span>: (<span class="number">0</span>, <span class="number">0</span>),
-            <span class="ident">max_size</span>: (<span class="number">0</span>, <span class="number">0</span>),
+            <span class="ident">min_size</span>: <span class="ident">Default::default</span>(),
+            <span class="ident">max_size</span>: <span class="ident">Default::default</span>(),
         }
     }
 }
@@ -3200,8 +3164,8 @@
         <span class="ident">seat</span>: <span class="ident">wl_seat::WlSeat</span>,
         <span class="doccomment">/// the grab serial</span>
         <span class="ident">serial</span>: <span class="ident">Serial</span>,
-        <span class="doccomment">/// location of the menu request</span>
-        <span class="ident">location</span>: (<span class="ident">i32</span>, <span class="ident">i32</span>),
+        <span class="doccomment">/// location of the menu request relative to the surface geometry</span>
+        <span class="ident">location</span>: <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>,
     },
     <span class="doccomment">/// A surface has acknowledged a configure serial.</span>
     <span class="ident">AckConfigure</span> {

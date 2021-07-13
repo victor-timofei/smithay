@@ -296,6 +296,9 @@
 <span id="296">296</span>
 <span id="297">297</span>
 <span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Utilities for handling shell surfaces with the `wl_shell` protocol</span>
 <span class="doccomment">//!</span>
@@ -348,7 +351,10 @@
     <span class="ident">sync</span>::{<span class="ident">Arc</span>, <span class="ident">Mutex</span>},
 };
 
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland</span>::{<span class="ident">compositor</span>, <span class="ident">Serial</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{
+    <span class="ident">utils</span>::{<span class="ident">Logical</span>, <span class="ident">Point</span>, <span class="ident">Size</span>},
+    <span class="ident">wayland</span>::{<span class="ident">compositor</span>, <span class="ident">Serial</span>},
+};
 
 <span class="kw">use</span> <span class="ident">wayland_server</span>::{
     <span class="ident">protocol</span>::{<span class="ident">wl_output</span>, <span class="ident">wl_seat</span>, <span class="ident">wl_shell</span>, <span class="ident">wl_shell_surface</span>, <span class="ident">wl_surface</span>},
@@ -431,8 +437,8 @@
     }
 
     <span class="doccomment">/// Send a configure event to this toplevel surface to suggest it a new configuration</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send_configure</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">size</span>: (<span class="ident">u32</span>, <span class="ident">u32</span>), <span class="ident">edges</span>: <span class="ident">wl_shell_surface::Resize</span>) {
-        <span class="self">self</span>.<span class="ident">shell_surface</span>.<span class="ident">configure</span>(<span class="ident">edges</span>, <span class="ident">size</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">i32</span>, <span class="ident">size</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">i32</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send_configure</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">size</span>: <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>, <span class="ident">edges</span>: <span class="ident">wl_shell_surface::Resize</span>) {
+        <span class="self">self</span>.<span class="ident">shell_surface</span>.<span class="ident">configure</span>(<span class="ident">edges</span>, <span class="ident">size</span>.<span class="ident">w</span>, <span class="ident">size</span>.<span class="ident">h</span>)
     }
 
     <span class="doccomment">/// Signal a popup surface that it has lost focus</span>
@@ -454,7 +460,7 @@
         <span class="doccomment">/// The surface considered as parent</span>
         <span class="ident">parent</span>: <span class="ident">wl_surface::WlSurface</span>,
         <span class="doccomment">/// Location relative to the parent</span>
-        <span class="ident">location</span>: (<span class="ident">i32</span>, <span class="ident">i32</span>),
+        <span class="ident">location</span>: <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>,
         <span class="doccomment">/// Wether this window should be marked as inactive</span>
         <span class="ident">inactive</span>: <span class="ident">bool</span>,
     },
@@ -480,7 +486,7 @@
         <span class="doccomment">/// Wether this popup should be marked as inactive</span>
         <span class="ident">inactive</span>: <span class="ident">bool</span>,
         <span class="doccomment">/// Location of the popup relative to its parent</span>
-        <span class="ident">location</span>: (<span class="ident">i32</span>, <span class="ident">i32</span>),
+        <span class="ident">location</span>: <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>,
         <span class="doccomment">/// Seat associated this the input that triggered the creation of the</span>
         <span class="doccomment">/// popup. Used to define when the &quot;popup done&quot; event is sent.</span>
         <span class="ident">seat</span>: <span class="ident">wl_seat::WlSeat</span>,

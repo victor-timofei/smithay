@@ -311,6 +311,11 @@
 <span id="311">311</span>
 <span id="312">312</span>
 <span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cell::RefCell</span>, <span class="ident">ops::Deref</span> <span class="kw">as</span> <span class="kw">_</span>, <span class="ident">os::unix::io::RawFd</span>, <span class="ident">rc::Rc</span>};
 
@@ -319,8 +324,13 @@
     <span class="ident">Main</span>,
 };
 
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland::seat</span>::{<span class="ident">AxisFrame</span>, <span class="ident">GrabStartData</span>, <span class="ident">PointerGrab</span>, <span class="ident">PointerInnerHandle</span>, <span class="ident">Seat</span>};
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland::Serial</span>;
+<span class="kw">use</span> <span class="kw">crate</span>::{
+    <span class="ident">utils</span>::{<span class="ident">Logical</span>, <span class="ident">Point</span>},
+    <span class="ident">wayland</span>::{
+        <span class="ident">seat</span>::{<span class="ident">AxisFrame</span>, <span class="ident">GrabStartData</span>, <span class="ident">PointerGrab</span>, <span class="ident">PointerInnerHandle</span>, <span class="ident">Seat</span>},
+        <span class="ident">Serial</span>,
+    },
+};
 
 <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">DataDeviceData</span>, <span class="ident">SeatData</span>};
 
@@ -386,12 +396,11 @@
     <span class="kw">fn</span> <span class="ident">motion</span>(
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">_handle</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
-        <span class="ident">location</span>: (<span class="ident">f64</span>, <span class="ident">f64</span>),
-        <span class="ident">focus</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">wl_surface::WlSurface</span>, (<span class="ident">f64</span>, <span class="ident">f64</span>))<span class="op">&gt;</span>,
+        <span class="ident">location</span>: <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">f64</span>, <span class="ident">Logical</span><span class="op">&gt;</span>,
+        <span class="ident">focus</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">wl_surface::WlSurface</span>, <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
         <span class="ident">serial</span>: <span class="ident">Serial</span>,
         <span class="ident">time</span>: <span class="ident">u32</span>,
     ) {
-        <span class="kw">let</span> (<span class="ident">x</span>, <span class="ident">y</span>) <span class="op">=</span> <span class="ident">location</span>;
         <span class="kw">let</span> <span class="ident">seat_data</span> <span class="op">=</span> <span class="self">self</span>
             .<span class="ident">seat</span>
             .<span class="ident">user_data</span>()
@@ -413,12 +422,13 @@
                 }
             }
         }
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">surface</span>, (<span class="ident">sx</span>, <span class="ident">sy</span>))) <span class="op">=</span> <span class="ident">focus</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">surface</span>, <span class="ident">surface_location</span>)) <span class="op">=</span> <span class="ident">focus</span> {
             <span class="comment">// early return if the surface is no longer valid</span>
             <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">surface</span>.<span class="ident">as_ref</span>().<span class="ident">client</span>() {
                 <span class="prelude-val">Some</span>(<span class="ident">c</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">c</span>,
                 <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span>,
             };
+            <span class="kw">let</span> (<span class="ident">x</span>, <span class="ident">y</span>) <span class="op">=</span> (<span class="ident">location</span> <span class="op">-</span> <span class="ident">surface_location</span>.<span class="ident">to_f64</span>()).<span class="ident">into</span>();
             <span class="kw">if</span> <span class="self">self</span>.<span class="ident">current_focus</span>.<span class="ident">is_none</span>() {
                 <span class="comment">// We entered a new surface, send the data offer</span>
                 <span class="kw">let</span> <span class="ident">offer_data</span> <span class="op">=</span> <span class="ident">Rc::new</span>(<span class="ident">RefCell::new</span>(<span class="ident">OfferData</span> {
@@ -458,7 +468,7 @@
                         <span class="ident">offer</span>.<span class="ident">offer</span>(<span class="ident">mime_type</span>);
                     }
                     <span class="ident">offer</span>.<span class="ident">source_actions</span>(<span class="self">self</span>.<span class="ident">metadata</span>.<span class="ident">dnd_action</span>);
-                    <span class="ident">device</span>.<span class="ident">enter</span>(<span class="ident">serial</span>.<span class="ident">into</span>(), <span class="kw-2">&amp;</span><span class="ident">surface</span>, <span class="ident">x</span> <span class="op">-</span> <span class="ident">sx</span>, <span class="ident">y</span> <span class="op">-</span> <span class="ident">sy</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">offer</span>));
+                    <span class="ident">device</span>.<span class="ident">enter</span>(<span class="ident">serial</span>.<span class="ident">into</span>(), <span class="kw-2">&amp;</span><span class="ident">surface</span>, <span class="ident">x</span>, <span class="ident">y</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">offer</span>));
                     <span class="self">self</span>.<span class="ident">pending_offers</span>.<span class="ident">push</span>(<span class="ident">offer</span>);
                 }
                 <span class="self">self</span>.<span class="ident">offer_data</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">offer_data</span>);
@@ -467,7 +477,7 @@
                 <span class="comment">// make a move</span>
                 <span class="kw">for</span> <span class="ident">device</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">seat_data</span>.<span class="ident">known_devices</span> {
                     <span class="kw">if</span> <span class="ident">device</span>.<span class="ident">as_ref</span>().<span class="ident">same_client_as</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>.<span class="ident">as_ref</span>()) {
-                        <span class="ident">device</span>.<span class="ident">motion</span>(<span class="ident">time</span>, <span class="ident">x</span> <span class="op">-</span> <span class="ident">sx</span>, <span class="ident">y</span> <span class="op">-</span> <span class="ident">sy</span>);
+                        <span class="ident">device</span>.<span class="ident">motion</span>(<span class="ident">time</span>, <span class="ident">x</span>, <span class="ident">y</span>);
                     }
                 }
             }

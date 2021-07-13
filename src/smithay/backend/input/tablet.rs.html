@@ -364,8 +364,11 @@
 <span id="364">364</span>
 <span id="365">365</span>
 <span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">ButtonState</span>, <span class="ident">Event</span>, <span class="ident">InputBackend</span>, <span class="ident">UnusedEvent</span>};
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils</span>::{<span class="ident">Logical</span>, <span class="ident">Point</span>, <span class="ident">Raw</span>};
 <span class="kw">use</span> <span class="ident">bitflags::bitflags</span>;
 
 <span class="doccomment">/// Description of physical tablet tool</span>
@@ -429,21 +432,22 @@
     <span class="kw">fn</span> <span class="ident">tool</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">TabletToolDescriptor</span>;
 
     <span class="doccomment">/// Delta between the last and new pointer device position interpreted as pixel movement</span>
-    <span class="kw">fn</span> <span class="ident">delta</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">f64</span>, <span class="ident">f64</span>) {
-        (<span class="self">self</span>.<span class="ident">delta_x</span>(), <span class="self">self</span>.<span class="ident">delta_y</span>())
+    <span class="kw">fn</span> <span class="ident">delta</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">f64</span>, <span class="ident">Logical</span><span class="op">&gt;</span> {
+        (<span class="self">self</span>.<span class="ident">delta_x</span>(), <span class="self">self</span>.<span class="ident">delta_y</span>()).<span class="ident">into</span>()
     }
 
     <span class="doccomment">/// Tool position in the device&#39;s native coordinate space</span>
-    <span class="kw">fn</span> <span class="ident">position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">f64</span>, <span class="ident">f64</span>) {
-        (<span class="self">self</span>.<span class="ident">x</span>(), <span class="self">self</span>.<span class="ident">y</span>())
+    <span class="kw">fn</span> <span class="ident">position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">f64</span>, <span class="ident">Raw</span><span class="op">&gt;</span> {
+        (<span class="self">self</span>.<span class="ident">x</span>(), <span class="self">self</span>.<span class="ident">y</span>()).<span class="ident">into</span>()
     }
 
     <span class="doccomment">/// Tool position converted into the target coordinate space.</span>
-    <span class="kw">fn</span> <span class="ident">position_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">coordinate_space</span>: (<span class="ident">u32</span>, <span class="ident">u32</span>)) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">f64</span>, <span class="ident">f64</span>) {
+    <span class="kw">fn</span> <span class="ident">position_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">coordinate_space</span>: <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">u32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">f64</span>, <span class="ident">Logical</span><span class="op">&gt;</span> {
         (
-            <span class="self">self</span>.<span class="ident">x_transformed</span>(<span class="ident">coordinate_space</span>.<span class="number">0</span>),
-            <span class="self">self</span>.<span class="ident">y_transformed</span>(<span class="ident">coordinate_space</span>.<span class="number">1</span>),
+            <span class="self">self</span>.<span class="ident">x_transformed</span>(<span class="ident">coordinate_space</span>.<span class="ident">x</span>),
+            <span class="self">self</span>.<span class="ident">y_transformed</span>(<span class="ident">coordinate_space</span>.<span class="ident">y</span>),
         )
+            .<span class="ident">into</span>()
     }
 
     <span class="doccomment">/// Returns the current tilt along the (X,Y) axis of the tablet&#39;s current logical</span>
