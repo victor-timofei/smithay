@@ -327,6 +327,8 @@ use crate::backend::graphics::{
 <span class="kw">mod</span> <span class="ident">error</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::error</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend::SwapBuffersError</span> <span class="kw">as</span> <span class="ident">GraphicsSwapBuffersError</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>)]</span>
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils</span>::{<span class="ident">Buffer</span>, <span class="ident">Size</span>};
 
 <span class="kw">use</span> <span class="ident">nix::libc::c_void</span>;
 
@@ -543,10 +545,8 @@ use crate::backend::graphics::{
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EGLBuffer</span> {
     <span class="ident">display</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">EGLDisplayHandle</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// Width in pixels</span>
-    <span class="kw">pub</span> <span class="ident">width</span>: <span class="ident">u32</span>,
-    <span class="doccomment">/// Height in pixels</span>
-    <span class="kw">pub</span> <span class="ident">height</span>: <span class="ident">u32</span>,
+    <span class="doccomment">/// Size of the buffer</span>
+    <span class="kw">pub</span> <span class="ident">size</span>: <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Buffer</span><span class="op">&gt;</span>,
     <span class="doccomment">/// If the y-axis is inverted or not</span>
     <span class="kw">pub</span> <span class="ident">y_inverted</span>: <span class="ident">bool</span>,
     <span class="doccomment">/// Format of these images</span>

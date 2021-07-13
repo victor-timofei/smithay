@@ -887,7 +887,6 @@
 <span id="887">887</span>
 <span id="888">888</span>
 <span id="889">889</span>
-<span id="890">890</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Type safe native types for safe egl initialisation</span>
 
@@ -1699,8 +1698,7 @@
 
         <span class="prelude-val">Ok</span>(<span class="ident">EGLBuffer</span> {
             <span class="ident">display</span>: <span class="self">self</span>.<span class="ident">display</span>.<span class="ident">clone</span>(),
-            <span class="ident">width</span>: <span class="ident">width</span> <span class="kw">as</span> <span class="ident">u32</span>,
-            <span class="ident">height</span>: <span class="ident">height</span> <span class="kw">as</span> <span class="ident">u32</span>,
+            <span class="ident">size</span>: (<span class="ident">width</span>, <span class="ident">height</span>).<span class="ident">into</span>(),
             <span class="comment">// y_inverted is negated here because the gles2 renderer</span>
             <span class="comment">// already inverts the buffer during rendering.</span>
             <span class="ident">y_inverted</span>: <span class="op">!</span><span class="ident">y_inverted</span>,

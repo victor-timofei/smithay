@@ -251,9 +251,6 @@
 <span id="251">251</span>
 <span id="252">252</span>
 <span id="253">253</span>
-<span id="254">254</span>
-<span id="255">255</span>
-<span id="256">256</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Module for [dmabuf](https://01.org/linuxgraphics/gfx-docs/drm/driver-api/dma-buf.html) buffers.</span>
 <span class="doccomment">//!</span>
@@ -268,6 +265,7 @@
 <span class="doccomment">//! the lifetime of the buffer. E.g. when you are only caching associated resources for a dmabuf.</span>
 
 <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Buffer</span>, <span class="ident">Format</span>, <span class="ident">Fourcc</span>, <span class="ident">Modifier</span>};
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils</span>::{<span class="ident">Buffer</span> <span class="kw">as</span> <span class="ident">BufferCoords</span>, <span class="ident">Size</span>};
 <span class="kw">use</span> <span class="ident">std::hash</span>::{<span class="ident">Hash</span>, <span class="ident">Hasher</span>};
 <span class="kw">use</span> <span class="ident">std::os::unix::io</span>::{<span class="ident">IntoRawFd</span>, <span class="ident">RawFd</span>};
 <span class="kw">use</span> <span class="ident">std::sync</span>::{<span class="ident">Arc</span>, <span class="ident">Weak</span>};
@@ -279,10 +277,8 @@
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">DmabufInternal</span> {
     <span class="doccomment">/// The submitted planes</span>
     <span class="kw">pub</span> <span class="ident">planes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Plane</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// The width of this buffer</span>
-    <span class="kw">pub</span> <span class="ident">width</span>: <span class="ident">i32</span>,
-    <span class="doccomment">/// The height of this buffer</span>
-    <span class="kw">pub</span> <span class="ident">height</span>: <span class="ident">i32</span>,
+    <span class="doccomment">/// The size of this buffer</span>
+    <span class="kw">pub</span> <span class="ident">size</span>: <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">BufferCoords</span><span class="op">&gt;</span>,
     <span class="doccomment">/// The format in use</span>
     <span class="kw">pub</span> <span class="ident">format</span>: <span class="ident">Fourcc</span>,
     <span class="doccomment">/// The flags applied to it</span>
@@ -364,12 +360,8 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Buffer</span> <span class="kw">for</span> <span class="ident">Dmabuf</span> {
-    <span class="kw">fn</span> <span class="ident">width</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">width</span> <span class="kw">as</span> <span class="ident">u32</span>
-    }
-
-    <span class="kw">fn</span> <span class="ident">height</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">height</span> <span class="kw">as</span> <span class="ident">u32</span>
+    <span class="kw">fn</span> <span class="ident">size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">BufferCoords</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">size</span>
     }
 
     <span class="kw">fn</span> <span class="ident">format</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Format</span> {
@@ -429,8 +421,7 @@
         <span class="ident">DmabufBuilder</span> {
             <span class="ident">internal</span>: <span class="ident">DmabufInternal</span> {
                 <span class="ident">planes</span>: <span class="ident">Vec::with_capacity</span>(<span class="ident">MAX_PLANES</span>),
-                <span class="ident">width</span>: <span class="ident">src</span>.<span class="ident">width</span>() <span class="kw">as</span> <span class="ident">i32</span>,
-                <span class="ident">height</span>: <span class="ident">src</span>.<span class="ident">height</span>() <span class="kw">as</span> <span class="ident">i32</span>,
+                <span class="ident">size</span>: <span class="ident">src</span>.<span class="ident">size</span>(),
                 <span class="ident">format</span>: <span class="ident">src</span>.<span class="ident">format</span>().<span class="ident">code</span>,
                 <span class="ident">flags</span>,
             },
@@ -438,12 +429,15 @@
     }
 
     <span class="doccomment">/// Create a new Dmabuf builder</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">builder</span>(<span class="ident">width</span>: <span class="ident">u32</span>, <span class="ident">height</span>: <span class="ident">u32</span>, <span class="ident">format</span>: <span class="ident">Fourcc</span>, <span class="ident">flags</span>: <span class="ident">DmabufFlags</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">DmabufBuilder</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">builder</span>(
+        <span class="ident">size</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">BufferCoords</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">format</span>: <span class="ident">Fourcc</span>,
+        <span class="ident">flags</span>: <span class="ident">DmabufFlags</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">DmabufBuilder</span> {
         <span class="ident">DmabufBuilder</span> {
             <span class="ident">internal</span>: <span class="ident">DmabufInternal</span> {
                 <span class="ident">planes</span>: <span class="ident">Vec::with_capacity</span>(<span class="ident">MAX_PLANES</span>),
-                <span class="ident">width</span>: <span class="ident">width</span> <span class="kw">as</span> <span class="ident">i32</span>,
-                <span class="ident">height</span>: <span class="ident">height</span> <span class="kw">as</span> <span class="ident">i32</span>,
+                <span class="ident">size</span>: <span class="ident">size</span>.<span class="ident">into</span>(),
                 <span class="ident">format</span>,
                 <span class="ident">flags</span>,
             },
