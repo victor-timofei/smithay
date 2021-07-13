@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `&#x2F;home&#x2F;runner&#x2F;.cargo&#x2F;registry&#x2F;src&#x2F;github.com-1ecc6299db9ec823&#x2F;input-0.5.0&#x2F;src&#x2F;device.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>device.rs - source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../storage.js"></script><script src="../../crates.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../favicon.svg"><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../input/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input"name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">   1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `&#x2F;home&#x2F;runner&#x2F;.cargo&#x2F;registry&#x2F;src&#x2F;github.com-1ecc6299db9ec823&#x2F;input-0.6.0&#x2F;src&#x2F;device.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>device.rs - source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../storage.js"></script><script src="../../crates.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../favicon.svg"><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../input/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input"name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">   1</span>
 <span id="2">   2</span>
 <span id="3">   3</span>
 <span id="4">   4</span>
@@ -1585,13 +1585,114 @@
 <span id="1585">1585</span>
 <span id="1586">1586</span>
 <span id="1587">1587</span>
+<span id="1588">1588</span>
+<span id="1589">1589</span>
+<span id="1590">1590</span>
+<span id="1591">1591</span>
+<span id="1592">1592</span>
+<span id="1593">1593</span>
+<span id="1594">1594</span>
+<span id="1595">1595</span>
+<span id="1596">1596</span>
+<span id="1597">1597</span>
+<span id="1598">1598</span>
+<span id="1599">1599</span>
+<span id="1600">1600</span>
+<span id="1601">1601</span>
+<span id="1602">1602</span>
+<span id="1603">1603</span>
+<span id="1604">1604</span>
+<span id="1605">1605</span>
+<span id="1606">1606</span>
+<span id="1607">1607</span>
+<span id="1608">1608</span>
+<span id="1609">1609</span>
+<span id="1610">1610</span>
+<span id="1611">1611</span>
+<span id="1612">1612</span>
+<span id="1613">1613</span>
+<span id="1614">1614</span>
+<span id="1615">1615</span>
+<span id="1616">1616</span>
+<span id="1617">1617</span>
+<span id="1618">1618</span>
+<span id="1619">1619</span>
+<span id="1620">1620</span>
+<span id="1621">1621</span>
+<span id="1622">1622</span>
+<span id="1623">1623</span>
+<span id="1624">1624</span>
+<span id="1625">1625</span>
+<span id="1626">1626</span>
+<span id="1627">1627</span>
+<span id="1628">1628</span>
+<span id="1629">1629</span>
+<span id="1630">1630</span>
+<span id="1631">1631</span>
+<span id="1632">1632</span>
+<span id="1633">1633</span>
+<span id="1634">1634</span>
+<span id="1635">1635</span>
+<span id="1636">1636</span>
+<span id="1637">1637</span>
+<span id="1638">1638</span>
+<span id="1639">1639</span>
+<span id="1640">1640</span>
+<span id="1641">1641</span>
+<span id="1642">1642</span>
+<span id="1643">1643</span>
+<span id="1644">1644</span>
+<span id="1645">1645</span>
+<span id="1646">1646</span>
+<span id="1647">1647</span>
+<span id="1648">1648</span>
+<span id="1649">1649</span>
+<span id="1650">1650</span>
+<span id="1651">1651</span>
+<span id="1652">1652</span>
+<span id="1653">1653</span>
+<span id="1654">1654</span>
+<span id="1655">1655</span>
+<span id="1656">1656</span>
+<span id="1657">1657</span>
+<span id="1658">1658</span>
+<span id="1659">1659</span>
+<span id="1660">1660</span>
+<span id="1661">1661</span>
+<span id="1662">1662</span>
+<span id="1663">1663</span>
+<span id="1664">1664</span>
+<span id="1665">1665</span>
+<span id="1666">1666</span>
+<span id="1667">1667</span>
+<span id="1668">1668</span>
+<span id="1669">1669</span>
+<span id="1670">1670</span>
+<span id="1671">1671</span>
+<span id="1672">1672</span>
+<span id="1673">1673</span>
+<span id="1674">1674</span>
+<span id="1675">1675</span>
+<span id="1676">1676</span>
+<span id="1677">1677</span>
+<span id="1678">1678</span>
+<span id="1679">1679</span>
+<span id="1680">1680</span>
+<span id="1681">1681</span>
+<span id="1682">1682</span>
+<span id="1683">1683</span>
 </pre><pre class="rust">
-<span class="kw">use</span> {<span class="ident">ffi</span>, <span class="ident">AsRaw</span>, <span class="ident">FromRaw</span>, <span class="ident">Libinput</span>, <span class="ident">Seat</span>};
-<span class="kw">use</span> <span class="ident">event::tablet_pad::TabletPadModeGroup</span>;
-<span class="kw">use</span> <span class="ident">event::switch::Switch</span>;
+<span class="kw">use</span> <span class="kw">crate</span>::{
+    <span class="ident">event</span>::{<span class="ident">switch::Switch</span>, <span class="ident">tablet_pad::TabletPadModeGroup</span>},
+    <span class="ident">ffi</span>, <span class="ident">AsRaw</span>, <span class="ident">FromRaw</span>, <span class="ident">Libinput</span>, <span class="ident">Seat</span>,
+};
+<span class="kw">use</span> <span class="ident">bitflags::bitflags</span>;
 <span class="kw">use</span> <span class="ident">std::ffi</span>::{<span class="ident">CStr</span>, <span class="ident">CString</span>};
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;udev&quot;</span>)]</span>
-<span class="kw">use</span> <span class="ident">udev</span>::{<span class="ident">Device</span> <span class="kw">as</span> <span class="ident">UdevDevice</span>, <span class="ident">FromRaw</span> <span class="kw">as</span> <span class="ident">UdevFromRaw</span>, <span class="ident">ffi::udev_device</span>};
+<span class="kw">use</span> <span class="ident">udev</span>::{
+    <span class="ident">ffi</span>::{<span class="ident">udev</span> <span class="kw">as</span> <span class="ident">udev_context</span>, <span class="ident">udev_device</span>, <span class="ident">udev_device_get_udev</span>},
+    <span class="ident">Device</span> <span class="kw">as</span> <span class="ident">UdevDevice</span>, <span class="ident">FromRawWithContext</span> <span class="kw">as</span> <span class="ident">UdevFromRawWithContext</span>,
+};
 
 <span class="doccomment">/// Capabilities on a device.</span>
 <span class="doccomment">///</span>
@@ -1708,7 +1809,7 @@
 }
 
 <span class="doccomment">/// Whenever scroll button lock is enabled or not</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;libinput_1_15&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;libinput_1_15&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">missing_docs</span>)]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ScrollButtonLockState</span> {
@@ -1915,17 +2016,18 @@
     <span class="doccomment">/// Calling this function multiple times for the same device may</span>
     <span class="doccomment">/// not return the same udev handle each time.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Unsafety</span>
+    <span class="doccomment">/// # Safety</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The result of this function is not definied if the passed udev `Context`</span>
     <span class="doccomment">/// is not the same as the one the libinput `Context` was created from.</span>
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;udev&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">udev_device</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">UdevDevice</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">udev_device</span> <span class="op">=</span> <span class="ident">ffi::libinput_device_get_udev_device</span>(<span class="self">self</span>.<span class="ident">ffi</span>) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>;
-        <span class="kw">if</span> <span class="ident">ptr</span>.<span class="ident">is_null</span>() {
+        <span class="kw">let</span> <span class="ident">dev</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">udev_device</span> <span class="op">=</span> <span class="ident">ffi::libinput_device_get_udev_device</span>(<span class="self">self</span>.<span class="ident">ffi</span>) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>;
+        <span class="kw">let</span> <span class="ident">ctx</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">udev_context</span> <span class="op">=</span> <span class="ident">udev_device_get_udev</span>(<span class="ident">dev</span>);
+        <span class="kw">if</span> <span class="ident">dev</span>.<span class="ident">is_null</span>() {
             <span class="prelude-val">None</span>
         } <span class="kw">else</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">UdevDevice::from_raw</span>(<span class="ident">ptr</span>))
+            <span class="prelude-val">Some</span>(<span class="ident">UdevDevice::from_raw_with_context</span>(<span class="ident">ctx</span>, <span class="ident">dev</span>))
         }
     }
 
@@ -1953,16 +2055,24 @@
                     <span class="ident">DeviceCapability::Keyboard</span> <span class="op">=</span><span class="op">&gt;</span> {
                         <span class="ident">ffi::libinput_device_capability_LIBINPUT_DEVICE_CAP_KEYBOARD</span>
                     }
-                    <span class="ident">DeviceCapability::Pointer</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::libinput_device_capability_LIBINPUT_DEVICE_CAP_POINTER</span>,
-                    <span class="ident">DeviceCapability::Touch</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::libinput_device_capability_LIBINPUT_DEVICE_CAP_TOUCH</span>,
+                    <span class="ident">DeviceCapability::Pointer</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">ffi::libinput_device_capability_LIBINPUT_DEVICE_CAP_POINTER</span>
+                    }
+                    <span class="ident">DeviceCapability::Touch</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">ffi::libinput_device_capability_LIBINPUT_DEVICE_CAP_TOUCH</span>
+                    }
                     <span class="ident">DeviceCapability::TabletTool</span> <span class="op">=</span><span class="op">&gt;</span> {
                         <span class="ident">ffi::libinput_device_capability_LIBINPUT_DEVICE_CAP_TABLET_TOOL</span>
                     }
                     <span class="ident">DeviceCapability::TabletPad</span> <span class="op">=</span><span class="op">&gt;</span> {
                         <span class="ident">ffi::libinput_device_capability_LIBINPUT_DEVICE_CAP_TABLET_PAD</span>
                     }
-                    <span class="ident">DeviceCapability::Gesture</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::libinput_device_capability_LIBINPUT_DEVICE_CAP_GESTURE</span>,
-                    <span class="ident">DeviceCapability::Switch</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::libinput_device_capability_LIBINPUT_DEVICE_CAP_SWITCH</span>,
+                    <span class="ident">DeviceCapability::Gesture</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">ffi::libinput_device_capability_LIBINPUT_DEVICE_CAP_GESTURE</span>
+                    }
+                    <span class="ident">DeviceCapability::Switch</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">ffi::libinput_device_capability_LIBINPUT_DEVICE_CAP_SWITCH</span>
+                    }
                 },
             ) <span class="op">!</span><span class="op">=</span> <span class="number">0</span>
         }
@@ -2059,7 +2169,8 @@
     <span class="doccomment">/// the events in the event queue will return the modes 1, 2 and</span>
     <span class="doccomment">/// 3, respectively.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tablet_pad_mode_group</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">index</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TabletPadModeGroup</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_device_tablet_pad_get_mode_group</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="ident">index</span>) };
+        <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span>
+            <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_device_tablet_pad_get_mode_group</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="ident">index</span>) };
         <span class="kw">if</span> <span class="ident">ptr</span>.<span class="ident">is_null</span>() {
             <span class="prelude-val">None</span>
         } <span class="kw">else</span> {
@@ -2068,36 +2179,34 @@
     }
 
     <span class="doccomment">/// Check if a `DeviceCapability::TabletPad`-device has a key with the given code (see linux/input-event-codes.h).</span>
-    <span class="doccomment">/// </span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// ## Returns</span>
     <span class="doccomment">/// - `Some(true)` if it has the requested key</span>
     <span class="doccomment">/// - `Some(false)` if it has not</span>
     <span class="doccomment">/// - `None` on error (no TabletPad device)</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;libinput_1_15&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;libinput_1_15&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tablet_pad_has_key</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">code</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_device_tablet_pad_has_key</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="ident">code</span>) } {
             <span class="op">-</span><span class="number">1</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
             <span class="number">0</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
             <span class="number">1</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid return code for libinput_device_tablet_pad_has_key&quot;</span>),
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(
+                <span class="string">&quot;libinput returned invalid return code for libinput_device_tablet_pad_has_key&quot;</span>
+            ),
         }
     }
 
     <span class="doccomment">/// Check how many touches a `DeviceCapability::Touch`-exposing Device supports simultaneously.</span>
-    <span class="doccomment">/// </span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// ## Returns</span>
     <span class="doccomment">/// - `Some(n)` amount of touches</span>
     <span class="doccomment">/// - `Some(0)` if unknown</span>
     <span class="doccomment">/// - `None` on error (no touch device)</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;libinput_1_11&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;libinput_1_11&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">touch_count</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="kw">unsafe</span> {
-            <span class="ident">ffi::libinput_device_touch_get_touch_count</span>(
-                <span class="self">self</span>.<span class="ident">as_raw_mut</span>()
-            )
-        } {
+        <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_device_touch_get_touch_count</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) } {
             <span class="op">-</span><span class="number">1</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
-            <span class="ident">n</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">n</span> <span class="kw">as</span> <span class="ident">u32</span>)
+            <span class="ident">n</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">n</span> <span class="kw">as</span> <span class="ident">u32</span>),
         }
     }
 
@@ -2106,7 +2215,9 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">config_accel_default_profile</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">AccelProfile</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_device_config_accel_get_default_profile</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) } {
             <span class="ident">ffi::libinput_config_accel_profile_LIBINPUT_CONFIG_ACCEL_PROFILE_NONE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
-            <span class="ident">ffi::libinput_config_accel_profile_LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">AccelProfile::Flat</span>),
+            <span class="ident">ffi::libinput_config_accel_profile_LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Some</span>(<span class="ident">AccelProfile::Flat</span>)
+            }
             <span class="ident">ffi::libinput_config_accel_profile_LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="prelude-val">Some</span>(<span class="ident">AccelProfile::Adaptive</span>)
             }
@@ -2119,7 +2230,9 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">config_accel_profile</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">AccelProfile</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_device_config_accel_get_profile</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) } {
             <span class="ident">ffi::libinput_config_accel_profile_LIBINPUT_CONFIG_ACCEL_PROFILE_NONE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
-            <span class="ident">ffi::libinput_config_accel_profile_LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">AccelProfile::Flat</span>),
+            <span class="ident">ffi::libinput_config_accel_profile_LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Some</span>(<span class="ident">AccelProfile::Flat</span>)
+            }
             <span class="ident">ffi::libinput_config_accel_profile_LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="prelude-val">Some</span>(<span class="ident">AccelProfile::Adaptive</span>)
             }
@@ -2132,10 +2245,15 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">config_accel_profiles</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AccelProfile</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">profiles</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
         <span class="kw">let</span> <span class="ident">bitmask</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_device_config_accel_get_profiles</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) };
-        <span class="kw">if</span> <span class="ident">bitmask</span> <span class="op">&amp;</span> <span class="ident">ffi::libinput_config_accel_profile_LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
+        <span class="kw">if</span> <span class="ident">bitmask</span> <span class="op">&amp;</span> <span class="ident">ffi::libinput_config_accel_profile_LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT</span> <span class="kw">as</span> <span class="ident">u32</span>
+            <span class="op">!</span><span class="op">=</span> <span class="number">0</span>
+        {
             <span class="ident">profiles</span>.<span class="ident">push</span>(<span class="ident">AccelProfile::Flat</span>);
         }
-        <span class="kw">if</span> <span class="ident">bitmask</span> <span class="op">&amp;</span> <span class="ident">ffi::libinput_config_accel_profile_LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
+        <span class="kw">if</span> <span class="ident">bitmask</span>
+            <span class="op">&amp;</span> <span class="ident">ffi::libinput_config_accel_profile_LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE</span> <span class="kw">as</span> <span class="ident">u32</span>
+            <span class="op">!</span><span class="op">=</span> <span class="number">0</span>
+        {
             <span class="ident">profiles</span>.<span class="ident">push</span>(<span class="ident">AccelProfile::Adaptive</span>);
         }
         <span class="ident">profiles</span>
@@ -2161,7 +2279,9 @@
             <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_UNSUPPORTED</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Unsupported</span>)
             }
-            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>),
+            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>)
+            }
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_config_status&#39;&quot;</span>),
         }
     }
@@ -2194,7 +2314,9 @@
             <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_UNSUPPORTED</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Unsupported</span>)
             }
-            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>),
+            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>)
+            }
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_config_status&#39;&quot;</span>),
         }
     }
@@ -2212,8 +2334,10 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">config_calibration_default_matrix</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>[<span class="ident">f32</span>; <span class="number">6</span>]<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">matrix</span> <span class="op">=</span> [<span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>];
         <span class="kw">if</span> <span class="kw">unsafe</span> {
-            <span class="ident">ffi::libinput_device_config_calibration_get_default_matrix</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="ident">matrix</span>.<span class="ident">as_mut_ptr</span>())
-                <span class="op">!</span><span class="op">=</span> <span class="number">0</span>
+            <span class="ident">ffi::libinput_device_config_calibration_get_default_matrix</span>(
+                <span class="self">self</span>.<span class="ident">as_raw_mut</span>(),
+                <span class="ident">matrix</span>.<span class="ident">as_mut_ptr</span>(),
+            ) <span class="op">!</span><span class="op">=</span> <span class="number">0</span>
         } {
             <span class="prelude-val">Some</span>(<span class="ident">matrix</span>)
         } <span class="kw">else</span> {
@@ -2225,7 +2349,10 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">config_calibration_matrix</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>[<span class="ident">f32</span>; <span class="number">6</span>]<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">matrix</span> <span class="op">=</span> [<span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>];
         <span class="kw">if</span> <span class="kw">unsafe</span> {
-            <span class="ident">ffi::libinput_device_config_calibration_get_matrix</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="ident">matrix</span>.<span class="ident">as_mut_ptr</span>()) <span class="op">!</span><span class="op">=</span> <span class="number">0</span>
+            <span class="ident">ffi::libinput_device_config_calibration_get_matrix</span>(
+                <span class="self">self</span>.<span class="ident">as_raw_mut</span>(),
+                <span class="ident">matrix</span>.<span class="ident">as_mut_ptr</span>(),
+            ) <span class="op">!</span><span class="op">=</span> <span class="number">0</span>
         } {
             <span class="prelude-val">Some</span>(<span class="ident">matrix</span>)
         } <span class="kw">else</span> {
@@ -2285,7 +2412,9 @@
             <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_UNSUPPORTED</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Unsupported</span>)
             }
-            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>),
+            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>)
+            }
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_config_status&#39;&quot;</span>),
         }
     }
@@ -2334,12 +2463,14 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">config_click_methods</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ClickMethod</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">methods</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
         <span class="kw">let</span> <span class="ident">bitmask</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_device_config_click_get_methods</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) };
-        <span class="kw">if</span> <span class="ident">bitmask</span> <span class="op">&amp;</span> <span class="ident">ffi::libinput_config_click_method_LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER</span> <span class="kw">as</span> <span class="ident">u32</span>
+        <span class="kw">if</span> <span class="ident">bitmask</span>
+            <span class="op">&amp;</span> <span class="ident">ffi::libinput_config_click_method_LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER</span> <span class="kw">as</span> <span class="ident">u32</span>
             <span class="op">=</span><span class="op">=</span> <span class="ident">bitmask</span>
         {
             <span class="ident">methods</span>.<span class="ident">push</span>(<span class="ident">ClickMethod::Clickfinger</span>);
         }
-        <span class="kw">if</span> <span class="ident">bitmask</span> <span class="op">&amp;</span> <span class="ident">ffi::libinput_config_click_method_LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS</span> <span class="kw">as</span> <span class="ident">u32</span>
+        <span class="kw">if</span> <span class="ident">bitmask</span>
+            <span class="op">&amp;</span> <span class="ident">ffi::libinput_config_click_method_LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS</span> <span class="kw">as</span> <span class="ident">u32</span>
             <span class="op">=</span><span class="op">=</span> <span class="ident">bitmask</span>
         {
             <span class="ident">methods</span>.<span class="ident">push</span>(<span class="ident">ClickMethod::ButtonAreas</span>);
@@ -2376,7 +2507,9 @@
             <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_UNSUPPORTED</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Unsupported</span>)
             }
-            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>),
+            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>)
+            }
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_config_status&#39;&quot;</span>),
         }
     }
@@ -2441,7 +2574,9 @@
             <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_UNSUPPORTED</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Unsupported</span>)
             }
-            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>),
+            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>)
+            }
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_config_status&#39;&quot;</span>),
         }
     }
@@ -2470,12 +2605,16 @@
     <span class="doccomment">/// Changing the left-handed configuration of a device may not</span>
     <span class="doccomment">/// take effect until all buttons have been logically released.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">config_left_handed_set</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">enabled</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">DeviceConfigResult</span> {
-        <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_device_config_left_handed_set</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="ident">enabled</span> <span class="kw">as</span> <span class="ident">i32</span>) } {
+        <span class="kw">match</span> <span class="kw">unsafe</span> {
+            <span class="ident">ffi::libinput_device_config_left_handed_set</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="ident">enabled</span> <span class="kw">as</span> <span class="ident">i32</span>)
+        } {
             <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_SUCCESS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(()),
             <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_UNSUPPORTED</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Unsupported</span>)
             }
-            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>),
+            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>)
+            }
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_config_status&#39;&quot;</span>),
         }
     }
@@ -2563,7 +2702,9 @@
             <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_UNSUPPORTED</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Unsupported</span>)
             }
-            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>),
+            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>)
+            }
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_config_status&#39;&quot;</span>),
         }
     }
@@ -2615,7 +2756,9 @@
             <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_UNSUPPORTED</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Unsupported</span>)
             }
-            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>),
+            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>)
+            }
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_config_status&#39;&quot;</span>),
         }
     }
@@ -2649,8 +2792,12 @@
     <span class="doccomment">/// instead of pointer motion events.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">config_scroll_default_method</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ScrollMethod</span> {
         <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_device_config_scroll_get_default_method</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) } {
-            <span class="ident">ffi::libinput_config_scroll_method_LIBINPUT_CONFIG_SCROLL_NO_SCROLL</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ScrollMethod::NoScroll</span>,
-            <span class="ident">ffi::libinput_config_scroll_method_LIBINPUT_CONFIG_SCROLL_2FG</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ScrollMethod::TwoFinger</span>,
+            <span class="ident">ffi::libinput_config_scroll_method_LIBINPUT_CONFIG_SCROLL_NO_SCROLL</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">ScrollMethod::NoScroll</span>
+            }
+            <span class="ident">ffi::libinput_config_scroll_method_LIBINPUT_CONFIG_SCROLL_2FG</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">ScrollMethod::TwoFinger</span>
+            }
             <span class="ident">ffi::libinput_config_scroll_method_LIBINPUT_CONFIG_SCROLL_EDGE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ScrollMethod::Edge</span>,
             <span class="ident">ffi::libinput_config_scroll_method_LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="ident">ScrollMethod::OnButtonDown</span>
@@ -2665,8 +2812,12 @@
     <span class="doccomment">/// instead of pointer motion events.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">config_scroll_method</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ScrollMethod</span> {
         <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_device_config_scroll_get_method</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) } {
-            <span class="ident">ffi::libinput_config_scroll_method_LIBINPUT_CONFIG_SCROLL_NO_SCROLL</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ScrollMethod::NoScroll</span>,
-            <span class="ident">ffi::libinput_config_scroll_method_LIBINPUT_CONFIG_SCROLL_2FG</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ScrollMethod::TwoFinger</span>,
+            <span class="ident">ffi::libinput_config_scroll_method_LIBINPUT_CONFIG_SCROLL_NO_SCROLL</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">ScrollMethod::NoScroll</span>
+            }
+            <span class="ident">ffi::libinput_config_scroll_method_LIBINPUT_CONFIG_SCROLL_2FG</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">ScrollMethod::TwoFinger</span>
+            }
             <span class="ident">ffi::libinput_config_scroll_method_LIBINPUT_CONFIG_SCROLL_EDGE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ScrollMethod::Edge</span>,
             <span class="ident">ffi::libinput_config_scroll_method_LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="ident">ScrollMethod::OnButtonDown</span>
@@ -2682,13 +2833,18 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">config_scroll_methods</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScrollMethod</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">methods</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
         <span class="kw">let</span> <span class="ident">bitmask</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_device_config_scroll_get_methods</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) };
-        <span class="kw">if</span> <span class="ident">bitmask</span> <span class="op">&amp;</span> <span class="ident">ffi::libinput_config_scroll_method_LIBINPUT_CONFIG_SCROLL_NO_SCROLL</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">=</span><span class="op">=</span> <span class="ident">bitmask</span> {
+        <span class="kw">if</span> <span class="ident">bitmask</span> <span class="op">&amp;</span> <span class="ident">ffi::libinput_config_scroll_method_LIBINPUT_CONFIG_SCROLL_NO_SCROLL</span> <span class="kw">as</span> <span class="ident">u32</span>
+            <span class="op">=</span><span class="op">=</span> <span class="ident">bitmask</span>
+        {
             <span class="ident">methods</span>.<span class="ident">push</span>(<span class="ident">ScrollMethod::NoScroll</span>);
         }
-        <span class="kw">if</span> <span class="ident">bitmask</span> <span class="op">&amp;</span> <span class="ident">ffi::libinput_config_scroll_method_LIBINPUT_CONFIG_SCROLL_2FG</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">=</span><span class="op">=</span> <span class="ident">bitmask</span> {
+        <span class="kw">if</span> <span class="ident">bitmask</span> <span class="op">&amp;</span> <span class="ident">ffi::libinput_config_scroll_method_LIBINPUT_CONFIG_SCROLL_2FG</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">=</span><span class="op">=</span> <span class="ident">bitmask</span>
+        {
             <span class="ident">methods</span>.<span class="ident">push</span>(<span class="ident">ScrollMethod::TwoFinger</span>);
         }
-        <span class="kw">if</span> <span class="ident">bitmask</span> <span class="op">&amp;</span> <span class="ident">ffi::libinput_config_scroll_method_LIBINPUT_CONFIG_SCROLL_EDGE</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">=</span><span class="op">=</span> <span class="ident">bitmask</span> {
+        <span class="kw">if</span> <span class="ident">bitmask</span> <span class="op">&amp;</span> <span class="ident">ffi::libinput_config_scroll_method_LIBINPUT_CONFIG_SCROLL_EDGE</span> <span class="kw">as</span> <span class="ident">u32</span>
+            <span class="op">=</span><span class="op">=</span> <span class="ident">bitmask</span>
+        {
             <span class="ident">methods</span>.<span class="ident">push</span>(<span class="ident">ScrollMethod::Edge</span>);
         }
         <span class="kw">if</span> <span class="ident">bitmask</span> <span class="op">&amp;</span> <span class="ident">ffi::libinput_config_scroll_method_LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN</span> <span class="kw">as</span> <span class="ident">u32</span>
@@ -2718,8 +2874,12 @@
                     <span class="ident">ScrollMethod::NoScroll</span> <span class="op">=</span><span class="op">&gt;</span> {
                         <span class="ident">ffi::libinput_config_scroll_method_LIBINPUT_CONFIG_SCROLL_NO_SCROLL</span>
                     }
-                    <span class="ident">ScrollMethod::TwoFinger</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::libinput_config_scroll_method_LIBINPUT_CONFIG_SCROLL_2FG</span>,
-                    <span class="ident">ScrollMethod::Edge</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::libinput_config_scroll_method_LIBINPUT_CONFIG_SCROLL_EDGE</span>,
+                    <span class="ident">ScrollMethod::TwoFinger</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">ffi::libinput_config_scroll_method_LIBINPUT_CONFIG_SCROLL_2FG</span>
+                    }
+                    <span class="ident">ScrollMethod::Edge</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">ffi::libinput_config_scroll_method_LIBINPUT_CONFIG_SCROLL_EDGE</span>
+                    }
                     <span class="ident">ScrollMethod::OnButtonDown</span> <span class="op">=</span><span class="op">&gt;</span> {
                         <span class="ident">ffi::libinput_config_scroll_method_LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN</span>
                     }
@@ -2730,7 +2890,9 @@
             <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_UNSUPPORTED</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Unsupported</span>)
             }
-            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>),
+            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>)
+            }
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_config_status&#39;&quot;</span>),
         }
     }
@@ -2763,15 +2925,23 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">config_scroll_has_natural_scroll</span>, <span class="ident">ffi::libinput_device_config_scroll_has_natural_scroll</span>, <span class="ident">bool</span>);
 
     <span class="doccomment">/// Enable or disable natural scrolling on the device.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">config_scroll_set_natural_scroll_enabled</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">enabled</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">DeviceConfigResult</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">config_scroll_set_natural_scroll_enabled</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">enabled</span>: <span class="ident">bool</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">DeviceConfigResult</span> {
         <span class="kw">match</span> <span class="kw">unsafe</span> {
-            <span class="ident">ffi::libinput_device_config_scroll_set_natural_scroll_enabled</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="ident">enabled</span> <span class="kw">as</span> <span class="ident">i32</span>)
+            <span class="ident">ffi::libinput_device_config_scroll_set_natural_scroll_enabled</span>(
+                <span class="self">self</span>.<span class="ident">as_raw_mut</span>(),
+                <span class="ident">enabled</span> <span class="kw">as</span> <span class="ident">i32</span>,
+            )
         } {
             <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_SUCCESS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(()),
             <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_UNSUPPORTED</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Unsupported</span>)
             }
-            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>),
+            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>)
+            }
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_config_status&#39;&quot;</span>),
         }
     }
@@ -2798,22 +2968,24 @@
             <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_UNSUPPORTED</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Unsupported</span>)
             }
-            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>),
+            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>)
+            }
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_config_status&#39;&quot;</span>),
         }
     }
 
     <span class="doccomment">/// Get the current scroll button lock state</span>
-    <span class="doccomment">/// </span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// If `ScrollMethod::OnButtonDown` is not supported, or no button is set,</span>
     <span class="doccomment">/// this functions returns `Disabled`.</span>
-    <span class="doccomment">/// </span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// ## Note</span>
-    <span class="doccomment">/// </span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// The return value is independent of the currently selected scroll-method.</span>
     <span class="doccomment">/// For the scroll button lock to activate, a device must have the</span>
     <span class="doccomment">/// `ScrollMethod::OnButtonDown` enabled, and a non-zero button set as scroll button.</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;libinput_1_15&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;libinput_1_15&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">config_scroll_button_lock</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ScrollButtonLockState</span> {
         <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_device_config_scroll_get_button_lock</span>(<span class="self">self</span>.<span class="ident">as_raw</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>) } {
             <span class="ident">ffi::libinput_config_scroll_button_lock_state_LIBINPUT_CONFIG_SCROLL_BUTTON_LOCK_DISABLED</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ScrollButtonLockState::Disabled</span>,
@@ -2821,12 +2993,12 @@
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid libinput_config_scroll_button_lock_state&quot;</span>),
         }
     }
-    
+
     <span class="doccomment">/// Get the default scroll button lock state</span>
-    <span class="doccomment">/// </span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// If `ScrollMethod::OnButtonDown` is not supported, or no button is set,</span>
     <span class="doccomment">/// this functions returns `Disabled`.</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;libinput_1_15&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;libinput_1_15&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">config_scroll_default_button_lock</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ScrollButtonLockState</span> {
         <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_device_config_scroll_get_default_button_lock</span>(<span class="self">self</span>.<span class="ident">as_raw</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>) } {
             <span class="ident">ffi::libinput_config_scroll_button_lock_state_LIBINPUT_CONFIG_SCROLL_BUTTON_LOCK_DISABLED</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ScrollButtonLockState::Disabled</span>,
@@ -2836,24 +3008,31 @@
     }
 
     <span class="doccomment">/// Set the scroll button lock.</span>
-    <span class="doccomment">/// </span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// If the state is `Disabled` the button must physically be held down for</span>
     <span class="doccomment">/// button scrolling to work. If the state is `Enabled`, the button is considered</span>
     <span class="doccomment">/// logically down after the first press and release sequence, and logically</span>
     <span class="doccomment">/// up after the second press and release sequence.</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;libinput_1_15&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">config_scroll_set_button_lock</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">state</span>: <span class="ident">ScrollButtonLockState</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">DeviceConfigResult</span> {
-        <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_device_config_scroll_set_button_lock</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(),
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;libinput_1_15&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">config_scroll_set_button_lock</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">state</span>: <span class="ident">ScrollButtonLockState</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">DeviceConfigResult</span> {
+        <span class="kw">match</span> <span class="kw">unsafe</span> {
+            <span class="ident">ffi::libinput_device_config_scroll_set_button_lock</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(),
             <span class="kw">match</span> <span class="ident">state</span> {
                 <span class="ident">ScrollButtonLockState::Enabled</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::libinput_config_scroll_button_lock_state_LIBINPUT_CONFIG_SCROLL_BUTTON_LOCK_ENABLED</span>,
                 <span class="ident">ScrollButtonLockState::Disabled</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::libinput_config_scroll_button_lock_state_LIBINPUT_CONFIG_SCROLL_BUTTON_LOCK_DISABLED</span>,
             }
-        )} {
+        )
+        } {
             <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_SUCCESS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(()),
             <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_UNSUPPORTED</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Unsupported</span>)
             }
-            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>),
+            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>)
+            }
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_config_status&#39;&quot;</span>),
         }
     }
@@ -2909,7 +3088,9 @@
             <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_UNSUPPORTED</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Unsupported</span>)
             }
-            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>),
+            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>)
+            }
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_config_status&#39;&quot;</span>),
         }
     }
@@ -2950,7 +3131,9 @@
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">config_tap_finger_count</span>() <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
             <span class="prelude-val">None</span>
         } <span class="kw">else</span> {
-            <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_device_config_tap_get_default_button_map</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) } {
+            <span class="kw">match</span> <span class="kw">unsafe</span> {
+                <span class="ident">ffi::libinput_device_config_tap_get_default_button_map</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>())
+            } {
                 <span class="ident">ffi::libinput_config_tap_button_map_LIBINPUT_CONFIG_TAP_MAP_LRM</span> <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="prelude-val">Some</span>(<span class="ident">TapButtonMap::LeftRightMiddle</span>)
                 }
@@ -2965,7 +3148,8 @@
     <span class="doccomment">/// Return whether tap-and-drag is enabled or disabled by default</span>
     <span class="doccomment">/// on this device.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">config_tap_default_drag_enabled</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-        <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_device_config_tap_get_default_drag_enabled</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) } {
+        <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_device_config_tap_get_default_drag_enabled</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) }
+        {
             <span class="ident">ffi::libinput_config_drag_state_LIBINPUT_CONFIG_DRAG_ENABLED</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">true</span>,
             <span class="ident">ffi::libinput_config_drag_state_LIBINPUT_CONFIG_DRAG_DISABLED</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_config_drag_state&#39;&quot;</span>),
@@ -3083,7 +3267,9 @@
             <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_UNSUPPORTED</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Unsupported</span>)
             }
-            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>),
+            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>)
+            }
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_config_status&#39;&quot;</span>),
         }
     }
@@ -3111,7 +3297,9 @@
             <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_UNSUPPORTED</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Unsupported</span>)
             }
-            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>),
+            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>)
+            }
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_config_status&#39;&quot;</span>),
         }
     }
@@ -3142,7 +3330,9 @@
             <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_UNSUPPORTED</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Unsupported</span>)
             }
-            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>),
+            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>)
+            }
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_config_status&#39;&quot;</span>),
         }
     }
@@ -3168,7 +3358,9 @@
             <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_UNSUPPORTED</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Unsupported</span>)
             }
-            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>),
+            <span class="ident">ffi::libinput_config_status_LIBINPUT_CONFIG_STATUS_INVALID</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">DeviceConfigError::Invalid</span>)
+            }
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_config_status&#39;&quot;</span>),
         }
     }
