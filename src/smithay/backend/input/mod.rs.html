@@ -625,7 +625,7 @@
     <span class="ident">TabletToolEvent</span>, <span class="ident">TabletToolProximityEvent</span>, <span class="ident">TabletToolTipEvent</span>, <span class="ident">TabletToolTipState</span>, <span class="ident">TabletToolType</span>,
 };
 
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils</span>::{<span class="ident">Logical</span>, <span class="ident">Point</span>, <span class="ident">Raw</span>};
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils</span>::{<span class="ident">Logical</span>, <span class="ident">Point</span>, <span class="ident">Raw</span>, <span class="ident">Size</span>};
 
 <span class="doccomment">/// Trait for generic functions every input device does provide</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Device</span>: <span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">std::hash::Hash</span> {
@@ -881,21 +881,21 @@
 
     <span class="doccomment">/// Device position converted to the targets coordinate space.</span>
     <span class="doccomment">/// E.g. the focused output&#39;s resolution.</span>
-    <span class="kw">fn</span> <span class="ident">position_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">coordinate_space</span>: <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">u32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">f64</span>, <span class="ident">Logical</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">position_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">coordinate_space</span>: <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">f64</span>, <span class="ident">Logical</span><span class="op">&gt;</span> {
         (
-            <span class="self">self</span>.<span class="ident">x_transformed</span>(<span class="ident">coordinate_space</span>.<span class="ident">x</span>),
-            <span class="self">self</span>.<span class="ident">y_transformed</span>(<span class="ident">coordinate_space</span>.<span class="ident">y</span>),
+            <span class="self">self</span>.<span class="ident">x_transformed</span>(<span class="ident">coordinate_space</span>.<span class="ident">w</span>),
+            <span class="self">self</span>.<span class="ident">y_transformed</span>(<span class="ident">coordinate_space</span>.<span class="ident">h</span>),
         )
             .<span class="ident">into</span>()
     }
 
     <span class="doccomment">/// Device x position converted to the targets coordinate space&#39;s width.</span>
     <span class="doccomment">/// E.g. the focused output&#39;s width.</span>
-    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span>;
+    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span>;
 
     <span class="doccomment">/// Device y position converted to the targets coordinate space&#39;s height.</span>
     <span class="doccomment">/// E.g. the focused output&#39;s height.</span>
-    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span>;
+    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span>;
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">InputBackend</span><span class="op">&gt;</span> <span class="ident">PointerMotionAbsoluteEvent</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">UnusedEvent</span> {
@@ -907,11 +907,11 @@
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {}
     }
 
-    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_width</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_width</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {}
     }
 
-    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_height</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_height</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {}
     }
 }
@@ -947,10 +947,10 @@
 
     <span class="doccomment">/// Touch position converted into the target coordinate space.</span>
     <span class="doccomment">/// E.g. the focused output&#39;s resolution.</span>
-    <span class="kw">fn</span> <span class="ident">position_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">coordinate_space</span>: <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">u32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">f64</span>, <span class="ident">Logical</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">position_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">coordinate_space</span>: <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">f64</span>, <span class="ident">Logical</span><span class="op">&gt;</span> {
         (
-            <span class="self">self</span>.<span class="ident">x_transformed</span>(<span class="ident">coordinate_space</span>.<span class="ident">x</span>),
-            <span class="self">self</span>.<span class="ident">y_transformed</span>(<span class="ident">coordinate_space</span>.<span class="ident">y</span>),
+            <span class="self">self</span>.<span class="ident">x_transformed</span>(<span class="ident">coordinate_space</span>.<span class="ident">w</span>),
+            <span class="self">self</span>.<span class="ident">y_transformed</span>(<span class="ident">coordinate_space</span>.<span class="ident">h</span>),
         )
             .<span class="ident">into</span>()
     }
@@ -967,11 +967,11 @@
 
     <span class="doccomment">/// Touch event&#39;s x position converted to the targets coordinate space&#39;s width.</span>
     <span class="doccomment">/// E.g. the focused output&#39;s width.</span>
-    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span>;
+    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span>;
 
     <span class="doccomment">/// Touch event&#39;s y position converted to the targets coordinate space&#39;s width.</span>
     <span class="doccomment">/// E.g. the focused output&#39;s width.</span>
-    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span>;
+    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span>;
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">InputBackend</span><span class="op">&gt;</span> <span class="ident">TouchDownEvent</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">UnusedEvent</span> {
@@ -987,11 +987,11 @@
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {}
     }
 
-    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_width</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_width</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {}
     }
 
-    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_height</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_height</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {}
     }
 }
@@ -1010,10 +1010,10 @@
 
     <span class="doccomment">/// Touch position converted into the target coordinate space.</span>
     <span class="doccomment">/// E.g. the focused output&#39;s resolution.</span>
-    <span class="kw">fn</span> <span class="ident">position_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">coordinate_space</span>: <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">u32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">f64</span>, <span class="ident">Logical</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">position_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">coordinate_space</span>: <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">f64</span>, <span class="ident">Logical</span><span class="op">&gt;</span> {
         (
-            <span class="self">self</span>.<span class="ident">x_transformed</span>(<span class="ident">coordinate_space</span>.<span class="ident">x</span>),
-            <span class="self">self</span>.<span class="ident">y_transformed</span>(<span class="ident">coordinate_space</span>.<span class="ident">y</span>),
+            <span class="self">self</span>.<span class="ident">x_transformed</span>(<span class="ident">coordinate_space</span>.<span class="ident">w</span>),
+            <span class="self">self</span>.<span class="ident">y_transformed</span>(<span class="ident">coordinate_space</span>.<span class="ident">h</span>),
         )
             .<span class="ident">into</span>()
     }
@@ -1030,11 +1030,11 @@
 
     <span class="doccomment">/// Touch event&#39;s x position converted to the targets coordinate space&#39;s width.</span>
     <span class="doccomment">/// E.g. the focused output&#39;s width.</span>
-    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span>;
+    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span>;
 
     <span class="doccomment">/// Touch event&#39;s y position converted to the targets coordinate space&#39;s width.</span>
     <span class="doccomment">/// E.g. the focused output&#39;s width.</span>
-    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span>;
+    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span>;
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">InputBackend</span><span class="op">&gt;</span> <span class="ident">TouchMotionEvent</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">UnusedEvent</span> {
@@ -1050,11 +1050,11 @@
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {}
     }
 
-    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_width</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_width</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {}
     }
 
-    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_height</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_height</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {}
     }
 }

@@ -823,12 +823,12 @@
         <span class="self">self</span>.<span class="ident">absolute_y</span>()
     }
 
-    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
-        <span class="self">self</span>.<span class="ident">absolute_x_transformed</span>(<span class="ident">width</span>)
+    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+        <span class="self">self</span>.<span class="ident">absolute_x_transformed</span>(<span class="ident">width</span> <span class="kw">as</span> <span class="ident">u32</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
-        <span class="self">self</span>.<span class="ident">absolute_y_transformed</span>(<span class="ident">height</span>)
+    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+        <span class="self">self</span>.<span class="ident">absolute_y_transformed</span>(<span class="ident">height</span> <span class="kw">as</span> <span class="ident">u32</span>)
     }
 }
 
@@ -855,12 +855,12 @@
         <span class="ident">event::touch::TouchEventPosition::y</span>(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
-        <span class="ident">event::touch::TouchEventPosition::x_transformed</span>(<span class="self">self</span>, <span class="ident">width</span>)
+    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+        <span class="ident">event::touch::TouchEventPosition::x_transformed</span>(<span class="self">self</span>, <span class="ident">width</span> <span class="kw">as</span> <span class="ident">u32</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
-        <span class="ident">event::touch::TouchEventPosition::y_transformed</span>(<span class="self">self</span>, <span class="ident">height</span>)
+    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+        <span class="ident">event::touch::TouchEventPosition::y_transformed</span>(<span class="self">self</span>, <span class="ident">height</span> <span class="kw">as</span> <span class="ident">u32</span>)
     }
 }
 
@@ -887,12 +887,12 @@
         <span class="ident">event::touch::TouchEventPosition::y</span>(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
-        <span class="ident">event::touch::TouchEventPosition::x_transformed</span>(<span class="self">self</span>, <span class="ident">width</span>)
+    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+        <span class="ident">event::touch::TouchEventPosition::x_transformed</span>(<span class="self">self</span>, <span class="ident">width</span> <span class="kw">as</span> <span class="ident">u32</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
-        <span class="ident">event::touch::TouchEventPosition::y_transformed</span>(<span class="self">self</span>, <span class="ident">height</span>)
+    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+        <span class="ident">event::touch::TouchEventPosition::y_transformed</span>(<span class="self">self</span>, <span class="ident">height</span> <span class="kw">as</span> <span class="ident">u32</span>)
     }
 }
 

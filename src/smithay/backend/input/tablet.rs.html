@@ -368,7 +368,7 @@
 <span id="368">368</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">ButtonState</span>, <span class="ident">Event</span>, <span class="ident">InputBackend</span>, <span class="ident">UnusedEvent</span>};
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils</span>::{<span class="ident">Logical</span>, <span class="ident">Point</span>, <span class="ident">Raw</span>};
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils</span>::{<span class="ident">Logical</span>, <span class="ident">Point</span>, <span class="ident">Raw</span>, <span class="ident">Size</span>};
 <span class="kw">use</span> <span class="ident">bitflags::bitflags</span>;
 
 <span class="doccomment">/// Description of physical tablet tool</span>
@@ -442,10 +442,10 @@
     }
 
     <span class="doccomment">/// Tool position converted into the target coordinate space.</span>
-    <span class="kw">fn</span> <span class="ident">position_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">coordinate_space</span>: <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">u32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">f64</span>, <span class="ident">Logical</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">position_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">coordinate_space</span>: <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">f64</span>, <span class="ident">Logical</span><span class="op">&gt;</span> {
         (
-            <span class="self">self</span>.<span class="ident">x_transformed</span>(<span class="ident">coordinate_space</span>.<span class="ident">x</span>),
-            <span class="self">self</span>.<span class="ident">y_transformed</span>(<span class="ident">coordinate_space</span>.<span class="ident">y</span>),
+            <span class="self">self</span>.<span class="ident">x_transformed</span>(<span class="ident">coordinate_space</span>.<span class="ident">w</span>),
+            <span class="self">self</span>.<span class="ident">y_transformed</span>(<span class="ident">coordinate_space</span>.<span class="ident">h</span>),
         )
             .<span class="ident">into</span>()
     }
@@ -479,9 +479,9 @@
     <span class="kw">fn</span> <span class="ident">y</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span>;
 
     <span class="doccomment">/// Return the current absolute X coordinate of the tablet tool event, transformed to screen coordinates.</span>
-    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span>;
+    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span>;
     <span class="doccomment">/// Return the current absolute Y coordinate of the tablet tool event, transformed to screen coordinates.</span>
-    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span>;
+    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span>;
 
     <span class="doccomment">/// Returns the current distance from the tablet&#39;s sensor, normalized to the range [0, 1]</span>
     <span class="doccomment">///</span>
@@ -574,10 +574,10 @@
     <span class="kw">fn</span> <span class="ident">y</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {}
     }
-    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_width</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_width</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {}
     }
-    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_height</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_height</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {}
     }
     <span class="kw">fn</span> <span class="ident">distance</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {

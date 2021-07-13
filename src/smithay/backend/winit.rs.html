@@ -1277,13 +1277,13 @@
         <span class="self">self</span>.<span class="ident">logical_position</span>.<span class="ident">y</span> <span class="op">*</span> <span class="ident">wsize</span>.<span class="ident">scale_factor</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="kw">let</span> <span class="ident">wsize</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">borrow</span>();
         <span class="kw">let</span> <span class="ident">w_width</span> <span class="op">=</span> <span class="ident">wsize</span>.<span class="ident">logical_size</span>().<span class="ident">w</span>;
         <span class="ident">f64::max</span>(<span class="self">self</span>.<span class="ident">logical_position</span>.<span class="ident">x</span> <span class="op">*</span> <span class="ident">width</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">w_width</span>, <span class="number">0.0</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="kw">let</span> <span class="ident">wsize</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">borrow</span>();
         <span class="kw">let</span> <span class="ident">w_height</span> <span class="op">=</span> <span class="ident">wsize</span>.<span class="ident">logical_size</span>().<span class="ident">h</span>;
         <span class="ident">f64::max</span>(<span class="self">self</span>.<span class="ident">logical_position</span>.<span class="ident">y</span> <span class="op">*</span> <span class="ident">height</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">w_height</span>, <span class="number">0.0</span>)
@@ -1394,13 +1394,13 @@
         <span class="self">self</span>.<span class="ident">location</span>.<span class="ident">y</span> <span class="op">*</span> <span class="ident">wsize</span>.<span class="ident">scale_factor</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="kw">let</span> <span class="ident">wsize</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">borrow</span>();
         <span class="kw">let</span> <span class="ident">w_width</span> <span class="op">=</span> <span class="ident">wsize</span>.<span class="ident">logical_size</span>().<span class="ident">w</span>;
         <span class="ident">f64::max</span>(<span class="self">self</span>.<span class="ident">location</span>.<span class="ident">x</span> <span class="op">*</span> <span class="ident">width</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">w_width</span>, <span class="number">0.0</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="kw">let</span> <span class="ident">wsize</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">borrow</span>();
         <span class="kw">let</span> <span class="ident">w_height</span> <span class="op">=</span> <span class="ident">wsize</span>.<span class="ident">logical_size</span>().<span class="ident">h</span>;
         <span class="ident">f64::max</span>(<span class="self">self</span>.<span class="ident">location</span>.<span class="ident">y</span> <span class="op">*</span> <span class="ident">height</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">w_height</span>, <span class="number">0.0</span>)
@@ -1441,13 +1441,13 @@
         <span class="self">self</span>.<span class="ident">location</span>.<span class="ident">y</span> <span class="op">*</span> <span class="ident">wsize</span>.<span class="ident">scale_factor</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="kw">let</span> <span class="ident">wsize</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">borrow</span>();
         <span class="kw">let</span> <span class="ident">w_width</span> <span class="op">=</span> <span class="ident">wsize</span>.<span class="ident">logical_size</span>().<span class="ident">w</span>;
         <span class="ident">f64::max</span>(<span class="self">self</span>.<span class="ident">location</span>.<span class="ident">x</span> <span class="op">*</span> <span class="ident">width</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">w_width</span>, <span class="number">0.0</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="kw">let</span> <span class="ident">wsize</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">borrow</span>();
         <span class="kw">let</span> <span class="ident">w_height</span> <span class="op">=</span> <span class="ident">wsize</span>.<span class="ident">logical_size</span>().<span class="ident">h</span>;
         <span class="ident">f64::max</span>(<span class="self">self</span>.<span class="ident">location</span>.<span class="ident">y</span> <span class="op">*</span> <span class="ident">height</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">w_height</span>, <span class="number">0.0</span>)
