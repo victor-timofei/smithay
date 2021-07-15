@@ -163,7 +163,7 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ## DrmDevice</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! A device  exposes certain properties, which are directly derived</span>
+<span class="doccomment">//! A device exposes certain properties, which are directly derived</span>
 <span class="doccomment">//! from the *device* as perceived by the direct rendering manager api (drm). These resources consists</span>
 <span class="doccomment">//! out of connectors, encoders, framebuffers, planes and crtcs.</span>
 <span class="doccomment">//!</span>
@@ -181,13 +181,13 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! A [`connector`](drm::control::connector) represents a port on your computer, possibly with a connected monitor, TV, capture card, etc.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! A [`framebuffer`](drm::control::framebuffer) represents a buffer you may be rendering to, see `Surface` below.</span>
+<span class="doccomment">//! A [`framebuffer`](drm::control::framebuffer) represents a buffer you may be rendering to, see `DrmSurface` below.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! A [`plane`](drm::control::plane) adds another layer on top of the crtcs, which allow us to layer multiple images on top of each other more efficiently</span>
-<span class="doccomment">//! then by combining the rendered images in the rendering phase, e.g. via OpenGL. Planes can be explicitly used by the user.</span>
+<span class="doccomment">//! then by combining the rendered images in the rendering phase, e.g. via OpenGL. Planes have to be explicitly used by the user to be useful.</span>
 <span class="doccomment">//! Every device has at least one primary plane used to display an image to the whole crtc. Additionally cursor and overlay planes may be present.</span>
 <span class="doccomment">//! Cursor planes are usually very restricted in size and meant to be used for hardware cursors, while overlay planes may</span>
-<span class="doccomment">//! be used for performance reasons to display any overlay on top of the image, e.g. top-most windows.</span>
+<span class="doccomment">//! be used for performance reasons to display any overlay on top of the image, e.g. the top-most windows.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! The main functionality of a `Device` in smithay is to give access to all these properties for the user to</span>
 <span class="doccomment">//! choose an appropriate rendering configuration. What that means is defined by the requirements and constraints documented</span>

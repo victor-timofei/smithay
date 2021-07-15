@@ -323,6 +323,9 @@
 <span id="323">323</span>
 <span id="324">324</span>
 <span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
 </pre><pre class="rust">
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">missing_docs</span>)]</span>
 
@@ -367,6 +370,8 @@
     });
 }
 
+<span class="doccomment">/// Loads libEGL symbols, if not loaded already.</span>
+<span class="doccomment">/// This normally happens automatically during [`EGLDisplay`] initialization.</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">make_sure_egl_is_loaded</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
     <span class="kw">use</span> <span class="ident">std</span>::{
         <span class="ident">ffi</span>::{<span class="ident">CStr</span>, <span class="ident">CString</span>},
@@ -433,6 +438,7 @@
     <span class="prelude-val">Ok</span>(<span class="ident">extensions</span>)
 }
 
+<span class="doccomment">/// Module containing raw egl function bindings</span>
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::all</span>, <span class="ident">missing_debug_implementations</span>)]</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">egl</span> {
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;

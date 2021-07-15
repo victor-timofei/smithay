@@ -17,10 +17,8 @@ return value of this function.  As an example:</p>
 <p>This will print something like the following (order indeterministic).  The
 thing to note is that you end up with two processes continuing execution
 immediately after the fork call but with different match arms.</p>
-<pre><code class="language-text">Continuing execution in parent process, new child has pid: 1234
-I'm a new child process
-</code></pre>
-<h1 id="safety" class="section-header"><a href="#safety">Safety</a></h1>
+<div class="example-wrap"><pre class="language-text">Continuing execution in parent process, new child has pid: 1234
+I&#39;m a new child process</pre></div><h1 id="safety" class="section-header"><a href="#safety">Safety</a></h1>
 <p>In a multithreaded program, only <a href="http://man7.org/linux/man-pages/man7/signal-safety.7.html">async-signal-safe</a> functions like <code>pause</code>
 and <code>_exit</code> may be called by the child (the parent isn’t restricted). Note
 that memory allocation may <strong>not</strong> be async-signal-safe and thus must be

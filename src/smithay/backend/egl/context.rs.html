@@ -552,7 +552,7 @@
     <span class="doccomment">/// # Safety</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This function is marked unsafe, because the context cannot be made current</span>
-    <span class="doccomment">/// on multiple threads.</span>
+    <span class="doccomment">/// on multiple threads without being unbound again (see `unbind`).</span>
     <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">make_current_with_surface</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">EGLSurface</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">MakeCurrentError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">surface_ptr</span> <span class="op">=</span> <span class="ident">surface</span>.<span class="ident">surface</span>.<span class="ident">load</span>(<span class="ident">Ordering::SeqCst</span>);
         <span class="ident">wrap_egl_call</span>(<span class="op">|</span><span class="op">|</span> {
@@ -567,7 +567,7 @@
     <span class="doccomment">/// # Safety</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This function is marked unsafe, because the context cannot be made current</span>
-    <span class="doccomment">/// on multiple threads without being unbound again (see `unbind`)</span>
+    <span class="doccomment">/// on multiple threads without being unbound again (see `unbind`).</span>
     <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">make_current</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">MakeCurrentError</span><span class="op">&gt;</span> {
         <span class="ident">wrap_egl_call</span>(<span class="op">|</span><span class="op">|</span> {
             <span class="ident">ffi::egl::MakeCurrent</span>(
@@ -598,7 +598,7 @@
 
     <span class="doccomment">/// Unbinds this context from the current thread, if set.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// This does nothing if this context is not the current context</span>
+    <span class="doccomment">/// This does nothing if this context is not the current context.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unbind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">MakeCurrentError</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">is_current</span>() {
             <span class="ident">wrap_egl_call</span>(<span class="op">|</span><span class="op">|</span> <span class="kw">unsafe</span> {
@@ -613,12 +613,12 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// Returns a list of formats for dmabufs that can be rendered to</span>
+    <span class="doccomment">/// Returns a list of formats for dmabufs that can be rendered to.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dmabuf_render_formats</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">DrmFormat</span><span class="op">&gt;</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">display</span>.<span class="ident">dmabuf_render_formats</span>
     }
 
-    <span class="doccomment">/// Returns a list of formats for dmabufs that can be used as textures</span>
+    <span class="doccomment">/// Returns a list of formats for dmabufs that can be used as textures.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dmabuf_texture_formats</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">DrmFormat</span><span class="op">&gt;</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">display</span>.<span class="ident">dmabuf_import_formats</span>
     }
@@ -643,7 +643,7 @@
     <span class="doccomment">/// `(3, 0)` will request a OpenGL ES 3.0 context for example.</span>
     <span class="doccomment">/// `(2, 0)` is the minimum.</span>
     <span class="kw">pub</span> <span class="ident">version</span>: (<span class="ident">u8</span>, <span class="ident">u8</span>),
-    <span class="doccomment">/// OpenGL profile to use</span>
+    <span class="doccomment">/// OpenGL profile to use.</span>
     <span class="kw">pub</span> <span class="ident">profile</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GlProfile</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Whether to enable the debug flag of the context.</span>
     <span class="doccomment">///</span>
@@ -657,7 +657,7 @@
 <span class="doccomment">/// Describes the requested OpenGL context profiles.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">GlProfile</span> {
-    <span class="doccomment">/// Include all the immediate more functions and definitions.</span>
+    <span class="doccomment">/// Include all the immediate functions and definitions.</span>
     <span class="ident">Compatibility</span>,
     <span class="doccomment">/// Include all the future-compatible functions and definitions.</span>
     <span class="ident">Core</span>,

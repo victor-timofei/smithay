@@ -211,10 +211,10 @@
     <span class="doccomment">/// Create a new `EGLSurface`.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Requires:</span>
-    <span class="doccomment">/// - A EGLDisplay supported by the corresponding plattform matching the surface type</span>
+    <span class="doccomment">/// - A EGLDisplay supported by the corresponding platform matching the surface type</span>
     <span class="doccomment">/// - A pixel format</span>
-    <span class="doccomment">/// - An (optional) preference for double_buffering</span>
     <span class="doccomment">/// - A valid `EGLConfig` (see `EGLContext::config_id()`)</span>
+    <span class="doccomment">/// - A native type backing the surface matching the used platform</span>
     <span class="doccomment">/// - An (optional) Logger</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">L</span><span class="op">&gt;</span>(
         <span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="ident">EGLDisplay</span>,

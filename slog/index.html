@@ -100,9 +100,8 @@ makes <code>trace</code> and <code>debug</code> level logging records practicall
 should encourage using them freely. If you want to enable trace/debug
 messages or raise the compile time logging level limit, use the following in
 your <code>Cargo.toml</code>:</p>
-<pre><code class="language-norust">slog = { version = ... ,
-         features = [&quot;max_level_trace&quot;, &quot;release_max_level_warn&quot;] }
-</code></pre>
+<div class="example-wrap"><pre class="language-norust">slog = { version = ... ,
+         features = [&quot;max_level_trace&quot;, &quot;release_max_level_warn&quot;] }</pre></div>
 <p>Root drain (passed to <code>Logger::root</code>) must be one that does not ever return
 errors. This forces user to pick error handing strategy.
 <code>Drain::fuse()</code> or <code>Drain::ignore_res()</code>.</p>

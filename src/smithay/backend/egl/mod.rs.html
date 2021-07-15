@@ -263,63 +263,34 @@
 <span id="263">263</span>
 <span id="264">264</span>
 <span id="265">265</span>
-<span id="266">266</span>
-<span id="267">267</span>
-<span id="268">268</span>
-<span id="269">269</span>
-<span id="270">270</span>
-<span id="271">271</span>
-<span id="272">272</span>
-<span id="273">273</span>
-<span id="274">274</span>
-<span id="275">275</span>
-<span id="276">276</span>
-<span id="277">277</span>
-<span id="278">278</span>
-<span id="279">279</span>
-<span id="280">280</span>
-<span id="281">281</span>
-<span id="282">282</span>
-<span id="283">283</span>
-<span id="284">284</span>
-<span id="285">285</span>
-<span id="286">286</span>
-<span id="287">287</span>
-<span id="288">288</span>
-<span id="289">289</span>
-<span id="290">290</span>
-<span id="291">291</span>
-<span id="292">292</span>
-<span id="293">293</span>
-<span id="294">294</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Common traits and types for egl rendering</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! Large parts of this module are taken from</span>
-<span class="doccomment">//! [glutin src/api/egl](https://github.com/tomaka/glutin/tree/044e651edf67a2029eecc650dd42546af1501414/src/api/egl/)</span>
+<span class="doccomment">//! This module has multiple responsibilities related to functionality provided by libEGL:</span>
+<span class="doccomment">//! Initializing EGL objects to:</span>
+<span class="doccomment">//! - initialize usage of EGL based [`WlBuffer`](wayland_server::protocol::wl_buffer::WlBuffer)s via `wl_drm`.</span>
+<span class="doccomment">//! - initialize OpenGL contexts from.</span>
+<span class="doccomment">//! - Import/Export external resources to/from OpenGL</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! It therefore falls under</span>
-<span class="doccomment">//! [glutin&#39;s Apache 2.0 license](https://github.com/tomaka/glutin/tree/044e651edf67a2029eecc650dd42546af1501414/LICENSE)</span>
+<span class="doccomment">//! To use this module, you first need to create a [`EGLDisplay`] through a supported EGL platform</span>
+<span class="doccomment">//! as inidicated by an implementation of the `native::EGLNativeDisplay` trait.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! Wayland specific EGL functionality - EGL based [`WlBuffer`](wayland_server::protocol::wl_buffer::WlBuffer)s.</span>
+<span class="doccomment">//! You may bind the [`EGLDisplay`], that shall be used by clients for rendering (so pick one initialized by a fast platform)</span>
+<span class="doccomment">//! to the [`wayland_server::Display`] of your compositor. Note only one backend may be bound to any [`Display`](wayland_server::Display) at any time.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! The types of this module can be used to initialize hardware acceleration rendering</span>
-<span class="doccomment">//! based on EGL for clients as it may enabled usage of `EGLImage` based [`WlBuffer`](wayland_server::protocol::wl_buffer::WlBuffer)s.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! To use it bind the [`EGLDisplay`] trait, that shall do the</span>
-<span class="doccomment">//! rendering (so pick a fast one), to the [`wayland_server::Display`] of your compositor.</span>
-<span class="doccomment">//! Note only one backend may be bound to any [`Display`](wayland_server::Display) at any time.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! You may then use the resulting [`EGLDisplay`] to receive [`EGLBuffer`]</span>
+<span class="doccomment">//! You may then use the resulting [`display::EGLBufferReader`] to receive [`EGLBuffer`]</span>
 <span class="doccomment">//! of an EGL-based [`WlBuffer`](wayland_server::protocol::wl_buffer::WlBuffer) for rendering.</span>
+<span class="doccomment">//! Renderers implementing the [`ImportEGL`](crate::backend::renderer::ImportEGL)-trait can manage the buffer reader for you.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! To create OpenGL contexts you may create [`EGLContext`]s from the display and if the context is initialized with a config</span>
+<span class="doccomment">//! it may also be used to initialize an [`EGLSurface`], which can be [bound](crate::backend::renderer::Bind) to some renderers.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Alternatively you may import [`dmabuf`](crate::backend::allocator::dmabuf)s using the display, which result</span>
+<span class="doccomment">//! in an [`EGLImage`], which can be rendered into by OpenGL. This is perferrable to using surfaces as the dmabuf can be</span>
+<span class="doccomment">//! passed around freely making resource-management and more complex use-cases like Multi-GPU rendering easier to manage.</span>
+<span class="doccomment">//! Renderers based on EGL may support doing this for you by allowing you to [`Bind`](crate::backend::renderer::Bind) a dmabuf directly.</span>
+<span class="doccomment">//!</span>
 
-<span class="comment">/*
-#[cfg(feature = &quot;renderer_gl&quot;)]
-use crate::backend::graphics::{
-    gl::{ffi as gl_ffi, GLGraphicsBackend},
-    SwapBuffersError as GraphicsSwapBuffersError,
-};
-*/</span>
 <span class="kw">use</span> <span class="ident">std::fmt</span>;
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">context</span>;
@@ -387,7 +358,7 @@ use crate::backend::graphics::{
     <span class="doccomment">/// This buffer is not managed by the EGL buffer</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;This buffer is not managed by EGL. Err: {0:}&quot;</span>)]</span>
     <span class="ident">NotManaged</span>(<span class="attribute">#[<span class="ident">source</span>]</span> <span class="ident">EGLError</span>),
-    <span class="doccomment">/// Failed to create `EGLImages` from the buffer</span>
+    <span class="doccomment">/// Failed to create `EGLBuffer` from the buffer</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Failed to create EGLImages from the buffer. Err: {0:}&quot;</span>)]</span>
     <span class="ident">EGLImageCreationFailed</span>(<span class="attribute">#[<span class="ident">source</span>]</span> <span class="ident">EGLError</span>),
     <span class="doccomment">/// The required EGL extension is not supported by the underlying EGL implementation</span>
@@ -481,35 +452,6 @@ use crate::backend::graphics::{
     }
 }
 
-<span class="doccomment">/// Error that might happen when binding an `EGLImage` to a GL texture</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">thiserror::Error</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">TextureCreationError</span> {
-    <span class="doccomment">/// The given plane index is out of bounds</span>
-    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;This buffer is not managed by EGL&quot;</span>)]</span>
-    <span class="ident">PlaneIndexOutOfBounds</span>,
-    <span class="doccomment">/// The OpenGL context has been lost and needs to be recreated.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// All the objects associated to it (textures, buffers, programs, etc.)</span>
-    <span class="doccomment">/// need to be recreated from scratch.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Operations will have no effect. Functions that read textures, buffers, etc.</span>
-    <span class="doccomment">/// from OpenGL will return uninitialized data instead.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// A context loss usually happens on mobile devices when the user puts the</span>
-    <span class="doccomment">/// application on sleep and wakes it up later. However any OpenGL implementation</span>
-    <span class="doccomment">/// can theoretically lose the context at any time.</span>
-    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;The context has been lost, it needs to be recreated&quot;</span>)]</span>
-    <span class="ident">ContextLost</span>,
-    <span class="doccomment">/// Required OpenGL Extension for texture creation is missing</span>
-    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Required OpenGL Extension for texture creation is missing: {0}&quot;</span>)]</span>
-    <span class="ident">GLExtensionNotSupported</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>),
-    <span class="doccomment">/// Failed to bind the `EGLImage` to the given texture</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The given argument is the GL error code</span>
-    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Failed to create EGLImages from the buffer (GL error code {0:x}&quot;</span>)]</span>
-    <span class="ident">TextureBindingFailed</span>(<span class="ident">u32</span>),
-}
-
 <span class="doccomment">/// Texture format types</span>
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">i32</span>)]</span>
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_camel_case_types</span>)]</span>
@@ -556,7 +498,7 @@ use crate::backend::graphics::{
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>)]</span>
 <span class="kw">impl</span> <span class="ident">EGLBuffer</span> {
-    <span class="doccomment">/// Amount of planes of these `EGLImages`</span>
+    <span class="doccomment">/// Amount of planes of this EGLBuffer</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">num_planes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
         <span class="self">self</span>.<span class="ident">format</span>.<span class="ident">num_planes</span>()
     }

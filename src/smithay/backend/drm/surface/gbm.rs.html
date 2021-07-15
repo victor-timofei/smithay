@@ -468,15 +468,6 @@
 <span id="468">468</span>
 <span id="469">469</span>
 <span id="470">470</span>
-<span id="471">471</span>
-<span id="472">472</span>
-<span id="473">473</span>
-<span id="474">474</span>
-<span id="475">475</span>
-<span id="476">476</span>
-<span id="477">477</span>
-<span id="478">478</span>
-<span id="479">479</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std::collections::HashSet</span>;
 <span class="kw">use</span> <span class="ident">std::os::unix::io::AsRawFd</span>;
@@ -496,13 +487,7 @@
 
 <span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">debug</span>, <span class="ident">error</span>, <span class="ident">o</span>, <span class="ident">trace</span>, <span class="ident">warn</span>};
 
-<span class="doccomment">/// Simplified by limited abstraction to link single [`DrmSurface`]s to renderers.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Use-case</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// In some scenarios it might be enough to use of a drm-surface as the one and only target</span>
-<span class="doccomment">/// of a single renderer. In these cases `DrmRenderSurface` provides a way to quickly</span>
-<span class="doccomment">/// get up and running without manually handling and binding buffers.</span>
+<span class="doccomment">/// Simplified abstraction of a swapchain for gbm-buffers displayed on a [`DrmSurface`].</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GbmBufferedSurface</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
     <span class="ident">buffers</span>: <span class="ident">Buffers</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>,
     <span class="ident">swapchain</span>: <span class="ident">Swapchain</span><span class="op">&lt;</span><span class="ident">GbmDevice</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>, <span class="ident">BufferObject</span><span class="op">&lt;</span>()<span class="op">&gt;</span>, (<span class="ident">Dmabuf</span>, <span class="ident">FbHandle</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
@@ -523,15 +508,12 @@
 <span class="kw">where</span>
     <span class="ident">D</span>: <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
-    <span class="doccomment">/// Create a new `DrmRendererSurface` from a given compatible combination</span>
-    <span class="doccomment">/// of a surface, an allocator and a renderer.</span>
+    <span class="doccomment">/// Create a new `GbmBufferedSurface` from a given compatible combination</span>
+    <span class="doccomment">/// of a surface, an allocator and renderer formats.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// To sucessfully call this function, you need to have a renderer,</span>
-    <span class="doccomment">/// which can render into a Dmabuf, and an allocator, which can create</span>
-    <span class="doccomment">/// a buffer type, which can be converted into a Dmabuf.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The function will futhermore check for compatibility by enumerating</span>
-    <span class="doccomment">/// supported pixel formats and choosing an appropriate one.</span>
+    <span class="doccomment">/// which can render into a Dmabuf, and a gbm allocator that can produce</span>
+    <span class="doccomment">/// buffers of a supported format for rendering.</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::type_complexity</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>(
         <span class="ident">drm</span>: <span class="ident">DrmSurface</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>,

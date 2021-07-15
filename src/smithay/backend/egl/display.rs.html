@@ -1279,7 +1279,7 @@
         <span class="prelude-val">Ok</span>((<span class="ident">desc</span>, <span class="ident">config_id</span>))
     }
 
-    <span class="doccomment">/// Get a handle to the underlying native EGLDisplay</span>
+    <span class="doccomment">/// Get a handle to the underlying raw EGLDisplay handle</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_display_handle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">EGLDisplayHandle</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">display</span>.<span class="ident">clone</span>()
     }
@@ -1294,7 +1294,7 @@
         <span class="self">self</span>.<span class="ident">extensions</span>.<span class="ident">clone</span>()
     }
 
-    <span class="doccomment">/// Imports a dmabuf as an eglimage</span>
+    <span class="doccomment">/// Imports a [`Dmabuf`] as an [`EGLImage`]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_image_from_dmabuf</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">dmabuf</span>: <span class="kw-2">&amp;</span><span class="ident">Dmabuf</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">EGLImage</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">extensions</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span> <span class="op">=</span><span class="op">=</span> <span class="string">&quot;EGL_KHR_image_base&quot;</span>)
             <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="self">self</span>

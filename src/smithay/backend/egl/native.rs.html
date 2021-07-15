@@ -275,7 +275,6 @@
 <span id="275">275</span>
 <span id="276">276</span>
 <span id="277">277</span>
-<span id="278">278</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Type safe native types for safe context/surface creation</span>
 
@@ -451,7 +450,6 @@
 <span class="doccomment">/// The returned [`NativeWindowType`](ffi::NativeWindowType) must be valid for EGL</span>
 <span class="doccomment">/// and there is no way to test that.</span>
 <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">trait</span> <span class="ident">EGLNativeSurface</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> {
-    <span class="doccomment">/// Error type thrown by the surface creation in case of failure.</span>
     <span class="doccomment">/// Create an EGLSurface from the internal native type.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Must be able to deal with re-creation of existing resources,</span>

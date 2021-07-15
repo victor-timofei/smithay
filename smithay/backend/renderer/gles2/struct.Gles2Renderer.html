@@ -5,7 +5,7 @@
 <h1 id="implementation-details" class="section-header"><a href="#implementation-details">Implementation details</a></h1>
 <ul>
 <li>Texture handles created by the resulting renderer are valid for every rendered created with an
-<code>EGLContext</code> shared with the given one (see <code>EGLContext::new_shared</code>) and can be used and destroyed on
+<code>EGLContext</code> shared with the given one (see <code>EGLContext::new_shared</code>) and can be used on
 any of these renderers.</li>
 <li>This renderer has no default framebuffer, use <code>Bind::bind</code> before rendering.</li>
 <li>Binding a new target, while another one is already bound, will replace the current target.</li>
