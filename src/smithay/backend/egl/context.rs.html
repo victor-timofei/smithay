@@ -701,7 +701,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">PixelFormatRequirements</span> {
-    <span class="doccomment">/// Append the  requirements to the given attribute list</span>
+    <span class="doccomment">/// Append the requirements to the given attribute list</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_attributes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">out</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">c_int</span><span class="op">&gt;</span>, <span class="ident">logger</span>: <span class="kw-2">&amp;</span><span class="ident">slog::Logger</span>) {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">hardware_accelerated</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">hardware_accelerated</span> {
             <span class="ident">out</span>.<span class="ident">push</span>(<span class="ident">ffi::egl::CONFIG_CAVEAT</span> <span class="kw">as</span> <span class="ident">c_int</span>);

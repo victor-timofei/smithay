@@ -157,7 +157,6 @@
 <span id="157">157</span>
 <span id="158">158</span>
 <span id="159">159</span>
-<span id="160">160</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std::ops::Deref</span>;
 <span class="kw">use</span> <span class="ident">std::sync</span>::{
@@ -211,9 +210,8 @@
 
 <span class="doccomment">/// Slot of a swapchain containing an allocated buffer and its userdata.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// Can be cloned and passed around freely, the buffer is marked for re-use</span>
-<span class="doccomment">/// once all copies are dropped. Holding on to this struct will block the</span>
-<span class="doccomment">/// buffer in the swapchain.</span>
+<span class="doccomment">/// The buffer is marked for re-use once all copies are dropped.</span>
+<span class="doccomment">/// Holding on to this struct will block the buffer in the swapchain.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Slot</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Buffer</span>, <span class="ident">U</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">InternalSlot</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">U</span><span class="op">&gt;</span><span class="op">&gt;</span>);
 
