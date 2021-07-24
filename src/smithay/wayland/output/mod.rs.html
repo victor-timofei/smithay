@@ -349,6 +349,35 @@
 <span id="349">349</span>
 <span id="350">350</span>
 <span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Output advertising capabilities</span>
 <span class="doccomment">//!</span>
@@ -391,6 +420,7 @@
 <span class="doccomment">//!     Some(Mode { size: (1920, 1080).into(), refresh: 60000 }), // the resolution mode,</span>
 <span class="doccomment">//!     Some(wl_output::Transform::Normal), // global screen transformation</span>
 <span class="doccomment">//!     Some(1), // global screen scaling factor</span>
+<span class="doccomment">//!     Some((0,0).into()) // output position</span>
 <span class="doccomment">//! );</span>
 <span class="doccomment">//! // set the preferred mode</span>
 <span class="doccomment">//! output.set_preferred(Mode { size: (1920, 1080).into(), refresh: 60000 });</span>
@@ -398,6 +428,8 @@
 <span class="doccomment">//! output.add_mode(Mode { size: (800, 600).into(), refresh: 60000 });</span>
 <span class="doccomment">//! output.add_mode(Mode { size: (1024, 768).into(), refresh: 60000 });</span>
 <span class="doccomment">//! ```</span>
+
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">xdg</span>;
 
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">ops::Deref</span> <span class="kw">as</span> <span class="kw">_</span>,
@@ -416,6 +448,8 @@
 <span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">info</span>, <span class="ident">o</span>, <span class="ident">trace</span>, <span class="ident">warn</span>};
 
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils</span>::{<span class="ident">Logical</span>, <span class="ident">Physical</span>, <span class="ident">Point</span>, <span class="ident">Raw</span>, <span class="ident">Size</span>};
+
+<span class="kw">use</span> <span class="self">self</span><span class="ident">::xdg::XdgOutput</span>;
 
 <span class="doccomment">/// An output mode</span>
 <span class="doccomment">///</span>
@@ -458,6 +492,8 @@
     <span class="ident">modes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Mode</span><span class="op">&gt;</span>,
     <span class="ident">current_mode</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Mode</span><span class="op">&gt;</span>,
     <span class="ident">preferred_mode</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Mode</span><span class="op">&gt;</span>,
+
+    <span class="ident">xdg_output</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">XdgOutput</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Inner</span> {
@@ -546,6 +582,7 @@
             <span class="ident">modes</span>: <span class="ident">Vec::new</span>(),
             <span class="ident">current_mode</span>: <span class="prelude-val">None</span>,
             <span class="ident">preferred_mode</span>: <span class="prelude-val">None</span>,
+            <span class="ident">xdg_output</span>: <span class="prelude-val">None</span>,
         }));
 
         <span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">Output</span> { <span class="ident">inner</span>: <span class="ident">inner</span>.<span class="ident">clone</span>() };
@@ -570,6 +607,16 @@
         );
 
         (<span class="ident">output</span>, <span class="ident">global</span>)
+    }
+
+    <span class="doccomment">/// Attempt to retrieve a [`Output`] from an existing resource</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_resource</span>(<span class="ident">output</span>: <span class="kw-2">&amp;</span><span class="ident">WlOutput</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Output</span><span class="op">&gt;</span> {
+        <span class="ident">output</span>
+            .<span class="ident">as_ref</span>()
+            .<span class="ident">user_data</span>()
+            .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">Inner</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+            .<span class="ident">cloned</span>()
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">inner</span><span class="op">|</span> <span class="ident">Output</span> { <span class="ident">inner</span> })
     }
 
     <span class="doccomment">/// Sets the preferred mode of this output</span>
@@ -609,7 +656,7 @@
 
     <span class="doccomment">/// Change the current state of this output</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// You can changed the current mode, transform status or scale of this output. Providing</span>
+    <span class="doccomment">/// You can changed the current mode, transform status, location or scale of this output. Providing</span>
     <span class="doccomment">/// `None` to any of these field means that the value does not change.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// If the provided mode was not previously known to this output, it is added to its</span>
@@ -621,6 +668,7 @@
         <span class="ident">new_mode</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Mode</span><span class="op">&gt;</span>,
         <span class="ident">new_transform</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Transform</span><span class="op">&gt;</span>,
         <span class="ident">new_scale</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>,
+        <span class="ident">new_location</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Point</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     ) {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inner</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">mode</span>) <span class="op">=</span> <span class="ident">new_mode</span> {
@@ -639,11 +687,21 @@
         <span class="kw">if</span> <span class="ident">inner</span>.<span class="ident">preferred_mode</span> <span class="op">=</span><span class="op">=</span> <span class="ident">new_mode</span> {
             <span class="ident">flags</span> <span class="op">|</span><span class="op">=</span> <span class="ident">WMode::Preferred</span>;
         }
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">new_location</span>) <span class="op">=</span> <span class="ident">new_location</span> {
+            <span class="ident">inner</span>.<span class="ident">location</span> <span class="op">=</span> <span class="ident">new_location</span>;
+        }
+
+        <span class="comment">// XdgOutput has to be updated before WlOutput</span>
+        <span class="comment">// Because WlOutput::done() has to allways be called last</span>
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">xdg_output</span>) <span class="op">=</span> <span class="ident">inner</span>.<span class="ident">xdg_output</span>.<span class="ident">as_ref</span>() {
+            <span class="ident">xdg_output</span>.<span class="ident">change_current_state</span>(<span class="ident">new_mode</span>, <span class="ident">new_scale</span>, <span class="ident">new_location</span>);
+        }
+
         <span class="kw">for</span> <span class="ident">output</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">inner</span>.<span class="ident">instances</span> {
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">mode</span>) <span class="op">=</span> <span class="ident">new_mode</span> {
                 <span class="ident">output</span>.<span class="ident">mode</span>(<span class="ident">flags</span>, <span class="ident">mode</span>.<span class="ident">size</span>.<span class="ident">w</span>, <span class="ident">mode</span>.<span class="ident">size</span>.<span class="ident">h</span>, <span class="ident">mode</span>.<span class="ident">refresh</span>);
             }
-            <span class="kw">if</span> <span class="ident">new_transform</span>.<span class="ident">is_some</span>() {
+            <span class="kw">if</span> <span class="ident">new_transform</span>.<span class="ident">is_some</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">new_location</span>.<span class="ident">is_some</span>() {
                 <span class="ident">inner</span>.<span class="ident">send_geometry</span>(<span class="ident">output</span>);
             }
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">scale</span>) <span class="op">=</span> <span class="ident">new_scale</span> {
