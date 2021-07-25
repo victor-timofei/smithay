@@ -5,14 +5,14 @@ for the <a href="../../../wayland_server/protocol/wl_compositor/index.html"><cod
 and <a href="../../../wayland_server/protocol/wl_subcompositor/index.html"><code>wl_subcompositor</code></a> globals.</p>
 <h2 id="why-use-this-implementation" class="section-header"><a href="#why-use-this-implementation">Why use this implementation</a></h2>
 <p>This implementation does a simple job: it stores in a coherent way the state of
-surface trees with subsurfaces, to provide you a direct access to the tree
+surface trees with subsurfaces, to provide you direct access to the tree
 structure and all surface attributes, and handles the application of double-buffered
 state.</p>
 <p>As such, you can, given a root surface with a role requiring it to be displayed,
 you can iterate over the whole tree of subsurfaces to recover all the metadata you
 need to display the subsurface tree.</p>
 <p>This implementation will not do anything more than present you the metadata specified by the
-client in a coherent and practical way. All the logic regarding to drawing itself, and
+client in a coherent and practical way. All the logic regarding drawing itself, and
 the positioning of windows (surface trees) one relative to another is out of its scope.</p>
 <h2 id="how-to-use-it" class="section-header"><a href="#how-to-use-it">How to use it</a></h2><h3 id="initialization" class="section-header"><a href="#initialization">Initialization</a></h3>
 <p>To initialize this implementation, use the <a href="fn.compositor_init.html" title="compositor_init"><code>compositor_init</code></a>
@@ -76,9 +76,9 @@ cannot be assigned an other</p>
 </div><div class="item-left module-item"><a class="enum" href="enum.Damage.html" title="smithay::wayland::compositor::Damage enum">Damage</a></div><div class="item-right docblock-short"><p>Description of a part of a surface that
 should be considered damaged and needs to be redrawn</p>
 </div><div class="item-left module-item"><a class="enum" href="enum.RectangleKind.html" title="smithay::wayland::compositor::RectangleKind enum">RectangleKind</a></div><div class="item-right docblock-short"><p>Kind of a rectangle part of a region</p>
-</div><div class="item-left module-item"><a class="enum" href="enum.TraversalAction.html" title="smithay::wayland::compositor::TraversalAction enum">TraversalAction</a></div><div class="item-right docblock-short"><p>Possible actions to do after handling a node diring tree traversal</p>
+</div><div class="item-left module-item"><a class="enum" href="enum.TraversalAction.html" title="smithay::wayland::compositor::TraversalAction enum">TraversalAction</a></div><div class="item-right docblock-short"><p>Possible actions to do after handling a node during tree traversal</p>
 </div></div><h2 id="traits" class="section-header"><a href="#traits">Traits</a></h2>
-<div class="item-table"><div class="item-left module-item"><a class="trait" href="trait.Cacheable.html" title="smithay::wayland::compositor::Cacheable trait">Cacheable</a></div><div class="item-right docblock-short"><p>Trait represening a value that can be used in double-buffered storage</p>
+<div class="item-table"><div class="item-left module-item"><a class="trait" href="trait.Cacheable.html" title="smithay::wayland::compositor::Cacheable trait">Cacheable</a></div><div class="item-right docblock-short"><p>Trait representing a value that can be used in double-buffered storage</p>
 </div></div><h2 id="functions" class="section-header"><a href="#functions">Functions</a></h2>
 <div class="item-table"><div class="item-left module-item"><a class="fn" href="fn.add_commit_hook.html" title="smithay::wayland::compositor::add_commit_hook fn">add_commit_hook</a></div><div class="item-right docblock-short"><p>Register a commit hook to be invoked on surface commit</p>
 </div><div class="item-left module-item"><a class="fn" href="fn.compositor_init.html" title="smithay::wayland::compositor::compositor_init fn">compositor_init</a></div><div class="item-right docblock-short"><p>Create new <a href="../../../wayland_server/protocol/wl_compositor/index.html"><code>wl_compositor</code></a>

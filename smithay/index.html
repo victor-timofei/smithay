@@ -19,7 +19,7 @@ to be accessed from many different callbacks. To avoid an heavy requirement on s
 as <code>Rc</code> and <code>Arc</code> and the synchronization they require, <a href="../calloop/index.html" title="calloop"><code>calloop</code></a> allows you to provide a mutable
 reference to a value, that will be passed down to most callbacks (possibly under the form of a
 <a href="../wayland_commons/filter/struct.DispatchData.html"><code>DispatchData</code></a> for wayland-related callbacks). This structure provides
-an easy access to a centralized mutable state without synchronization (as the callback invocation is
+easy access to a centralized mutable state without synchronization (as the callback invocation is
 <em>always</em> sequential), and is the recommended way to of structuring your compositor.</p>
 <p>Several objects, in particular on the wayland clients side, can exist as multiple instances where each
 instance has its own associated state. For these situations, these objects provide an interface allowing

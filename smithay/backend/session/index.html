@@ -9,7 +9,7 @@ open privileged devices, and be notified about when the session is paused and re
 <h2 id="general-use" class="section-header"><a href="#general-use">General use</a></h2>
 <p>Session handling in Smithay is done through a pair of types that each session provider implements.</p>
 <p>The first is a handle implementing the <a href="trait.Session.html" title="Session"><code>Session</code></a> trait, which allows you to request the opening
-of devices, a VT change, or informations about the session state.</p>
+of devices, a VT change, or information about the session state.</p>
 <p>The second is a notifier which informs you when the session is enabled or disabled by the system.
 This notifier takes the form of a <a href="../../../calloop/index.html" title="calloop"><code>calloop</code></a> event source, but it does not generates any event
 directly. Instead, it gives you a <a href="../../utils/signaling/struct.Signaler.html"><code>Signaler</code></a> that you can

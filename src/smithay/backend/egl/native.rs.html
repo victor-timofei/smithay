@@ -357,7 +357,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// * `platform` - The platform defined in `ffi::egl::`</span>
     <span class="doccomment">/// * `platform_name` - A human readable representation of the platform</span>
-    <span class="doccomment">/// * `native_display` - The native display raw pointer which can be casted to `*mut c_void`</span>
+    <span class="doccomment">/// * `native_display` - The native display raw pointer which can be cast to `*mut c_void`</span>
     <span class="doccomment">/// * `attrib_list` - A list of `ffi::EGLint` like defined in the EGL Extension</span>
     <span class="doccomment">/// * `required_extensions` - The names of the required EGL Extensions for this platform</span>
     <span class="doccomment">///</span>
@@ -463,7 +463,7 @@
 
     <span class="doccomment">/// Will be called to check if any internal resources will need</span>
     <span class="doccomment">/// to be recreated. Old resources must be used until `create`</span>
-    <span class="doccomment">/// was called again and a new surface was optained.</span>
+    <span class="doccomment">/// was called again and a new surface was obtained.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Only needs to be recreated, if this may return true.</span>
     <span class="doccomment">/// The default implementation always returns false.</span>

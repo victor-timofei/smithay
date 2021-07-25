@@ -243,7 +243,7 @@
 
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland::Serial</span>;
 
-<span class="doccomment">/// Trait represening a value that can be used in double-buffered storage</span>
+<span class="doccomment">/// Trait representing a value that can be used in double-buffered storage</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// The type needs to implement the [`Default`] trait, which will be used</span>
 <span class="doccomment">/// to initialize. You further need to provide two methods:</span>
@@ -257,14 +257,14 @@
 <span class="doccomment">/// current state.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// In most cases, this method will simply produce a copy of the pending state,</span>
-<span class="doccomment">/// but you might need additionnal logic in some cases, such as for handling</span>
+<span class="doccomment">/// but you might need additional logic in some cases, such as for handling</span>
 <span class="doccomment">/// non-cloneable resources (which thus need to be moved into the produce value).</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// Then at some point the [`Cacheable::merge_into`] method of your type will be</span>
 <span class="doccomment">/// invoked. In this method, `self` acts as the update that should be merged into</span>
 <span class="doccomment">/// the current state provided as argument. In simple cases, the action would just</span>
-<span class="doccomment">/// be to copy `self` into the current state, but mre complex cases require</span>
-<span class="doccomment">/// additionnal logic.</span>
+<span class="doccomment">/// be to copy `self` into the current state, but more complex cases require</span>
+<span class="doccomment">/// additional logic.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Cacheable</span>: <span class="ident">Default</span> {
     <span class="doccomment">/// Produce a new state to be cached from the pending state</span>
     <span class="kw">fn</span> <span class="ident">commit</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span>;
@@ -328,7 +328,7 @@
 <span class="doccomment">/// A typemap-like container for double-buffered values</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// All values inserted into this container must implement the [`Cacheable`] trait,</span>
-<span class="doccomment">/// which defines their buffering semantics. They futhermore must be `Send` as the surface state</span>
+<span class="doccomment">/// which defines their buffering semantics. They furthermore must be `Send` as the surface state</span>
 <span class="doccomment">/// can be accessed from multiple threads (but `Sync` is not required, the surface internally synchronizes</span>
 <span class="doccomment">/// access to its state).</span>
 <span class="doccomment">///</span>
@@ -341,7 +341,7 @@
 <span class="doccomment">/// stored.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// This contained has [`RefCell`]-like semantics: values of multiple stored types can be accessed at the</span>
-<span class="doccomment">/// same time. The stored values are initialized lazyly the first time `current()` or `pending()` are</span>
+<span class="doccomment">/// same time. The stored values are initialized lazily the first time `current()` or `pending()` are</span>
 <span class="doccomment">/// invoked with this type as argument.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MultiCache</span> {
     <span class="ident">caches</span>: <span class="ident">appendlist::AppendList</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Cache</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span><span class="op">&gt;</span>,
@@ -375,7 +375,7 @@
             .<span class="ident">unwrap</span>()
     }
 
-    <span class="doccomment">/// Acces the pending state associated with type `T`</span>
+    <span class="doccomment">/// Access the pending state associated with type `T`</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pending</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Cacheable</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RefMut</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">T</span><span class="op">&gt;</span> {
         <span class="ident">RefMut::map</span>(<span class="self">self</span>.<span class="ident">find_or_insert</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>().<span class="ident">borrow_mut</span>(), <span class="op">|</span><span class="ident">cs</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">cs</span>.<span class="ident">pending</span>)
     }

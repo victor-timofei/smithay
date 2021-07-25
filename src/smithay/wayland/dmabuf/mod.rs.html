@@ -460,6 +460,15 @@
 <span id="460">460</span>
 <span id="461">461</span>
 <span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Linux DMABUF protocol</span>
 <span class="doccomment">//!</span>
@@ -512,7 +521,8 @@
 
 <span class="kw">use</span> <span class="ident">wayland_protocols::unstable::linux_dmabuf::v1::server</span>::{
     <span class="ident">zwp_linux_buffer_params_v1</span>::{
-        <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">ParamError</span>, <span class="ident">Request</span> <span class="kw">as</span> <span class="ident">ParamsRequest</span>, <span class="ident">ZwpLinuxBufferParamsV1</span> <span class="kw">as</span> <span class="ident">BufferParams</span>,
+        <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">ParamError</span>, <span class="ident">Flags</span> <span class="kw">as</span> <span class="ident">BufferFlags</span>, <span class="ident">Request</span> <span class="kw">as</span> <span class="ident">ParamsRequest</span>,
+        <span class="ident">ZwpLinuxBufferParamsV1</span> <span class="kw">as</span> <span class="ident">BufferParams</span>,
     },
     <span class="ident">zwp_linux_dmabuf_v1</span>,
 };
@@ -687,7 +697,7 @@
         <span class="ident">width</span>: <span class="ident">i32</span>,
         <span class="ident">height</span>: <span class="ident">i32</span>,
         <span class="ident">format</span>: <span class="ident">u32</span>,
-        <span class="ident">flags</span>: <span class="ident">u32</span>,
+        <span class="ident">flags</span>: <span class="ident">BufferFlags</span>,
         <span class="ident">ddata</span>: <span class="ident">DispatchData</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
     ) {
         <span class="comment">// Cannot reuse a params:</span>
@@ -723,7 +733,11 @@
             <span class="kw">return</span>;
         }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> <span class="ident">Dmabuf::builder</span>((<span class="ident">width</span>, <span class="ident">height</span>), <span class="ident">format</span>, <span class="ident">DmabufFlags::from_bits_truncate</span>(<span class="ident">flags</span>));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> <span class="ident">Dmabuf::builder</span>(
+            (<span class="ident">width</span>, <span class="ident">height</span>),
+            <span class="ident">format</span>,
+            <span class="ident">DmabufFlags::from_bits_truncate</span>(<span class="ident">flags</span>.<span class="ident">bits</span>()),
+        );
         <span class="kw">let</span> <span class="ident">planes</span> <span class="op">=</span> <span class="ident">std::mem::take</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">pending_planes</span>);
         <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">plane</span>) <span class="kw">in</span> <span class="ident">planes</span>.<span class="ident">into_iter</span>().<span class="ident">enumerate</span>() {
             <span class="kw">let</span> <span class="ident">offset</span> <span class="op">=</span> <span class="ident">plane</span>.<span class="ident">offset</span>;
@@ -772,7 +786,7 @@
         <span class="ident">width</span>: <span class="ident">i32</span>,
         <span class="ident">height</span>: <span class="ident">i32</span>,
         <span class="ident">format</span>: <span class="ident">u32</span>,
-        <span class="ident">flags</span>: <span class="ident">u32</span>,
+        <span class="ident">flags</span>: <span class="ident">BufferFlags</span>,
         <span class="ident">ddata</span>: <span class="ident">DispatchData</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
     ) {
         <span class="comment">// Cannot reuse a params:</span>
@@ -808,7 +822,11 @@
             <span class="kw">return</span>;
         }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> <span class="ident">Dmabuf::builder</span>((<span class="ident">width</span>, <span class="ident">height</span>), <span class="ident">format</span>, <span class="ident">DmabufFlags::from_bits_truncate</span>(<span class="ident">flags</span>));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> <span class="ident">Dmabuf::builder</span>(
+            (<span class="ident">width</span>, <span class="ident">height</span>),
+            <span class="ident">format</span>,
+            <span class="ident">DmabufFlags::from_bits_truncate</span>(<span class="ident">flags</span>.<span class="ident">bits</span>()),
+        );
         <span class="kw">let</span> <span class="ident">planes</span> <span class="op">=</span> <span class="ident">::std::mem::take</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">pending_planes</span>);
         <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">plane</span>) <span class="kw">in</span> <span class="ident">planes</span>.<span class="ident">into_iter</span>().<span class="ident">enumerate</span>() {
             <span class="kw">let</span> <span class="ident">offset</span> <span class="op">=</span> <span class="ident">plane</span>.<span class="ident">offset</span>;

@@ -3,7 +3,7 @@
 Once the last <code>Dmabuf</code> reference is dropped, its file descriptor is closed and
 underlying resources are freed.</p>
 <p>If you want to hold on to a potentially alive dmabuf without blocking the free up
-of the underlying resouces, you may <code>downgrade</code> a <code>Dmabuf</code> reference to a <code>WeakDmabuf</code>.</p>
+of the underlying resources, you may <code>downgrade</code> a <code>Dmabuf</code> reference to a <code>WeakDmabuf</code>.</p>
 <p>This can be especially useful in resources where other parts of the stack should decide upon
 the lifetime of the buffer. E.g. when you are only caching associated resources for a dmabuf.</p>
 </div></details><h2 id="structs" class="section-header"><a href="#structs">Structs</a></h2>

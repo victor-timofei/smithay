@@ -203,7 +203,7 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Some of these modules require you to provide a callback that is invoked for some</span>
 <span class="doccomment">//! client requests that your logic needs to handle. In most cases these callback</span>
-<span class="doccomment">//! are given as input an enum specifying the event that occured, as well as the</span>
+<span class="doccomment">//! are given as input an enum specifying the event that occurred, as well as the</span>
 <span class="doccomment">//! [`DispatchData`](wayland_server::DispatchData) from `wayland_server`.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ## Provided helpers</span>
@@ -215,7 +215,7 @@
 <span class="doccomment">//! Following this, the [`shell`] module contains the logic allowing clients to use their</span>
 <span class="doccomment">//! surface to build concrete windows with the usual interactions. Different kind of shells</span>
 <span class="doccomment">//! exist, but in general you will want to support at least the [`xdg`](shell::xdg) variant,</span>
-<span class="doccomment">//! which is the standart used by most applications.</span>
+<span class="doccomment">//! which is the standard used by most applications.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Then, the [`seat`] module contains logic related to input handling. These helpers are used</span>
 <span class="doccomment">//! to forward input (such as pointer action or keystrokes) to clients, and manage the input</span>
@@ -225,7 +225,7 @@
 <span class="doccomment">//! The [`shm`] module provides the necessary logic for client to provide buffers defining the</span>
 <span class="doccomment">//! contents of their windows using shared memory. This is the main mechanism used by clients</span>
 <span class="doccomment">//! that are not hardware accelerated. As a complement, the [`dmabuf`] module provides support</span>
-<span class="doccomment">//! hardware-accelerated clients; it is tighly linked to the</span>
+<span class="doccomment">//! hardware-accelerated clients; it is tightly linked to the</span>
 <span class="doccomment">//! [`backend::allocator`](crate::backend::allocator) module.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! The [`output`] module helps forwarding to clients information about the display monitors that</span>

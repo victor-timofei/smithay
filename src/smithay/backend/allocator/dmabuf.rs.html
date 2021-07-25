@@ -259,7 +259,7 @@
 <span class="doccomment">//! underlying resources are freed.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! If you want to hold on to a potentially alive dmabuf without blocking the free up</span>
-<span class="doccomment">//! of the underlying resouces, you may `downgrade` a `Dmabuf` reference to a `WeakDmabuf`.</span>
+<span class="doccomment">//! of the underlying resources, you may `downgrade` a `Dmabuf` reference to a `WeakDmabuf`.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! This can be especially useful in resources where other parts of the stack should decide upon</span>
 <span class="doccomment">//! the lifetime of the buffer. E.g. when you are only caching associated resources for a dmabuf.</span>
@@ -379,9 +379,9 @@
 }
 
 <span class="kw">impl</span> <span class="ident">DmabufBuilder</span> {
-    <span class="doccomment">/// Add a plane to the construted Dmabuf</span>
+    <span class="doccomment">/// Add a plane to the constructed Dmabuf</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// *Note*: Each Dmabuf needs atleast one plane.</span>
+    <span class="doccomment">/// *Note*: Each Dmabuf needs at least one plane.</span>
     <span class="doccomment">/// MAX_PLANES notes the maximum amount of planes any format may use with this implementation.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_plane</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">fd</span>: <span class="ident">RawFd</span>, <span class="ident">idx</span>: <span class="ident">u32</span>, <span class="ident">offset</span>: <span class="ident">u32</span>, <span class="ident">stride</span>: <span class="ident">u32</span>, <span class="ident">modifier</span>: <span class="ident">Modifier</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">planes</span>.<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">MAX_PLANES</span> {
@@ -412,7 +412,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Dmabuf</span> {
-    <span class="doccomment">/// Create a new Dmabuf by intializing with values from an existing buffer</span>
+    <span class="doccomment">/// Create a new Dmabuf by initializing with values from an existing buffer</span>
     <span class="doccomment">///</span>
     <span class="comment">// Note: the `src` Buffer is only used a reference for size and format.</span>
     <span class="comment">// The contents are determined by the provided file descriptors, which</span>

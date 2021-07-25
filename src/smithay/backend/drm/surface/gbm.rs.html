@@ -511,7 +511,7 @@
     <span class="doccomment">/// Create a new `GbmBufferedSurface` from a given compatible combination</span>
     <span class="doccomment">/// of a surface, an allocator and renderer formats.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// To sucessfully call this function, you need to have a renderer,</span>
+    <span class="doccomment">/// To successfully call this function, you need to have a renderer,</span>
     <span class="doccomment">/// which can render into a Dmabuf, and a gbm allocator that can produce</span>
     <span class="doccomment">/// buffers of a supported format for rendering.</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::type_complexity</span>)]</span>
@@ -655,7 +655,7 @@
 
     <span class="doccomment">/// Marks the current frame as submitted.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// *Note*: Needs to be called, after the vblank event of the matching [`DrmDevice`](super::DrmDevice)</span>
+    <span class="doccomment">/// *Note*: Needs to be called, after the vblank event of the matching [`DrmDevice`](super::super::DrmDevice)</span>
     <span class="doccomment">/// was received after calling [`GbmBufferedSurface::queue_buffer`] on this surface.</span>
     <span class="doccomment">/// Otherwise the underlying swapchain will run out of buffers eventually.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">frame_submitted</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {

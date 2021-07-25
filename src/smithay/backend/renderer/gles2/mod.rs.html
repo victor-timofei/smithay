@@ -1173,6 +1173,7 @@
 <span id="1173">1173</span>
 <span id="1174">1174</span>
 <span id="1175">1175</span>
+<span id="1176">1176</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Implementation of the rendering traits using OpenGL ES 2</span>
 
@@ -1202,7 +1203,7 @@
     <span class="ident">EGLContext</span>, <span class="ident">EGLSurface</span>, <span class="ident">MakeCurrentError</span>,
 };
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend::SwapBuffersError</span>;
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils</span>::{<span class="ident">Physical</span>, <span class="ident">Size</span>};
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils</span>::{<span class="ident">Buffer</span>, <span class="ident">Physical</span>, <span class="ident">Size</span>};
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_system_lib&quot;</span>))]</span>
 <span class="kw">use</span> <span class="kw">super</span><span class="ident">::ImportEgl</span>;
@@ -1210,7 +1211,8 @@
 <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">ImportDma</span>, <span class="ident">ImportShm</span>};
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_system_lib&quot;</span>))]</span>
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::backend::egl</span>::{<span class="ident">display::EGLBufferReader</span>, <span class="ident">Format</span> <span class="kw">as</span> <span class="ident">EGLFormat</span>};
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils</span>::{<span class="ident">Buffer</span>, <span class="ident">Rectangle</span>};
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>)]</span>
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils::Rectangle</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">wayland_server::protocol</span>::{<span class="ident">wl_buffer</span>, <span class="ident">wl_shm</span>};
 

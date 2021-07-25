@@ -4,9 +4,9 @@
 <p>The module is largely structured around three main aspects of interaction with the OS:
 session management, input handling, and graphics.</p>
 <h3 id="session-management" class="section-header"><a href="#session-management">Session management</a></h3>
-<p>Session management relates to mechanisms allowing the compositor to access the ressources
+<p>Session management relates to mechanisms allowing the compositor to access the resources
 it needs to function. It contains interaction with the login manager if any ((e)logind or
-seatd), as well as releasing thoses ressources when TTY-switching. It is handled by the
+seatd), as well as releasing those resources when TTY-switching. It is handled by the
 <a href="session/index.html" title="session"><code>session</code></a> module, gated by the <code>backend_session</code> cargo feature. You will generally need
 it to run your compositor directly on a TTY.</p>
 <p>This module is tightly coupled with the <a href="udev/index.html" title="udev"><code>udev</code></a> module (gated by the <code>backend_udev</code> cargo

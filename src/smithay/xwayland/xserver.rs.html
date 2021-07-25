@@ -427,17 +427,6 @@
 <span id="427">427</span>
 <span id="428">428</span>
 <span id="429">429</span>
-<span id="430">430</span>
-<span id="431">431</span>
-<span id="432">432</span>
-<span id="433">433</span>
-<span id="434">434</span>
-<span id="435">435</span>
-<span id="436">436</span>
-<span id="437">437</span>
-<span id="438">438</span>
-<span id="439">439</span>
-<span id="440">440</span>
 </pre><pre class="rust">
 <span class="comment">/*
  * Steps of XWayland server creation
@@ -483,7 +472,7 @@
     <span class="ident">any::Any</span>,
     <span class="ident">cell::RefCell</span>,
     <span class="ident">env</span>,
-    <span class="ident">io</span>::{<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">IOError</span>, <span class="ident">Read</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">IOResult</span>},
+    <span class="ident">io</span>::{<span class="ident">Read</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">IOResult</span>},
     <span class="ident">os::unix</span>::{
         <span class="ident">io</span>::{<span class="ident">AsRawFd</span>, <span class="ident">IntoRawFd</span>, <span class="ident">RawFd</span>},
         <span class="ident">net::UnixStream</span>,
@@ -502,8 +491,6 @@
 
 <span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">error</span>, <span class="ident">info</span>, <span class="ident">o</span>};
 
-<span class="kw">use</span> <span class="ident">nix::Error</span> <span class="kw">as</span> <span class="ident">NixError</span>;
-
 <span class="kw">use</span> <span class="ident">wayland_server</span>::{<span class="ident">Client</span>, <span class="ident">Display</span>, <span class="ident">Filter</span>};
 
 <span class="kw">use</span> <span class="kw">super</span><span class="ident">::x11_sockets</span>::{<span class="ident">prepare_x11_sockets</span>, <span class="ident">X11Lock</span>};
@@ -519,7 +506,7 @@
 <span class="doccomment">/// This is a very low-level interface, only notifying you when the connection</span>
 <span class="doccomment">/// with XWayland is up, or when it terminates.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// Your WM code must be able handle the XWayland server connecting then</span>
+<span class="doccomment">/// Your WM code must be able to handle the XWayland server connecting then</span>
 <span class="doccomment">/// disconnecting several time in a row, but only a single connection will</span>
 <span class="doccomment">/// be active at any given time.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
@@ -861,22 +848,13 @@
     <span class="prelude-val">Ok</span>(<span class="ident">child</span>.<span class="ident">stdout</span>.<span class="ident">take</span>().<span class="ident">expect</span>(<span class="string">&quot;stdout should be piped&quot;</span>))
 }
 
-<span class="kw">fn</span> <span class="ident">nix_error_to_io</span>(<span class="ident">err</span>: <span class="ident">NixError</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IOError</span> {
-    <span class="kw">use</span> <span class="ident">std::io::ErrorKind</span>;
-    <span class="kw">match</span> <span class="ident">err</span> {
-        <span class="ident">NixError::Sys</span>(<span class="ident">errno</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">errno</span>.<span class="ident">into</span>(),
-        <span class="ident">NixError::InvalidPath</span> <span class="op">|</span> <span class="ident">NixError::InvalidUtf8</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">IOError::new</span>(<span class="ident">ErrorKind::InvalidInput</span>, <span class="ident">err</span>),
-        <span class="ident">NixError::UnsupportedOperation</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">IOError::new</span>(<span class="ident">ErrorKind::Other</span>, <span class="ident">err</span>),
-    }
-}
-
 <span class="doccomment">/// Remove the `O_CLOEXEC` flag from this `Fd`</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// This means that the `Fd` will *not* be automatically</span>
 <span class="doccomment">/// closed when we `exec()` into XWayland</span>
 <span class="kw">fn</span> <span class="ident">unset_cloexec</span>(<span class="ident">fd</span>: <span class="ident">RawFd</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IOResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">use</span> <span class="ident">nix::fcntl</span>::{<span class="ident">fcntl</span>, <span class="ident">FcntlArg</span>, <span class="ident">FdFlag</span>};
-    <span class="ident">fcntl</span>(<span class="ident">fd</span>, <span class="ident">FcntlArg::F_SETFD</span>(<span class="ident">FdFlag::empty</span>())).<span class="ident">map_err</span>(<span class="ident">nix_error_to_io</span>)<span class="question-mark">?</span>;
+    <span class="ident">fcntl</span>(<span class="ident">fd</span>, <span class="ident">FcntlArg::F_SETFD</span>(<span class="ident">FdFlag::empty</span>()))<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>(())
 }
 </pre></div>

@@ -379,11 +379,11 @@
 <span class="doccomment">/// An explicit synchronization state</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// The client is not required to fill both. `acquire` being `None` means that you don&#39;t need to wait</span>
-<span class="doccomment">/// before acessing the buffer, `release` being `None` means that the client does not require additionnal</span>
+<span class="doccomment">/// before accessing the buffer, `release` being `None` means that the client does not require additional</span>
 <span class="doccomment">/// signaling that you are finished (you still need to send `wl_buffer.release`).</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// When processing the current state, the whould [`Option::take`] the values from it. Otherwise they&#39;ll</span>
-<span class="doccomment">/// be treated as unused and released when overwritten by the next client commit.</span>
+<span class="doccomment">/// When processing the current state, [`Option::take`] the values from it. Otherwise they&#39;ll be</span>
+<span class="doccomment">/// treated as unused and released when overwritten by the next client commit.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ExplicitSyncState</span> {
     <span class="doccomment">/// An acquire `dma_fence` object, that you should wait on before accessing the contents of the</span>
