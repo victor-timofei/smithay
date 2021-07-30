@@ -405,9 +405,9 @@
             <span class="comment">// focus changed, we need to make a leave if appropriate</span>
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">surface</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">current_focus</span>.<span class="ident">take</span>() {
                 <span class="comment">// only leave if there is a data source or we are on the original client</span>
-                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">data_source</span>.<span class="ident">is_some</span>() <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">origin</span>.<span class="ident">as_ref</span>().<span class="ident">same_client_as</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>.<span class="ident">as_ref</span>()) {
+                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">data_source</span>.<span class="ident">is_some</span>() <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">origin</span>.<span class="ident">as_ref</span>().<span class="ident">same_client_as</span>(<span class="ident">surface</span>.<span class="ident">as_ref</span>()) {
                     <span class="kw">for</span> <span class="ident">device</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">seat_data</span>.<span class="ident">known_devices</span> {
-                        <span class="kw">if</span> <span class="ident">device</span>.<span class="ident">as_ref</span>().<span class="ident">same_client_as</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>.<span class="ident">as_ref</span>()) {
+                        <span class="kw">if</span> <span class="ident">device</span>.<span class="ident">as_ref</span>().<span class="ident">same_client_as</span>(<span class="ident">surface</span>.<span class="ident">as_ref</span>()) {
                             <span class="ident">device</span>.<span class="ident">leave</span>();
                         }
                     }
@@ -438,7 +438,7 @@
                     <span class="kw">for</span> <span class="ident">device</span> <span class="kw">in</span> <span class="ident">seat_data</span>
                         .<span class="ident">known_devices</span>
                         .<span class="ident">iter</span>()
-                        .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">d</span><span class="op">|</span> <span class="ident">d</span>.<span class="ident">as_ref</span>().<span class="ident">same_client_as</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>.<span class="ident">as_ref</span>()))
+                        .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">d</span><span class="op">|</span> <span class="ident">d</span>.<span class="ident">as_ref</span>().<span class="ident">same_client_as</span>(<span class="ident">surface</span>.<span class="ident">as_ref</span>()))
                     {
                         <span class="kw">let</span> <span class="ident">action_choice</span> <span class="op">=</span> <span class="ident">device</span>
                             .<span class="ident">as_ref</span>()
@@ -474,9 +474,9 @@
                     <span class="self">self</span>.<span class="ident">offer_data</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">offer_data</span>);
                 } <span class="kw">else</span> {
                     <span class="comment">// only send if we are on a surface of the same client</span>
-                    <span class="kw">if</span> <span class="self">self</span>.<span class="ident">origin</span>.<span class="ident">as_ref</span>().<span class="ident">same_client_as</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>.<span class="ident">as_ref</span>()) {
+                    <span class="kw">if</span> <span class="self">self</span>.<span class="ident">origin</span>.<span class="ident">as_ref</span>().<span class="ident">same_client_as</span>(<span class="ident">surface</span>.<span class="ident">as_ref</span>()) {
                         <span class="kw">for</span> <span class="ident">device</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">seat_data</span>.<span class="ident">known_devices</span> {
-                            <span class="kw">if</span> <span class="ident">device</span>.<span class="ident">as_ref</span>().<span class="ident">same_client_as</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>.<span class="ident">as_ref</span>()) {
+                            <span class="kw">if</span> <span class="ident">device</span>.<span class="ident">as_ref</span>().<span class="ident">same_client_as</span>(<span class="ident">surface</span>.<span class="ident">as_ref</span>()) {
                                 <span class="ident">device</span>.<span class="ident">enter</span>(<span class="ident">serial</span>.<span class="ident">into</span>(), <span class="kw-2">&amp;</span><span class="ident">surface</span>, <span class="ident">x</span>, <span class="ident">y</span>, <span class="prelude-val">None</span>);
                             }
                         }
@@ -485,9 +485,9 @@
                 <span class="self">self</span>.<span class="ident">current_focus</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">surface</span>);
             } <span class="kw">else</span> {
                 <span class="comment">// make a move</span>
-                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">data_source</span>.<span class="ident">is_some</span>() <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">origin</span>.<span class="ident">as_ref</span>().<span class="ident">same_client_as</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>.<span class="ident">as_ref</span>()) {
+                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">data_source</span>.<span class="ident">is_some</span>() <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">origin</span>.<span class="ident">as_ref</span>().<span class="ident">same_client_as</span>(<span class="ident">surface</span>.<span class="ident">as_ref</span>()) {
                     <span class="kw">for</span> <span class="ident">device</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">seat_data</span>.<span class="ident">known_devices</span> {
-                        <span class="kw">if</span> <span class="ident">device</span>.<span class="ident">as_ref</span>().<span class="ident">same_client_as</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>.<span class="ident">as_ref</span>()) {
+                        <span class="kw">if</span> <span class="ident">device</span>.<span class="ident">as_ref</span>().<span class="ident">same_client_as</span>(<span class="ident">surface</span>.<span class="ident">as_ref</span>()) {
                             <span class="ident">device</span>.<span class="ident">motion</span>(<span class="ident">time</span>, <span class="ident">x</span>, <span class="ident">y</span>);
                         }
                     }
@@ -519,7 +519,7 @@
                 <span class="bool-val">false</span>
             };
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">surface</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">current_focus</span> {
-                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">data_source</span>.<span class="ident">is_some</span>() <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">origin</span>.<span class="ident">as_ref</span>().<span class="ident">same_client_as</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>.<span class="ident">as_ref</span>()) {
+                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">data_source</span>.<span class="ident">is_some</span>() <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">origin</span>.<span class="ident">as_ref</span>().<span class="ident">same_client_as</span>(<span class="ident">surface</span>.<span class="ident">as_ref</span>()) {
                     <span class="kw">for</span> <span class="ident">device</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">seat_data</span>.<span class="ident">known_devices</span> {
                         <span class="kw">if</span> <span class="ident">device</span>.<span class="ident">as_ref</span>().<span class="ident">same_client_as</span>(<span class="ident">surface</span>.<span class="ident">as_ref</span>()) {
                             <span class="kw">if</span> <span class="ident">validated</span> {

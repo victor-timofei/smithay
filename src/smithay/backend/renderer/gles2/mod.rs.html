@@ -1562,7 +1562,7 @@
 }
 
 <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">texture_program</span>(<span class="ident">gl</span>: <span class="kw-2">&amp;</span><span class="ident">ffi::Gles2</span>, <span class="ident">frag</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Gles2Program</span>, <span class="ident">Gles2Error</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">program</span> <span class="op">=</span> <span class="ident">link_program</span>(<span class="kw-2">&amp;</span><span class="ident">gl</span>, <span class="ident">shaders::VERTEX_SHADER</span>, <span class="ident">frag</span>)<span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="ident">program</span> <span class="op">=</span> <span class="ident">link_program</span>(<span class="ident">gl</span>, <span class="ident">shaders::VERTEX_SHADER</span>, <span class="ident">frag</span>)<span class="question-mark">?</span>;
 
     <span class="kw">let</span> <span class="ident">position</span> <span class="op">=</span> <span class="ident">CStr::from_bytes_with_nul</span>(<span class="string">b&quot;position\0&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;NULL terminated&quot;</span>);
     <span class="kw">let</span> <span class="ident">tex_coords</span> <span class="op">=</span> <span class="ident">CStr::from_bytes_with_nul</span>(<span class="string">b&quot;tex_coords\0&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;NULL terminated&quot;</span>);
@@ -1734,7 +1734,7 @@
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Gles2Texture</span>, <span class="ident">Gles2Error</span><span class="op">&gt;</span> {
         <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland::shm::with_buffer_contents</span>;
 
-        <span class="ident">with_buffer_contents</span>(<span class="kw-2">&amp;</span><span class="ident">buffer</span>, <span class="op">|</span><span class="ident">slice</span>, <span class="ident">data</span><span class="op">|</span> {
+        <span class="ident">with_buffer_contents</span>(<span class="ident">buffer</span>, <span class="op">|</span><span class="ident">slice</span>, <span class="ident">data</span><span class="op">|</span> {
             <span class="self">self</span>.<span class="ident">make_current</span>()<span class="question-mark">?</span>;
 
             <span class="kw">let</span> <span class="ident">offset</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">offset</span> <span class="kw">as</span> <span class="ident">i32</span>;
@@ -1888,7 +1888,7 @@
             .<span class="ident">egl_reader</span>
             .<span class="ident">as_ref</span>()
             .<span class="ident">unwrap</span>()
-            .<span class="ident">egl_buffer_contents</span>(<span class="kw-2">&amp;</span><span class="ident">buffer</span>)
+            .<span class="ident">egl_buffer_contents</span>(<span class="ident">buffer</span>)
             .<span class="ident">map_err</span>(<span class="ident">Gles2Error::EGLBufferAccessError</span>)<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">tex</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">import_egl_image</span>(<span class="ident">egl</span>.<span class="ident">image</span>(<span class="number">0</span>).<span class="ident">unwrap</span>(), <span class="ident">egl</span>.<span class="ident">format</span> <span class="op">=</span><span class="op">=</span> <span class="ident">EGLFormat::External</span>, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
@@ -1920,14 +1920,14 @@
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Gles2Error::GLExtensionNotSupported</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;GL_OES_EGL_image&quot;</span>]));
         }
 
-        <span class="self">self</span>.<span class="ident">existing_dmabuf_texture</span>(<span class="kw-2">&amp;</span><span class="ident">buffer</span>)<span class="question-mark">?</span>.<span class="ident">map</span>(<span class="prelude-val">Ok</span>).<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> {
+        <span class="self">self</span>.<span class="ident">existing_dmabuf_texture</span>(<span class="ident">buffer</span>)<span class="question-mark">?</span>.<span class="ident">map</span>(<span class="prelude-val">Ok</span>).<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> {
             <span class="kw">let</span> <span class="ident">is_external</span> <span class="op">=</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">egl</span>.<span class="ident">dmabuf_render_formats</span>().<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">buffer</span>.<span class="ident">format</span>());
 
             <span class="self">self</span>.<span class="ident">make_current</span>()<span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">image</span> <span class="op">=</span> <span class="self">self</span>
                 .<span class="ident">egl</span>
                 .<span class="ident">display</span>
-                .<span class="ident">create_image_from_dmabuf</span>(<span class="kw-2">&amp;</span><span class="ident">buffer</span>)
+                .<span class="ident">create_image_from_dmabuf</span>(<span class="ident">buffer</span>)
                 .<span class="ident">map_err</span>(<span class="ident">Gles2Error::BindBufferEGLError</span>)<span class="question-mark">?</span>;
 
             <span class="kw">let</span> <span class="ident">tex</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">import_egl_image</span>(<span class="ident">image</span>, <span class="ident">is_external</span>, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;

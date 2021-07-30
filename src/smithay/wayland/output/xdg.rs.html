@@ -270,7 +270,7 @@
                 .<span class="ident">lock</span>()
                 .<span class="ident">unwrap</span>()
                 .<span class="ident">instances</span>
-                .<span class="ident">retain</span>(<span class="op">|</span><span class="ident">o</span><span class="op">|</span> <span class="op">!</span><span class="ident">o</span>.<span class="ident">as_ref</span>().<span class="ident">equals</span>(<span class="kw-2">&amp;</span><span class="ident">xdg_output</span>.<span class="ident">as_ref</span>()));
+                .<span class="ident">retain</span>(<span class="op">|</span><span class="ident">o</span><span class="op">|</span> <span class="op">!</span><span class="ident">o</span>.<span class="ident">as_ref</span>().<span class="ident">equals</span>(<span class="ident">xdg_output</span>.<span class="ident">as_ref</span>()));
         }));
         <span class="ident">xdg_output</span>.<span class="ident">as_ref</span>().<span class="ident">user_data</span>().<span class="ident">set_threadsafe</span>({
             <span class="kw">let</span> <span class="ident">xdg_output</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">clone</span>();

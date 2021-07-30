@@ -455,20 +455,6 @@
 <span id="455">455</span>
 <span id="456">456</span>
 <span id="457">457</span>
-<span id="458">458</span>
-<span id="459">459</span>
-<span id="460">460</span>
-<span id="461">461</span>
-<span id="462">462</span>
-<span id="463">463</span>
-<span id="464">464</span>
-<span id="465">465</span>
-<span id="466">466</span>
-<span id="467">467</span>
-<span id="468">468</span>
-<span id="469">469</span>
-<span id="470">470</span>
-<span id="471">471</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Linux DMABUF protocol</span>
 <span class="doccomment">//!</span>
@@ -721,14 +707,7 @@
             }
         };
 
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">buffer_basic_checks</span>(
-            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">formats</span>,
-            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">pending_planes</span>,
-            <span class="kw-2">&amp;</span><span class="ident">params</span>,
-            <span class="ident">format</span>,
-            <span class="ident">width</span>,
-            <span class="ident">height</span>,
-        ) {
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">buffer_basic_checks</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">formats</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">pending_planes</span>, <span class="ident">params</span>, <span class="ident">format</span>, <span class="ident">width</span>, <span class="ident">height</span>) {
             <span class="macro">trace!</span>(<span class="self">self</span>.<span class="ident">log</span>, <span class="string">&quot;Killing client providing bogus dmabuf buffer params.&quot;</span>);
             <span class="kw">return</span>;
         }
@@ -810,14 +789,7 @@
             }
         };
 
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">buffer_basic_checks</span>(
-            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">formats</span>,
-            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">pending_planes</span>,
-            <span class="kw-2">&amp;</span><span class="ident">params</span>,
-            <span class="ident">format</span>,
-            <span class="ident">width</span>,
-            <span class="ident">height</span>,
-        ) {
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">buffer_basic_checks</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">formats</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">pending_planes</span>, <span class="ident">params</span>, <span class="ident">format</span>, <span class="ident">width</span>, <span class="ident">height</span>) {
             <span class="macro">trace!</span>(<span class="self">self</span>.<span class="ident">log</span>, <span class="string">&quot;Killing client providing bogus dmabuf buffer params.&quot;</span>);
             <span class="kw">return</span>;
         }

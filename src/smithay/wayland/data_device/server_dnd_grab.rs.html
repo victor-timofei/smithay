@@ -421,7 +421,7 @@
             <span class="comment">// focus changed, we need to make a leave if appropriate</span>
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">surface</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">current_focus</span>.<span class="ident">take</span>() {
                 <span class="kw">for</span> <span class="ident">device</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">seat_data</span>.<span class="ident">known_devices</span> {
-                    <span class="kw">if</span> <span class="ident">device</span>.<span class="ident">as_ref</span>().<span class="ident">same_client_as</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>.<span class="ident">as_ref</span>()) {
+                    <span class="kw">if</span> <span class="ident">device</span>.<span class="ident">as_ref</span>().<span class="ident">same_client_as</span>(<span class="ident">surface</span>.<span class="ident">as_ref</span>()) {
                         <span class="ident">device</span>.<span class="ident">leave</span>();
                     }
                 }
@@ -450,7 +450,7 @@
                 <span class="kw">for</span> <span class="ident">device</span> <span class="kw">in</span> <span class="ident">seat_data</span>
                     .<span class="ident">known_devices</span>
                     .<span class="ident">iter</span>()
-                    .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">d</span><span class="op">|</span> <span class="ident">d</span>.<span class="ident">as_ref</span>().<span class="ident">same_client_as</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>.<span class="ident">as_ref</span>()))
+                    .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">d</span><span class="op">|</span> <span class="ident">d</span>.<span class="ident">as_ref</span>().<span class="ident">same_client_as</span>(<span class="ident">surface</span>.<span class="ident">as_ref</span>()))
                 {
                     <span class="kw">let</span> <span class="ident">action_choice</span> <span class="op">=</span> <span class="ident">device</span>
                         .<span class="ident">as_ref</span>()
@@ -486,7 +486,7 @@
             } <span class="kw">else</span> {
                 <span class="comment">// make a move</span>
                 <span class="kw">for</span> <span class="ident">device</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">seat_data</span>.<span class="ident">known_devices</span> {
-                    <span class="kw">if</span> <span class="ident">device</span>.<span class="ident">as_ref</span>().<span class="ident">same_client_as</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>.<span class="ident">as_ref</span>()) {
+                    <span class="kw">if</span> <span class="ident">device</span>.<span class="ident">as_ref</span>().<span class="ident">same_client_as</span>(<span class="ident">surface</span>.<span class="ident">as_ref</span>()) {
                         <span class="ident">device</span>.<span class="ident">motion</span>(<span class="ident">time</span>, <span class="ident">x</span>, <span class="ident">y</span>);
                     }
                 }
