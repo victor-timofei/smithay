@@ -1748,7 +1748,7 @@
 <span class="kw">use</span> <span class="kw">super</span><span class="ident">::PingError</span>;
 
 <span class="comment">// handlers for the xdg_shell protocol</span>
-<span class="kw">mod</span> <span class="ident">xdg_handlers</span>;
+<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">mod</span> <span class="ident">xdg_handlers</span>;
 <span class="comment">// compatibility handlers for the zxdg_shell_v6 protocol, its earlier version</span>
 <span class="kw">mod</span> <span class="ident">zxdgv6_handlers</span>;
 
