@@ -819,12 +819,28 @@
 <span id="819">819</span>
 <span id="820">820</span>
 <span id="821">821</span>
+<span id="822">822</span>
+<span id="823">823</span>
+<span id="824">824</span>
+<span id="825">825</span>
+<span id="826">826</span>
+<span id="827">827</span>
+<span id="828">828</span>
+<span id="829">829</span>
+<span id="830">830</span>
+<span id="831">831</span>
+<span id="832">832</span>
+<span id="833">833</span>
+<span id="834">834</span>
+<span id="835">835</span>
+<span id="836">836</span>
+<span id="837">837</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std::sync::atomic</span>::{<span class="ident">AtomicBool</span>, <span class="ident">Ordering</span>};
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cell::RefCell</span>, <span class="ident">ops::Deref</span> <span class="kw">as</span> <span class="kw">_</span>, <span class="ident">sync::Mutex</span>};
 
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland::compositor</span>;
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland::shell::xdg::PopupState</span>;
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland::shell::xdg</span>::{<span class="ident">PopupState</span>, <span class="ident">ZXDG_POPUP_ROLE</span>, <span class="ident">ZXDG_TOPLEVEL_ROLE</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland::Serial</span>;
 <span class="kw">use</span> <span class="ident">wayland_protocols</span>::{
     <span class="ident">unstable::xdg_shell::v6::server</span>::{
@@ -842,9 +858,6 @@
     <span class="ident">ShellData</span>, <span class="ident">SurfaceCachedState</span>, <span class="ident">ToplevelConfigure</span>, <span class="ident">ToplevelKind</span>, <span class="ident">XdgPopupSurfaceRoleAttributes</span>,
     <span class="ident">XdgRequest</span>, <span class="ident">XdgToplevelSurfaceRoleAttributes</span>,
 };
-
-<span class="kw">static</span> <span class="ident">ZXDG_TOPLEVEL_ROLE</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;zxdg_toplevel&quot;</span>;
-<span class="kw">static</span> <span class="ident">ZXDG_POPUP_ROLE</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;zxdg_popup&quot;</span>;
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">implement_shell</span>(
     <span class="ident">shell</span>: <span class="ident">Main</span><span class="op">&lt;</span><span class="ident">zxdg_shell_v6::ZxdgShellV6</span><span class="op">&gt;</span>,
@@ -1385,16 +1398,18 @@
             <span class="comment">// all it done by the destructor</span>
         }
         <span class="ident">zxdg_toplevel_v6::Request::SetParent</span> { <span class="ident">parent</span> } <span class="op">=</span><span class="op">&gt;</span> {
-            <span class="ident">with_surface_toplevel_role_data</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>, <span class="op">|</span><span class="ident">data</span><span class="op">|</span> {
-                <span class="ident">data</span>.<span class="ident">parent</span> <span class="op">=</span> <span class="ident">parent</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">toplevel_surface_parent</span><span class="op">|</span> {
-                    <span class="kw">let</span> <span class="ident">parent_data</span> <span class="op">=</span> <span class="ident">toplevel_surface_parent</span>
-                        .<span class="ident">as_ref</span>()
-                        .<span class="ident">user_data</span>()
-                        .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ShellSurfaceUserData</span><span class="op">&gt;</span>()
-                        .<span class="ident">unwrap</span>();
-                    <span class="ident">parent_data</span>.<span class="ident">wl_surface</span>.<span class="ident">clone</span>()
-                })
+            <span class="kw">let</span> <span class="ident">parent_surface</span> <span class="op">=</span> <span class="ident">parent</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">toplevel_surface_parent</span><span class="op">|</span> {
+                <span class="ident">toplevel_surface_parent</span>
+                    .<span class="ident">as_ref</span>()
+                    .<span class="ident">user_data</span>()
+                    .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ShellSurfaceUserData</span><span class="op">&gt;</span>()
+                    .<span class="ident">unwrap</span>()
+                    .<span class="ident">wl_surface</span>
+                    .<span class="ident">clone</span>()
             });
+
+            <span class="comment">// Parent is not double buffered, we can set it directly</span>
+            <span class="ident">set_parent</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>, <span class="ident">parent_surface</span>);
         }
         <span class="ident">zxdg_toplevel_v6::Request::SetTitle</span> { <span class="ident">title</span> } <span class="op">=</span><span class="op">&gt;</span> {
             <span class="comment">// Title is not double buffered, we can set it directly</span>
@@ -1640,6 +1655,23 @@
         <span class="number">0b1010</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">xdg_positioner::Anchor::BottomRight</span>),
         <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
     }
+}
+
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">get_parent</span>(<span class="ident">toplevel</span>: <span class="kw-2">&amp;</span><span class="ident">zxdg_toplevel_v6::ZxdgToplevelV6</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">wl_surface::WlSurface</span><span class="op">&gt;</span> {
+    <span class="ident">with_surface_toplevel_role_data</span>(<span class="ident">toplevel</span>, <span class="op">|</span><span class="ident">data</span><span class="op">|</span> <span class="ident">data</span>.<span class="ident">parent</span>.<span class="ident">clone</span>())
+}
+
+<span class="doccomment">/// Sets the parent of the specified toplevel surface.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The parent must be a toplevel surface.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The parent of a surface is not double buffered and therefore may be set directly.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// If the parent is `None`, the parent-child relationship is removed.</span>
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">set_parent</span>(<span class="ident">toplevel</span>: <span class="kw-2">&amp;</span><span class="ident">zxdg_toplevel_v6::ZxdgToplevelV6</span>, <span class="ident">parent</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">wl_surface::WlSurface</span><span class="op">&gt;</span>) {
+    <span class="ident">with_surface_toplevel_role_data</span>(<span class="ident">toplevel</span>, <span class="op">|</span><span class="ident">data</span><span class="op">|</span> {
+        <span class="ident">data</span>.<span class="ident">parent</span> <span class="op">=</span> <span class="ident">parent</span>;
+    });
 }
 </pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="smithay" data-search-index-js="../../../../../search-index.js" data-search-js="../../../../../search.js"></div>
