@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src&#x2F;wayland&#x2F;shell&#x2F;xdg&#x2F;mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="stylesheet" type="text/css" href="../../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../../../../storage.js"></script><script src="../../../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../../../favicon.svg"><link rel="alternate icon" type="image/png" href="../../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../../../smithay/index.html'><div class='logo-container rust-logo'><img src='../../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">   1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src&#x2F;wayland&#x2F;shell&#x2F;xdg&#x2F;mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="stylesheet" type="text/css" href="../../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../../../../storage.js"></script><script src="../../../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../../favicon.svg"><style type="text/css">#crate-search{background-image:url("../../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../../../smithay/index.html'><div class='logo-container rust-logo'><img src='../../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">   1</span>
 <span id="2">   2</span>
 <span id="3">   3</span>
 <span id="4">   4</span>
@@ -1656,8 +1656,180 @@
 <span id="1656">1656</span>
 <span id="1657">1657</span>
 <span id="1658">1658</span>
-</pre><pre class="rust">
-<span class="doccomment">//! Utilities for handling shell surfaces with the `xdg_shell` protocol</span>
+<span id="1659">1659</span>
+<span id="1660">1660</span>
+<span id="1661">1661</span>
+<span id="1662">1662</span>
+<span id="1663">1663</span>
+<span id="1664">1664</span>
+<span id="1665">1665</span>
+<span id="1666">1666</span>
+<span id="1667">1667</span>
+<span id="1668">1668</span>
+<span id="1669">1669</span>
+<span id="1670">1670</span>
+<span id="1671">1671</span>
+<span id="1672">1672</span>
+<span id="1673">1673</span>
+<span id="1674">1674</span>
+<span id="1675">1675</span>
+<span id="1676">1676</span>
+<span id="1677">1677</span>
+<span id="1678">1678</span>
+<span id="1679">1679</span>
+<span id="1680">1680</span>
+<span id="1681">1681</span>
+<span id="1682">1682</span>
+<span id="1683">1683</span>
+<span id="1684">1684</span>
+<span id="1685">1685</span>
+<span id="1686">1686</span>
+<span id="1687">1687</span>
+<span id="1688">1688</span>
+<span id="1689">1689</span>
+<span id="1690">1690</span>
+<span id="1691">1691</span>
+<span id="1692">1692</span>
+<span id="1693">1693</span>
+<span id="1694">1694</span>
+<span id="1695">1695</span>
+<span id="1696">1696</span>
+<span id="1697">1697</span>
+<span id="1698">1698</span>
+<span id="1699">1699</span>
+<span id="1700">1700</span>
+<span id="1701">1701</span>
+<span id="1702">1702</span>
+<span id="1703">1703</span>
+<span id="1704">1704</span>
+<span id="1705">1705</span>
+<span id="1706">1706</span>
+<span id="1707">1707</span>
+<span id="1708">1708</span>
+<span id="1709">1709</span>
+<span id="1710">1710</span>
+<span id="1711">1711</span>
+<span id="1712">1712</span>
+<span id="1713">1713</span>
+<span id="1714">1714</span>
+<span id="1715">1715</span>
+<span id="1716">1716</span>
+<span id="1717">1717</span>
+<span id="1718">1718</span>
+<span id="1719">1719</span>
+<span id="1720">1720</span>
+<span id="1721">1721</span>
+<span id="1722">1722</span>
+<span id="1723">1723</span>
+<span id="1724">1724</span>
+<span id="1725">1725</span>
+<span id="1726">1726</span>
+<span id="1727">1727</span>
+<span id="1728">1728</span>
+<span id="1729">1729</span>
+<span id="1730">1730</span>
+<span id="1731">1731</span>
+<span id="1732">1732</span>
+<span id="1733">1733</span>
+<span id="1734">1734</span>
+<span id="1735">1735</span>
+<span id="1736">1736</span>
+<span id="1737">1737</span>
+<span id="1738">1738</span>
+<span id="1739">1739</span>
+<span id="1740">1740</span>
+<span id="1741">1741</span>
+<span id="1742">1742</span>
+<span id="1743">1743</span>
+<span id="1744">1744</span>
+<span id="1745">1745</span>
+<span id="1746">1746</span>
+<span id="1747">1747</span>
+<span id="1748">1748</span>
+<span id="1749">1749</span>
+<span id="1750">1750</span>
+<span id="1751">1751</span>
+<span id="1752">1752</span>
+<span id="1753">1753</span>
+<span id="1754">1754</span>
+<span id="1755">1755</span>
+<span id="1756">1756</span>
+<span id="1757">1757</span>
+<span id="1758">1758</span>
+<span id="1759">1759</span>
+<span id="1760">1760</span>
+<span id="1761">1761</span>
+<span id="1762">1762</span>
+<span id="1763">1763</span>
+<span id="1764">1764</span>
+<span id="1765">1765</span>
+<span id="1766">1766</span>
+<span id="1767">1767</span>
+<span id="1768">1768</span>
+<span id="1769">1769</span>
+<span id="1770">1770</span>
+<span id="1771">1771</span>
+<span id="1772">1772</span>
+<span id="1773">1773</span>
+<span id="1774">1774</span>
+<span id="1775">1775</span>
+<span id="1776">1776</span>
+<span id="1777">1777</span>
+<span id="1778">1778</span>
+<span id="1779">1779</span>
+<span id="1780">1780</span>
+<span id="1781">1781</span>
+<span id="1782">1782</span>
+<span id="1783">1783</span>
+<span id="1784">1784</span>
+<span id="1785">1785</span>
+<span id="1786">1786</span>
+<span id="1787">1787</span>
+<span id="1788">1788</span>
+<span id="1789">1789</span>
+<span id="1790">1790</span>
+<span id="1791">1791</span>
+<span id="1792">1792</span>
+<span id="1793">1793</span>
+<span id="1794">1794</span>
+<span id="1795">1795</span>
+<span id="1796">1796</span>
+<span id="1797">1797</span>
+<span id="1798">1798</span>
+<span id="1799">1799</span>
+<span id="1800">1800</span>
+<span id="1801">1801</span>
+<span id="1802">1802</span>
+<span id="1803">1803</span>
+<span id="1804">1804</span>
+<span id="1805">1805</span>
+<span id="1806">1806</span>
+<span id="1807">1807</span>
+<span id="1808">1808</span>
+<span id="1809">1809</span>
+<span id="1810">1810</span>
+<span id="1811">1811</span>
+<span id="1812">1812</span>
+<span id="1813">1813</span>
+<span id="1814">1814</span>
+<span id="1815">1815</span>
+<span id="1816">1816</span>
+<span id="1817">1817</span>
+<span id="1818">1818</span>
+<span id="1819">1819</span>
+<span id="1820">1820</span>
+<span id="1821">1821</span>
+<span id="1822">1822</span>
+<span id="1823">1823</span>
+<span id="1824">1824</span>
+<span id="1825">1825</span>
+<span id="1826">1826</span>
+<span id="1827">1827</span>
+<span id="1828">1828</span>
+<span id="1829">1829</span>
+<span id="1830">1830</span>
+<span id="1831">1831</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Utilities for handling shell surfaces with the `xdg_shell` protocol</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! This module provides automatic handling of shell surfaces objects, by being registered</span>
 <span class="doccomment">//! as a global handler for `xdg_shell`.</span>
@@ -1720,12 +1892,12 @@
 <span class="doccomment">//! the subhandler you provided, or via methods on the [`ShellState`]</span>
 <span class="doccomment">//! that you are given (in an `Arc&lt;Mutex&lt;_&gt;&gt;`) as return value of the `init` function.</span>
 
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils::DeadResource</span>;
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::utils</span>::{<span class="ident">Logical</span>, <span class="ident">Point</span>, <span class="ident">Rectangle</span>, <span class="ident">Size</span>};
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland::compositor</span>;
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland::compositor::Cacheable</span>;
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland::shell::is_toplevel_equivalent</span>;
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::wayland</span>::{<span class="ident">Serial</span>, <span class="ident">SERIAL_COUNTER</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::DeadResource</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils</span>::{<span class="ident">Logical</span>, <span class="ident">Point</span>, <span class="ident">Rectangle</span>, <span class="ident">Size</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::wayland::compositor</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::wayland::compositor::Cacheable</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::wayland::shell::is_toplevel_equivalent</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::wayland</span>::{<span class="ident">Serial</span>, <span class="ident">SERIAL_COUNTER</span>};
 <span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">cell::RefCell</span>,
@@ -1745,7 +1917,7 @@
     <span class="ident">Display</span>, <span class="ident">Filter</span>, <span class="ident">Global</span>, <span class="ident">UserDataMap</span>,
 };
 
-<span class="kw">use</span> <span class="kw">super</span><span class="ident">::PingError</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::PingError</span>;
 
 <span class="comment">// handlers for the xdg_shell protocol</span>
 <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">mod</span> <span class="ident">xdg_handlers</span>;
@@ -1783,6 +1955,9 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// [xdg_popup]: self::XDG_POPUP_ROLE</span>
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">ZXDG_POPUP_ROLE</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;zxdg_popup&quot;</span>;
+
+<span class="doccomment">/// Constant for toplevel state version checking</span>
+<span class="kw">const</span> <span class="ident">XDG_TOPLEVEL_STATE_TILED_SINCE</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">2</span>;
 
 <span class="macro">macro_rules!</span> <span class="ident">xdg_role</span> {
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">configure</span>:<span class="ident">ty</span>,
@@ -1974,12 +2149,6 @@
         <span class="doccomment">/// It is a protocol error to call commit on a wl_surface with</span>
         <span class="doccomment">/// the xdg_popup role when no parent is set.</span>
         <span class="kw">pub</span> <span class="ident">parent</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">wl_surface::WlSurface</span><span class="op">&gt;</span>,
-        <span class="doccomment">/// The positioner state can be used by the compositor</span>
-        <span class="doccomment">/// to calculate the best placement for the popup.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// For example the compositor should prevent that a popup</span>
-        <span class="doccomment">/// is placed outside the visible rectangle of a output.</span>
-        <span class="kw">pub</span> <span class="ident">positioner</span>: <span class="ident">PositionerState</span>,
         <span class="doccomment">/// Holds the last server_pending state that has been acknowledged</span>
         <span class="doccomment">/// by the client. This state should be cloned to the current</span>
         <span class="doccomment">/// during a commit.</span>
@@ -1999,6 +2168,12 @@
 <span class="doccomment">/// Represents the state of the popup</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PopupState</span> {
+    <span class="doccomment">/// The positioner state can be used by the compositor</span>
+    <span class="doccomment">/// to calculate the best placement for the popup.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// For example the compositor should prevent that a popup</span>
+    <span class="doccomment">/// is placed outside the visible rectangle of a output.</span>
+    <span class="kw">pub</span> <span class="ident">positioner</span>: <span class="ident">PositionerState</span>,
     <span class="doccomment">/// Holds the geometry of the popup as defined by the positioner.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// `Rectangle::width` and `Rectangle::height` holds the size of the</span>
@@ -2015,11 +2190,12 @@
     <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">geometry</span>: <span class="ident">Default::default</span>(),
+            <span class="ident">positioner</span>: <span class="ident">Default::default</span>(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="doccomment">/// The state of a positioner, as set by the client</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PositionerState</span> {
     <span class="doccomment">/// Size of the rectangle that needs to be positioned</span>
@@ -2037,6 +2213,26 @@
     <span class="kw">pub</span> <span class="ident">constraint_adjustment</span>: <span class="ident">xdg_positioner::ConstraintAdjustment</span>,
     <span class="doccomment">/// Offset placement relative to the anchor point</span>
     <span class="kw">pub</span> <span class="ident">offset</span>: <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// When set reactive, the surface is reconstrained if the conditions</span>
+    <span class="doccomment">/// used for constraining changed, e.g. the parent window moved.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If the conditions changed and the popup was reconstrained,</span>
+    <span class="doccomment">/// an xdg_popup.configure event is sent with updated geometry,</span>
+    <span class="doccomment">/// followed by an xdg_surface.configure event.</span>
+    <span class="kw">pub</span> <span class="ident">reactive</span>: <span class="ident">bool</span>,
+    <span class="doccomment">/// The parent window geometry the compositor should use when</span>
+    <span class="doccomment">/// positioning the popup. The compositor may use this information</span>
+    <span class="doccomment">/// to determine the future state the popup should be constrained using.</span>
+    <span class="doccomment">/// If this doesn&#39;t match the dimension of the parent the popup is</span>
+    <span class="doccomment">/// eventually positioned against, the behavior is undefined.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The arguments are given in the surface-local coordinate space.</span>
+    <span class="kw">pub</span> <span class="ident">parent_size</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// The serial of an xdg_surface.configure event this positioner will</span>
+    <span class="doccomment">/// be used in response to. The compositor may use this information</span>
+    <span class="doccomment">/// together with set_parent_size to determine what future state the</span>
+    <span class="doccomment">/// popup should be constrained using.</span>
+    <span class="kw">pub</span> <span class="ident">parent_configure</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Serial</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">PositionerState</span> {
@@ -2048,6 +2244,9 @@
             <span class="ident">gravity</span>: <span class="ident">xdg_positioner::Gravity::None</span>,
             <span class="ident">offset</span>: <span class="ident">Default::default</span>(),
             <span class="ident">rect_size</span>: <span class="ident">Default::default</span>(),
+            <span class="ident">reactive</span>: <span class="bool-val">false</span>,
+            <span class="ident">parent_size</span>: <span class="prelude-val">None</span>,
+            <span class="ident">parent_configure</span>: <span class="prelude-val">None</span>,
         }
     }
 }
@@ -2117,7 +2316,7 @@
     <span class="doccomment">/// The `constraint_adjustment` will not be considered by this</span>
     <span class="doccomment">/// implementation and the position and size should be re-calculated</span>
     <span class="doccomment">/// in the compositor if the compositor implements `constraint_adjustment`</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">get_geometry</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_geometry</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span> {
         <span class="comment">// From the `xdg_shell` prococol specification:</span>
         <span class="comment">//</span>
         <span class="comment">// set_offset:</span>
@@ -2250,6 +2449,39 @@
             <span class="bool-val">true</span>
         }
     }
+
+    <span class="doccomment">/// Filter the states according to the provided version</span>
+    <span class="doccomment">/// of the [`XdgToplevel`]</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">into_filtered_states</span>(<span class="self">self</span>, <span class="ident">version</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">xdg_toplevel::State</span><span class="op">&gt;</span> {
+        <span class="comment">// If the client version supports the tiled states</span>
+        <span class="comment">// we can directly return the states which will save</span>
+        <span class="comment">// us from allocating another vector</span>
+        <span class="kw">if</span> <span class="ident">version</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">XDG_TOPLEVEL_STATE_TILED_SINCE</span> {
+            <span class="kw">return</span> <span class="self">self</span>.<span class="ident">states</span>;
+        }
+
+        <span class="kw">let</span> <span class="ident">is_tiled</span> <span class="op">=</span> <span class="op">|</span><span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="ident">xdg_toplevel::State</span><span class="op">|</span> {
+            <span class="macro">matches!</span>(
+                <span class="ident">state</span>,
+                <span class="ident">xdg_toplevel::State::TiledTop</span>
+                    <span class="op">|</span> <span class="ident">xdg_toplevel::State::TiledBottom</span>
+                    <span class="op">|</span> <span class="ident">xdg_toplevel::State::TiledLeft</span>
+                    <span class="op">|</span> <span class="ident">xdg_toplevel::State::TiledRight</span>
+            )
+        };
+
+        <span class="kw">let</span> <span class="ident">contains_tiled</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">states</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">state</span><span class="op">|</span> <span class="ident">is_tiled</span>(<span class="ident">state</span>));
+
+        <span class="comment">// If the states do not contain a tiled state</span>
+        <span class="comment">// we can directly return the states which will save</span>
+        <span class="comment">// us from allocating another vector</span>
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">contains_tiled</span> {
+            <span class="kw">return</span> <span class="self">self</span>.<span class="ident">states</span>;
+        }
+
+        <span class="comment">// We need to filter out the unsupported states</span>
+        <span class="self">self</span>.<span class="ident">states</span>.<span class="ident">into_iter</span>().<span class="ident">filter</span>(<span class="op">|</span><span class="ident">state</span><span class="op">|</span> <span class="op">!</span><span class="ident">is_tiled</span>(<span class="ident">state</span>)).<span class="ident">collect</span>()
+    }
 }
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">ToplevelStateSet</span> {
@@ -2260,9 +2492,9 @@
 
 <span class="kw">impl</span> <span class="ident">IntoIterator</span> <span class="kw">for</span> <span class="ident">ToplevelStateSet</span> {
     <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">xdg_toplevel::State</span>;
-    <span class="kw">type</span> <span class="ident">IntoIter</span> <span class="op">=</span> <span class="ident">std::vec::IntoIter</span><span class="op">&lt;</span><span class="self">Self</span><span class="ident">::Item</span><span class="op">&gt;</span>;
+    <span class="kw">type</span> <span class="ident">IntoIter</span> <span class="op">=</span> <span class="ident">std::vec::IntoIter</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span>;
 
-    <span class="kw">fn</span> <span class="ident">into_iter</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span><span class="ident">::IntoIter</span> {
+    <span class="kw">fn</span> <span class="ident">into_iter</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::IntoIter</span> {
         <span class="self">self</span>.<span class="ident">states</span>.<span class="ident">into_iter</span>()
     }
 }
@@ -2344,7 +2576,7 @@
     <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">::slog::Logger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">Impl</span>: <span class="ident">FnMut</span>(<span class="ident">XdgRequest</span>, <span class="ident">DispatchData</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
-    <span class="kw">let</span> <span class="ident">log</span> <span class="op">=</span> <span class="kw">crate</span><span class="ident">::slog_or_fallback</span>(<span class="ident">logger</span>);
+    <span class="kw">let</span> <span class="ident">log</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::slog_or_fallback</span>(<span class="ident">logger</span>);
     <span class="kw">let</span> <span class="ident">shell_state</span> <span class="op">=</span> <span class="ident">Arc::new</span>(<span class="ident">Mutex::new</span>(<span class="ident">ShellState</span> {
         <span class="ident">known_toplevels</span>: <span class="ident">Vec::new</span>(),
         <span class="ident">known_popups</span>: <span class="ident">Vec::new</span>(),
@@ -2359,16 +2591,16 @@
     <span class="kw">let</span> <span class="ident">shell_data_z</span> <span class="op">=</span> <span class="ident">shell_data</span>.<span class="ident">clone</span>();
 
     <span class="kw">let</span> <span class="ident">xdg_shell_global</span> <span class="op">=</span> <span class="ident">display</span>.<span class="ident">create_global</span>(
-        <span class="number">1</span>,
+        <span class="number">3</span>,
         <span class="ident">Filter::new</span>(<span class="kw">move</span> <span class="op">|</span>(<span class="ident">shell</span>, <span class="ident">_version</span>), <span class="kw">_</span>, <span class="ident">dispatch_data</span><span class="op">|</span> {
-            <span class="self">self</span><span class="ident">::xdg_handlers::implement_wm_base</span>(<span class="ident">shell</span>, <span class="kw-2">&amp;</span><span class="ident">shell_data</span>, <span class="ident">dispatch_data</span>);
+            <span class="ident"><span class="self">self</span>::xdg_handlers::implement_wm_base</span>(<span class="ident">shell</span>, <span class="kw-2">&amp;</span><span class="ident">shell_data</span>, <span class="ident">dispatch_data</span>);
         }),
     );
 
     <span class="kw">let</span> <span class="ident">zxdgv6_shell_global</span> <span class="op">=</span> <span class="ident">display</span>.<span class="ident">create_global</span>(
         <span class="number">1</span>,
         <span class="ident">Filter::new</span>(<span class="kw">move</span> <span class="op">|</span>(<span class="ident">shell</span>, <span class="ident">_version</span>), <span class="kw">_</span>, <span class="ident">dispatch_data</span><span class="op">|</span> {
-            <span class="self">self</span><span class="ident">::zxdgv6_handlers::implement_shell</span>(<span class="ident">shell</span>, <span class="kw-2">&amp;</span><span class="ident">shell_data_z</span>, <span class="ident">dispatch_data</span>);
+            <span class="ident"><span class="self">self</span>::zxdgv6_handlers::implement_shell</span>(<span class="ident">shell</span>, <span class="kw-2">&amp;</span><span class="ident">shell_data_z</span>, <span class="ident">dispatch_data</span>);
         }),
     );
 
@@ -2478,7 +2710,7 @@
                 <span class="kw">let</span> <span class="ident">user_data</span> <span class="op">=</span> <span class="ident">shell</span>
                     .<span class="ident">as_ref</span>()
                     .<span class="ident">user_data</span>()
-                    .<span class="ident">get</span>::<span class="op">&lt;</span><span class="self">self</span><span class="ident">::xdg_handlers::ShellUserData</span><span class="op">&gt;</span>()
+                    .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident"><span class="self">self</span>::xdg_handlers::ShellUserData</span><span class="op">&gt;</span>()
                     .<span class="ident">unwrap</span>();
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">guard</span> <span class="op">=</span> <span class="ident">user_data</span>.<span class="ident">client_data</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pending_ping</span>) <span class="op">=</span> <span class="ident">guard</span>.<span class="ident">pending_ping</span> {
@@ -2491,7 +2723,7 @@
                 <span class="kw">let</span> <span class="ident">user_data</span> <span class="op">=</span> <span class="ident">shell</span>
                     .<span class="ident">as_ref</span>()
                     .<span class="ident">user_data</span>()
-                    .<span class="ident">get</span>::<span class="op">&lt;</span><span class="self">self</span><span class="ident">::zxdgv6_handlers::ShellUserData</span><span class="op">&gt;</span>()
+                    .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident"><span class="self">self</span>::zxdgv6_handlers::ShellUserData</span><span class="op">&gt;</span>()
                     .<span class="ident">unwrap</span>();
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">guard</span> <span class="op">=</span> <span class="ident">user_data</span>.<span class="ident">client_data</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pending_ping</span>) <span class="op">=</span> <span class="ident">guard</span>.<span class="ident">pending_ping</span> {
@@ -2505,19 +2737,19 @@
     }
 
     <span class="doccomment">/// Access the user data associated with this shell client</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_data</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="kw">crate</span><span class="ident">::utils::DeadResource</span><span class="op">&gt;</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_data</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident"><span class="kw">crate</span>::utils::DeadResource</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">UserDataMap</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span>,
     {
         <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">alive</span>() {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span><span class="ident">::utils::DeadResource</span>);
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident"><span class="kw">crate</span>::utils::DeadResource</span>);
         }
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span> {
             <span class="ident">ShellClientKind::Xdg</span>(<span class="kw-2">ref</span> <span class="ident">shell</span>) <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">shell</span>
                     .<span class="ident">as_ref</span>()
                     .<span class="ident">user_data</span>()
-                    .<span class="ident">get</span>::<span class="op">&lt;</span><span class="self">self</span><span class="ident">::xdg_handlers::ShellUserData</span><span class="op">&gt;</span>()
+                    .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident"><span class="self">self</span>::xdg_handlers::ShellUserData</span><span class="op">&gt;</span>()
                     .<span class="ident">unwrap</span>();
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">guard</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">client_data</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
                 <span class="prelude-val">Ok</span>(<span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">guard</span>.<span class="ident">data</span>))
@@ -2526,7 +2758,7 @@
                 <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">shell</span>
                     .<span class="ident">as_ref</span>()
                     .<span class="ident">user_data</span>()
-                    .<span class="ident">get</span>::<span class="op">&lt;</span><span class="self">self</span><span class="ident">::zxdgv6_handlers::ShellUserData</span><span class="op">&gt;</span>()
+                    .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident"><span class="self">self</span>::zxdgv6_handlers::ShellUserData</span><span class="op">&gt;</span>()
                     .<span class="ident">unwrap</span>();
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">guard</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">client_data</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
                 <span class="prelude-val">Ok</span>(<span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">guard</span>.<span class="ident">data</span>))
@@ -2577,7 +2809,7 @@
                 <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">s</span>
                     .<span class="ident">as_ref</span>()
                     .<span class="ident">user_data</span>()
-                    .<span class="ident">get</span>::<span class="op">&lt;</span><span class="self">self</span><span class="ident">::xdg_handlers::ShellSurfaceUserData</span><span class="op">&gt;</span>()
+                    .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident"><span class="self">self</span>::xdg_handlers::ShellSurfaceUserData</span><span class="op">&gt;</span>()
                     .<span class="ident">unwrap</span>();
                 <span class="ident">ShellClientKind::Xdg</span>(<span class="ident">data</span>.<span class="ident">wm_base</span>.<span class="ident">clone</span>())
             }
@@ -2585,7 +2817,7 @@
                 <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">s</span>
                     .<span class="ident">as_ref</span>()
                     .<span class="ident">user_data</span>()
-                    .<span class="ident">get</span>::<span class="op">&lt;</span><span class="self">self</span><span class="ident">::zxdgv6_handlers::ShellSurfaceUserData</span><span class="op">&gt;</span>()
+                    .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident"><span class="self">self</span>::zxdgv6_handlers::ShellSurfaceUserData</span><span class="op">&gt;</span>()
                     .<span class="ident">unwrap</span>();
                 <span class="ident">ShellClientKind::ZxdgV6</span>(<span class="ident">data</span>.<span class="ident">shell</span>.<span class="ident">clone</span>())
             }
@@ -2662,9 +2894,9 @@
             .<span class="ident">unwrap_or</span>(<span class="prelude-val">None</span>);
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">configure</span>) <span class="op">=</span> <span class="ident">configure</span> {
                 <span class="kw">match</span> <span class="self">self</span>.<span class="ident">shell_surface</span> {
-                    <span class="ident">ToplevelKind::Xdg</span>(<span class="kw-2">ref</span> <span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="self">self</span><span class="ident">::xdg_handlers::send_toplevel_configure</span>(<span class="ident">s</span>, <span class="ident">configure</span>),
+                    <span class="ident">ToplevelKind::Xdg</span>(<span class="kw-2">ref</span> <span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident"><span class="self">self</span>::xdg_handlers::send_toplevel_configure</span>(<span class="ident">s</span>, <span class="ident">configure</span>),
                     <span class="ident">ToplevelKind::ZxdgV6</span>(<span class="kw-2">ref</span> <span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                        <span class="self">self</span><span class="ident">::zxdgv6_handlers::send_toplevel_configure</span>(<span class="ident">s</span>, <span class="ident">configure</span>)
+                        <span class="ident"><span class="self">self</span>::zxdgv6_handlers::send_toplevel_configure</span>(<span class="ident">s</span>, <span class="ident">configure</span>)
                     }
                 }
             }
@@ -2718,7 +2950,7 @@
                     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">s</span>
                         .<span class="ident">as_ref</span>()
                         .<span class="ident">user_data</span>()
-                        .<span class="ident">get</span>::<span class="op">&lt;</span><span class="self">self</span><span class="ident">::xdg_handlers::ShellSurfaceUserData</span><span class="op">&gt;</span>()
+                        .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident"><span class="self">self</span>::xdg_handlers::ShellSurfaceUserData</span><span class="op">&gt;</span>()
                         .<span class="ident">unwrap</span>();
                     <span class="ident">data</span>.<span class="ident">xdg_surface</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
                         <span class="ident">xdg_surface::Error::NotConstructed</span> <span class="kw">as</span> <span class="ident">u32</span>,
@@ -2729,7 +2961,7 @@
                     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">s</span>
                         .<span class="ident">as_ref</span>()
                         .<span class="ident">user_data</span>()
-                        .<span class="ident">get</span>::<span class="op">&lt;</span><span class="self">self</span><span class="ident">::zxdgv6_handlers::ShellSurfaceUserData</span><span class="op">&gt;</span>()
+                        .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident"><span class="self">self</span>::zxdgv6_handlers::ShellSurfaceUserData</span><span class="op">&gt;</span>()
                         .<span class="ident">unwrap</span>();
                     <span class="ident">data</span>.<span class="ident">xdg_surface</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
                         <span class="ident">zxdg_surface_v6::Error::NotConstructed</span> <span class="kw">as</span> <span class="ident">u32</span>,
@@ -2846,6 +3078,21 @@
     }
 }
 
+<span class="doccomment">/// Represents the possible errors that</span>
+<span class="doccomment">/// can be returned from [`PopupSurface::send_configure`]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">thiserror::Error</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">PopupConfigureError</span> {
+    <span class="doccomment">/// The popup has already been configured and the</span>
+    <span class="doccomment">/// protocol version forbids the popup to</span>
+    <span class="doccomment">/// be re-configured</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;The popup has already been configured&quot;</span>)]</span>
+    <span class="ident">AlreadyConfigured</span>,
+    <span class="doccomment">/// The popup is not allowed to be re-configured,</span>
+    <span class="doccomment">/// the positioner is not reactive</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;The popup positioner is not reactive&quot;</span>)]</span>
+    <span class="ident">NotReactive</span>,
+}
+
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum</span> <span class="ident">PopupKind</span> {
     <span class="ident">Xdg</span>(<span class="ident">xdg_popup::XdgPopup</span>),
@@ -2911,7 +3158,7 @@
                 <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">p</span>
                     .<span class="ident">as_ref</span>()
                     .<span class="ident">user_data</span>()
-                    .<span class="ident">get</span>::<span class="op">&lt;</span><span class="self">self</span><span class="ident">::xdg_handlers::ShellSurfaceUserData</span><span class="op">&gt;</span>()
+                    .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident"><span class="self">self</span>::xdg_handlers::ShellSurfaceUserData</span><span class="op">&gt;</span>()
                     .<span class="ident">unwrap</span>();
                 <span class="ident">ShellClientKind::Xdg</span>(<span class="ident">data</span>.<span class="ident">wm_base</span>.<span class="ident">clone</span>())
             }
@@ -2919,7 +3166,7 @@
                 <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">p</span>
                     .<span class="ident">as_ref</span>()
                     .<span class="ident">user_data</span>()
-                    .<span class="ident">get</span>::<span class="op">&lt;</span><span class="self">self</span><span class="ident">::zxdgv6_handlers::ShellSurfaceUserData</span><span class="op">&gt;</span>()
+                    .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident"><span class="self">self</span>::zxdgv6_handlers::ShellSurfaceUserData</span><span class="op">&gt;</span>()
                     .<span class="ident">unwrap</span>();
                 <span class="ident">ShellClientKind::ZxdgV6</span>(<span class="ident">data</span>.<span class="ident">shell</span>.<span class="ident">clone</span>())
             }
@@ -2928,13 +3175,17 @@
         <span class="prelude-val">Some</span>(<span class="ident">ShellClient</span> { <span class="ident">kind</span>: <span class="ident">shell</span> })
     }
 
-    <span class="doccomment">/// Send a configure event to this popup surface to suggest it a new configuration</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The serial of this configure will be tracked waiting for the client to ACK it.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// You can manipulate the state that will be sent to the client with the [`with_pending_state`](#method.with_pending_state)</span>
-    <span class="doccomment">/// method.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send_configure</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+    <span class="doccomment">/// Get the version of the popup resource</span>
+    <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">shell_surface</span> {
+            <span class="ident">PopupKind::Xdg</span>(<span class="kw-2">ref</span> <span class="ident">xdg</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">xdg</span>.<span class="ident">as_ref</span>().<span class="ident">version</span>(),
+            <span class="ident">PopupKind::ZxdgV6</span>(<span class="kw-2">ref</span> <span class="ident">zxdg</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">zxdg</span>.<span class="ident">as_ref</span>().<span class="ident">version</span>(),
+        }
+    }
+
+    <span class="doccomment">/// Internal configure function to re-use the configure</span>
+    <span class="doccomment">/// logic for both [`XdgRequest::send_configure`] and [`XdgRequest::send_repositioned`]</span>
+    <span class="kw">fn</span> <span class="ident">send_configure_internal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">reposition_token</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>) {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">surface</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_surface</span>() {
             <span class="kw">let</span> <span class="ident">next_configure</span> <span class="op">=</span> <span class="ident">compositor::with_states</span>(<span class="ident">surface</span>, <span class="op">|</span><span class="ident">states</span><span class="op">|</span> {
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">attributes</span> <span class="op">=</span> <span class="ident">states</span>
@@ -2943,12 +3194,17 @@
                     .<span class="ident">unwrap</span>()
                     .<span class="ident">lock</span>()
                     .<span class="ident">unwrap</span>();
-                <span class="kw">if</span> <span class="op">!</span><span class="ident">attributes</span>.<span class="ident">initial_configure_sent</span> <span class="op">|</span><span class="op">|</span> <span class="ident">attributes</span>.<span class="ident">server_pending</span>.<span class="ident">is_some</span>() {
+
+                <span class="kw">if</span> <span class="op">!</span><span class="ident">attributes</span>.<span class="ident">initial_configure_sent</span>
+                    <span class="op">|</span><span class="op">|</span> <span class="ident">attributes</span>.<span class="ident">server_pending</span>.<span class="ident">is_some</span>()
+                    <span class="op">|</span><span class="op">|</span> <span class="ident">reposition_token</span>.<span class="ident">is_some</span>()
+                {
                     <span class="kw">let</span> <span class="ident">pending</span> <span class="op">=</span> <span class="ident">attributes</span>.<span class="ident">server_pending</span>.<span class="ident">take</span>().<span class="ident">unwrap_or</span>(<span class="ident">attributes</span>.<span class="ident">current</span>);
 
                     <span class="kw">let</span> <span class="ident">configure</span> <span class="op">=</span> <span class="ident">PopupConfigure</span> {
                         <span class="ident">state</span>: <span class="ident">pending</span>,
                         <span class="ident">serial</span>: <span class="ident">SERIAL_COUNTER</span>.<span class="ident">next_serial</span>(),
+                        <span class="ident">reposition_token</span>,
                     };
 
                     <span class="ident">attributes</span>.<span class="ident">pending_configures</span>.<span class="ident">push</span>(<span class="ident">configure</span>);
@@ -2963,14 +3219,66 @@
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">configure</span>) <span class="op">=</span> <span class="ident">next_configure</span> {
                 <span class="kw">match</span> <span class="self">self</span>.<span class="ident">shell_surface</span> {
                     <span class="ident">PopupKind::Xdg</span>(<span class="kw-2">ref</span> <span class="ident">p</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                        <span class="self">self</span><span class="ident">::xdg_handlers::send_popup_configure</span>(<span class="ident">p</span>, <span class="ident">configure</span>);
+                        <span class="ident"><span class="self">self</span>::xdg_handlers::send_popup_configure</span>(<span class="ident">p</span>, <span class="ident">configure</span>);
                     }
                     <span class="ident">PopupKind::ZxdgV6</span>(<span class="kw-2">ref</span> <span class="ident">p</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                        <span class="self">self</span><span class="ident">::zxdgv6_handlers::send_popup_configure</span>(<span class="ident">p</span>, <span class="ident">configure</span>);
+                        <span class="ident"><span class="self">self</span>::zxdgv6_handlers::send_popup_configure</span>(<span class="ident">p</span>, <span class="ident">configure</span>);
                     }
                 }
             }
         }
+    }
+
+    <span class="doccomment">/// Send a configure event to this popup surface to suggest it a new configuration</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The serial of this configure will be tracked waiting for the client to ACK it.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// You can manipulate the state that will be sent to the client with the [`with_pending_state`](#method.with_pending_state)</span>
+    <span class="doccomment">/// method.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns [`Err(PopupConfigureError)`] if the initial configure has already been sent and</span>
+    <span class="doccomment">/// the client protocol version disallows a re-configure or the current [`PositionerState`]</span>
+    <span class="doccomment">/// is not reactive</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send_configure</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">PopupConfigureError</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">surface</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_surface</span>() {
+            <span class="comment">// Check if we are allowed to send a configure</span>
+            <span class="ident">compositor::with_states</span>(<span class="ident">surface</span>, <span class="op">|</span><span class="ident">states</span><span class="op">|</span> {
+                <span class="kw">let</span> <span class="ident">attributes</span> <span class="op">=</span> <span class="ident">states</span>
+                    .<span class="ident">data_map</span>
+                    .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">XdgPopupSurfaceRoleAttributes</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+                    .<span class="ident">unwrap</span>()
+                    .<span class="ident">lock</span>()
+                    .<span class="ident">unwrap</span>();
+
+                <span class="kw">if</span> <span class="ident">attributes</span>.<span class="ident">initial_configure_sent</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">version</span>() <span class="op">&lt;</span> <span class="ident">xdg_popup::EVT_REPOSITIONED_SINCE</span> {
+                    <span class="comment">// Return error, initial configure already sent and client</span>
+                    <span class="comment">// does not support re-configure</span>
+                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PopupConfigureError::AlreadyConfigured</span>);
+                }
+
+                <span class="kw">let</span> <span class="ident">is_reactive</span> <span class="op">=</span> <span class="ident">attributes</span>.<span class="ident">current</span>.<span class="ident">positioner</span>.<span class="ident">reactive</span>;
+
+                <span class="kw">if</span> <span class="ident">attributes</span>.<span class="ident">initial_configure_sent</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">is_reactive</span> {
+                    <span class="comment">// Return error, the positioner does not allow re-configure</span>
+                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PopupConfigureError::NotReactive</span>);
+                }
+
+                <span class="prelude-val">Ok</span>(())
+            })
+            .<span class="ident">unwrap_or</span>(<span class="prelude-val">Ok</span>(()))<span class="question-mark">?</span>;
+
+            <span class="self">self</span>.<span class="ident">send_configure_internal</span>(<span class="prelude-val">None</span>);
+        }
+
+        <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="doccomment">/// Send a configure event, including the `repositioned` event to the client</span>
+    <span class="doccomment">/// in response to a `reposition` request.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// For further information see [`XdgPopup::send_configure`]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send_repositioned</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">token</span>: <span class="ident">u32</span>) {
+        <span class="self">self</span>.<span class="ident">send_configure_internal</span>(<span class="prelude-val">Some</span>(<span class="ident">token</span>))
     }
 
     <span class="doccomment">/// Handles the role specific commit logic</span>
@@ -2998,7 +3306,7 @@
                     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">s</span>
                         .<span class="ident">as_ref</span>()
                         .<span class="ident">user_data</span>()
-                        .<span class="ident">get</span>::<span class="op">&lt;</span><span class="self">self</span><span class="ident">::xdg_handlers::ShellSurfaceUserData</span><span class="op">&gt;</span>()
+                        .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident"><span class="self">self</span>::xdg_handlers::ShellSurfaceUserData</span><span class="op">&gt;</span>()
                         .<span class="ident">unwrap</span>();
                     <span class="ident">data</span>.<span class="ident">xdg_surface</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
                         <span class="ident">xdg_surface::Error::NotConstructed</span> <span class="kw">as</span> <span class="ident">u32</span>,
@@ -3009,7 +3317,7 @@
                     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">s</span>
                         .<span class="ident">as_ref</span>()
                         .<span class="ident">user_data</span>()
-                        .<span class="ident">get</span>::<span class="op">&lt;</span><span class="self">self</span><span class="ident">::zxdgv6_handlers::ShellSurfaceUserData</span><span class="op">&gt;</span>()
+                        .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident"><span class="self">self</span>::zxdgv6_handlers::ShellSurfaceUserData</span><span class="op">&gt;</span>()
                         .<span class="ident">unwrap</span>();
                     <span class="ident">data</span>.<span class="ident">xdg_surface</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
                         <span class="ident">zxdg_surface_v6::Error::NotConstructed</span> <span class="kw">as</span> <span class="ident">u32</span>,
@@ -3067,7 +3375,7 @@
                     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">s</span>
                         .<span class="ident">as_ref</span>()
                         .<span class="ident">user_data</span>()
-                        .<span class="ident">get</span>::<span class="op">&lt;</span><span class="self">self</span><span class="ident">::xdg_handlers::ShellSurfaceUserData</span><span class="op">&gt;</span>()
+                        .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident"><span class="self">self</span>::xdg_handlers::ShellSurfaceUserData</span><span class="op">&gt;</span>()
                         .<span class="ident">unwrap</span>();
                     <span class="ident">data</span>.<span class="ident">xdg_surface</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
                         <span class="ident">xdg_surface::Error::NotConstructed</span> <span class="kw">as</span> <span class="ident">u32</span>,
@@ -3078,7 +3386,7 @@
                     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">s</span>
                         .<span class="ident">as_ref</span>()
                         .<span class="ident">user_data</span>()
-                        .<span class="ident">get</span>::<span class="op">&lt;</span><span class="self">self</span><span class="ident">::zxdgv6_handlers::ShellSurfaceUserData</span><span class="op">&gt;</span>()
+                        .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident"><span class="self">self</span>::zxdgv6_handlers::ShellSurfaceUserData</span><span class="op">&gt;</span>()
                         .<span class="ident">unwrap</span>();
                     <span class="ident">data</span>.<span class="ident">xdg_surface</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
                         <span class="ident">zxdg_surface_v6::Error::NotConstructed</span> <span class="kw">as</span> <span class="ident">u32</span>,
@@ -3095,6 +3403,10 @@
     <span class="doccomment">/// It means that the use has dismissed the popup surface, or that</span>
     <span class="doccomment">/// the pointer has left the area of popup grab if there was a grab.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send_popup_done</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+        <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">alive</span>() {
+            <span class="kw">return</span>;
+        }
+
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">shell_surface</span> {
             <span class="ident">PopupKind::Xdg</span>(<span class="kw-2">ref</span> <span class="ident">p</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">p</span>.<span class="ident">popup_done</span>(),
             <span class="ident">PopupKind::ZxdgV6</span>(<span class="kw-2">ref</span> <span class="ident">p</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">p</span>.<span class="ident">popup_done</span>(),
@@ -3170,6 +3482,10 @@
     <span class="doccomment">/// from a client for a serial will validate all pending lower</span>
     <span class="doccomment">/// serials.</span>
     <span class="kw">pub</span> <span class="ident">serial</span>: <span class="ident">Serial</span>,
+    <span class="doccomment">/// The token the client provided in the `xdg_popup::reposition`</span>
+    <span class="doccomment">/// request. The token itself is opaque, and has no other special meaning.</span>
+    <span class="doccomment">/// The token is sent in the corresponding `xdg_popup::repositioned` event.</span>
+    <span class="kw">pub</span> <span class="ident">reposition_token</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>,
 }
 
 <span class="doccomment">/// Defines the possible configure variants</span>
@@ -3233,6 +3549,15 @@
     <span class="ident">NewPopup</span> {
         <span class="doccomment">/// the surface</span>
         <span class="ident">surface</span>: <span class="ident">PopupSurface</span>,
+        <span class="doccomment">/// The state of the positioner at the time</span>
+        <span class="doccomment">/// the popup was requested.</span>
+        <span class="doccomment">///</span>
+        <span class="doccomment">/// The positioner state can be used by the compositor</span>
+        <span class="doccomment">/// to calculate the best placement for the popup.</span>
+        <span class="doccomment">///</span>
+        <span class="doccomment">/// For example the compositor should prevent that a popup</span>
+        <span class="doccomment">/// is placed outside the visible rectangle of a output.</span>
+        <span class="ident">positioner</span>: <span class="ident">PositionerState</span>,
     },
     <span class="doccomment">/// The client requested the start of an interactive move for this surface</span>
     <span class="ident">Move</span> {
@@ -3314,8 +3639,28 @@
         <span class="doccomment">/// The configure serial.</span>
         <span class="ident">configure</span>: <span class="ident">Configure</span>,
     },
+    <span class="doccomment">/// A client requested a reposition, providing a new</span>
+    <span class="doccomment">/// positioner, of a popup.</span>
+    <span class="ident">RePosition</span> {
+        <span class="doccomment">/// The popup for which a reposition has been requested</span>
+        <span class="ident">surface</span>: <span class="ident">PopupSurface</span>,
+        <span class="doccomment">/// The state of the positioner at the time</span>
+        <span class="doccomment">/// the reposition request was made.</span>
+        <span class="doccomment">///</span>
+        <span class="doccomment">/// The positioner state can be used by the compositor</span>
+        <span class="doccomment">/// to calculate the best placement for the popup.</span>
+        <span class="doccomment">///</span>
+        <span class="doccomment">/// For example the compositor should prevent that a popup</span>
+        <span class="doccomment">/// is placed outside the visible rectangle of a output.</span>
+        <span class="ident">positioner</span>: <span class="ident">PositionerState</span>,
+        <span class="doccomment">/// The passed token will be sent in the corresponding xdg_popup.repositioned event.</span>
+        <span class="doccomment">/// The new popup position will not take effect until the corresponding configure event</span>
+        <span class="doccomment">/// is acknowledged by the client. See xdg_popup.repositioned for details.</span>
+        <span class="doccomment">/// The token itself is opaque, and has no other special meaning.</span>
+        <span class="ident">token</span>: <span class="ident">u32</span>,
+    },
 }
-</pre></div>
+</code></pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="smithay" data-search-index-js="../../../../../search-index.js" data-search-js="../../../../../search.js"></div>
     <script src="../../../../../main.js"></script><script src="../../../../../source-script.js"></script><script src="../../../../../source-files.js"></script>
 </body></html>

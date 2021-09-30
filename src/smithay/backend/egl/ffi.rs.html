@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src&#x2F;backend&#x2F;egl&#x2F;ffi.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>ffi.rs - source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../../../storage.js"></script><script src="../../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../../smithay/index.html'><div class='logo-container rust-logo'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src&#x2F;backend&#x2F;egl&#x2F;ffi.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>ffi.rs - source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../../../storage.js"></script><script src="../../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../../smithay/index.html'><div class='logo-container rust-logo'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -330,10 +330,9 @@
 <span id="330">330</span>
 <span id="331">331</span>
 <span id="332">332</span>
-</pre><pre class="rust">
-<span class="attribute">#![<span class="ident">allow</span>(<span class="ident">missing_docs</span>)]</span>
+</pre><pre class="rust"><code><span class="attribute">#![<span class="ident">allow</span>(<span class="ident">missing_docs</span>)]</span>
 
-<span class="kw">use</span> <span class="kw">super</span><span class="ident">::Error</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::Error</span>;
 <span class="kw">use</span> <span class="ident">nix::libc</span>::{<span class="ident">c_long</span>, <span class="ident">c_uint</span>, <span class="ident">c_void</span>};
 
 <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">khronos_utime_nanoseconds_t</span> <span class="op">=</span> <span class="ident">khronos_uint64_t</span>;
@@ -366,7 +365,7 @@
         } <span class="kw">else</span> {
             <span class="ident">std::borrow::Cow::Borrowed</span>(<span class="string">&quot;&quot;</span>)
         };
-        <span class="kw">let</span> <span class="ident">logger</span> <span class="op">=</span> <span class="kw">crate</span><span class="ident">::slog_or_fallback</span>(<span class="prelude-val">None</span>).<span class="ident">new</span>(<span class="macro">slog::o!</span>(<span class="string">&quot;backend&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;egl&quot;</span>));
+        <span class="kw">let</span> <span class="ident">logger</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::slog_or_fallback</span>(<span class="prelude-val">None</span>).<span class="ident">new</span>(<span class="macro">slog::o!</span>(<span class="string">&quot;backend&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;egl&quot;</span>));
         <span class="kw">match</span> <span class="ident">severity</span> {
             <span class="ident">egl::DEBUG_MSG_CRITICAL_KHR</span> <span class="op">|</span> <span class="ident">egl::DEBUG_MSG_ERROR_KHR</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="macro">slog::error!</span>(<span class="ident">logger</span>, <span class="string">&quot;[EGL] {}: {}&quot;</span>, <span class="ident">command_utf8</span>, <span class="ident">message_utf8</span>)
@@ -392,7 +391,7 @@
     {
         <span class="ident">f</span>
     }
-    <span class="kw">let</span> <span class="ident">proc_address</span> <span class="op">=</span> <span class="ident">constrain</span>(<span class="op">|</span><span class="ident">sym</span><span class="op">|</span> <span class="kw">unsafe</span> { <span class="kw">super</span><span class="ident">::get_proc_address</span>(<span class="ident">sym</span>) });
+    <span class="kw">let</span> <span class="ident">proc_address</span> <span class="op">=</span> <span class="ident">constrain</span>(<span class="op">|</span><span class="ident">sym</span><span class="op">|</span> <span class="kw">unsafe</span> { <span class="ident"><span class="kw">super</span>::get_proc_address</span>(<span class="ident">sym</span>) });
 
     <span class="ident">egl::LOAD</span>.<span class="ident">call_once</span>(<span class="op">|</span><span class="op">|</span> <span class="kw">unsafe</span> {
         <span class="ident">egl::load_with</span>(<span class="op">|</span><span class="ident">sym</span><span class="op">|</span> {
@@ -411,7 +410,7 @@
     });
 
     <span class="kw">let</span> <span class="ident">extensions</span> <span class="op">=</span> <span class="kw">unsafe</span> {
-        <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="kw">super</span><span class="ident">::wrap_egl_call</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">egl::QueryString</span>(<span class="ident">egl::NO_DISPLAY</span>, <span class="ident">egl::EXTENSIONS</span> <span class="kw">as</span> <span class="ident">i32</span>))
+        <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident"><span class="kw">super</span>::wrap_egl_call</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">egl::QueryString</span>(<span class="ident">egl::NO_DISPLAY</span>, <span class="ident">egl::EXTENSIONS</span> <span class="kw">as</span> <span class="ident">i32</span>))
             .<span class="ident">map_err</span>(<span class="ident">Error::InitFailed</span>)<span class="question-mark">?</span>; <span class="comment">//TODO EGL_EXT_client_extensions not supported</span>
 
         <span class="comment">// this possibility is available only with EGL 1.5 or EGL_EXT_platform_base, otherwise</span>
@@ -543,27 +542,27 @@
     <span class="kw">mod</span> <span class="ident">wayland_storage</span> {
         <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">FnPtr</span>, <span class="ident">__gl_imports::raw</span>};
         <span class="kw">pub</span> <span class="kw">static</span> <span class="kw-2">mut</span> <span class="ident">BindWaylandDisplayWL</span>: <span class="ident">FnPtr</span> <span class="op">=</span> <span class="ident">FnPtr</span> {
-            <span class="ident">f</span>: <span class="kw">super</span><span class="ident">::missing_fn_panic</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">raw::c_void</span>,
+            <span class="ident">f</span>: <span class="ident"><span class="kw">super</span>::missing_fn_panic</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">raw::c_void</span>,
             <span class="ident">is_loaded</span>: <span class="bool-val">false</span>,
         };
         <span class="kw">pub</span> <span class="kw">static</span> <span class="kw-2">mut</span> <span class="ident">UnbindWaylandDisplayWL</span>: <span class="ident">FnPtr</span> <span class="op">=</span> <span class="ident">FnPtr</span> {
-            <span class="ident">f</span>: <span class="kw">super</span><span class="ident">::missing_fn_panic</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">raw::c_void</span>,
+            <span class="ident">f</span>: <span class="ident"><span class="kw">super</span>::missing_fn_panic</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">raw::c_void</span>,
             <span class="ident">is_loaded</span>: <span class="bool-val">false</span>,
         };
         <span class="kw">pub</span> <span class="kw">static</span> <span class="kw-2">mut</span> <span class="ident">QueryWaylandBufferWL</span>: <span class="ident">FnPtr</span> <span class="op">=</span> <span class="ident">FnPtr</span> {
-            <span class="ident">f</span>: <span class="kw">super</span><span class="ident">::missing_fn_panic</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">raw::c_void</span>,
+            <span class="ident">f</span>: <span class="ident"><span class="kw">super</span>::missing_fn_panic</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">raw::c_void</span>,
             <span class="ident">is_loaded</span>: <span class="bool-val">false</span>,
         };
         <span class="kw">pub</span> <span class="kw">static</span> <span class="kw-2">mut</span> <span class="ident">DebugMessageControlKHR</span>: <span class="ident">FnPtr</span> <span class="op">=</span> <span class="ident">FnPtr</span> {
-            <span class="ident">f</span>: <span class="kw">super</span><span class="ident">::missing_fn_panic</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">raw::c_void</span>,
+            <span class="ident">f</span>: <span class="ident"><span class="kw">super</span>::missing_fn_panic</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">raw::c_void</span>,
             <span class="ident">is_loaded</span>: <span class="bool-val">false</span>,
         };
     }
 
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span>
     <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">DebugMessageControlKHR</span> {
-        <span class="kw">use</span> <span class="kw">super</span><span class="ident">::FnPtr</span>;
-        <span class="kw">use</span> <span class="kw">super</span><span class="ident">::__gl_imports::raw</span>;
+        <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::FnPtr</span>;
+        <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::__gl_imports::raw</span>;
         <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">metaloadfn</span>, <span class="ident">wayland_storage</span>};
 
         <span class="attribute">#[<span class="ident">inline</span>]</span>
@@ -663,7 +662,7 @@
     <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">EGL_TEXTURE_FORMAT</span>: <span class="ident">i32</span> <span class="op">=</span> <span class="number">0x3080</span>;
     <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">WAYLAND_Y_INVERTED_WL</span>: <span class="ident">i32</span> <span class="op">=</span> <span class="number">0x31DB</span>;
 }
-</pre></div>
+</code></pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-search-index-js="../../../../search-index.js" data-search-js="../../../../search.js"></div>
     <script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script>
 </body></html>

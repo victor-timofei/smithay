@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["init_dmabuf_global","Handler trait for dmabuf validation"]]});
+initSidebarItems({"fn":[["init_dmabuf_global","Initialize a dmabuf global."],["init_dmabuf_global_with_filter","Initialize a dmabuf global with a client filter."]]});
