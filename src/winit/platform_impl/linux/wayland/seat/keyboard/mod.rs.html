@@ -138,7 +138,7 @@
         <span class="ident">seat</span>: <span class="kw-2">&amp;</span><span class="ident">Attached</span><span class="op">&lt;</span><span class="ident">WlSeat</span><span class="op">&gt;</span>,
         <span class="ident">loop_handle</span>: <span class="ident">LoopHandle</span><span class="op">&lt;</span><span class="ident">WinitState</span><span class="op">&gt;</span>,
         <span class="ident">modifiers_state</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">ModifiersState</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inner</span> <span class="op">=</span> <span class="ident">KeyboardInner::new</span>(<span class="ident">modifiers_state</span>);
         <span class="kw">let</span> <span class="ident">keyboard_data</span> <span class="op">=</span> <span class="ident">keyboard::map_keyboard_repeat</span>(
             <span class="ident">loop_handle</span>.<span class="ident">clone</span>(),
@@ -189,7 +189,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">KeyboardInner</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">modifiers_state</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">ModifiersState</span><span class="op">&gt;</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">modifiers_state</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">ModifiersState</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">target_window_id</span>: <span class="prelude-val">None</span>,
             <span class="ident">pending_modifers_state</span>: <span class="prelude-val">None</span>,
@@ -199,7 +199,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">keyboard::ModifiersState</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ModifiersState</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">mods</span>: <span class="ident">keyboard::ModifiersState</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ModifiersState</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">mods</span>: <span class="ident">keyboard::ModifiersState</span>) -&gt; <span class="ident">ModifiersState</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">wl_mods</span> <span class="op">=</span> <span class="ident">ModifiersState::empty</span>();
         <span class="ident">wl_mods</span>.<span class="ident">set</span>(<span class="ident">ModifiersState::SHIFT</span>, <span class="ident">mods</span>.<span class="ident">shift</span>);
         <span class="ident">wl_mods</span>.<span class="ident">set</span>(<span class="ident">ModifiersState::CTRL</span>, <span class="ident">mods</span>.<span class="ident">ctrl</span>);

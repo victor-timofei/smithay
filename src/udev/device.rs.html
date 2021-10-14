@@ -371,7 +371,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">std::fmt::Debug</span> <span class="kw">for</span> <span class="ident">Device</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Device&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;initialized&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">is_initialized</span>())
             .<span class="ident">field</span>(<span class="string">&quot;device_major_minor_number&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">devnum</span>())
@@ -390,7 +390,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Device</span> {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">udev</span>: <span class="self">self</span>.<span class="ident">udev</span>.<span class="ident">clone</span>(),
             <span class="ident">device</span>: <span class="kw">unsafe</span> { <span class="ident">ffi::udev_device_ref</span>(<span class="self">self</span>.<span class="ident">device</span>) },
@@ -419,7 +419,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// The `syspath` parameter should be a path to the device file within the `sysfs` file system,</span>
     <span class="doccomment">/// e.g., `/sys/devices/virtual/tty/tty0`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_syspath</span>(<span class="ident">syspath</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_syspath</span>(<span class="ident">syspath</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="comment">// Create a new Udev context for this device</span>
         <span class="comment">// It would be more efficient to allow callers to create just one context and use multiple</span>
         <span class="comment">// devices, however that would be an API-breaking change.</span>
@@ -437,7 +437,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// The `syspath` parameter should be a path to the device file within the `sysfs` file system,</span>
     <span class="doccomment">/// e.g., `/sys/devices/virtual/tty/tty0`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_syspath_with_context</span>(<span class="ident">udev</span>: <span class="ident">Udev</span>, <span class="ident">syspath</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_syspath_with_context</span>(<span class="ident">udev</span>: <span class="ident">Udev</span>, <span class="ident">syspath</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">syspath</span> <span class="op">=</span> <span class="ident">util::os_str_to_cstring</span>(<span class="ident">syspath</span>)<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="macro">try_alloc!</span>(<span class="kw">unsafe</span> {
@@ -451,7 +451,7 @@
     <span class="doccomment">/// corresponding `Udev` instance from which the device was created.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This guarantees that the `Udev` will live longer than the corresponding `Device`</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">udev</span>: <span class="ident">Udev</span>, <span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::udev_device</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">udev</span>: <span class="ident">Udev</span>, <span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::udev_device</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> { <span class="ident">udev</span>, <span class="ident">device</span>: <span class="ident">ptr</span> }
     }
 
@@ -463,15 +463,15 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This method only applies to devices with device nodes or network interfaces. All other</span>
     <span class="doccomment">/// devices return `true` by default.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_initialized</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_initialized</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="kw">unsafe</span> { <span class="ident">ffi::udev_device_get_is_initialized</span>(<span class="self">self</span>.<span class="ident">device</span>) <span class="op">&gt;</span> <span class="number">0</span> }
     }
 
     <span class="doccomment">/// Gets the device&#39;s major/minor number.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">devnum</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">dev_t</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">devnum</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">dev_t</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi::udev_device_get_devnum</span>(<span class="self">self</span>.<span class="ident">device</span>) } {
-            <span class="number">0</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
-            <span class="ident">n</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">n</span>),
+            <span class="number">0</span> =&gt; <span class="prelude-val">None</span>,
+            <span class="ident">n</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident">n</span>),
         }
     }
 
@@ -480,7 +480,7 @@
     <span class="doccomment">/// The path is an absolute path and includes the sys mount point. For example, the syspath for</span>
     <span class="doccomment">/// `tty0` could be `/sys/devices/virtual/tty/tty0`, which includes the sys mount point,</span>
     <span class="doccomment">/// `/sys`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">syspath</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Path</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">syspath</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">Path</span> {
         <span class="ident">Path::new</span>(<span class="kw">unsafe</span> {
             <span class="ident">util::ptr_to_os_str_unchecked</span>(<span class="ident">ffi::udev_device_get_syspath</span>(<span class="self">self</span>.<span class="ident">device</span>))
         })
@@ -490,7 +490,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// The path does not contain the sys mount point, but does start with a `/`. For example, the</span>
     <span class="doccomment">/// devpath for `tty0` could be `/devices/virtual/tty/tty0`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">devpath</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">OsStr</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">devpath</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">OsStr</span> {
         <span class="kw">unsafe</span> { <span class="ident">util::ptr_to_os_str_unchecked</span>(<span class="ident">ffi::udev_device_get_devpath</span>(<span class="self">self</span>.<span class="ident">device</span>)) }
     }
 
@@ -498,13 +498,13 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// The path is an absolute path and starts with the device directory. For example, the device</span>
     <span class="doccomment">/// node for `tty0` could be `/dev/tty0`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">devnode</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Path</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">devnode</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Path</span><span class="op">&gt;</span> {
         <span class="ident">util::ptr_to_os_str</span>(<span class="kw">unsafe</span> { <span class="ident">ffi::udev_device_get_devnode</span>(<span class="self">self</span>.<span class="ident">device</span>) })
             .<span class="ident">map</span>(<span class="op">|</span><span class="ident">path</span><span class="op">|</span> <span class="ident">Path::new</span>(<span class="ident">path</span>))
     }
 
     <span class="doccomment">/// Returns the parent of the device.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi::udev_device_get_parent</span>(<span class="self">self</span>.<span class="ident">device</span>) };
 
         <span class="kw">if</span> <span class="ident">ptr</span>.<span class="ident">is_null</span>() {
@@ -517,7 +517,7 @@
     }
 
     <span class="doccomment">/// Returns the parent of the device with the matching subsystem and devtype if any.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parent_with_subsystem</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">OsStr</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">subsystem</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parent_with_subsystem</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">OsStr</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">subsystem</span>: <span class="ident">T</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">subsystem</span> <span class="op">=</span> <span class="ident">util::os_str_to_cstring</span>(<span class="ident">subsystem</span>)<span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="kw">unsafe</span> {
             <span class="ident">ffi::udev_device_get_parent_with_subsystem_devtype</span>(
@@ -541,7 +541,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">subsystem</span>: <span class="ident">T</span>,
         <span class="ident">devtype</span>: <span class="ident">U</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">subsystem</span> <span class="op">=</span> <span class="ident">util::os_str_to_cstring</span>(<span class="ident">subsystem</span>)<span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">devtype</span> <span class="op">=</span> <span class="ident">util::os_str_to_cstring</span>(<span class="ident">devtype</span>)<span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="kw">unsafe</span> {
@@ -565,7 +565,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// The subsystem name is a string that indicates which kernel subsystem the device belongs to.</span>
     <span class="doccomment">/// Examples of subsystem names are `tty`, `vtconsole`, `block`, `scsi`, and `net`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">subsystem</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">OsStr</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">subsystem</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">OsStr</span><span class="op">&gt;</span> {
         <span class="ident">util::ptr_to_os_str</span>(<span class="kw">unsafe</span> { <span class="ident">ffi::udev_device_get_subsystem</span>(<span class="self">self</span>.<span class="ident">device</span>) })
     }
 
@@ -574,7 +574,7 @@
     <span class="doccomment">/// The sysname is a string that differentiates the device from others in the same subsystem.</span>
     <span class="doccomment">/// For example, `tty0` is the sysname for a TTY device that differentiates it from others,</span>
     <span class="doccomment">/// such as `tty1`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sysname</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">OsStr</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sysname</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">OsStr</span> {
         <span class="kw">unsafe</span> { <span class="ident">util::ptr_to_os_str_unchecked</span>(<span class="ident">ffi::udev_device_get_sysname</span>(<span class="self">self</span>.<span class="ident">device</span>)) }
     }
 
@@ -586,7 +586,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Some devices don&#39;t have instance numbers, such as `/dev/console`, in which case the method</span>
     <span class="doccomment">/// returns `None`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sysnum</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sysnum</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi::udev_device_get_sysnum</span>(<span class="self">self</span>.<span class="ident">device</span>) };
 
         <span class="kw">if</span> <span class="ident">ptr</span>.<span class="ident">is_null</span>() {
@@ -594,26 +594,26 @@
         }
 
         <span class="kw">match</span> <span class="ident">str::from_utf8</span>(<span class="kw">unsafe</span> { <span class="ident">CStr::from_ptr</span>(<span class="ident">ptr</span>) }.<span class="ident">to_bytes</span>()) {
-            <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
-            <span class="prelude-val">Ok</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">FromStr::from_str</span>(<span class="ident">s</span>).<span class="ident">ok</span>(),
+            <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
+            <span class="prelude-val">Ok</span>(<span class="ident">s</span>) =&gt; <span class="ident">FromStr::from_str</span>(<span class="ident">s</span>).<span class="ident">ok</span>(),
         }
     }
 
     <span class="doccomment">/// Returns the devtype name of the device.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">devtype</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">OsStr</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">devtype</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">OsStr</span><span class="op">&gt;</span> {
         <span class="ident">util::ptr_to_os_str</span>(<span class="kw">unsafe</span> { <span class="ident">ffi::udev_device_get_devtype</span>(<span class="self">self</span>.<span class="ident">device</span>) })
     }
 
     <span class="doccomment">/// Returns the name of the kernel driver attached to the device.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">driver</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">OsStr</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">driver</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">OsStr</span><span class="op">&gt;</span> {
         <span class="ident">util::ptr_to_os_str</span>(<span class="kw">unsafe</span> { <span class="ident">ffi::udev_device_get_driver</span>(<span class="self">self</span>.<span class="ident">device</span>) })
     }
 
     <span class="doccomment">/// Retreives the value of a device property.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">property_value</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">OsStr</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">property</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">OsStr</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">property_value</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">OsStr</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">property</span>: <span class="ident">T</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">OsStr</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">prop</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">util::os_str_to_cstring</span>(<span class="ident">property</span>) {
-            <span class="prelude-val">Ok</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">s</span>,
-            <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="prelude-val">None</span>,
+            <span class="prelude-val">Ok</span>(<span class="ident">s</span>) =&gt; <span class="ident">s</span>,
+            <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return</span> <span class="prelude-val">None</span>,
         };
 
         <span class="ident">util::ptr_to_os_str</span>(<span class="kw">unsafe</span> {
@@ -622,10 +622,10 @@
     }
 
     <span class="doccomment">/// Retreives the value of a device attribute.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">attribute_value</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">OsStr</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">attribute</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">OsStr</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">attribute_value</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">OsStr</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">attribute</span>: <span class="ident">T</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">OsStr</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">attr</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">util::os_str_to_cstring</span>(<span class="ident">attribute</span>) {
-            <span class="prelude-val">Ok</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">s</span>,
-            <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="prelude-val">None</span>,
+            <span class="prelude-val">Ok</span>(<span class="ident">s</span>) =&gt; <span class="ident">s</span>,
+            <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return</span> <span class="prelude-val">None</span>,
         };
 
         <span class="ident">util::ptr_to_os_str</span>(<span class="kw">unsafe</span> {
@@ -638,7 +638,7 @@
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">attribute</span>: <span class="ident">T</span>,
         <span class="ident">value</span>: <span class="ident">U</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">attribute</span> <span class="op">=</span> <span class="ident">util::os_str_to_cstring</span>(<span class="ident">attribute</span>)<span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">util::os_str_to_cstring</span>(<span class="ident">value</span>)<span class="question-mark">?</span>;
 
@@ -664,7 +664,7 @@
     <span class="doccomment">///     println!(&quot;{:?} = {:?}&quot;, property.name(), property.value());</span>
     <span class="doccomment">/// }</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">properties</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Properties</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">properties</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Properties</span> {
         <span class="ident">Properties</span> {
             <span class="ident">entry</span>: <span class="kw">unsafe</span> { <span class="ident">ffi::udev_device_get_properties_list_entry</span>(<span class="self">self</span>.<span class="ident">device</span>) },
             <span class="ident">phantom</span>: <span class="ident">PhantomData</span>,
@@ -684,7 +684,7 @@
     <span class="doccomment">///     println!(&quot;{:?} = {:?}&quot;, attribute.name(), attribute.value());</span>
     <span class="doccomment">/// }</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">attributes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Attributes</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">attributes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Attributes</span> {
         <span class="ident">Attributes</span> {
             <span class="ident">entry</span>: <span class="kw">unsafe</span> { <span class="ident">ffi::udev_device_get_sysattr_list_entry</span>(<span class="self">self</span>.<span class="ident">device</span>) },
             <span class="ident">phantom</span>: <span class="ident">PhantomData</span>,
@@ -692,7 +692,7 @@
     }
 
     <span class="doccomment">/// Returns the device action for the device.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">action</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">OsStr</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">action</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">OsStr</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> { <span class="ident">util::ptr_to_os_str</span>(<span class="ident">ffi::udev_device_get_action</span>(<span class="self">self</span>.<span class="ident">device</span>)) }
     }
 }

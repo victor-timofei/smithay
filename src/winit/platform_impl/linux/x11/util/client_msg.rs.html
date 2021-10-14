@@ -54,7 +54,7 @@
         <span class="ident">target_window</span>: <span class="ident">c_ulong</span>,
         <span class="ident">event_mask</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">c_long</span><span class="op">&gt;</span>,
         <span class="ident">event</span>: <span class="ident">T</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Flusher</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="ident">Flusher</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">event_mask</span> <span class="op">=</span> <span class="ident">event_mask</span>.<span class="ident">unwrap_or</span>(<span class="ident">ffi::NoEventMask</span>);
         <span class="kw">unsafe</span> {
             (<span class="self">self</span>.<span class="ident">xlib</span>.<span class="ident">XSendEvent</span>)(
@@ -75,7 +75,7 @@
         <span class="ident">message_type</span>: <span class="ident">ffi::Atom</span>,
         <span class="ident">event_mask</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">c_long</span><span class="op">&gt;</span>,
         <span class="ident">data</span>: <span class="ident">ClientMsgPayload</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Flusher</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="ident">Flusher</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">event</span> <span class="op">=</span> <span class="ident">ffi::XClientMessageEvent</span> {
             <span class="ident">type_</span>: <span class="ident">ffi::ClientMessage</span>,
             <span class="ident">display</span>: <span class="self">self</span>.<span class="ident">display</span>,

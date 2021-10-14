@@ -100,7 +100,7 @@
     <span class="ident">epoll_fd</span>: <span class="ident">RawFd</span>,
 }
 
-<span class="kw">fn</span> <span class="ident">make_flags</span>(<span class="ident">interest</span>: <span class="ident">Interest</span>, <span class="ident">mode</span>: <span class="ident">Mode</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">epoll::EpollFlags</span> {
+<span class="kw">fn</span> <span class="ident">make_flags</span>(<span class="ident">interest</span>: <span class="ident">Interest</span>, <span class="ident">mode</span>: <span class="ident">Mode</span>) -&gt; <span class="ident">epoll::EpollFlags</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">flags</span> <span class="op">=</span> <span class="ident">epoll::EpollFlags::empty</span>();
     <span class="kw">if</span> <span class="ident">interest</span>.<span class="ident">readable</span> {
         <span class="ident">flags</span> <span class="op">|</span><span class="op">=</span> <span class="ident">epoll::EpollFlags::EPOLLIN</span>;
@@ -109,14 +109,14 @@
         <span class="ident">flags</span> <span class="op">|</span><span class="op">=</span> <span class="ident">epoll::EpollFlags::EPOLLOUT</span>;
     }
     <span class="kw">match</span> <span class="ident">mode</span> {
-        <span class="ident">Mode::Level</span> <span class="op">=</span><span class="op">&gt;</span> { <span class="comment">/* This is the default */</span> }
-        <span class="ident">Mode::Edge</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">flags</span> <span class="op">|</span><span class="op">=</span> <span class="ident">epoll::EpollFlags::EPOLLET</span>,
-        <span class="ident">Mode::OneShot</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">flags</span> <span class="op">|</span><span class="op">=</span> <span class="ident">epoll::EpollFlags::EPOLLONESHOT</span>,
+        <span class="ident">Mode::Level</span> =&gt; { <span class="comment">/* This is the default */</span> }
+        <span class="ident">Mode::Edge</span> =&gt; <span class="ident">flags</span> <span class="op">|</span><span class="op">=</span> <span class="ident">epoll::EpollFlags::EPOLLET</span>,
+        <span class="ident">Mode::OneShot</span> =&gt; <span class="ident">flags</span> <span class="op">|</span><span class="op">=</span> <span class="ident">epoll::EpollFlags::EPOLLONESHOT</span>,
     }
     <span class="ident">flags</span>
 }
 
-<span class="kw">fn</span> <span class="ident">flags_to_readiness</span>(<span class="ident">flags</span>: <span class="ident">epoll::EpollFlags</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Readiness</span> {
+<span class="kw">fn</span> <span class="ident">flags_to_readiness</span>(<span class="ident">flags</span>: <span class="ident">epoll::EpollFlags</span>) -&gt; <span class="ident">Readiness</span> {
     <span class="ident">Readiness</span> {
         <span class="ident">readable</span>: <span class="ident">flags</span>.<span class="ident">contains</span>(<span class="ident">epoll::EpollFlags::EPOLLIN</span>),
         <span class="ident">writable</span>: <span class="ident">flags</span>.<span class="ident">contains</span>(<span class="ident">epoll::EpollFlags::EPOLLOUT</span>),
@@ -125,7 +125,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Epoll</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">Epoll</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">Epoll</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">epoll_fd</span> <span class="op">=</span> <span class="ident">epoll::epoll_create1</span>(<span class="ident">epoll::EpollCreateFlags::EPOLL_CLOEXEC</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">Epoll</span> { <span class="ident">epoll_fd</span> })
     }
@@ -133,7 +133,7 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">poll</span>(
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">timeout</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">std::time::Duration</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PollEvent</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PollEvent</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffer</span> <span class="op">=</span> [<span class="ident">epoll::EpollEvent::empty</span>(); <span class="number">32</span>];
         <span class="kw">let</span> <span class="ident">timeout</span> <span class="op">=</span> <span class="ident">timeout</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">d</span><span class="op">|</span> <span class="ident">d</span>.<span class="ident">as_millis</span>() <span class="kw">as</span> <span class="ident">isize</span>).<span class="ident">unwrap_or</span>(<span class="op">-</span><span class="number">1</span>);
         <span class="kw">let</span> <span class="ident">n_ready</span> <span class="op">=</span> <span class="ident">epoll::epoll_wait</span>(<span class="self">self</span>.<span class="ident">epoll_fd</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">buffer</span>, <span class="ident">timeout</span>)<span class="question-mark">?</span>;
@@ -154,7 +154,7 @@
         <span class="ident">interest</span>: <span class="ident">Interest</span>,
         <span class="ident">mode</span>: <span class="ident">Mode</span>,
         <span class="ident">token</span>: <span class="ident">Token</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    ) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">event</span> <span class="op">=</span> <span class="ident">epoll::EpollEvent::new</span>(<span class="ident">make_flags</span>(<span class="ident">interest</span>, <span class="ident">mode</span>), <span class="ident">token</span>.<span class="ident">to_u64</span>());
         <span class="ident">epoll::epoll_ctl</span>(<span class="self">self</span>.<span class="ident">epoll_fd</span>, <span class="ident">epoll::EpollOp::EpollCtlAdd</span>, <span class="ident">fd</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">event</span>)
             .<span class="ident">map_err</span>(<span class="ident">Into::into</span>)
@@ -166,13 +166,13 @@
         <span class="ident">interest</span>: <span class="ident">Interest</span>,
         <span class="ident">mode</span>: <span class="ident">Mode</span>,
         <span class="ident">token</span>: <span class="ident">Token</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    ) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">event</span> <span class="op">=</span> <span class="ident">epoll::EpollEvent::new</span>(<span class="ident">make_flags</span>(<span class="ident">interest</span>, <span class="ident">mode</span>), <span class="ident">token</span>.<span class="ident">to_u64</span>());
         <span class="ident">epoll::epoll_ctl</span>(<span class="self">self</span>.<span class="ident">epoll_fd</span>, <span class="ident">epoll::EpollOp::EpollCtlMod</span>, <span class="ident">fd</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">event</span>)
             .<span class="ident">map_err</span>(<span class="ident">Into::into</span>)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">fd</span>: <span class="ident">RawFd</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">fd</span>: <span class="ident">RawFd</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="ident">epoll::epoll_ctl</span>(<span class="self">self</span>.<span class="ident">epoll_fd</span>, <span class="ident">epoll::EpollOp::EpollCtlDel</span>, <span class="ident">fd</span>, <span class="prelude-val">None</span>).<span class="ident">map_err</span>(<span class="ident">Into::into</span>)
     }
 }

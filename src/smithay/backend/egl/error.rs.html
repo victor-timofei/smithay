@@ -246,39 +246,39 @@
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">EGLError</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">value</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">value</span>: <span class="ident">u32</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">match</span> <span class="ident">value</span> {
-            <span class="ident">ffi::egl::NOT_INITIALIZED</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::NotInitialized</span>,
-            <span class="ident">ffi::egl::BAD_ACCESS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::BadAccess</span>,
-            <span class="ident">ffi::egl::BAD_ALLOC</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::BadAlloc</span>,
-            <span class="ident">ffi::egl::BAD_ATTRIBUTE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::BadAttribute</span>,
-            <span class="ident">ffi::egl::BAD_CONTEXT</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::BadContext</span>,
-            <span class="ident">ffi::egl::BAD_CURRENT_SURFACE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::BadCurrentSurface</span>,
-            <span class="ident">ffi::egl::BAD_DISPLAY</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::BadDisplay</span>,
-            <span class="ident">ffi::egl::BAD_SURFACE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::BadSurface</span>,
-            <span class="ident">ffi::egl::BAD_MATCH</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::BadMatch</span>,
-            <span class="ident">ffi::egl::BAD_PARAMETER</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::BadParameter</span>,
-            <span class="ident">ffi::egl::BAD_NATIVE_PIXMAP</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::BadNativePixmap</span>,
-            <span class="ident">ffi::egl::BAD_NATIVE_WINDOW</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::BadNativeWindow</span>,
+            <span class="ident">ffi::egl::NOT_INITIALIZED</span> =&gt; <span class="ident">EGLError::NotInitialized</span>,
+            <span class="ident">ffi::egl::BAD_ACCESS</span> =&gt; <span class="ident">EGLError::BadAccess</span>,
+            <span class="ident">ffi::egl::BAD_ALLOC</span> =&gt; <span class="ident">EGLError::BadAlloc</span>,
+            <span class="ident">ffi::egl::BAD_ATTRIBUTE</span> =&gt; <span class="ident">EGLError::BadAttribute</span>,
+            <span class="ident">ffi::egl::BAD_CONTEXT</span> =&gt; <span class="ident">EGLError::BadContext</span>,
+            <span class="ident">ffi::egl::BAD_CURRENT_SURFACE</span> =&gt; <span class="ident">EGLError::BadCurrentSurface</span>,
+            <span class="ident">ffi::egl::BAD_DISPLAY</span> =&gt; <span class="ident">EGLError::BadDisplay</span>,
+            <span class="ident">ffi::egl::BAD_SURFACE</span> =&gt; <span class="ident">EGLError::BadSurface</span>,
+            <span class="ident">ffi::egl::BAD_MATCH</span> =&gt; <span class="ident">EGLError::BadMatch</span>,
+            <span class="ident">ffi::egl::BAD_PARAMETER</span> =&gt; <span class="ident">EGLError::BadParameter</span>,
+            <span class="ident">ffi::egl::BAD_NATIVE_PIXMAP</span> =&gt; <span class="ident">EGLError::BadNativePixmap</span>,
+            <span class="ident">ffi::egl::BAD_NATIVE_WINDOW</span> =&gt; <span class="ident">EGLError::BadNativeWindow</span>,
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_drm_eglstream&quot;</span>)]</span>
-            <span class="ident">ffi::egl::RESOURCE_BUSY_EXT</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::ResourceBusy</span>,
-            <span class="ident">ffi::egl::CONTEXT_LOST</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::ContextLost</span>,
-            <span class="ident">x</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">EGLError::Unknown</span>(<span class="ident">x</span>),
+            <span class="ident">ffi::egl::RESOURCE_BUSY_EXT</span> =&gt; <span class="ident">EGLError::ResourceBusy</span>,
+            <span class="ident">ffi::egl::CONTEXT_LOST</span> =&gt; <span class="ident">EGLError::ContextLost</span>,
+            <span class="ident">x</span> =&gt; <span class="ident">EGLError::Unknown</span>(<span class="ident">x</span>),
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">EGLError</span> {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">from_last_call</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">EGLError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">from_last_call</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">EGLError</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi::egl::GetError</span>() <span class="kw">as</span> <span class="ident">u32</span> } {
-            <span class="ident">ffi::egl::SUCCESS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(()),
-            <span class="ident">x</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">EGLError::from</span>(<span class="ident">x</span>)),
+            <span class="ident">ffi::egl::SUCCESS</span> =&gt; <span class="prelude-val">Ok</span>(()),
+            <span class="ident">x</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">EGLError::from</span>(<span class="ident">x</span>)),
         }
     }
 }
 
 <span class="doccomment">/// Wraps a raw egl call and returns error codes from `eglGetError`, if it fails.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wrap_egl_call</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">call</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">EGLError</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wrap_egl_call</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>() -&gt; <span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">call</span>: <span class="ident">F</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">EGLError</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">call</span>();
     <span class="ident">EGLError::from_last_call</span>().<span class="ident">map</span>(<span class="op">|</span>()<span class="op">|</span> <span class="ident">res</span>)
 }

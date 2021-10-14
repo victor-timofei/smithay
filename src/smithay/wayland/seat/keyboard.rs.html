@@ -638,7 +638,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">XkbConfig</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">rules</span>: <span class="string">&quot;&quot;</span>,
             <span class="ident">model</span>: <span class="string">&quot;&quot;</span>,
@@ -663,7 +663,7 @@
 
 <span class="comment">// focus_hook does not implement debug, so we have to impl Debug manually</span>
 <span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">KbdInternal</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;KbdInternal&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;known_kbds&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">known_kbds</span>)
             .<span class="ident">field</span>(<span class="string">&quot;focus&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">focus</span>)
@@ -688,7 +688,7 @@
         <span class="ident">repeat_rate</span>: <span class="ident">i32</span>,
         <span class="ident">repeat_delay</span>: <span class="ident">i32</span>,
         <span class="ident">focus_hook</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">FnMut</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">WlSurface</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">KbdInternal</span>, ()<span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">KbdInternal</span>, ()<span class="op">&gt;</span> {
         <span class="comment">// we create a new contex for each keyboard because libxkbcommon is actually NOT threadsafe</span>
         <span class="comment">// so confining it inside the KbdInternal allows us to use Rusts mutability rules to make</span>
         <span class="comment">// sure nothing goes wrong.</span>
@@ -721,14 +721,14 @@
     }
 
     <span class="comment">// return true if modifier state has changed</span>
-    <span class="kw">fn</span> <span class="ident">key_input</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">keycode</span>: <span class="ident">u32</span>, <span class="ident">state</span>: <span class="ident">KeyState</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">fn</span> <span class="ident">key_input</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">keycode</span>: <span class="ident">u32</span>, <span class="ident">state</span>: <span class="ident">KeyState</span>) -&gt; <span class="ident">bool</span> {
         <span class="comment">// track pressed keys as xkbcommon does not seem to expose it :(</span>
         <span class="kw">let</span> <span class="ident">direction</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">state</span> {
-            <span class="ident">KeyState::Pressed</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">KeyState::Pressed</span> =&gt; {
                 <span class="self">self</span>.<span class="ident">pressed_keys</span>.<span class="ident">push</span>(<span class="ident">keycode</span>);
                 <span class="ident">xkb::KeyDirection::Down</span>
             }
-            <span class="ident">KeyState::Released</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">KeyState::Released</span> =&gt; {
                 <span class="self">self</span>.<span class="ident">pressed_keys</span>.<span class="ident">retain</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">k</span><span class="op">|</span> <span class="ident">k</span> <span class="op">!</span><span class="op">=</span> <span class="ident">keycode</span>);
                 <span class="ident">xkb::KeyDirection::Up</span>
             }
@@ -747,7 +747,7 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">serialize_modifiers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">u32</span>, <span class="ident">u32</span>, <span class="ident">u32</span>, <span class="ident">u32</span>) {
+    <span class="kw">fn</span> <span class="ident">serialize_modifiers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">u32</span>, <span class="ident">u32</span>, <span class="ident">u32</span>, <span class="ident">u32</span>) {
         <span class="kw">let</span> <span class="ident">mods_depressed</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">state</span>.<span class="ident">serialize_mods</span>(<span class="ident">xkb::STATE_MODS_DEPRESSED</span>);
         <span class="kw">let</span> <span class="ident">mods_latched</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">state</span>.<span class="ident">serialize_mods</span>(<span class="ident">xkb::STATE_MODS_LATCHED</span>);
         <span class="kw">let</span> <span class="ident">mods_locked</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">state</span>.<span class="ident">serialize_mods</span>(<span class="ident">xkb::STATE_MODS_LOCKED</span>);
@@ -756,7 +756,7 @@
         (<span class="ident">mods_depressed</span>, <span class="ident">mods_latched</span>, <span class="ident">mods_locked</span>, <span class="ident">layout_locked</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">serialize_pressed_keys</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">serialize_pressed_keys</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">serialized</span> <span class="op">=</span> <span class="kw">unsafe</span> {
             <span class="ident">::std::slice::from_raw_parts</span>(
                 <span class="self">self</span>.<span class="ident">pressed_keys</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">u8</span>,
@@ -798,14 +798,14 @@
     <span class="ident">repeat_rate</span>: <span class="ident">i32</span>,
     <span class="ident">logger</span>: <span class="kw-2">&amp;</span><span class="ident">::slog::Logger</span>,
     <span class="ident">focus_hook</span>: <span class="ident">F</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">KeyboardHandle</span>, <span class="ident">Error</span><span class="op">&gt;</span>
+) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">KeyboardHandle</span>, <span class="ident">Error</span><span class="op">&gt;</span>
 <span class="kw">where</span>
     <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">WlSurface</span><span class="op">&gt;</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
-    <span class="kw">let</span> <span class="ident">log</span> <span class="op">=</span> <span class="ident">logger</span>.<span class="ident">new</span>(<span class="macro">o!</span>(<span class="string">&quot;smithay_module&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;xkbcommon_handler&quot;</span>));
+    <span class="kw">let</span> <span class="ident">log</span> <span class="op">=</span> <span class="ident">logger</span>.<span class="ident">new</span>(<span class="macro">o!</span>(<span class="string">&quot;smithay_module&quot;</span> =&gt; <span class="string">&quot;xkbcommon_handler&quot;</span>));
     <span class="macro">info!</span>(<span class="ident">log</span>, <span class="string">&quot;Initializing a xkbcommon handler with keymap query&quot;</span>;
-        <span class="string">&quot;rules&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">xkb_config</span>.<span class="ident">rules</span>, <span class="string">&quot;model&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">xkb_config</span>.<span class="ident">model</span>, <span class="string">&quot;layout&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">xkb_config</span>.<span class="ident">layout</span>,
-        <span class="string">&quot;variant&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">xkb_config</span>.<span class="ident">variant</span>, <span class="string">&quot;options&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">xkb_config</span>.<span class="ident">options</span>
+        <span class="string">&quot;rules&quot;</span> =&gt; <span class="ident">xkb_config</span>.<span class="ident">rules</span>, <span class="string">&quot;model&quot;</span> =&gt; <span class="ident">xkb_config</span>.<span class="ident">model</span>, <span class="string">&quot;layout&quot;</span> =&gt; <span class="ident">xkb_config</span>.<span class="ident">layout</span>,
+        <span class="string">&quot;variant&quot;</span> =&gt; <span class="ident">xkb_config</span>.<span class="ident">variant</span>, <span class="string">&quot;options&quot;</span> =&gt; <span class="kw-2">&amp;</span><span class="ident">xkb_config</span>.<span class="ident">options</span>
     );
     <span class="kw">let</span> <span class="ident">internal</span> <span class="op">=</span>
         <span class="ident">KbdInternal::new</span>(<span class="ident">xkb_config</span>, <span class="ident">repeat_rate</span>, <span class="ident">repeat_delay</span>, <span class="ident">Box::new</span>(<span class="ident">focus_hook</span>)).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
@@ -813,7 +813,7 @@
             <span class="ident">Error::BadKeymap</span>
         })<span class="question-mark">?</span>;
 
-    <span class="macro">info!</span>(<span class="ident">log</span>, <span class="string">&quot;Loaded Keymap&quot;</span>; <span class="string">&quot;name&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">internal</span>.<span class="ident">keymap</span>.<span class="ident">layouts</span>().<span class="ident">next</span>());
+    <span class="macro">info!</span>(<span class="ident">log</span>, <span class="string">&quot;Loaded Keymap&quot;</span>; <span class="string">&quot;name&quot;</span> =&gt; <span class="ident">internal</span>.<span class="ident">keymap</span>.<span class="ident">layouts</span>().<span class="ident">next</span>());
 
     <span class="kw">let</span> <span class="ident">keymap</span> <span class="op">=</span> <span class="ident">internal</span>.<span class="ident">keymap</span>.<span class="ident">get_as_string</span>(<span class="ident">xkb::KEYMAP_FORMAT_TEXT_V1</span>);
 
@@ -841,7 +841,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">KeysymHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.<span class="ident">keycode</span>)
     }
 }
@@ -853,23 +853,23 @@
     <span class="doccomment">/// does not want to or cannot handle multiple keysyms.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// If the key does not have exactly one keysym, returns [`keysyms::KEY_NoSymbol`].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">modified_sym</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Keysym</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">modified_sym</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>) -&gt; <span class="ident">Keysym</span> {
         <span class="self">self</span>.<span class="ident">state</span>.<span class="ident">key_get_one_sym</span>(<span class="self">self</span>.<span class="ident">keycode</span>)
     }
 
     <span class="doccomment">/// Returns the syms for the underlying keycode with all modifications by the current keymap state applied.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">modified_syms</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">Keysym</span>] {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">modified_syms</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">Keysym</span>] {
         <span class="self">self</span>.<span class="ident">state</span>.<span class="ident">key_get_syms</span>(<span class="self">self</span>.<span class="ident">keycode</span>)
     }
 
     <span class="doccomment">/// Returns the syms for the underlying keycode without any modifications by the current keymap state applied.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">raw_syms</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">Keysym</span>] {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">raw_syms</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">Keysym</span>] {
         <span class="self">self</span>.<span class="ident">keymap</span>
             .<span class="ident">key_get_syms_by_level</span>(<span class="self">self</span>.<span class="ident">keycode</span>, <span class="self">self</span>.<span class="ident">state</span>.<span class="ident">key_get_layout</span>(<span class="self">self</span>.<span class="ident">keycode</span>), <span class="number">0</span>)
     }
 
     <span class="doccomment">/// Returns the raw code in X keycode system (shifted by 8)</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">raw_code</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">raw_code</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>) -&gt; <span class="ident">u32</span> {
         <span class="self">self</span>.<span class="ident">keycode</span>
     }
 }
@@ -920,11 +920,11 @@
         <span class="ident">serial</span>: <span class="ident">Serial</span>,
         <span class="ident">time</span>: <span class="ident">u32</span>,
         <span class="ident">filter</span>: <span class="ident">F</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="ident">ModifiersState</span>, <span class="ident">KeysymHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">FilterResult</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="ident">ModifiersState</span>, <span class="ident">KeysymHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FilterResult</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
     {
-        <span class="macro">trace!</span>(<span class="self">self</span>.<span class="ident">arc</span>.<span class="ident">logger</span>, <span class="string">&quot;Handling keystroke&quot;</span>; <span class="string">&quot;keycode&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">keycode</span>, <span class="string">&quot;state&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">format_args!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">state</span>));
+        <span class="macro">trace!</span>(<span class="self">self</span>.<span class="ident">arc</span>.<span class="ident">logger</span>, <span class="string">&quot;Handling keystroke&quot;</span>; <span class="string">&quot;keycode&quot;</span> =&gt; <span class="ident">keycode</span>, <span class="string">&quot;state&quot;</span> =&gt; <span class="macro">format_args!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">state</span>));
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">guard</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">arc</span>.<span class="ident">internal</span>.<span class="ident">borrow_mut</span>();
         <span class="kw">let</span> <span class="ident">mods_changed</span> <span class="op">=</span> <span class="ident">guard</span>.<span class="ident">key_input</span>(<span class="ident">keycode</span>, <span class="ident">state</span>);
         <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">KeysymHandle</span> {
@@ -936,7 +936,7 @@
         };
 
         <span class="macro">trace!</span>(<span class="self">self</span>.<span class="ident">arc</span>.<span class="ident">logger</span>, <span class="string">&quot;Calling input filter&quot;</span>;
-            <span class="string">&quot;mods_state&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">format_args!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">guard</span>.<span class="ident">mods_state</span>), <span class="string">&quot;sym&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">xkb::keysym_get_name</span>(<span class="ident">handle</span>.<span class="ident">modified_sym</span>())
+            <span class="string">&quot;mods_state&quot;</span> =&gt; <span class="macro">format_args!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">guard</span>.<span class="ident">mods_state</span>), <span class="string">&quot;sym&quot;</span> =&gt; <span class="ident">xkb::keysym_get_name</span>(<span class="ident">handle</span>.<span class="ident">modified_sym</span>())
         );
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="ident">FilterResult::Intercept</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">filter</span>(<span class="kw-2">&amp;</span><span class="ident">guard</span>.<span class="ident">mods_state</span>, <span class="ident">handle</span>) {
@@ -952,8 +952,8 @@
             <span class="prelude-val">None</span>
         };
         <span class="kw">let</span> <span class="ident">wl_state</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">state</span> {
-            <span class="ident">KeyState::Pressed</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">WlKeyState::Pressed</span>,
-            <span class="ident">KeyState::Released</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">WlKeyState::Released</span>,
+            <span class="ident">KeyState::Pressed</span> =&gt; <span class="ident">WlKeyState::Pressed</span>,
+            <span class="ident">KeyState::Released</span> =&gt; <span class="ident">WlKeyState::Released</span>,
         };
         <span class="ident">guard</span>.<span class="ident">with_focused_kbds</span>(<span class="op">|</span><span class="ident">kbd</span>, <span class="kw">_</span><span class="op">|</span> {
             <span class="comment">// key event must be sent before modifers event for libxkbcommon</span>
@@ -1021,7 +1021,7 @@
     }
 
     <span class="doccomment">/// Check if given client currently has keyboard focus</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_focus</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">client</span>: <span class="kw-2">&amp;</span><span class="ident">Client</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_focus</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">client</span>: <span class="kw-2">&amp;</span><span class="ident">Client</span>) -&gt; <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="ident">arc</span>
             .<span class="ident">internal</span>
             .<span class="ident">borrow_mut</span>()
@@ -1055,7 +1055,7 @@
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span> <span class="ident">ret</span> {
             <span class="macro">warn!</span>(<span class="self">self</span>.<span class="ident">arc</span>.<span class="ident">logger</span>,
                 <span class="string">&quot;Failed write keymap to client in a tempfile&quot;</span>;
-                <span class="string">&quot;err&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">e</span>)
+                <span class="string">&quot;err&quot;</span> =&gt; <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">e</span>)
             );
             <span class="kw">return</span>;
         };
@@ -1078,13 +1078,13 @@
     }
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">implement_keyboard</span>(<span class="ident">keyboard</span>: <span class="ident">Main</span><span class="op">&lt;</span><span class="ident">WlKeyboard</span><span class="op">&gt;</span>, <span class="ident">handle</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">KeyboardHandle</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">WlKeyboard</span> {
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">implement_keyboard</span>(<span class="ident">keyboard</span>: <span class="ident">Main</span><span class="op">&lt;</span><span class="ident">WlKeyboard</span><span class="op">&gt;</span>, <span class="ident">handle</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">KeyboardHandle</span><span class="op">&gt;</span>) -&gt; <span class="ident">WlKeyboard</span> {
     <span class="ident">keyboard</span>.<span class="ident">quick_assign</span>(<span class="op">|</span><span class="ident">_keyboard</span>, <span class="ident">request</span>, <span class="ident">_data</span><span class="op">|</span> {
         <span class="kw">match</span> <span class="ident">request</span> {
-            <span class="ident">Request::Release</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">Request::Release</span> =&gt; {
                 <span class="comment">// Our destructors already handle it</span>
             }
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
+            <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
         }
     });
 

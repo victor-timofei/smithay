@@ -233,7 +233,7 @@
 <span class="doccomment">/// you are given a [`Ping`] instance, which can be cloned and used to ping the</span>
 <span class="doccomment">/// event loop, and a [`PingSource`], which you can insert in your event loop to</span>
 <span class="doccomment">/// receive the pings.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">make_ping</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>(<span class="ident">Ping</span>, <span class="ident">PingSource</span>)<span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">make_ping</span>() -&gt; <span class="ident">std::io::Result</span><span class="op">&lt;</span>(<span class="ident">Ping</span>, <span class="ident">PingSource</span>)<span class="op">&gt;</span> {
     <span class="kw">let</span> (<span class="ident">read</span>, <span class="ident">write</span>) <span class="op">=</span> <span class="ident">pipe2</span>(<span class="ident">OFlag::O_CLOEXEC</span> <span class="op">|</span> <span class="ident">OFlag::O_NONBLOCK</span>)<span class="question-mark">?</span>;
     <span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span> <span class="ident">PingSource</span> {
         <span class="ident">pipe</span>: <span class="ident">Generic::from_fd</span>(<span class="ident">read</span>, <span class="ident">Interest::READ</span>, <span class="ident">Mode::Level</span>),
@@ -265,9 +265,9 @@
         <span class="ident">readiness</span>: <span class="ident">Readiness</span>,
         <span class="ident">token</span>: <span class="ident">Token</span>,
         <span class="kw-2">mut</span> <span class="ident">callback</span>: <span class="ident">C</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span><span class="ident">PostAction</span><span class="op">&gt;</span>
+    ) -&gt; <span class="ident">std::io::Result</span><span class="op">&lt;</span><span class="ident">PostAction</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="ident">C</span>: <span class="ident">FnMut</span>(<span class="ident"><span class="self">Self</span>::Event</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident"><span class="self">Self</span>::Metadata</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Ret</span>,
+        <span class="ident">C</span>: <span class="ident">FnMut</span>(<span class="ident"><span class="self">Self</span>::Event</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident"><span class="self">Self</span>::Metadata</span>) -&gt; <span class="ident"><span class="self">Self</span>::Ret</span>,
     {
         <span class="self">self</span>.<span class="ident">pipe</span>.<span class="ident">process_events</span>(<span class="ident">readiness</span>, <span class="ident">token</span>, <span class="op">|</span><span class="kw">_</span>, <span class="ident">fd</span><span class="op">|</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> [<span class="number">0u8</span>; <span class="number">32</span>];
@@ -275,15 +275,15 @@
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">action</span> <span class="op">=</span> <span class="ident">PostAction::Continue</span>;
             <span class="kw">loop</span> {
                 <span class="kw">match</span> <span class="ident">read</span>(<span class="ident">fd</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">buf</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="number">0</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="prelude-val">Ok</span>(<span class="number">0</span>) =&gt; {
                         <span class="comment">// The other end of the pipe was closed, mark ourselved to for removal</span>
                         <span class="ident">action</span> <span class="op">=</span> <span class="ident">PostAction::Remove</span>;
                         <span class="kw">break</span>;
                     }
-                    <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">read_something</span> <span class="op">=</span> <span class="bool-val">true</span>,
-                    <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="ident">read_something</span> <span class="op">=</span> <span class="bool-val">true</span>,
+                    <span class="prelude-val">Err</span>(<span class="ident">e</span>) =&gt; {
                         <span class="kw">let</span> <span class="ident">e</span>: <span class="ident">std::io::Error</span> <span class="op">=</span> <span class="ident">e</span>.<span class="ident">into</span>();
-                        <span class="kw">if</span> <span class="ident">e</span>.<span class="ident">kind</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">std::io::ErrorKind::WouldBlock</span> {
+                        <span class="kw">if</span> <span class="ident">e</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">std::io::ErrorKind::WouldBlock</span> {
                             <span class="kw">break</span>;
                         <span class="comment">// nothing more to read</span>
                         } <span class="kw">else</span> {
@@ -304,7 +304,7 @@
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>,
         <span class="ident">token_factory</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">TokenFactory</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    ) -&gt; <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">pipe</span>.<span class="ident">register</span>(<span class="ident">poll</span>, <span class="ident">token_factory</span>)
     }
 
@@ -312,11 +312,11 @@
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>,
         <span class="ident">token_factory</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">TokenFactory</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    ) -&gt; <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">pipe</span>.<span class="ident">reregister</span>(<span class="ident">poll</span>, <span class="ident">token_factory</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">unregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">unregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>) -&gt; <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">pipe</span>.<span class="ident">unregister</span>(<span class="ident">poll</span>)
     }
 }

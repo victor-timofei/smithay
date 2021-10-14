@@ -289,19 +289,19 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Handle</span>(<span class="ident">control::RawResourceHandle</span>);
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Handle</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">control::RawResourceHandle</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">handle</span>: <span class="ident">Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">handle</span>: <span class="ident">Handle</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">handle</span>.<span class="number">0</span>
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Handle</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">u32</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">handle</span>: <span class="ident">Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">handle</span>: <span class="ident">Handle</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">handle</span>.<span class="number">0</span>.<span class="ident">into</span>()
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">control::RawResourceHandle</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Handle</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">handle</span>: <span class="ident">control::RawResourceHandle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">handle</span>: <span class="ident">control::RawResourceHandle</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">Handle</span>(<span class="ident">handle</span>)
     }
 }
@@ -311,7 +311,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">std::fmt::Debug</span> <span class="kw">for</span> <span class="ident">Handle</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span>) -&gt; <span class="ident">std::fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_tuple</span>(<span class="string">&quot;property::Handle&quot;</span>).<span class="ident">field</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>).<span class="ident">finish</span>()
     }
 }
@@ -328,22 +328,22 @@
 
 <span class="kw">impl</span> <span class="ident">Info</span> {
     <span class="doccomment">/// Returns the name of this property.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">std::ffi::CStr</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">std::ffi::CStr</span> {
         <span class="kw">unsafe</span> { <span class="ident">std::ffi::CStr::from_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">info</span>.<span class="ident">name</span>[<span class="number">0</span>] <span class="kw">as</span> <span class="kw">_</span>) }
     }
 
     <span class="doccomment">/// Returns the ValueType of this property.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">value_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ValueType</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">value_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ValueType</span> {
         <span class="self">self</span>.<span class="ident">val_type</span>
     }
 
     <span class="doccomment">/// Returns whether this property is mutable.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mutable</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mutable</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="ident">mutable</span>
     }
 
     <span class="doccomment">/// Returns whether this property can be atomically updated.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">atomic</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">atomic</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="ident">atomic</span>
     }
 }
@@ -385,24 +385,24 @@
 
 <span class="kw">impl</span> <span class="ident">ValueType</span> {
     <span class="doccomment">/// Given a [`RawValue`], convert it into a specific [`Value`]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">convert_value</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">value</span>: <span class="ident">RawValue</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Value</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">convert_value</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">value</span>: <span class="ident">RawValue</span>) -&gt; <span class="ident">Value</span> {
         <span class="kw">use</span> <span class="ident">std::mem::transmute</span> <span class="kw">as</span> <span class="ident">tm</span>;
 
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">ValueType::Unknown</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Value::Unknown</span>(<span class="ident">value</span>),
-            <span class="ident">ValueType::Boolean</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Value::Boolean</span>(<span class="ident">value</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span>),
-            <span class="ident">ValueType::UnsignedRange</span>(<span class="kw">_</span>, <span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Value::UnsignedRange</span>(<span class="ident">value</span>),
-            <span class="ident">ValueType::SignedRange</span>(<span class="kw">_</span>, <span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Value::SignedRange</span>(<span class="ident">value</span> <span class="kw">as</span> <span class="ident">i64</span>),
-            <span class="ident">ValueType::Enum</span>(<span class="ident">values</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Value::Enum</span>(<span class="ident">values</span>.<span class="ident">get_value_from_raw_value</span>(<span class="ident">value</span>)),
-            <span class="ident">ValueType::Bitmask</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Value::Bitmask</span>(<span class="ident">value</span>),
-            <span class="ident">ValueType::Blob</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Value::Blob</span>(<span class="ident">value</span>),
-            <span class="ident">ValueType::Object</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Value::Object</span>(<span class="kw">unsafe</span> { <span class="ident">tm</span>(<span class="ident">value</span> <span class="kw">as</span> <span class="ident">u32</span>) }),
-            <span class="ident">ValueType::CRTC</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Value::CRTC</span>(<span class="kw">unsafe</span> { <span class="ident">tm</span>(<span class="ident">value</span> <span class="kw">as</span> <span class="ident">u32</span>) }),
-            <span class="ident">ValueType::Connector</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Value::Connector</span>(<span class="kw">unsafe</span> { <span class="ident">tm</span>(<span class="ident">value</span> <span class="kw">as</span> <span class="ident">u32</span>) }),
-            <span class="ident">ValueType::Encoder</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Value::Encoder</span>(<span class="kw">unsafe</span> { <span class="ident">tm</span>(<span class="ident">value</span> <span class="kw">as</span> <span class="ident">u32</span>) }),
-            <span class="ident">ValueType::Framebuffer</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Value::Framebuffer</span>(<span class="kw">unsafe</span> { <span class="ident">tm</span>(<span class="ident">value</span> <span class="kw">as</span> <span class="ident">u32</span>) }),
-            <span class="ident">ValueType::Plane</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Value::Plane</span>(<span class="kw">unsafe</span> { <span class="ident">tm</span>(<span class="ident">value</span> <span class="kw">as</span> <span class="ident">u32</span>) }),
-            <span class="ident">ValueType::Property</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Value::Property</span>(<span class="kw">unsafe</span> { <span class="ident">tm</span>(<span class="ident">value</span> <span class="kw">as</span> <span class="ident">u32</span>) }),
+            <span class="ident">ValueType::Unknown</span> =&gt; <span class="ident">Value::Unknown</span>(<span class="ident">value</span>),
+            <span class="ident">ValueType::Boolean</span> =&gt; <span class="ident">Value::Boolean</span>(<span class="ident">value</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span>),
+            <span class="ident">ValueType::UnsignedRange</span>(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="ident">Value::UnsignedRange</span>(<span class="ident">value</span>),
+            <span class="ident">ValueType::SignedRange</span>(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="ident">Value::SignedRange</span>(<span class="ident">value</span> <span class="kw">as</span> <span class="ident">i64</span>),
+            <span class="ident">ValueType::Enum</span>(<span class="ident">values</span>) =&gt; <span class="ident">Value::Enum</span>(<span class="ident">values</span>.<span class="ident">get_value_from_raw_value</span>(<span class="ident">value</span>)),
+            <span class="ident">ValueType::Bitmask</span> =&gt; <span class="ident">Value::Bitmask</span>(<span class="ident">value</span>),
+            <span class="ident">ValueType::Blob</span> =&gt; <span class="ident">Value::Blob</span>(<span class="ident">value</span>),
+            <span class="ident">ValueType::Object</span> =&gt; <span class="ident">Value::Object</span>(<span class="kw">unsafe</span> { <span class="ident">tm</span>(<span class="ident">value</span> <span class="kw">as</span> <span class="ident">u32</span>) }),
+            <span class="ident">ValueType::CRTC</span> =&gt; <span class="ident">Value::CRTC</span>(<span class="kw">unsafe</span> { <span class="ident">tm</span>(<span class="ident">value</span> <span class="kw">as</span> <span class="ident">u32</span>) }),
+            <span class="ident">ValueType::Connector</span> =&gt; <span class="ident">Value::Connector</span>(<span class="kw">unsafe</span> { <span class="ident">tm</span>(<span class="ident">value</span> <span class="kw">as</span> <span class="ident">u32</span>) }),
+            <span class="ident">ValueType::Encoder</span> =&gt; <span class="ident">Value::Encoder</span>(<span class="kw">unsafe</span> { <span class="ident">tm</span>(<span class="ident">value</span> <span class="kw">as</span> <span class="ident">u32</span>) }),
+            <span class="ident">ValueType::Framebuffer</span> =&gt; <span class="ident">Value::Framebuffer</span>(<span class="kw">unsafe</span> { <span class="ident">tm</span>(<span class="ident">value</span> <span class="kw">as</span> <span class="ident">u32</span>) }),
+            <span class="ident">ValueType::Plane</span> =&gt; <span class="ident">Value::Plane</span>(<span class="kw">unsafe</span> { <span class="ident">tm</span>(<span class="ident">value</span> <span class="kw">as</span> <span class="ident">u32</span>) }),
+            <span class="ident">ValueType::Property</span> =&gt; <span class="ident">Value::Property</span>(<span class="kw">unsafe</span> { <span class="ident">tm</span>(<span class="ident">value</span> <span class="kw">as</span> <span class="ident">u32</span>) }),
         }
     }
 }
@@ -443,30 +443,30 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">RawValue</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">value</span>: <span class="ident">Value</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">value</span>: <span class="ident">Value</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">use</span> <span class="ident">std::mem::transmute</span> <span class="kw">as</span> <span class="ident">tm</span>;
 
         <span class="kw">match</span> <span class="ident">value</span> {
-            <span class="ident">Value::Unknown</span>(<span class="ident">x</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">x</span>,
-            <span class="ident">Value::Boolean</span>(<span class="ident">x</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">Value::Unknown</span>(<span class="ident">x</span>) =&gt; <span class="ident">x</span>,
+            <span class="ident">Value::Boolean</span>(<span class="ident">x</span>) =&gt; {
                 <span class="kw">if</span> <span class="ident">x</span> {
                     <span class="number">1</span>
                 } <span class="kw">else</span> {
                     <span class="number">0</span>
                 }
             }
-            <span class="ident">Value::UnsignedRange</span>(<span class="ident">x</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">x</span>,
-            <span class="ident">Value::SignedRange</span>(<span class="ident">x</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">x</span> <span class="kw">as</span> <span class="ident">u64</span>,
-            <span class="ident">Value::Enum</span>(<span class="ident">val</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">val</span>.<span class="ident">value</span>(),
-            <span class="ident">Value::Bitmask</span>(<span class="ident">x</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">x</span>,
-            <span class="ident">Value::Blob</span>(<span class="ident">x</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">x</span>,
-            <span class="ident">Value::Object</span>(<span class="ident">x</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">unsafe</span> { <span class="ident">tm</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">u32</span><span class="op">&gt;</span>(<span class="ident">x</span>).<span class="ident">into</span>() },
-            <span class="ident">Value::CRTC</span>(<span class="ident">x</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">unsafe</span> { <span class="ident">tm</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">u32</span><span class="op">&gt;</span>(<span class="ident">x</span>).<span class="ident">into</span>() },
-            <span class="ident">Value::Connector</span>(<span class="ident">x</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">unsafe</span> { <span class="ident">tm</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">u32</span><span class="op">&gt;</span>(<span class="ident">x</span>).<span class="ident">into</span>() },
-            <span class="ident">Value::Encoder</span>(<span class="ident">x</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">unsafe</span> { <span class="ident">tm</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">u32</span><span class="op">&gt;</span>(<span class="ident">x</span>).<span class="ident">into</span>() },
-            <span class="ident">Value::Framebuffer</span>(<span class="ident">x</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">unsafe</span> { <span class="ident">tm</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">u32</span><span class="op">&gt;</span>(<span class="ident">x</span>).<span class="ident">into</span>() },
-            <span class="ident">Value::Plane</span>(<span class="ident">x</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">unsafe</span> { <span class="ident">tm</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">u32</span><span class="op">&gt;</span>(<span class="ident">x</span>).<span class="ident">into</span>() },
-            <span class="ident">Value::Property</span>(<span class="ident">x</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">unsafe</span> { <span class="ident">tm</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">u32</span><span class="op">&gt;</span>(<span class="ident">x</span>).<span class="ident">into</span>() },
+            <span class="ident">Value::UnsignedRange</span>(<span class="ident">x</span>) =&gt; <span class="ident">x</span>,
+            <span class="ident">Value::SignedRange</span>(<span class="ident">x</span>) =&gt; <span class="ident">x</span> <span class="kw">as</span> <span class="ident">u64</span>,
+            <span class="ident">Value::Enum</span>(<span class="ident">val</span>) =&gt; <span class="ident">val</span>.<span class="ident">value</span>(),
+            <span class="ident">Value::Bitmask</span>(<span class="ident">x</span>) =&gt; <span class="ident">x</span>,
+            <span class="ident">Value::Blob</span>(<span class="ident">x</span>) =&gt; <span class="ident">x</span>,
+            <span class="ident">Value::Object</span>(<span class="ident">x</span>) =&gt; <span class="kw">unsafe</span> { <span class="ident">tm</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">u32</span><span class="op">&gt;</span>(<span class="ident">x</span>).<span class="ident">into</span>() },
+            <span class="ident">Value::CRTC</span>(<span class="ident">x</span>) =&gt; <span class="kw">unsafe</span> { <span class="ident">tm</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">u32</span><span class="op">&gt;</span>(<span class="ident">x</span>).<span class="ident">into</span>() },
+            <span class="ident">Value::Connector</span>(<span class="ident">x</span>) =&gt; <span class="kw">unsafe</span> { <span class="ident">tm</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">u32</span><span class="op">&gt;</span>(<span class="ident">x</span>).<span class="ident">into</span>() },
+            <span class="ident">Value::Encoder</span>(<span class="ident">x</span>) =&gt; <span class="kw">unsafe</span> { <span class="ident">tm</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">u32</span><span class="op">&gt;</span>(<span class="ident">x</span>).<span class="ident">into</span>() },
+            <span class="ident">Value::Framebuffer</span>(<span class="ident">x</span>) =&gt; <span class="kw">unsafe</span> { <span class="ident">tm</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">u32</span><span class="op">&gt;</span>(<span class="ident">x</span>).<span class="ident">into</span>() },
+            <span class="ident">Value::Plane</span>(<span class="ident">x</span>) =&gt; <span class="kw">unsafe</span> { <span class="ident">tm</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">u32</span><span class="op">&gt;</span>(<span class="ident">x</span>).<span class="ident">into</span>() },
+            <span class="ident">Value::Property</span>(<span class="ident">x</span>) =&gt; <span class="kw">unsafe</span> { <span class="ident">tm</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">u32</span><span class="op">&gt;</span>(<span class="ident">x</span>).<span class="ident">into</span>() },
         }
     }
 }
@@ -478,18 +478,18 @@
 
 <span class="kw">impl</span> <span class="ident">EnumValue</span> {
     <span class="doccomment">/// Returns the [`RawValue`] of this value</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">value</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RawValue</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">value</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">RawValue</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">value</span>
     }
 
     <span class="doccomment">/// Returns the name of this value</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">std::ffi::CStr</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">std::ffi::CStr</span> {
         <span class="kw">unsafe</span> { <span class="ident">std::ffi::CStr::from_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>.<span class="ident">name</span>[<span class="number">0</span>] <span class="kw">as</span> <span class="kw">_</span>) }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">std::fmt::Debug</span> <span class="kw">for</span> <span class="ident">EnumValue</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span>) -&gt; <span class="ident">std::fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;EnumValue&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;value&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">value</span>())
             .<span class="ident">field</span>(<span class="string">&quot;name&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>())
@@ -507,21 +507,21 @@
 
 <span class="kw">impl</span> <span class="ident">EnumValues</span> {
     <span class="doccomment">/// Returns a tuple containing slices to the [`RawValue`]s and the [`EnumValue`]s</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">values</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="kw-2">&amp;</span>[<span class="ident">RawValue</span>], <span class="kw-2">&amp;</span>[<span class="ident">EnumValue</span>]) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">values</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="kw-2">&amp;</span>[<span class="ident">RawValue</span>], <span class="kw-2">&amp;</span>[<span class="ident">EnumValue</span>]) {
         (<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">values</span>[..<span class="self">self</span>.<span class="ident">length</span>], <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">enums</span>[..<span class="self">self</span>.<span class="ident">length</span>])
     }
 
     <span class="doccomment">/// Returns an [`EnumValue`] for a [`RawValue`]</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Note: This is a dumb translation, not every [`RawValue`] is part of en Enum</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_value_from_raw_value</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">value</span>: <span class="ident">RawValue</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">EnumValue</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_value_from_raw_value</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">value</span>: <span class="ident">RawValue</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">EnumValue</span> {
         <span class="kw">let</span> (<span class="kw">_</span>, <span class="ident">enums</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">values</span>();
         <span class="kw-2">&amp;</span><span class="ident">enums</span>[<span class="ident">value</span> <span class="kw">as</span> <span class="ident">usize</span>]
     }
 }
 
 <span class="kw">impl</span> <span class="ident">std::fmt::Debug</span> <span class="kw">for</span> <span class="ident">EnumValues</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span>) -&gt; <span class="ident">std::fmt::Result</span> {
         <span class="kw">let</span> (<span class="ident">vals</span>, <span class="ident">enums</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">values</span>();
 
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;EnumValues&quot;</span>)

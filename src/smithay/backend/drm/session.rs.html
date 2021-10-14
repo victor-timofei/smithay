@@ -208,14 +208,14 @@
             <span class="ident">dev</span>: <span class="ident">Arc::downgrade</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">internal</span>),
             <span class="ident">dev_id</span>: <span class="self">self</span>.<span class="ident">dev_id</span>,
             <span class="ident">active</span>: <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">internal</span> {
-                <span class="ident">DrmDeviceInternal::Atomic</span>(<span class="ident">dev</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">dev</span>.<span class="ident">active</span>.<span class="ident">clone</span>(),
-                <span class="ident">DrmDeviceInternal::Legacy</span>(<span class="ident">dev</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">dev</span>.<span class="ident">active</span>.<span class="ident">clone</span>(),
+                <span class="ident">DrmDeviceInternal::Atomic</span>(<span class="ident">dev</span>) =&gt; <span class="ident">dev</span>.<span class="ident">active</span>.<span class="ident">clone</span>(),
+                <span class="ident">DrmDeviceInternal::Legacy</span>(<span class="ident">dev</span>) =&gt; <span class="ident">dev</span>.<span class="ident">active</span>.<span class="ident">clone</span>(),
             },
             <span class="ident">privileged</span>: <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">internal</span> {
-                <span class="ident">DrmDeviceInternal::Atomic</span>(<span class="ident">dev</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">dev</span>.<span class="ident">fd</span>.<span class="ident">privileged</span>,
-                <span class="ident">DrmDeviceInternal::Legacy</span>(<span class="ident">dev</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">dev</span>.<span class="ident">fd</span>.<span class="ident">privileged</span>,
+                <span class="ident">DrmDeviceInternal::Atomic</span>(<span class="ident">dev</span>) =&gt; <span class="ident">dev</span>.<span class="ident">fd</span>.<span class="ident">privileged</span>,
+                <span class="ident">DrmDeviceInternal::Legacy</span>(<span class="ident">dev</span>) =&gt; <span class="ident">dev</span>.<span class="ident">fd</span>.<span class="ident">privileged</span>,
             },
-            <span class="ident">logger</span>: <span class="self">self</span>.<span class="ident">logger</span>.<span class="ident">new</span>(<span class="macro">o!</span>(<span class="string">&quot;drm_module&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;observer&quot;</span>)),
+            <span class="ident">logger</span>: <span class="self">self</span>.<span class="ident">logger</span>.<span class="ident">new</span>(<span class="macro">o!</span>(<span class="string">&quot;drm_module&quot;</span> =&gt; <span class="string">&quot;observer&quot;</span>)),
         };
 
         <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="ident">signaler</span>.<span class="ident">register</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">signal</span><span class="op">|</span> <span class="ident">observer</span>.<span class="ident">signal</span>(<span class="kw-2">*</span><span class="ident">signal</span>));
@@ -226,10 +226,10 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">DrmDeviceObserver</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">signal</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">signal</span>: <span class="ident">SessionSignal</span>) {
         <span class="kw">match</span> <span class="ident">signal</span> {
-            <span class="ident">SessionSignal::PauseSession</span> <span class="op">=</span><span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">pause</span>(<span class="prelude-val">None</span>),
-            <span class="ident">SessionSignal::PauseDevice</span> { <span class="ident">major</span>, <span class="ident">minor</span> } <span class="op">=</span><span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">pause</span>(<span class="prelude-val">Some</span>((<span class="ident">major</span>, <span class="ident">minor</span>))),
-            <span class="ident">SessionSignal::ActivateSession</span> <span class="op">=</span><span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">activate</span>(<span class="prelude-val">None</span>),
-            <span class="ident">SessionSignal::ActivateDevice</span> { <span class="ident">major</span>, <span class="ident">minor</span>, <span class="ident">new_fd</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">SessionSignal::PauseSession</span> =&gt; <span class="self">self</span>.<span class="ident">pause</span>(<span class="prelude-val">None</span>),
+            <span class="ident">SessionSignal::PauseDevice</span> { <span class="ident">major</span>, <span class="ident">minor</span> } =&gt; <span class="self">self</span>.<span class="ident">pause</span>(<span class="prelude-val">Some</span>((<span class="ident">major</span>, <span class="ident">minor</span>))),
+            <span class="ident">SessionSignal::ActivateSession</span> =&gt; <span class="self">self</span>.<span class="ident">activate</span>(<span class="prelude-val">None</span>),
+            <span class="ident">SessionSignal::ActivateDevice</span> { <span class="ident">major</span>, <span class="ident">minor</span>, <span class="ident">new_fd</span> } =&gt; {
                 <span class="self">self</span>.<span class="ident">activate</span>(<span class="prelude-val">Some</span>((<span class="ident">major</span>, <span class="ident">minor</span>, <span class="ident">new_fd</span>)))
             }
         }
@@ -285,7 +285,7 @@
 
 <span class="kw">struct</span> <span class="ident">FdHack</span>(<span class="ident">RawFd</span>);
 <span class="kw">impl</span> <span class="ident">AsRawFd</span> <span class="kw">for</span> <span class="ident">FdHack</span> {
-    <span class="kw">fn</span> <span class="ident">as_raw_fd</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RawFd</span> {
+    <span class="kw">fn</span> <span class="ident">as_raw_fd</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">RawFd</span> {
         <span class="self">self</span>.<span class="number">0</span>
     }
 }
@@ -295,14 +295,14 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">Linkable</span><span class="op">&lt;</span><span class="ident">SessionSignal</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">DrmSurface</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">link</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">signaler</span>: <span class="ident">Signaler</span><span class="op">&lt;</span><span class="ident">SessionSignal</span><span class="op">&gt;</span>) {
         <span class="kw">let</span> <span class="ident">logger</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">internal</span> {
-            <span class="ident">DrmSurfaceInternal::Atomic</span>(<span class="ident">surf</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">surf</span>.<span class="ident">logger</span>.<span class="ident">clone</span>(),
-            <span class="ident">DrmSurfaceInternal::Legacy</span>(<span class="ident">surf</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">surf</span>.<span class="ident">logger</span>.<span class="ident">clone</span>(),
+            <span class="ident">DrmSurfaceInternal::Atomic</span>(<span class="ident">surf</span>) =&gt; <span class="ident">surf</span>.<span class="ident">logger</span>.<span class="ident">clone</span>(),
+            <span class="ident">DrmSurfaceInternal::Legacy</span>(<span class="ident">surf</span>) =&gt; <span class="ident">surf</span>.<span class="ident">logger</span>.<span class="ident">clone</span>(),
         };
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">observer</span> <span class="op">=</span> <span class="ident">DrmSurfaceObserver</span> {
             <span class="ident">dev_id</span>: <span class="self">self</span>.<span class="ident">dev_id</span>,
             <span class="ident">crtc</span>: <span class="self">self</span>.<span class="ident">crtc</span>(),
             <span class="ident">surf</span>: <span class="ident">Arc::downgrade</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">internal</span>),
-            <span class="ident">logger</span>: <span class="ident">logger</span>.<span class="ident">new</span>(<span class="macro">o!</span>(<span class="string">&quot;drm_module&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;observer&quot;</span>)),
+            <span class="ident">logger</span>: <span class="ident">logger</span>.<span class="ident">new</span>(<span class="macro">o!</span>(<span class="string">&quot;drm_module&quot;</span> =&gt; <span class="string">&quot;observer&quot;</span>)),
         };
 
         <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="ident">signaler</span>.<span class="ident">register</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">signal</span><span class="op">|</span> <span class="ident">observer</span>.<span class="ident">signal</span>(<span class="kw-2">*</span><span class="ident">signal</span>));
@@ -313,11 +313,11 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">DrmSurfaceObserver</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">signal</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">signal</span>: <span class="ident">SessionSignal</span>) {
         <span class="kw">match</span> <span class="ident">signal</span> {
-            <span class="ident">SessionSignal::ActivateSession</span> <span class="op">=</span><span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">activate</span>(<span class="prelude-val">None</span>),
-            <span class="ident">SessionSignal::ActivateDevice</span> { <span class="ident">major</span>, <span class="ident">minor</span>, <span class="ident">new_fd</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">SessionSignal::ActivateSession</span> =&gt; <span class="self">self</span>.<span class="ident">activate</span>(<span class="prelude-val">None</span>),
+            <span class="ident">SessionSignal::ActivateDevice</span> { <span class="ident">major</span>, <span class="ident">minor</span>, <span class="ident">new_fd</span> } =&gt; {
                 <span class="self">self</span>.<span class="ident">activate</span>(<span class="prelude-val">Some</span>((<span class="ident">major</span>, <span class="ident">minor</span>, <span class="ident">new_fd</span>)))
             }
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {}
+            <span class="kw">_</span> =&gt; {}
         }
     }
 
@@ -335,8 +335,8 @@
             };
 
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">surf</span> {
-                <span class="ident">DrmSurfaceInternal::Atomic</span>(<span class="ident">surf</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">surf</span>.<span class="ident">reset_state</span>(<span class="ident">fd</span>.<span class="ident">as_ref</span>()),
-                <span class="ident">DrmSurfaceInternal::Legacy</span>(<span class="ident">surf</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">surf</span>.<span class="ident">reset_state</span>(<span class="ident">fd</span>.<span class="ident">as_ref</span>()),
+                <span class="ident">DrmSurfaceInternal::Atomic</span>(<span class="ident">surf</span>) =&gt; <span class="ident">surf</span>.<span class="ident">reset_state</span>(<span class="ident">fd</span>.<span class="ident">as_ref</span>()),
+                <span class="ident">DrmSurfaceInternal::Legacy</span>(<span class="ident">surf</span>) =&gt; <span class="ident">surf</span>.<span class="ident">reset_state</span>(<span class="ident">fd</span>.<span class="ident">as_ref</span>()),
             } {
                 <span class="macro">warn!</span>(
                     <span class="self">self</span>.<span class="ident">logger</span>,

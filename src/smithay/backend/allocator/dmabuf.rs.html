@@ -300,7 +300,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">IntoRawFd</span> <span class="kw">for</span> <span class="ident">Plane</span> {
-    <span class="kw">fn</span> <span class="ident">into_raw_fd</span>(<span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RawFd</span> {
+    <span class="kw">fn</span> <span class="ident">into_raw_fd</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">RawFd</span> {
         <span class="self">self</span>.<span class="ident">fd</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>()
     }
 }
@@ -334,14 +334,14 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WeakDmabuf</span>(<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">Weak</span><span class="op">&lt;</span><span class="ident">DmabufInternal</span><span class="op">&gt;</span>);
 
 <span class="kw">impl</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="ident">Dmabuf</span> {
-    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="ident">bool</span> {
         <span class="ident">Arc::ptr_eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="ident">other</span>.<span class="number">0</span>)
     }
 }
 <span class="kw">impl</span> <span class="ident">Eq</span> <span class="kw">for</span> <span class="ident">Dmabuf</span> {}
 
 <span class="kw">impl</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="ident">WeakDmabuf</span> {
-    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="ident">bool</span> {
         <span class="ident">Weak::ptr_eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="ident">other</span>.<span class="number">0</span>)
     }
 }
@@ -359,11 +359,11 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Buffer</span> <span class="kw">for</span> <span class="ident">Dmabuf</span> {
-    <span class="kw">fn</span> <span class="ident">size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">BufferCoords</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">BufferCoords</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">size</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">format</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Format</span> {
+    <span class="kw">fn</span> <span class="ident">format</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Format</span> {
         <span class="ident">Format</span> {
             <span class="ident">code</span>: <span class="self">self</span>.<span class="number">0</span>.<span class="ident">format</span>,
             <span class="ident">modifier</span>: <span class="self">self</span>.<span class="number">0</span>.<span class="ident">planes</span>[<span class="number">0</span>].<span class="ident">modifier</span>,
@@ -382,8 +382,8 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// *Note*: Each Dmabuf needs at least one plane.</span>
     <span class="doccomment">/// MAX_PLANES notes the maximum amount of planes any format may use with this implementation.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_plane</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">fd</span>: <span class="ident">RawFd</span>, <span class="ident">idx</span>: <span class="ident">u32</span>, <span class="ident">offset</span>: <span class="ident">u32</span>, <span class="ident">stride</span>: <span class="ident">u32</span>, <span class="ident">modifier</span>: <span class="ident">Modifier</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">planes</span>.<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">MAX_PLANES</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_plane</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">fd</span>: <span class="ident">RawFd</span>, <span class="ident">idx</span>: <span class="ident">u32</span>, <span class="ident">offset</span>: <span class="ident">u32</span>, <span class="ident">stride</span>: <span class="ident">u32</span>, <span class="ident">modifier</span>: <span class="ident">Modifier</span>) -&gt; <span class="ident">bool</span> {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">planes</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="ident">MAX_PLANES</span> {
             <span class="kw">return</span> <span class="bool-val">false</span>;
         }
         <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">planes</span>.<span class="ident">push</span>(<span class="ident">Plane</span> {
@@ -400,7 +400,7 @@
     <span class="doccomment">/// Build a `Dmabuf` out of the provided parameters and planes</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Returns `None` if the builder has no planes attached.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Dmabuf</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Dmabuf</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">planes</span>.<span class="ident">is_empty</span>() {
             <span class="kw">return</span> <span class="prelude-val">None</span>;
         }
@@ -416,7 +416,7 @@
     <span class="comment">// Note: the `src` Buffer is only used a reference for size and format.</span>
     <span class="comment">// The contents are determined by the provided file descriptors, which</span>
     <span class="comment">// do not need to refer to the same buffer `src` does.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">builder_from_buffer</span>(<span class="ident">src</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">Buffer</span>, <span class="ident">flags</span>: <span class="ident">DmabufFlags</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">DmabufBuilder</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">builder_from_buffer</span>(<span class="ident">src</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">Buffer</span>, <span class="ident">flags</span>: <span class="ident">DmabufFlags</span>) -&gt; <span class="ident">DmabufBuilder</span> {
         <span class="ident">DmabufBuilder</span> {
             <span class="ident">internal</span>: <span class="ident">DmabufInternal</span> {
                 <span class="ident">planes</span>: <span class="ident">Vec::with_capacity</span>(<span class="ident">MAX_PLANES</span>),
@@ -432,7 +432,7 @@
         <span class="ident">size</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">BufferCoords</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">format</span>: <span class="ident">Fourcc</span>,
         <span class="ident">flags</span>: <span class="ident">DmabufFlags</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">DmabufBuilder</span> {
+    ) -&gt; <span class="ident">DmabufBuilder</span> {
         <span class="ident">DmabufBuilder</span> {
             <span class="ident">internal</span>: <span class="ident">DmabufInternal</span> {
                 <span class="ident">planes</span>: <span class="ident">Vec::with_capacity</span>(<span class="ident">MAX_PLANES</span>),
@@ -444,37 +444,37 @@
     }
 
     <span class="doccomment">/// The amount of planes this Dmabuf has</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">num_planes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">num_planes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">planes</span>.<span class="ident">len</span>()
     }
 
     <span class="doccomment">/// Returns raw handles of the planes of this buffer</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">handles</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">RawFd</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;_</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">handles</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">RawFd</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;_</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">planes</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">p</span>.<span class="ident">fd</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>())
     }
 
     <span class="doccomment">/// Returns offsets for the planes of this buffer</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">offsets</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">u32</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;_</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">offsets</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">u32</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;_</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">planes</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">offset</span>)
     }
 
     <span class="doccomment">/// Returns strides for the planes of this buffer</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">strides</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">u32</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;_</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">strides</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">u32</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;_</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">planes</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">stride</span>)
     }
 
     <span class="doccomment">/// Returns if this buffer format has any vendor-specific modifiers set or is implicit/linear</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_modifier</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_modifier</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">planes</span>[<span class="number">0</span>].<span class="ident">modifier</span> <span class="op">!</span><span class="op">=</span> <span class="ident">Modifier::Invalid</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">planes</span>[<span class="number">0</span>].<span class="ident">modifier</span> <span class="op">!</span><span class="op">=</span> <span class="ident">Modifier::Linear</span>
     }
 
     <span class="doccomment">/// Returns if the buffer is stored inverted on the y-axis</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">y_inverted</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">y_inverted</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">flags</span>.<span class="ident">contains</span>(<span class="ident">DmabufFlags::Y_INVERT</span>)
     }
 
     <span class="doccomment">/// Create a weak reference to this dmabuf</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">weak</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">WeakDmabuf</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">weak</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WeakDmabuf</span> {
         <span class="ident">WeakDmabuf</span>(<span class="ident">Arc::downgrade</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>))
     }
 }
@@ -483,7 +483,7 @@
     <span class="doccomment">/// Try to upgrade to a strong reference of this buffer.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Fails if no strong references exist anymore and the handle was already closed.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">upgrade</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Dmabuf</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">upgrade</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Dmabuf</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">upgrade</span>().<span class="ident">map</span>(<span class="ident">Dmabuf</span>)
     }
 }
@@ -494,13 +494,13 @@
     <span class="kw">type</span> <span class="ident">Error</span>;
 
     <span class="doccomment">/// Export this buffer as a new Dmabuf</span>
-    <span class="kw">fn</span> <span class="ident">export</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Dmabuf</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">export</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Dmabuf</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>;
 }
 
 <span class="kw">impl</span> <span class="ident">AsDmabuf</span> <span class="kw">for</span> <span class="ident">Dmabuf</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">std::convert::Infallible</span>;
 
-    <span class="kw">fn</span> <span class="ident">export</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Dmabuf</span>, <span class="ident">std::convert::Infallible</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">export</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Dmabuf</span>, <span class="ident">std::convert::Infallible</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">clone</span>())
     }
 }

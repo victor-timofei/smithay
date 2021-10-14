@@ -345,7 +345,7 @@
             <span class="ident">surface_y</span>,
             <span class="ident">serial</span>,
             ..
-        } <span class="op">=</span><span class="op">&gt;</span> {
+        } =&gt; {
             <span class="ident">pointer_data</span>.<span class="ident">latest_serial</span>.<span class="ident">replace</span>(<span class="ident">serial</span>);
 
             <span class="kw">let</span> <span class="ident">window_id</span> <span class="op">=</span> <span class="ident">wayland::make_wid</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>);
@@ -353,8 +353,8 @@
                 <span class="kw">return</span>;
             }
             <span class="kw">let</span> <span class="ident">window_handle</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">winit_state</span>.<span class="ident">window_map</span>.<span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="ident">window_id</span>) {
-                <span class="prelude-val">Some</span>(<span class="ident">window_handle</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">window_handle</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">window_handle</span>) =&gt; <span class="ident">window_handle</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="kw">return</span>,
             };
 
             <span class="kw">let</span> <span class="ident">scale_factor</span> <span class="op">=</span> <span class="ident">sctk::get_surface_scale_factor</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>) <span class="kw">as</span> <span class="ident">f64</span>;
@@ -392,15 +392,15 @@
                 <span class="ident">window_id</span>,
             );
         }
-        <span class="ident">PointerEvent::Leave</span> { <span class="ident">surface</span>, <span class="ident">serial</span> } <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">PointerEvent::Leave</span> { <span class="ident">surface</span>, <span class="ident">serial</span> } =&gt; {
             <span class="ident">pointer_data</span>.<span class="ident">surface</span> <span class="op">=</span> <span class="prelude-val">None</span>;
             <span class="ident">pointer_data</span>.<span class="ident">latest_serial</span>.<span class="ident">replace</span>(<span class="ident">serial</span>);
 
             <span class="kw">let</span> <span class="ident">window_id</span> <span class="op">=</span> <span class="ident">wayland::make_wid</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>);
 
             <span class="kw">let</span> <span class="ident">window_handle</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">winit_state</span>.<span class="ident">window_map</span>.<span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="ident">window_id</span>) {
-                <span class="prelude-val">Some</span>(<span class="ident">window_handle</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">window_handle</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">window_handle</span>) =&gt; <span class="ident">window_handle</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="kw">return</span>,
             };
 
             <span class="comment">// Notify a window that pointer is no longer observing it.</span>
@@ -426,10 +426,10 @@
             <span class="ident">surface_x</span>,
             <span class="ident">surface_y</span>,
             ..
-        } <span class="op">=</span><span class="op">&gt;</span> {
+        } =&gt; {
             <span class="kw">let</span> <span class="ident">surface</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">pointer_data</span>.<span class="ident">surface</span>.<span class="ident">as_ref</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">surface</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">surface</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">surface</span>) =&gt; <span class="ident">surface</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="kw">return</span>,
             };
 
             <span class="kw">let</span> <span class="ident">window_id</span> <span class="op">=</span> <span class="ident">wayland::make_wid</span>(<span class="ident">surface</span>);
@@ -453,24 +453,24 @@
             <span class="ident">state</span>,
             <span class="ident">serial</span>,
             ..
-        } <span class="op">=</span><span class="op">&gt;</span> {
+        } =&gt; {
             <span class="ident">pointer_data</span>.<span class="ident">latest_serial</span>.<span class="ident">replace</span>(<span class="ident">serial</span>);
             <span class="kw">let</span> <span class="ident">window_id</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">pointer_data</span>.<span class="ident">surface</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="ident">wayland::make_wid</span>) {
-                <span class="prelude-val">Some</span>(<span class="ident">window_id</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">window_id</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">window_id</span>) =&gt; <span class="ident">window_id</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="kw">return</span>,
             };
 
             <span class="kw">let</span> <span class="ident">state</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">state</span> {
-                <span class="ident">wl_pointer::ButtonState::Pressed</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ElementState::Pressed</span>,
-                <span class="ident">wl_pointer::ButtonState::Released</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ElementState::Released</span>,
-                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
+                <span class="ident">wl_pointer::ButtonState::Pressed</span> =&gt; <span class="ident">ElementState::Pressed</span>,
+                <span class="ident">wl_pointer::ButtonState::Released</span> =&gt; <span class="ident">ElementState::Released</span>,
+                <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
             };
 
             <span class="kw">let</span> <span class="ident">button</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">button</span> {
-                <span class="ident">BTN_LEFT</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">MouseButton::Left</span>,
-                <span class="ident">BTN_RIGHT</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">MouseButton::Right</span>,
-                <span class="ident">BTN_MIDDLE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">MouseButton::Middle</span>,
-                <span class="ident">button</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">MouseButton::Other</span>(<span class="ident">button</span> <span class="kw">as</span> <span class="ident">u16</span>),
+                <span class="ident">BTN_LEFT</span> =&gt; <span class="ident">MouseButton::Left</span>,
+                <span class="ident">BTN_RIGHT</span> =&gt; <span class="ident">MouseButton::Right</span>,
+                <span class="ident">BTN_MIDDLE</span> =&gt; <span class="ident">MouseButton::Middle</span>,
+                <span class="ident">button</span> =&gt; <span class="ident">MouseButton::Other</span>(<span class="ident">button</span> <span class="kw">as</span> <span class="ident">u16</span>),
             };
 
             <span class="ident">event_sink</span>.<span class="ident">push_window_event</span>(
@@ -485,10 +485,10 @@
                 <span class="ident">window_id</span>,
             );
         }
-        <span class="ident">PointerEvent::Axis</span> { <span class="ident">axis</span>, <span class="ident">value</span>, .. } <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">PointerEvent::Axis</span> { <span class="ident">axis</span>, <span class="ident">value</span>, .. } =&gt; {
             <span class="kw">let</span> <span class="ident">surface</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">pointer_data</span>.<span class="ident">surface</span>.<span class="ident">as_ref</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">surface</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">surface</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">surface</span>) =&gt; <span class="ident">surface</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="kw">return</span>,
             };
 
             <span class="kw">let</span> <span class="ident">window_id</span> <span class="op">=</span> <span class="ident">wayland::make_wid</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>);
@@ -499,9 +499,9 @@
                 <span class="comment">// Old seat compatibility.</span>
                 <span class="kw">match</span> <span class="ident">axis</span> {
                     <span class="comment">// Wayland vertical sign convention is the inverse of winit.</span>
-                    <span class="ident">wl_pointer::Axis::VerticalScroll</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">y</span> <span class="op">-</span><span class="op">=</span> <span class="ident">value</span> <span class="kw">as</span> <span class="ident">f32</span>,
-                    <span class="ident">wl_pointer::Axis::HorizontalScroll</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">x</span> <span class="op">+</span><span class="op">=</span> <span class="ident">value</span> <span class="kw">as</span> <span class="ident">f32</span>,
-                    <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
+                    <span class="ident">wl_pointer::Axis::VerticalScroll</span> =&gt; <span class="ident">y</span> <span class="op">-</span><span class="op">=</span> <span class="ident">value</span> <span class="kw">as</span> <span class="ident">f32</span>,
+                    <span class="ident">wl_pointer::Axis::HorizontalScroll</span> =&gt; <span class="ident">x</span> <span class="op">+</span><span class="op">=</span> <span class="ident">value</span> <span class="kw">as</span> <span class="ident">f32</span>,
+                    <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
                 }
 
                 <span class="kw">let</span> <span class="ident">scale_factor</span> <span class="op">=</span> <span class="ident">sctk::get_surface_scale_factor</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>) <span class="kw">as</span> <span class="ident">f64</span>;
@@ -522,20 +522,20 @@
                 <span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">x</span>, <span class="kw-2">mut</span> <span class="ident">y</span>) <span class="op">=</span> <span class="ident">pointer_data</span>.<span class="ident">axis_data</span>.<span class="ident">axis_buffer</span>.<span class="ident">unwrap_or</span>((<span class="number">0.0</span>, <span class="number">0.0</span>));
                 <span class="kw">match</span> <span class="ident">axis</span> {
                     <span class="comment">// Wayland vertical sign convention is the inverse of winit.</span>
-                    <span class="ident">wl_pointer::Axis::VerticalScroll</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">y</span> <span class="op">-</span><span class="op">=</span> <span class="ident">value</span> <span class="kw">as</span> <span class="ident">f32</span>,
-                    <span class="ident">wl_pointer::Axis::HorizontalScroll</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">x</span> <span class="op">+</span><span class="op">=</span> <span class="ident">value</span> <span class="kw">as</span> <span class="ident">f32</span>,
-                    <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
+                    <span class="ident">wl_pointer::Axis::VerticalScroll</span> =&gt; <span class="ident">y</span> <span class="op">-</span><span class="op">=</span> <span class="ident">value</span> <span class="kw">as</span> <span class="ident">f32</span>,
+                    <span class="ident">wl_pointer::Axis::HorizontalScroll</span> =&gt; <span class="ident">x</span> <span class="op">+</span><span class="op">=</span> <span class="ident">value</span> <span class="kw">as</span> <span class="ident">f32</span>,
+                    <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
                 }
 
                 <span class="ident">pointer_data</span>.<span class="ident">axis_data</span>.<span class="ident">axis_buffer</span> <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="ident">x</span>, <span class="ident">y</span>));
 
                 <span class="ident">pointer_data</span>.<span class="ident">axis_data</span>.<span class="ident">axis_state</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">pointer_data</span>.<span class="ident">axis_data</span>.<span class="ident">axis_state</span> {
-                    <span class="ident">TouchPhase::Started</span> <span class="op">|</span> <span class="ident">TouchPhase::Moved</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TouchPhase::Moved</span>,
-                    <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TouchPhase::Started</span>,
+                    <span class="ident">TouchPhase::Started</span> <span class="op">|</span> <span class="ident">TouchPhase::Moved</span> =&gt; <span class="ident">TouchPhase::Moved</span>,
+                    <span class="kw">_</span> =&gt; <span class="ident">TouchPhase::Started</span>,
                 }
             }
         }
-        <span class="ident">PointerEvent::AxisDiscrete</span> { <span class="ident">axis</span>, <span class="ident">discrete</span> } <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">PointerEvent::AxisDiscrete</span> { <span class="ident">axis</span>, <span class="ident">discrete</span> } =&gt; {
             <span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">x</span>, <span class="kw-2">mut</span> <span class="ident">y</span>) <span class="op">=</span> <span class="ident">pointer_data</span>
                 .<span class="ident">axis_data</span>
                 .<span class="ident">axis_discrete_buffer</span>
@@ -543,29 +543,29 @@
 
             <span class="kw">match</span> <span class="ident">axis</span> {
                 <span class="comment">// Wayland vertical sign convention is the inverse of winit.</span>
-                <span class="ident">wl_pointer::Axis::VerticalScroll</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">y</span> <span class="op">-</span><span class="op">=</span> <span class="ident">discrete</span> <span class="kw">as</span> <span class="ident">f32</span>,
-                <span class="ident">wl_pointer::Axis::HorizontalScroll</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">x</span> <span class="op">+</span><span class="op">=</span> <span class="ident">discrete</span> <span class="kw">as</span> <span class="ident">f32</span>,
-                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
+                <span class="ident">wl_pointer::Axis::VerticalScroll</span> =&gt; <span class="ident">y</span> <span class="op">-</span><span class="op">=</span> <span class="ident">discrete</span> <span class="kw">as</span> <span class="ident">f32</span>,
+                <span class="ident">wl_pointer::Axis::HorizontalScroll</span> =&gt; <span class="ident">x</span> <span class="op">+</span><span class="op">=</span> <span class="ident">discrete</span> <span class="kw">as</span> <span class="ident">f32</span>,
+                <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
             }
 
             <span class="ident">pointer_data</span>.<span class="ident">axis_data</span>.<span class="ident">axis_discrete_buffer</span> <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="ident">x</span>, <span class="ident">y</span>));
 
             <span class="ident">pointer_data</span>.<span class="ident">axis_data</span>.<span class="ident">axis_state</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">pointer_data</span>.<span class="ident">axis_data</span>.<span class="ident">axis_state</span> {
-                <span class="ident">TouchPhase::Started</span> <span class="op">|</span> <span class="ident">TouchPhase::Moved</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TouchPhase::Moved</span>,
-                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TouchPhase::Started</span>,
+                <span class="ident">TouchPhase::Started</span> <span class="op">|</span> <span class="ident">TouchPhase::Moved</span> =&gt; <span class="ident">TouchPhase::Moved</span>,
+                <span class="kw">_</span> =&gt; <span class="ident">TouchPhase::Started</span>,
             }
         }
-        <span class="ident">PointerEvent::AxisSource</span> { .. } <span class="op">=</span><span class="op">&gt;</span> (),
-        <span class="ident">PointerEvent::AxisStop</span> { .. } <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">PointerEvent::AxisSource</span> { .. } =&gt; (),
+        <span class="ident">PointerEvent::AxisStop</span> { .. } =&gt; {
             <span class="ident">pointer_data</span>.<span class="ident">axis_data</span>.<span class="ident">axis_state</span> <span class="op">=</span> <span class="ident">TouchPhase::Ended</span>;
         }
-        <span class="ident">PointerEvent::Frame</span> <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">PointerEvent::Frame</span> =&gt; {
             <span class="kw">let</span> <span class="ident">axis_buffer</span> <span class="op">=</span> <span class="ident">pointer_data</span>.<span class="ident">axis_data</span>.<span class="ident">axis_buffer</span>.<span class="ident">take</span>();
             <span class="kw">let</span> <span class="ident">axis_discrete_buffer</span> <span class="op">=</span> <span class="ident">pointer_data</span>.<span class="ident">axis_data</span>.<span class="ident">axis_discrete_buffer</span>.<span class="ident">take</span>();
 
             <span class="kw">let</span> <span class="ident">surface</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">pointer_data</span>.<span class="ident">surface</span>.<span class="ident">as_ref</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">surface</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">surface</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">surface</span>) =&gt; <span class="ident">surface</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="kw">return</span>,
             };
             <span class="kw">let</span> <span class="ident">window_id</span> <span class="op">=</span> <span class="ident">wayland::make_wid</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>);
 
@@ -596,7 +596,7 @@
 
             <span class="ident">event_sink</span>.<span class="ident">push_window_event</span>(<span class="ident">window_event</span>, <span class="ident">window_id</span>);
         }
-        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> (),
+        <span class="kw">_</span> =&gt; (),
     }
 }
 

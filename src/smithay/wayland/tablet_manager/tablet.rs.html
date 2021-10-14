@@ -116,7 +116,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Device</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">D</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">TabletDescriptor</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">device</span>: <span class="kw-2">&amp;</span><span class="ident">D</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">device</span>: <span class="kw-2">&amp;</span><span class="ident">D</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">TabletDescriptor</span> {
             <span class="ident">name</span>: <span class="ident">device</span>.<span class="ident">name</span>(),
             <span class="ident">syspath</span>: <span class="ident">device</span>.<span class="ident">syspath</span>(),

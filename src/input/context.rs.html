@@ -454,7 +454,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// ## Returns</span>
     <span class="doccomment">/// The file descriptor, or a negative errno on failure.</span>
-    <span class="kw">fn</span> <span class="ident">open_restricted</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>, <span class="ident">flags</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RawFd</span>, <span class="ident">i32</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">open_restricted</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>, <span class="ident">flags</span>: <span class="ident">i32</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RawFd</span>, <span class="ident">i32</span><span class="op">&gt;</span>;
 
     <span class="doccomment">/// Close the file descriptor.</span>
     <span class="doccomment">///</span>
@@ -467,18 +467,18 @@
     <span class="ident">path</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::c_char</span>,
     <span class="ident">flags</span>: <span class="ident">libc::c_int</span>,
     <span class="ident">user_data</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">libc::c_void</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">libc::c_int</span> {
+) -&gt; <span class="ident">libc::c_int</span> {
     <span class="kw">use</span> <span class="ident">std::borrow::Cow</span>;
 
     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">interface</span>) <span class="op">=</span> (<span class="ident">user_data</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">I</span>).<span class="ident">as_mut</span>() {
         <span class="kw">let</span> <span class="ident">path_str</span> <span class="op">=</span> <span class="ident">CStr::from_ptr</span>(<span class="ident">path</span>).<span class="ident">to_string_lossy</span>();
         <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">path_str</span> {
-            <span class="ident">Cow::Borrowed</span>(<span class="ident">string</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">interface</span>.<span class="ident">open_restricted</span>(<span class="ident">Path::new</span>(<span class="ident">string</span>), <span class="ident">flags</span>),
-            <span class="ident">Cow::Owned</span>(<span class="ident">string</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">interface</span>.<span class="ident">open_restricted</span>(<span class="ident">Path::new</span>(<span class="kw-2">&amp;</span><span class="ident">string</span>), <span class="ident">flags</span>),
+            <span class="ident">Cow::Borrowed</span>(<span class="ident">string</span>) =&gt; <span class="ident">interface</span>.<span class="ident">open_restricted</span>(<span class="ident">Path::new</span>(<span class="ident">string</span>), <span class="ident">flags</span>),
+            <span class="ident">Cow::Owned</span>(<span class="ident">string</span>) =&gt; <span class="ident">interface</span>.<span class="ident">open_restricted</span>(<span class="ident">Path::new</span>(<span class="kw-2">&amp;</span><span class="ident">string</span>), <span class="ident">flags</span>),
         };
         <span class="kw">match</span> <span class="ident">res</span> {
-            <span class="prelude-val">Ok</span>(<span class="ident">fd</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">fd</span>,
-            <span class="prelude-val">Err</span>(<span class="ident">errno</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Ok</span>(<span class="ident">fd</span>) =&gt; <span class="ident">fd</span>,
+            <span class="prelude-val">Err</span>(<span class="ident">errno</span>) =&gt; {
                 <span class="kw">if</span> <span class="ident">errno</span> <span class="op">&gt;</span> <span class="number">0</span> {
                     <span class="op">-</span><span class="ident">errno</span>
                 } <span class="kw">else</span> {
@@ -514,19 +514,19 @@
 }
 
 <span class="kw">impl</span> <span class="ident">::std::fmt::Debug</span> <span class="kw">for</span> <span class="ident">Libinput</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">::std::fmt::Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::std::fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">::std::fmt::Formatter</span>) -&gt; <span class="ident">::std::fmt::Result</span> {
         <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;Libinput @{:p}&quot;</span>, <span class="self">self</span>.<span class="ident">as_raw</span>())
     }
 }
 
 <span class="kw">impl</span> <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi::libinput</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Libinput</span> {
-    <span class="kw">fn</span> <span class="ident">as_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">ffi::libinput</span> {
+    <span class="kw">fn</span> <span class="ident">as_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">ffi::libinput</span> {
         <span class="self">self</span>.<span class="ident">ffi</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Libinput</span> {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">Libinput</span> {
             <span class="ident">ffi</span>: <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_ref</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) },
             <span class="ident">_interface</span>: <span class="self">self</span>.<span class="ident">_interface</span>.<span class="ident">clone</span>(),
@@ -543,8 +543,8 @@
 }
 
 <span class="kw">impl</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="ident">Libinput</span> {
-    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">as_raw</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">other</span>.<span class="ident">as_raw</span>()
+    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">as_raw</span>() <span class="op">==</span> <span class="ident">other</span>.<span class="ident">as_raw</span>()
     }
 }
 
@@ -558,7 +558,7 @@
 
 <span class="kw">impl</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">Libinput</span> {
     <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">Event</span>;
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_get_event</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) };
         <span class="kw">if</span> <span class="ident">ptr</span>.<span class="ident">is_null</span>() {
             <span class="prelude-val">None</span>
@@ -583,7 +583,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This function is unsafe, because there is no way to verify that `udev_context` is indeed a valid udev context or even points to valid memory.</span>
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;udev&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_with_udev</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="ident">LibinputInterface</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">interface</span>: <span class="ident">I</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Libinput</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_with_udev</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="ident">LibinputInterface</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">interface</span>: <span class="ident">I</span>) -&gt; <span class="ident">Libinput</span> {
         <span class="kw">let</span> <span class="ident">boxed_userdata</span> <span class="op">=</span> <span class="ident">Rc::new</span>(<span class="ident">interface</span>);
         <span class="kw">let</span> <span class="ident">boxed_interface</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="ident">ffi::libinput_interface</span> {
             <span class="ident">open_restricted</span>: <span class="prelude-val">Some</span>(<span class="ident">open_restricted</span>::<span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>),
@@ -619,7 +619,7 @@
     <span class="doccomment">/// - interface - A `LibinputInterface` providing functions to open and close devices.</span>
     <span class="doccomment">/// - userdata - Optionally some userdata attached to the newly created context (see [`Userdata`](./trait.Userdata.html))</span>
     <span class="doccomment">///</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_from_path</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">LibinputInterface</span><span class="op">&gt;</span>(<span class="ident">interface</span>: <span class="ident">I</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Libinput</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_from_path</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">LibinputInterface</span><span class="op">&gt;</span>(<span class="ident">interface</span>: <span class="ident">I</span>) -&gt; <span class="ident">Libinput</span> {
         <span class="kw">let</span> <span class="ident">boxed_userdata</span> <span class="op">=</span> <span class="ident">Rc::new</span>(<span class="ident">interface</span>);
         <span class="kw">let</span> <span class="ident">boxed_interface</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="ident">ffi::libinput_interface</span> {
             <span class="ident">open_restricted</span>: <span class="prelude-val">Some</span>(<span class="ident">open_restricted</span>::<span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>),
@@ -652,7 +652,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// It is an application bug to call this function on a context</span>
     <span class="doccomment">/// initialized with `new_from_udev`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">path_add_device</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Device</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">path_add_device</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Device</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">CString::new</span>(<span class="ident">path</span>).<span class="ident">expect</span>(<span class="string">&quot;Device Path contained a null-byte&quot;</span>);
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">ffi::libinput_path_add_device</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="ident">path</span>.<span class="ident">as_ptr</span>());
@@ -697,13 +697,13 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This function may only be called once per context.</span>
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;udev&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">udev_assign_seat</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">seat_id</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), ()<span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">udev_assign_seat</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">seat_id</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), ()<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">CString::new</span>(<span class="ident">seat_id</span>).<span class="ident">expect</span>(<span class="string">&quot;Seat Id contained a null-byte&quot;</span>);
         <span class="kw">unsafe</span> {
             <span class="kw">match</span> <span class="ident">ffi::libinput_udev_assign_seat</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="ident">id</span>.<span class="ident">as_ptr</span>()) {
-                <span class="number">0</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(()),
-                <span class="op">-</span><span class="number">1</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(()),
-                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
+                <span class="number">0</span> =&gt; <span class="prelude-val">Ok</span>(()),
+                <span class="op">-</span><span class="number">1</span> =&gt; <span class="prelude-val">Err</span>(()),
+                <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
             }
         }
     }
@@ -719,12 +719,12 @@
     <span class="doccomment">/// Resume a suspended libinput context.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This re-enables device monitoring and adds existing devices.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">resume</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), ()<span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">resume</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), ()<span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
             <span class="kw">match</span> <span class="ident">ffi::libinput_resume</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) {
-                <span class="number">0</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(()),
-                <span class="op">-</span><span class="number">1</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(()),
-                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
+                <span class="number">0</span> =&gt; <span class="prelude-val">Ok</span>(()),
+                <span class="op">-</span><span class="number">1</span> =&gt; <span class="prelude-val">Err</span>(()),
+                <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
             }
         }
     }
@@ -742,12 +742,12 @@
     <span class="doccomment">/// of timing-sensitive features (e.g. tap-to-click), any delay in</span>
     <span class="doccomment">/// calling `dispatch` may prevent these features from working</span>
     <span class="doccomment">/// correctly.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">IoResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">IoResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
             <span class="kw">match</span> <span class="ident">ffi::libinput_dispatch</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) {
-                <span class="number">0</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(()),
-                <span class="ident">x</span> <span class="kw">if</span> <span class="ident">x</span> <span class="op">&lt;</span> <span class="number">0</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">IoError::from_raw_os_error</span>(<span class="ident">x</span>)),
-                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
+                <span class="number">0</span> =&gt; <span class="prelude-val">Ok</span>(()),
+                <span class="ident">x</span> <span class="kw">if</span> <span class="ident">x</span> <span class="op">&lt;</span> <span class="number">0</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">IoError::from_raw_os_error</span>(<span class="ident">x</span>)),
+                <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
             }
         }
     }
@@ -817,7 +817,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// See [`AsRawFd`]</span>
     <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.4.1&quot;</span>, <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;Use the provided AsRawFd implementation&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">fd</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RawFd</span> {
+    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">fd</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">RawFd</span> {
         <span class="ident">ffi::libinput_get_fd</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>())
     }
 
@@ -835,7 +835,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// If the pointer is pointing to a different struct, invalid memory or `NULL` the returned</span>
     <span class="doccomment">/// struct may panic on use or cause other undefined behavior.</span>
-    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">ffi</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::libinput</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">ffi</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::libinput</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">Libinput</span> {
             <span class="ident">ffi</span>: <span class="ident">ffi::libinput_ref</span>(<span class="ident">ffi</span>),
             <span class="ident">_interface</span>: <span class="prelude-val">None</span>,
@@ -844,7 +844,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">AsRawFd</span> <span class="kw">for</span> <span class="ident">Libinput</span> {
-    <span class="kw">fn</span> <span class="ident">as_raw_fd</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RawFd</span> {
+    <span class="kw">fn</span> <span class="ident">as_raw_fd</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">RawFd</span> {
         <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_get_fd</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) }
     }
 }

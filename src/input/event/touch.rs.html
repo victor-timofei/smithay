@@ -211,7 +211,7 @@
     <span class="kw">fn</span> <span class="ident">time_usec</span>, <span class="ident">ffi::libinput_event_touch_get_time_usec</span>, <span class="ident">u64</span>);
 
     <span class="doccomment">/// Convert into a general `TouchEvent` again</span>
-    <span class="kw">fn</span> <span class="ident">into_touch_event</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">TouchEvent</span>
+    <span class="kw">fn</span> <span class="ident">into_touch_event</span>(<span class="self">self</span>) -&gt; <span class="ident">TouchEvent</span>
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
     {
@@ -241,11 +241,11 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// If the touch event has no assigned slot, for example if it is from a</span>
     <span class="doccomment">/// single touch device, this function returns `None`.</span>
-    <span class="kw">fn</span> <span class="ident">slot</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">slot</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_event_touch_get_slot</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) } {
-            <span class="ident">x</span> <span class="kw">if</span> <span class="ident">x</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">0</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">x</span> <span class="kw">as</span> <span class="ident">u32</span>),
-            <span class="op">-</span><span class="number">1</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput_event_touch_get_slot returned undocumentated value!&quot;</span>),
+            <span class="ident">x</span> <span class="kw">if</span> <span class="ident">x</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">0</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident">x</span> <span class="kw">as</span> <span class="ident">u32</span>),
+            <span class="op">-</span><span class="number">1</span> =&gt; <span class="prelude-val">None</span>,
+            <span class="kw">_</span> =&gt; <span class="macro">panic!</span>(<span class="string">&quot;libinput_event_touch_get_slot returned undocumentated value!&quot;</span>),
         }
     }
 }
@@ -272,7 +272,7 @@
     <span class="doccomment">/// ## Arguments</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// - width - The current output screen width</span>
-    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">u32</span>) -&gt; <span class="ident">f64</span> {
         <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_event_touch_get_x_transformed</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="ident">width</span>) }
     }
 
@@ -282,7 +282,7 @@
     <span class="doccomment">/// ## Arguments</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// - height - The current output screen height</span>
-    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">u32</span>) -&gt; <span class="ident">f64</span> {
         <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_event_touch_get_y_transformed</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="ident">height</span>) }
     }
 }
@@ -304,61 +304,61 @@
 
 <span class="kw">impl</span> <span class="ident">EventTrait</span> <span class="kw">for</span> <span class="ident">TouchEvent</span> {
     <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">as_raw_event</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::libinput_event</span> {
+    <span class="kw">fn</span> <span class="ident">as_raw_event</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::libinput_event</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">TouchEvent::Down</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
-            <span class="ident">TouchEvent::Up</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
-            <span class="ident">TouchEvent::Motion</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
-            <span class="ident">TouchEvent::Cancel</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
-            <span class="ident">TouchEvent::Frame</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
+            <span class="ident">TouchEvent::Down</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
+            <span class="ident">TouchEvent::Up</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
+            <span class="ident">TouchEvent::Motion</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
+            <span class="ident">TouchEvent::Cancel</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
+            <span class="ident">TouchEvent::Frame</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">as_raw_event</span>(),
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">FromRaw</span><span class="op">&lt;</span><span class="ident">ffi::libinput_event_touch</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">TouchEvent</span> {
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">event</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::libinput_event_touch</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">Libinput</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">event</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::libinput_event_touch</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">Libinput</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">let</span> <span class="ident">base</span> <span class="op">=</span> <span class="ident">ffi::libinput_event_touch_get_base_event</span>(<span class="ident">event</span>);
         <span class="kw">match</span> <span class="ident">ffi::libinput_event_get_type</span>(<span class="ident">base</span>) {
-            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TOUCH_DOWN</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TOUCH_DOWN</span> =&gt; {
                 <span class="ident">TouchEvent::Down</span>(<span class="ident">TouchDownEvent::from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
             }
-            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TOUCH_UP</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TOUCH_UP</span> =&gt; {
                 <span class="ident">TouchEvent::Up</span>(<span class="ident">TouchUpEvent::from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
             }
-            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TOUCH_MOTION</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TOUCH_MOTION</span> =&gt; {
                 <span class="ident">TouchEvent::Motion</span>(<span class="ident">TouchMotionEvent::from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
             }
-            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TOUCH_CANCEL</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TOUCH_CANCEL</span> =&gt; {
                 <span class="ident">TouchEvent::Cancel</span>(<span class="ident">TouchCancelEvent::from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
             }
-            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TOUCH_FRAME</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TOUCH_FRAME</span> =&gt; {
                 <span class="ident">TouchEvent::Frame</span>(<span class="ident">TouchFrameEvent::from_raw</span>(<span class="ident">event</span>, <span class="ident">context</span>))
             }
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
+            <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi::libinput_event_touch</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">TouchEvent</span> {
-    <span class="kw">fn</span> <span class="ident">as_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">ffi::libinput_event_touch</span> {
+    <span class="kw">fn</span> <span class="ident">as_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">ffi::libinput_event_touch</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">TouchEvent::Down</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
-            <span class="ident">TouchEvent::Up</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
-            <span class="ident">TouchEvent::Motion</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
-            <span class="ident">TouchEvent::Cancel</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
-            <span class="ident">TouchEvent::Frame</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw</span>(),
+            <span class="ident">TouchEvent::Down</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">as_raw</span>(),
+            <span class="ident">TouchEvent::Up</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">as_raw</span>(),
+            <span class="ident">TouchEvent::Motion</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">as_raw</span>(),
+            <span class="ident">TouchEvent::Cancel</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">as_raw</span>(),
+            <span class="ident">TouchEvent::Frame</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">as_raw</span>(),
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Context</span> <span class="kw">for</span> <span class="ident">TouchEvent</span> {
-    <span class="kw">fn</span> <span class="ident">context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Libinput</span> {
+    <span class="kw">fn</span> <span class="ident">context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">Libinput</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">TouchEvent::Down</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
-            <span class="ident">TouchEvent::Up</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
-            <span class="ident">TouchEvent::Motion</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
-            <span class="ident">TouchEvent::Cancel</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
-            <span class="ident">TouchEvent::Frame</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">TouchEvent::Down</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">TouchEvent::Up</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">TouchEvent::Motion</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">TouchEvent::Cancel</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">TouchEvent::Frame</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">context</span>(),
         }
     }
 }

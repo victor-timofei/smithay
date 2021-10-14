@@ -64,7 +64,7 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DeviceId</span>;
 
 <span class="kw">impl</span> <span class="ident">DeviceId</span> {
-    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">dummy</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">dummy</span>() -&gt; <span class="self">Self</span> {
         <span class="ident">DeviceId</span>
     }
 }
@@ -73,13 +73,13 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WindowId</span>(<span class="ident">usize</span>);
 
 <span class="kw">impl</span> <span class="ident">WindowId</span> {
-    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">dummy</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">dummy</span>() -&gt; <span class="self">Self</span> {
         <span class="ident">WindowId</span>(<span class="number">0</span>)
     }
 }
 
 <span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">fn</span> <span class="ident">make_wid</span>(<span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">WindowId</span> {
+<span class="kw">fn</span> <span class="ident">make_wid</span>(<span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>) -&gt; <span class="ident">WindowId</span> {
     <span class="ident">WindowId</span>(<span class="ident">surface</span>.<span class="ident">as_ref</span>().<span class="ident">c_ptr</span>() <span class="kw">as</span> <span class="ident">usize</span>)
 }
 </code></pre></div>

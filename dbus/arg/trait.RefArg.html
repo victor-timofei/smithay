@@ -31,7 +31,7 @@ representation is guaranteed to be a Vec<T>. Arrays of structs, dicts, and so on
 safe to use with this.</p>
 <p>Note: The internal representation of complex types (Dict, Struct) is unstable
 and as_any should not be relied upon for these types. Use as_iter instead.</p>
-<h1 id="panic" class="section-header"><a href="#panic">Panic</a></h1>
+<h5 id="panic" class="section-header"><a href="#panic">Panic</a></h5>
 <p>Will panic if the interior cannot be made mutable, e g, if encapsulated
 inside a Rc with a reference count &gt; 1.</p>
 </div></details><details class="rustdoc-toggle" open><summary><div id="tymethod.box_clone" class="method has-srclink"><div class="rightside"><a class="srclink" href="../../src/dbus/arg/msgarg.rs.html#126" title="goto source code">[src]</a></div><h4 class="code-header">fn <a href="#tymethod.box_clone" class="fnname">box_clone</a>(&amp;self) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="trait.RefArg.html" title="trait dbus::arg::RefArg">RefArg</a> + 'static&gt;</h4></div></summary><div class="docblock"><p>Deep clone of the RefArg, causing the result to be ’static.</p>

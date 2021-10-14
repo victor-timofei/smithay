@@ -142,7 +142,7 @@
         <span class="self">self</span>.<span class="ident">update_cursor</span>(<span class="ident">window</span>, <span class="ident">cursor</span>);
     }
 
-    <span class="kw">fn</span> <span class="ident">create_empty_cursor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ffi::Cursor</span> {
+    <span class="kw">fn</span> <span class="ident">create_empty_cursor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ffi::Cursor</span> {
         <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="number">0</span>;
         <span class="kw">let</span> <span class="ident">pixmap</span> <span class="op">=</span> <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">screen</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">xlib</span>.<span class="ident">XDefaultScreen</span>)(<span class="self">self</span>.<span class="ident">display</span>);
@@ -150,7 +150,7 @@
             (<span class="self">self</span>.<span class="ident">xlib</span>.<span class="ident">XCreateBitmapFromData</span>)(<span class="self">self</span>.<span class="ident">display</span>, <span class="ident">window</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>, <span class="number">1</span>, <span class="number">1</span>)
         };
 
-        <span class="kw">if</span> <span class="ident">pixmap</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
+        <span class="kw">if</span> <span class="ident">pixmap</span> <span class="op">==</span> <span class="number">0</span> {
             <span class="macro">panic!</span>(<span class="string">&quot;failed to allocate pixmap for cursor&quot;</span>);
         }
 
@@ -173,13 +173,13 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">load_cursor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ffi::Cursor</span> {
+    <span class="kw">fn</span> <span class="ident">load_cursor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">ffi::Cursor</span> {
         <span class="kw">unsafe</span> {
             (<span class="self">self</span>.<span class="ident">xcursor</span>.<span class="ident">XcursorLibraryLoadCursor</span>)(<span class="self">self</span>.<span class="ident">display</span>, <span class="ident">name</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>)
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">load_first_existing_cursor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">names</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>[<span class="ident">u8</span>]]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ffi::Cursor</span> {
+    <span class="kw">fn</span> <span class="ident">load_first_existing_cursor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">names</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>[<span class="ident">u8</span>]]) -&gt; <span class="ident">ffi::Cursor</span> {
         <span class="kw">for</span> <span class="ident">name</span> <span class="kw">in</span> <span class="ident">names</span>.<span class="ident">iter</span>() {
             <span class="kw">let</span> <span class="ident">xcursor</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">load_cursor</span>(<span class="ident">name</span>);
             <span class="kw">if</span> <span class="ident">xcursor</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
@@ -189,10 +189,10 @@
         <span class="number">0</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">get_cursor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cursor</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CursorIcon</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ffi::Cursor</span> {
+    <span class="kw">fn</span> <span class="ident">get_cursor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cursor</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CursorIcon</span><span class="op">&gt;</span>) -&gt; <span class="ident">ffi::Cursor</span> {
         <span class="kw">let</span> <span class="ident">cursor</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">cursor</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">cursor</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">cursor</span>,
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="self">self</span>.<span class="ident">create_empty_cursor</span>(),
+            <span class="prelude-val">Some</span>(<span class="ident">cursor</span>) =&gt; <span class="ident">cursor</span>,
+            <span class="prelude-val">None</span> =&gt; <span class="kw">return</span> <span class="self">self</span>.<span class="ident">create_empty_cursor</span>(),
         };
 
         <span class="kw">let</span> <span class="ident">load</span> <span class="op">=</span> <span class="op">|</span><span class="ident">name</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">|</span> <span class="self">self</span>.<span class="ident">load_cursor</span>(<span class="ident">name</span>);
@@ -204,47 +204,47 @@
         <span class="comment">//</span>
         <span class="comment">// Try the better looking (or more suiting) names first.</span>
         <span class="kw">match</span> <span class="ident">cursor</span> {
-            <span class="ident">CursorIcon::Alias</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">load</span>(<span class="string">b&quot;link\0&quot;</span>),
-            <span class="ident">CursorIcon::Arrow</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">load</span>(<span class="string">b&quot;arrow\0&quot;</span>),
-            <span class="ident">CursorIcon::Cell</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">load</span>(<span class="string">b&quot;plus\0&quot;</span>),
-            <span class="ident">CursorIcon::Copy</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">load</span>(<span class="string">b&quot;copy\0&quot;</span>),
-            <span class="ident">CursorIcon::Crosshair</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">load</span>(<span class="string">b&quot;crosshair\0&quot;</span>),
-            <span class="ident">CursorIcon::Default</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">load</span>(<span class="string">b&quot;left_ptr\0&quot;</span>),
-            <span class="ident">CursorIcon::Hand</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">loadn</span>(<span class="kw-2">&amp;</span>[<span class="string">b&quot;hand2\0&quot;</span>, <span class="string">b&quot;hand1\0&quot;</span>]),
-            <span class="ident">CursorIcon::Help</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">load</span>(<span class="string">b&quot;question_arrow\0&quot;</span>),
-            <span class="ident">CursorIcon::Move</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">load</span>(<span class="string">b&quot;move\0&quot;</span>),
-            <span class="ident">CursorIcon::Grab</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">loadn</span>(<span class="kw-2">&amp;</span>[<span class="string">b&quot;openhand\0&quot;</span>, <span class="string">b&quot;grab\0&quot;</span>]),
-            <span class="ident">CursorIcon::Grabbing</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">loadn</span>(<span class="kw-2">&amp;</span>[<span class="string">b&quot;closedhand\0&quot;</span>, <span class="string">b&quot;grabbing\0&quot;</span>]),
-            <span class="ident">CursorIcon::Progress</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">load</span>(<span class="string">b&quot;left_ptr_watch\0&quot;</span>),
-            <span class="ident">CursorIcon::AllScroll</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">load</span>(<span class="string">b&quot;all-scroll\0&quot;</span>),
-            <span class="ident">CursorIcon::ContextMenu</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">load</span>(<span class="string">b&quot;context-menu\0&quot;</span>),
+            <span class="ident">CursorIcon::Alias</span> =&gt; <span class="ident">load</span>(<span class="string">b&quot;link\0&quot;</span>),
+            <span class="ident">CursorIcon::Arrow</span> =&gt; <span class="ident">load</span>(<span class="string">b&quot;arrow\0&quot;</span>),
+            <span class="ident">CursorIcon::Cell</span> =&gt; <span class="ident">load</span>(<span class="string">b&quot;plus\0&quot;</span>),
+            <span class="ident">CursorIcon::Copy</span> =&gt; <span class="ident">load</span>(<span class="string">b&quot;copy\0&quot;</span>),
+            <span class="ident">CursorIcon::Crosshair</span> =&gt; <span class="ident">load</span>(<span class="string">b&quot;crosshair\0&quot;</span>),
+            <span class="ident">CursorIcon::Default</span> =&gt; <span class="ident">load</span>(<span class="string">b&quot;left_ptr\0&quot;</span>),
+            <span class="ident">CursorIcon::Hand</span> =&gt; <span class="ident">loadn</span>(<span class="kw-2">&amp;</span>[<span class="string">b&quot;hand2\0&quot;</span>, <span class="string">b&quot;hand1\0&quot;</span>]),
+            <span class="ident">CursorIcon::Help</span> =&gt; <span class="ident">load</span>(<span class="string">b&quot;question_arrow\0&quot;</span>),
+            <span class="ident">CursorIcon::Move</span> =&gt; <span class="ident">load</span>(<span class="string">b&quot;move\0&quot;</span>),
+            <span class="ident">CursorIcon::Grab</span> =&gt; <span class="ident">loadn</span>(<span class="kw-2">&amp;</span>[<span class="string">b&quot;openhand\0&quot;</span>, <span class="string">b&quot;grab\0&quot;</span>]),
+            <span class="ident">CursorIcon::Grabbing</span> =&gt; <span class="ident">loadn</span>(<span class="kw-2">&amp;</span>[<span class="string">b&quot;closedhand\0&quot;</span>, <span class="string">b&quot;grabbing\0&quot;</span>]),
+            <span class="ident">CursorIcon::Progress</span> =&gt; <span class="ident">load</span>(<span class="string">b&quot;left_ptr_watch\0&quot;</span>),
+            <span class="ident">CursorIcon::AllScroll</span> =&gt; <span class="ident">load</span>(<span class="string">b&quot;all-scroll\0&quot;</span>),
+            <span class="ident">CursorIcon::ContextMenu</span> =&gt; <span class="ident">load</span>(<span class="string">b&quot;context-menu\0&quot;</span>),
 
-            <span class="ident">CursorIcon::NoDrop</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">loadn</span>(<span class="kw-2">&amp;</span>[<span class="string">b&quot;no-drop\0&quot;</span>, <span class="string">b&quot;circle\0&quot;</span>]),
-            <span class="ident">CursorIcon::NotAllowed</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">load</span>(<span class="string">b&quot;crossed_circle\0&quot;</span>),
+            <span class="ident">CursorIcon::NoDrop</span> =&gt; <span class="ident">loadn</span>(<span class="kw-2">&amp;</span>[<span class="string">b&quot;no-drop\0&quot;</span>, <span class="string">b&quot;circle\0&quot;</span>]),
+            <span class="ident">CursorIcon::NotAllowed</span> =&gt; <span class="ident">load</span>(<span class="string">b&quot;crossed_circle\0&quot;</span>),
 
             <span class="comment">// Resize cursors</span>
-            <span class="ident">CursorIcon::EResize</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">load</span>(<span class="string">b&quot;right_side\0&quot;</span>),
-            <span class="ident">CursorIcon::NResize</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">load</span>(<span class="string">b&quot;top_side\0&quot;</span>),
-            <span class="ident">CursorIcon::NeResize</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">load</span>(<span class="string">b&quot;top_right_corner\0&quot;</span>),
-            <span class="ident">CursorIcon::NwResize</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">load</span>(<span class="string">b&quot;top_left_corner\0&quot;</span>),
-            <span class="ident">CursorIcon::SResize</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">load</span>(<span class="string">b&quot;bottom_side\0&quot;</span>),
-            <span class="ident">CursorIcon::SeResize</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">load</span>(<span class="string">b&quot;bottom_right_corner\0&quot;</span>),
-            <span class="ident">CursorIcon::SwResize</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">load</span>(<span class="string">b&quot;bottom_left_corner\0&quot;</span>),
-            <span class="ident">CursorIcon::WResize</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">load</span>(<span class="string">b&quot;left_side\0&quot;</span>),
-            <span class="ident">CursorIcon::EwResize</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">load</span>(<span class="string">b&quot;h_double_arrow\0&quot;</span>),
-            <span class="ident">CursorIcon::NsResize</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">load</span>(<span class="string">b&quot;v_double_arrow\0&quot;</span>),
-            <span class="ident">CursorIcon::NwseResize</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">loadn</span>(<span class="kw-2">&amp;</span>[<span class="string">b&quot;bd_double_arrow\0&quot;</span>, <span class="string">b&quot;size_bdiag\0&quot;</span>]),
-            <span class="ident">CursorIcon::NeswResize</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">loadn</span>(<span class="kw-2">&amp;</span>[<span class="string">b&quot;fd_double_arrow\0&quot;</span>, <span class="string">b&quot;size_fdiag\0&quot;</span>]),
-            <span class="ident">CursorIcon::ColResize</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">loadn</span>(<span class="kw-2">&amp;</span>[<span class="string">b&quot;split_h\0&quot;</span>, <span class="string">b&quot;h_double_arrow\0&quot;</span>]),
-            <span class="ident">CursorIcon::RowResize</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">loadn</span>(<span class="kw-2">&amp;</span>[<span class="string">b&quot;split_v\0&quot;</span>, <span class="string">b&quot;v_double_arrow\0&quot;</span>]),
+            <span class="ident">CursorIcon::EResize</span> =&gt; <span class="ident">load</span>(<span class="string">b&quot;right_side\0&quot;</span>),
+            <span class="ident">CursorIcon::NResize</span> =&gt; <span class="ident">load</span>(<span class="string">b&quot;top_side\0&quot;</span>),
+            <span class="ident">CursorIcon::NeResize</span> =&gt; <span class="ident">load</span>(<span class="string">b&quot;top_right_corner\0&quot;</span>),
+            <span class="ident">CursorIcon::NwResize</span> =&gt; <span class="ident">load</span>(<span class="string">b&quot;top_left_corner\0&quot;</span>),
+            <span class="ident">CursorIcon::SResize</span> =&gt; <span class="ident">load</span>(<span class="string">b&quot;bottom_side\0&quot;</span>),
+            <span class="ident">CursorIcon::SeResize</span> =&gt; <span class="ident">load</span>(<span class="string">b&quot;bottom_right_corner\0&quot;</span>),
+            <span class="ident">CursorIcon::SwResize</span> =&gt; <span class="ident">load</span>(<span class="string">b&quot;bottom_left_corner\0&quot;</span>),
+            <span class="ident">CursorIcon::WResize</span> =&gt; <span class="ident">load</span>(<span class="string">b&quot;left_side\0&quot;</span>),
+            <span class="ident">CursorIcon::EwResize</span> =&gt; <span class="ident">load</span>(<span class="string">b&quot;h_double_arrow\0&quot;</span>),
+            <span class="ident">CursorIcon::NsResize</span> =&gt; <span class="ident">load</span>(<span class="string">b&quot;v_double_arrow\0&quot;</span>),
+            <span class="ident">CursorIcon::NwseResize</span> =&gt; <span class="ident">loadn</span>(<span class="kw-2">&amp;</span>[<span class="string">b&quot;bd_double_arrow\0&quot;</span>, <span class="string">b&quot;size_bdiag\0&quot;</span>]),
+            <span class="ident">CursorIcon::NeswResize</span> =&gt; <span class="ident">loadn</span>(<span class="kw-2">&amp;</span>[<span class="string">b&quot;fd_double_arrow\0&quot;</span>, <span class="string">b&quot;size_fdiag\0&quot;</span>]),
+            <span class="ident">CursorIcon::ColResize</span> =&gt; <span class="ident">loadn</span>(<span class="kw-2">&amp;</span>[<span class="string">b&quot;split_h\0&quot;</span>, <span class="string">b&quot;h_double_arrow\0&quot;</span>]),
+            <span class="ident">CursorIcon::RowResize</span> =&gt; <span class="ident">loadn</span>(<span class="kw-2">&amp;</span>[<span class="string">b&quot;split_v\0&quot;</span>, <span class="string">b&quot;v_double_arrow\0&quot;</span>]),
 
-            <span class="ident">CursorIcon::Text</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">loadn</span>(<span class="kw-2">&amp;</span>[<span class="string">b&quot;text\0&quot;</span>, <span class="string">b&quot;xterm\0&quot;</span>]),
-            <span class="ident">CursorIcon::VerticalText</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">load</span>(<span class="string">b&quot;vertical-text\0&quot;</span>),
+            <span class="ident">CursorIcon::Text</span> =&gt; <span class="ident">loadn</span>(<span class="kw-2">&amp;</span>[<span class="string">b&quot;text\0&quot;</span>, <span class="string">b&quot;xterm\0&quot;</span>]),
+            <span class="ident">CursorIcon::VerticalText</span> =&gt; <span class="ident">load</span>(<span class="string">b&quot;vertical-text\0&quot;</span>),
 
-            <span class="ident">CursorIcon::Wait</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">load</span>(<span class="string">b&quot;watch\0&quot;</span>),
+            <span class="ident">CursorIcon::Wait</span> =&gt; <span class="ident">load</span>(<span class="string">b&quot;watch\0&quot;</span>),
 
-            <span class="ident">CursorIcon::ZoomIn</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">load</span>(<span class="string">b&quot;zoom-in\0&quot;</span>),
-            <span class="ident">CursorIcon::ZoomOut</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">load</span>(<span class="string">b&quot;zoom-out\0&quot;</span>),
+            <span class="ident">CursorIcon::ZoomIn</span> =&gt; <span class="ident">load</span>(<span class="string">b&quot;zoom-in\0&quot;</span>),
+            <span class="ident">CursorIcon::ZoomOut</span> =&gt; <span class="ident">load</span>(<span class="string">b&quot;zoom-out\0&quot;</span>),
         }
     }
 

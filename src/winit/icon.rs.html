@@ -166,9 +166,9 @@
 }
 
 <span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">BadIcon</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">BadIcon::ByteCountNotDivisibleBy4</span> { <span class="ident">byte_count</span> } <span class="op">=</span><span class="op">&gt;</span> <span class="macro">write!</span>(<span class="ident">f</span>,
+            <span class="ident">BadIcon::ByteCountNotDivisibleBy4</span> { <span class="ident">byte_count</span> } =&gt; <span class="macro">write!</span>(<span class="ident">f</span>,
                 <span class="string">&quot;The length of the `rgba` argument ({:?}) isn&#39;t divisible by 4, making it impossible to interpret as 32bpp RGBA pixels.&quot;</span>,
                 <span class="ident">byte_count</span>,
             ),
@@ -177,17 +177,17 @@
                 <span class="ident">height</span>,
                 <span class="ident">width_x_height</span>,
                 <span class="ident">pixel_count</span>,
-            } <span class="op">=</span><span class="op">&gt;</span> <span class="macro">write!</span>(<span class="ident">f</span>,
+            } =&gt; <span class="macro">write!</span>(<span class="ident">f</span>,
                 <span class="string">&quot;The specified dimensions ({:?}x{:?}) don&#39;t match the number of pixels supplied by the `rgba` argument ({:?}). For those dimensions, the expected pixel count is {:?}.&quot;</span>,
                 <span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">pixel_count</span>, <span class="ident">width_x_height</span>,
             ),
-            <span class="ident">BadIcon::OsError</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;OS error when instantiating the icon: {:?}&quot;</span>, <span class="ident">e</span>),
+            <span class="ident">BadIcon::OsError</span>(<span class="ident">e</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;OS error when instantiating the icon: {:?}&quot;</span>, <span class="ident">e</span>),
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">BadIcon</span> {
-    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)<span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="self">self</span>)
     }
 }
@@ -212,7 +212,7 @@
         <span class="doccomment">///</span>
         <span class="doccomment">/// The length of `rgba` must be divisible by 4, and `width * height` must equal</span>
         <span class="doccomment">/// `rgba.len() / 4`. Otherwise, this will return a `BadIcon` error.</span>
-        <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_rgba</span>(<span class="ident">rgba</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">width</span>: <span class="ident">u32</span>, <span class="ident">height</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">BadIcon</span><span class="op">&gt;</span> {
+        <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_rgba</span>(<span class="ident">rgba</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">width</span>: <span class="ident">u32</span>, <span class="ident">height</span>: <span class="ident">u32</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">BadIcon</span><span class="op">&gt;</span> {
             <span class="kw">if</span> <span class="ident">rgba</span>.<span class="ident">len</span>() <span class="op">%</span> <span class="ident">PIXEL_SIZE</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">BadIcon::ByteCountNotDivisibleBy4</span> {
                     <span class="ident">byte_count</span>: <span class="ident">rgba</span>.<span class="ident">len</span>(),
@@ -237,7 +237,7 @@
     }
 
     <span class="kw">impl</span> <span class="ident">NoIcon</span> {
-        <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_rgba</span>(<span class="ident">rgba</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">width</span>: <span class="ident">u32</span>, <span class="ident">height</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">BadIcon</span><span class="op">&gt;</span> {
+        <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_rgba</span>(<span class="ident">rgba</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">width</span>: <span class="ident">u32</span>, <span class="ident">height</span>: <span class="ident">u32</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">BadIcon</span><span class="op">&gt;</span> {
             <span class="comment">// Create the rgba icon anyway to validate the input</span>
             <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">RgbaIcon::from_rgba</span>(<span class="ident">rgba</span>, <span class="ident">width</span>, <span class="ident">height</span>)<span class="question-mark">?</span>;
             <span class="prelude-val">Ok</span>(<span class="ident">NoIcon</span>)
@@ -252,7 +252,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">Icon</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">formatter</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">fmt::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">formatter</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">fmt::Error</span><span class="op">&gt;</span> {
         <span class="ident">fmt::Debug::fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">inner</span>, <span class="ident">formatter</span>)
     }
 }
@@ -262,7 +262,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// The length of `rgba` must be divisible by 4, and `width * height` must equal</span>
     <span class="doccomment">/// `rgba.len() / 4`. Otherwise, this will return a `BadIcon` error.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_rgba</span>(<span class="ident">rgba</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">width</span>: <span class="ident">u32</span>, <span class="ident">height</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">BadIcon</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_rgba</span>(<span class="ident">rgba</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">width</span>: <span class="ident">u32</span>, <span class="ident">height</span>: <span class="ident">u32</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">BadIcon</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">Icon</span> {
             <span class="ident">inner</span>: <span class="ident">PlatformIcon::from_rgba</span>(<span class="ident">rgba</span>, <span class="ident">width</span>, <span class="ident">height</span>)<span class="question-mark">?</span>,
         })

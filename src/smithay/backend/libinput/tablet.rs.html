@@ -208,11 +208,11 @@
 <span class="kw">where</span>
     <span class="ident">E</span>: <span class="ident">IsTabletEvent</span>,
 {
-    <span class="kw">fn</span> <span class="ident">time</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
+    <span class="kw">fn</span> <span class="ident">time</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u32</span> {
         <span class="ident">tablet_tool::TabletToolEventTrait::time</span>(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">device</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">libinput::Device</span> {
+    <span class="kw">fn</span> <span class="ident">device</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">libinput::Device</span> {
         <span class="ident">event::EventTrait::device</span>(<span class="self">self</span>)
     }
 }
@@ -220,19 +220,19 @@
 <span class="kw">impl</span> <span class="ident">backend::TabletToolAxisEvent</span><span class="op">&lt;</span><span class="ident">LibinputInputBackend</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">tablet_tool::TabletToolAxisEvent</span> {}
 
 <span class="kw">impl</span> <span class="ident">backend::TabletToolProximityEvent</span><span class="op">&lt;</span><span class="ident">LibinputInputBackend</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">tablet_tool::TabletToolProximityEvent</span> {
-    <span class="kw">fn</span> <span class="ident">state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">backend::ProximityState</span> {
+    <span class="kw">fn</span> <span class="ident">state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">backend::ProximityState</span> {
         <span class="kw">match</span> <span class="ident">tablet_tool::TabletToolProximityEvent::proximity_state</span>(<span class="self">self</span>) {
-            <span class="ident">tablet_tool::ProximityState::In</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">backend::ProximityState::In</span>,
-            <span class="ident">tablet_tool::ProximityState::Out</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">backend::ProximityState::Out</span>,
+            <span class="ident">tablet_tool::ProximityState::In</span> =&gt; <span class="ident">backend::ProximityState::In</span>,
+            <span class="ident">tablet_tool::ProximityState::Out</span> =&gt; <span class="ident">backend::ProximityState::Out</span>,
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">backend::TabletToolTipEvent</span><span class="op">&lt;</span><span class="ident">LibinputInputBackend</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">tablet_tool::TabletToolTipEvent</span> {
-    <span class="kw">fn</span> <span class="ident">tip_state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">TabletToolTipState</span> {
+    <span class="kw">fn</span> <span class="ident">tip_state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TabletToolTipState</span> {
         <span class="kw">match</span> <span class="ident">tablet_tool::TabletToolTipEvent::tip_state</span>(<span class="self">self</span>) {
-            <span class="ident">tablet_tool::TipState::Up</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">backend::TabletToolTipState::Up</span>,
-            <span class="ident">tablet_tool::TipState::Down</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">backend::TabletToolTipState::Down</span>,
+            <span class="ident">tablet_tool::TipState::Up</span> =&gt; <span class="ident">backend::TabletToolTipState::Up</span>,
+            <span class="ident">tablet_tool::TipState::Down</span> =&gt; <span class="ident">backend::TabletToolTipState::Down</span>,
         }
     }
 }
@@ -241,18 +241,18 @@
 <span class="kw">where</span>
     <span class="ident">E</span>: <span class="ident">IsTabletEvent</span> <span class="op">+</span> <span class="ident">event::EventTrait</span>,
 {
-    <span class="kw">fn</span> <span class="ident">tool</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">TabletToolDescriptor</span> {
+    <span class="kw">fn</span> <span class="ident">tool</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TabletToolDescriptor</span> {
         <span class="kw">let</span> <span class="ident">tool</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">tool</span>();
 
         <span class="kw">let</span> <span class="ident">tool_type</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">tool</span>.<span class="ident">tool_type</span>() {
-            <span class="ident">tablet_tool::TabletToolType::Pen</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType::Pen</span>,
-            <span class="ident">tablet_tool::TabletToolType::Eraser</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType::Eraser</span>,
-            <span class="ident">tablet_tool::TabletToolType::Brush</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType::Brush</span>,
-            <span class="ident">tablet_tool::TabletToolType::Pencil</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType::Pencil</span>,
-            <span class="ident">tablet_tool::TabletToolType::Airbrush</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType::Airbrush</span>,
-            <span class="ident">tablet_tool::TabletToolType::Mouse</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType::Mouse</span>,
-            <span class="ident">tablet_tool::TabletToolType::Lens</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType::Lens</span>,
-            <span class="ident">tablet_tool::TabletToolType::Totem</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType::Totem</span>,
+            <span class="ident">tablet_tool::TabletToolType::Pen</span> =&gt; <span class="ident">TabletToolType::Pen</span>,
+            <span class="ident">tablet_tool::TabletToolType::Eraser</span> =&gt; <span class="ident">TabletToolType::Eraser</span>,
+            <span class="ident">tablet_tool::TabletToolType::Brush</span> =&gt; <span class="ident">TabletToolType::Brush</span>,
+            <span class="ident">tablet_tool::TabletToolType::Pencil</span> =&gt; <span class="ident">TabletToolType::Pencil</span>,
+            <span class="ident">tablet_tool::TabletToolType::Airbrush</span> =&gt; <span class="ident">TabletToolType::Airbrush</span>,
+            <span class="ident">tablet_tool::TabletToolType::Mouse</span> =&gt; <span class="ident">TabletToolType::Mouse</span>,
+            <span class="ident">tablet_tool::TabletToolType::Lens</span> =&gt; <span class="ident">TabletToolType::Lens</span>,
+            <span class="ident">tablet_tool::TabletToolType::Totem</span> =&gt; <span class="ident">TabletToolType::Totem</span>,
         };
 
         <span class="kw">let</span> <span class="ident">hardware_serial</span> <span class="op">=</span> <span class="ident">tool</span>.<span class="ident">serial</span>();
@@ -275,102 +275,102 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">delta_x</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">delta_x</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f64</span> {
         <span class="ident">tablet_tool::TabletToolEventTrait::dx</span>(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">delta_y</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">delta_y</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f64</span> {
         <span class="ident">tablet_tool::TabletToolEventTrait::dy</span>(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">x</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">x</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f64</span> {
         <span class="ident">tablet_tool::TabletToolEventTrait::x</span>(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">y</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">y</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f64</span> {
         <span class="ident">tablet_tool::TabletToolEventTrait::y</span>(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">x_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">i32</span>) -&gt; <span class="ident">f64</span> {
         <span class="ident">tablet_tool::TabletToolEventTrait::x_transformed</span>(<span class="self">self</span>, <span class="ident">width</span> <span class="kw">as</span> <span class="ident">u32</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">y_transformed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">i32</span>) -&gt; <span class="ident">f64</span> {
         <span class="ident">tablet_tool::TabletToolEventTrait::y_transformed</span>(<span class="self">self</span>, <span class="ident">height</span> <span class="kw">as</span> <span class="ident">u32</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">distance</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">distance</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f64</span> {
         <span class="ident">tablet_tool::TabletToolEventTrait::distance</span>(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">distance_has_changed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">fn</span> <span class="ident">distance_has_changed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="ident">tablet_tool::TabletToolEventTrait::distance_has_changed</span>(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">pressure</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">pressure</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f64</span> {
         <span class="ident">tablet_tool::TabletToolEventTrait::pressure</span>(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">pressure_has_changed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">fn</span> <span class="ident">pressure_has_changed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="ident">tablet_tool::TabletToolEventTrait::pressure_has_changed</span>(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">slider_position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">slider_position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f64</span> {
         <span class="ident">tablet_tool::TabletToolEventTrait::slider_position</span>(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">slider_has_changed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">fn</span> <span class="ident">slider_has_changed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="ident">tablet_tool::TabletToolEventTrait::slider_has_changed</span>(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">tilt_x</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">tilt_x</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f64</span> {
         <span class="ident">tablet_tool::TabletToolEventTrait::dx</span>(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">tilt_x_has_changed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">fn</span> <span class="ident">tilt_x_has_changed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="ident">tablet_tool::TabletToolEventTrait::tilt_x_has_changed</span>(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">tilt_y</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">tilt_y</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f64</span> {
         <span class="ident">tablet_tool::TabletToolEventTrait::dy</span>(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">tilt_y_has_changed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">fn</span> <span class="ident">tilt_y_has_changed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="ident">tablet_tool::TabletToolEventTrait::tilt_y_has_changed</span>(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">rotation</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">rotation</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f64</span> {
         <span class="ident">tablet_tool::TabletToolEventTrait::rotation</span>(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">rotation_has_changed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">fn</span> <span class="ident">rotation_has_changed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="ident">tablet_tool::TabletToolEventTrait::rotation_has_changed</span>(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">wheel_delta</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">fn</span> <span class="ident">wheel_delta</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f64</span> {
         <span class="ident">tablet_tool::TabletToolEventTrait::wheel_delta</span>(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">wheel_delta_discrete</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i32</span> {
+    <span class="kw">fn</span> <span class="ident">wheel_delta_discrete</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">i32</span> {
         <span class="comment">// I have no idea why f64 is returend by this fn, in libinput&#39;s api wheel clicks are always i32</span>
         <span class="ident">tablet_tool::TabletToolEventTrait::wheel_delta_discrete</span>(<span class="self">self</span>) <span class="kw">as</span> <span class="ident">i32</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">wheel_has_changed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">fn</span> <span class="ident">wheel_has_changed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="ident">tablet_tool::TabletToolEventTrait::wheel_has_changed</span>(<span class="self">self</span>)
     }
 }
 
 <span class="kw">impl</span> <span class="ident">backend::TabletToolButtonEvent</span><span class="op">&lt;</span><span class="ident">LibinputInputBackend</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">tablet_tool::TabletToolButtonEvent</span> {
-    <span class="kw">fn</span> <span class="ident">button</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
+    <span class="kw">fn</span> <span class="ident">button</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u32</span> {
         <span class="ident">tablet_tool::TabletToolButtonEvent::button</span>(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">seat_button_count</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
+    <span class="kw">fn</span> <span class="ident">seat_button_count</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u32</span> {
         <span class="ident">tablet_tool::TabletToolButtonEvent::seat_button_count</span>(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">button_state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">backend::ButtonState</span> {
+    <span class="kw">fn</span> <span class="ident">button_state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">backend::ButtonState</span> {
         <span class="ident">tablet_tool::TabletToolButtonEvent::button_state</span>(<span class="self">self</span>).<span class="ident">into</span>()
     }
 }

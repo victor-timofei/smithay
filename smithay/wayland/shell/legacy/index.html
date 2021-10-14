@@ -5,7 +5,7 @@ thus this module is provided as a compatibility layer with older clients. As a c
 you can as a compositor-writer decide to only support its functionality in a best-effort
 manner: as this global is part of the core protocol, you are still required to provide
 some support for it.</p>
-<h2 id="why-use-this-implementation" class="section-header"><a href="#why-use-this-implementation">Why use this implementation</a></h2>
+<h3 id="why-use-this-implementation" class="section-header"><a href="#why-use-this-implementation">Why use this implementation</a></h3>
 <p>This implementation can track for you the various shell surfaces defined by the
 clients by handling the <code>wl_shell</code> protocol.</p>
 <p>It allows you to easily access a list of all shell surfaces defined by your clients
@@ -13,7 +13,7 @@ access their associated metadata and underlying <code>wl_surface</code>s.</p>
 <p>This handler only handles the protocol exchanges with the client to present you the
 information in a coherent and relatively easy to use manner. All the actual drawing
 and positioning logic of windows is out of its scope.</p>
-<h2 id="how-to-use-it" class="section-header"><a href="#how-to-use-it">How to use it</a></h2><h3 id="initialization" class="section-header"><a href="#initialization">Initialization</a></h3>
+<h3 id="how-to-use-it" class="section-header"><a href="#how-to-use-it">How to use it</a></h3><h4 id="initialization" class="section-header"><a href="#initialization">Initialization</a></h4>
 <p>To initialize this handler, simple use the <a href="fn.wl_shell_init.html" title="wl_shell_init"><code>wl_shell_init</code></a> function provided in this module.
 You need to provide a closure that will be invoked whenever some action is required from you,
 are represented by the <a href="enum.ShellRequest.html" title="ShellRequest"><code>ShellRequest</code></a> enum.</p>
@@ -29,16 +29,16 @@ are represented by the <a href="enum.ShellRequest.html" title="ShellRequest"><co
 
 <span class="comment">// You&#39;re now ready to go!</span></code></pre></div>
 </div></details><h2 id="structs" class="section-header"><a href="#structs">Structs</a></h2>
-<div class="item-table"><div class="item-left module-item"><a class="struct" href="struct.ShellState.html" title="smithay::wayland::shell::legacy::ShellState struct">ShellState</a></div><div class="item-right docblock-short"><p>Shell global state</p>
-</div><div class="item-left module-item"><a class="struct" href="struct.ShellSurface.html" title="smithay::wayland::shell::legacy::ShellSurface struct">ShellSurface</a></div><div class="item-right docblock-short"><p>A handle to a shell surface</p>
-</div><div class="item-left module-item"><a class="struct" href="struct.ShellSurfaceAttributes.html" title="smithay::wayland::shell::legacy::ShellSurfaceAttributes struct">ShellSurfaceAttributes</a></div><div class="item-right docblock-short"><p>Metadata associated with the <code>wl_surface</code> role</p>
-</div></div><h2 id="enums" class="section-header"><a href="#enums">Enums</a></h2>
-<div class="item-table"><div class="item-left module-item"><a class="enum" href="enum.ShellRequest.html" title="smithay::wayland::shell::legacy::ShellRequest enum">ShellRequest</a></div><div class="item-right docblock-short"><p>A request triggered by a <code>wl_shell_surface</code></p>
-</div><div class="item-left module-item"><a class="enum" href="enum.ShellSurfaceKind.html" title="smithay::wayland::shell::legacy::ShellSurfaceKind enum">ShellSurfaceKind</a></div><div class="item-right docblock-short"><p>Possible kinds of shell surface of the <code>wl_shell</code> protocol</p>
-</div></div><h2 id="constants" class="section-header"><a href="#constants">Constants</a></h2>
-<div class="item-table"><div class="item-left module-item"><a class="constant" href="constant.WL_SHELL_SURFACE_ROLE.html" title="smithay::wayland::shell::legacy::WL_SHELL_SURFACE_ROLE constant">WL_SHELL_SURFACE_ROLE</a></div><div class="item-right docblock-short"><p>The role of a wl_shell_surface.</p>
-</div></div><h2 id="functions" class="section-header"><a href="#functions">Functions</a></h2>
-<div class="item-table"><div class="item-left module-item"><a class="fn" href="fn.wl_shell_init.html" title="smithay::wayland::shell::legacy::wl_shell_init fn">wl_shell_init</a></div><div class="item-right docblock-short"><p>Create a new <code>wl_shell</code> global</p>
-</div></div></section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-search-index-js="../../../../search-index.js" data-search-js="../../../../search.js"></div>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.ShellState.html" title="smithay::wayland::shell::legacy::ShellState struct">ShellState</a></div><div class="item-right docblock-short"><p>Shell global state</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.ShellSurface.html" title="smithay::wayland::shell::legacy::ShellSurface struct">ShellSurface</a></div><div class="item-right docblock-short"><p>A handle to a shell surface</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.ShellSurfaceAttributes.html" title="smithay::wayland::shell::legacy::ShellSurfaceAttributes struct">ShellSurfaceAttributes</a></div><div class="item-right docblock-short"><p>Metadata associated with the <code>wl_surface</code> role</p>
+</div></div></div><h2 id="enums" class="section-header"><a href="#enums">Enums</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.ShellRequest.html" title="smithay::wayland::shell::legacy::ShellRequest enum">ShellRequest</a></div><div class="item-right docblock-short"><p>A request triggered by a <code>wl_shell_surface</code></p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.ShellSurfaceKind.html" title="smithay::wayland::shell::legacy::ShellSurfaceKind enum">ShellSurfaceKind</a></div><div class="item-right docblock-short"><p>Possible kinds of shell surface of the <code>wl_shell</code> protocol</p>
+</div></div></div><h2 id="constants" class="section-header"><a href="#constants">Constants</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.WL_SHELL_SURFACE_ROLE.html" title="smithay::wayland::shell::legacy::WL_SHELL_SURFACE_ROLE constant">WL_SHELL_SURFACE_ROLE</a></div><div class="item-right docblock-short"><p>The role of a wl_shell_surface.</p>
+</div></div></div><h2 id="functions" class="section-header"><a href="#functions">Functions</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.wl_shell_init.html" title="smithay::wayland::shell::legacy::wl_shell_init fn">wl_shell_init</a></div><div class="item-right docblock-short"><p>Create a new <code>wl_shell</code> global</p>
+</div></div></div></section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-search-index-js="../../../../search-index.js" data-search-js="../../../../search.js"></div>
     <script src="../../../../main.js"></script>
 </body></html>

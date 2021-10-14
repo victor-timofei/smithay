@@ -401,7 +401,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">AaRect</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>((<span class="ident">x</span>, <span class="ident">y</span>): (<span class="ident">i32</span>, <span class="ident">i32</span>), (<span class="ident">width</span>, <span class="ident">height</span>): (<span class="ident">u32</span>, <span class="ident">u32</span>)) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>((<span class="ident">x</span>, <span class="ident">y</span>): (<span class="ident">i32</span>, <span class="ident">i32</span>), (<span class="ident">width</span>, <span class="ident">height</span>): (<span class="ident">u32</span>, <span class="ident">u32</span>)) -&gt; <span class="self">Self</span> {
         <span class="kw">let</span> (<span class="ident">x</span>, <span class="ident">y</span>) <span class="op">=</span> (<span class="ident">x</span> <span class="kw">as</span> <span class="ident">i64</span>, <span class="ident">y</span> <span class="kw">as</span> <span class="ident">i64</span>);
         <span class="kw">let</span> (<span class="ident">width</span>, <span class="ident">height</span>) <span class="op">=</span> (<span class="ident">width</span> <span class="kw">as</span> <span class="ident">i64</span>, <span class="ident">height</span> <span class="kw">as</span> <span class="ident">i64</span>);
         <span class="ident">AaRect</span> {
@@ -412,11 +412,11 @@
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">contains_point</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">x</span>: <span class="ident">i64</span>, <span class="ident">y</span>: <span class="ident">i64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">contains_point</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">x</span>: <span class="ident">i64</span>, <span class="ident">y</span>: <span class="ident">i64</span>) -&gt; <span class="ident">bool</span> {
         <span class="ident">x</span> <span class="op">&gt;</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">x</span> <span class="op">&amp;&amp;</span> <span class="ident">x</span> <span class="op">&lt;</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">x</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">width</span> <span class="op">&amp;&amp;</span> <span class="ident">y</span> <span class="op">&gt;</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">y</span> <span class="op">&amp;&amp;</span> <span class="ident">y</span> <span class="op">&lt;</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">y</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">height</span>
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_overlapping_area</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i64</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_overlapping_area</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="ident">i64</span> {
         <span class="kw">let</span> <span class="ident">x_overlap</span> <span class="op">=</span> <span class="ident">cmp::max</span>(
             <span class="number">0</span>,
             <span class="ident">cmp::min</span>(<span class="self">self</span>.<span class="ident">x</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">width</span>, <span class="ident">other</span>.<span class="ident">x</span> <span class="op">+</span> <span class="ident">other</span>.<span class="ident">width</span>) <span class="op">-</span> <span class="ident">cmp::max</span>(<span class="self">self</span>.<span class="ident">x</span>, <span class="ident">other</span>.<span class="ident">x</span>),
@@ -465,7 +465,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">FrameExtents</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">left</span>: <span class="ident">c_ulong</span>, <span class="ident">right</span>: <span class="ident">c_ulong</span>, <span class="ident">top</span>: <span class="ident">c_ulong</span>, <span class="ident">bottom</span>: <span class="ident">c_ulong</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">left</span>: <span class="ident">c_ulong</span>, <span class="ident">right</span>: <span class="ident">c_ulong</span>, <span class="ident">top</span>: <span class="ident">c_ulong</span>, <span class="ident">bottom</span>: <span class="ident">c_ulong</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">FrameExtents</span> {
             <span class="ident">left</span>,
             <span class="ident">right</span>,
@@ -474,7 +474,7 @@
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_border</span>(<span class="ident">border</span>: <span class="ident">c_ulong</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_border</span>(<span class="ident">border</span>: <span class="ident">c_ulong</span>) -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::new</span>(<span class="ident">border</span>, <span class="ident">border</span>, <span class="ident">border</span>, <span class="ident">border</span>)
     }
 }
@@ -501,7 +501,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">FrameExtentsHeuristic</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inner_pos_to_outer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">x</span>: <span class="ident">i32</span>, <span class="ident">y</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">i32</span>, <span class="ident">i32</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inner_pos_to_outer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">x</span>: <span class="ident">i32</span>, <span class="ident">y</span>: <span class="ident">i32</span>) -&gt; (<span class="ident">i32</span>, <span class="ident">i32</span>) {
         <span class="kw">use</span> <span class="ident"><span class="self">self</span>::FrameExtentsHeuristicPath</span>::<span class="kw-2">*</span>;
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">heuristic_path</span> <span class="op">!</span><span class="op">=</span> <span class="ident">UnsupportedBordered</span> {
             (
@@ -513,7 +513,7 @@
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inner_size_to_outer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">u32</span>, <span class="ident">height</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">u32</span>, <span class="ident">u32</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inner_size_to_outer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">u32</span>, <span class="ident">height</span>: <span class="ident">u32</span>) -&gt; (<span class="ident">u32</span>, <span class="ident">u32</span>) {
         (
             <span class="ident">width</span>.<span class="ident">saturating_add</span>(
                 <span class="self">self</span>.<span class="ident">frame_extents</span>
@@ -535,7 +535,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">window</span>: <span class="ident">ffi::Window</span>,
         <span class="ident">root</span>: <span class="ident">ffi::Window</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TranslatedCoords</span>, <span class="ident">XError</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TranslatedCoords</span>, <span class="ident">XError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">coords</span> <span class="op">=</span> <span class="ident">TranslatedCoords::default</span>();
 
         <span class="kw">unsafe</span> {
@@ -556,7 +556,7 @@
     }
 
     <span class="comment">// This is adequate for inner_size</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_geometry</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">window</span>: <span class="ident">ffi::Window</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Geometry</span>, <span class="ident">XError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_geometry</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">window</span>: <span class="ident">ffi::Window</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Geometry</span>, <span class="ident">XError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">geometry</span> <span class="op">=</span> <span class="ident">Geometry::default</span>();
 
         <span class="kw">let</span> <span class="ident">_status</span> <span class="op">=</span> <span class="kw">unsafe</span> {
@@ -577,7 +577,7 @@
         <span class="prelude-val">Ok</span>(<span class="ident">geometry</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">get_frame_extents</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">window</span>: <span class="ident">ffi::Window</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">FrameExtents</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">get_frame_extents</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">window</span>: <span class="ident">ffi::Window</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">FrameExtents</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">extents_atom</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="self">self</span>.<span class="ident">get_atom_unchecked</span>(<span class="string">b&quot;_NET_FRAME_EXTENTS\0&quot;</span>) };
 
         <span class="kw">if</span> <span class="op">!</span><span class="ident">hint_is_supported</span>(<span class="ident">extents_atom</span>) {
@@ -605,7 +605,7 @@
         })
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_top_level</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">window</span>: <span class="ident">ffi::Window</span>, <span class="ident">root</span>: <span class="ident">ffi::Window</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_top_level</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">window</span>: <span class="ident">ffi::Window</span>, <span class="ident">root</span>: <span class="ident">ffi::Window</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">client_list_atom</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="self">self</span>.<span class="ident">get_atom_unchecked</span>(<span class="string">b&quot;_NET_CLIENT_LIST\0&quot;</span>) };
 
         <span class="kw">if</span> <span class="op">!</span><span class="ident">hint_is_supported</span>(<span class="ident">client_list_atom</span>) {
@@ -619,7 +619,7 @@
         <span class="ident">client_list</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">client_list</span><span class="op">|</span> <span class="ident">client_list</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">window</span>))
     }
 
-    <span class="kw">fn</span> <span class="ident">get_parent_window</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">window</span>: <span class="ident">ffi::Window</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ffi::Window</span>, <span class="ident">XError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">get_parent_window</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">window</span>: <span class="ident">ffi::Window</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ffi::Window</span>, <span class="ident">XError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">root</span> <span class="op">=</span> <span class="number">0</span>;
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parent</span> <span class="op">=</span> <span class="number">0</span>;
@@ -650,11 +650,11 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">window</span>: <span class="ident">ffi::Window</span>,
         <span class="ident">root</span>: <span class="ident">ffi::Window</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ffi::Window</span>, <span class="ident">XError</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ffi::Window</span>, <span class="ident">XError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">outer_window</span> <span class="op">=</span> <span class="ident">window</span>;
         <span class="kw">loop</span> {
             <span class="kw">let</span> <span class="ident">candidate</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_parent_window</span>(<span class="ident">outer_window</span>)<span class="question-mark">?</span>;
-            <span class="kw">if</span> <span class="ident">candidate</span> <span class="op">=</span><span class="op">=</span> <span class="ident">root</span> {
+            <span class="kw">if</span> <span class="ident">candidate</span> <span class="op">==</span> <span class="ident">root</span> {
                 <span class="kw">break</span>;
             }
             <span class="ident">outer_window</span> <span class="op">=</span> <span class="ident">candidate</span>;
@@ -666,7 +666,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">window</span>: <span class="ident">ffi::Window</span>,
         <span class="ident">root</span>: <span class="ident">ffi::Window</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">FrameExtentsHeuristic</span> {
+    ) -&gt; <span class="ident">FrameExtentsHeuristic</span> {
         <span class="kw">use</span> <span class="ident"><span class="self">self</span>::FrameExtentsHeuristicPath</span>::<span class="kw-2">*</span>;
 
         <span class="comment">// Position relative to root window.</span>
@@ -696,7 +696,7 @@
         <span class="comment">// when y is on the range [0, 2] and if the window has been unfocused since being</span>
         <span class="comment">// undecorated (or was undecorated upon construction), the first condition is true,</span>
         <span class="comment">// requiring us to rely on the second condition.</span>
-        <span class="kw">let</span> <span class="ident">nested</span> <span class="op">=</span> <span class="op">!</span>(<span class="ident">window</span> <span class="op">=</span><span class="op">=</span> <span class="ident">child</span> <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">is_top_level</span>(<span class="ident">child</span>, <span class="ident">root</span>) <span class="op">=</span><span class="op">=</span> <span class="prelude-val">Some</span>(<span class="bool-val">true</span>));
+        <span class="kw">let</span> <span class="ident">nested</span> <span class="op">=</span> <span class="op">!</span>(<span class="ident">window</span> <span class="op">==</span> <span class="ident">child</span> <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">is_top_level</span>(<span class="ident">child</span>, <span class="ident">root</span>) <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="bool-val">true</span>));
 
         <span class="comment">// Hopefully the WM supports EWMH, allowing us to get exact info on the window frames.</span>
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">frame_extents</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_frame_extents</span>(<span class="ident">window</span>) {

@@ -6,7 +6,7 @@ return value indicates a failure, this function will return
 <p>On platforms where libc does not provide <code>clearenv()</code>, a fallback
 implementation will be used that iterates over all environment variables and
 removes them one-by-one.</p>
-<h1 id="safety" class="section-header"><a href="#safety">Safety</a></h1>
+<h2 id="safety" class="section-header"><a href="#safety">Safety</a></h2>
 <p>This function is not threadsafe and can cause undefined behavior in
 combination with <code>std::env</code> or other program components that access the
 environment. See, for example, the discussion on <code>std::env::remove_var</code>; this

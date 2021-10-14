@@ -326,7 +326,7 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EglExtensionNotSupportedError</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>]);
 
 <span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">EglExtensionNotSupportedError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">formatter</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::std::result::Result</span><span class="op">&lt;</span>(), <span class="ident">fmt::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">formatter</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">::std::result::Result</span><span class="op">&lt;</span>(), <span class="ident">fmt::Error</span><span class="op">&gt;</span> {
         <span class="macro">write!</span>(
             <span class="ident">formatter</span>,
             <span class="string">&quot;None of the following EGL extensions is supported by the underlying EGL implementation,
@@ -345,7 +345,7 @@
 <span class="doccomment">/// # Safety</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// This function should only be invoked while an EGL context is active.</span>
-<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">get_proc_address</span>(<span class="ident">symbol</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_void</span> {
+<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">get_proc_address</span>(<span class="ident">symbol</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_void</span> {
     <span class="kw">let</span> <span class="ident">addr</span> <span class="op">=</span> <span class="ident">CString::new</span>(<span class="ident">symbol</span>.<span class="ident">as_bytes</span>()).<span class="ident">unwrap</span>();
     <span class="kw">let</span> <span class="ident">addr</span> <span class="op">=</span> <span class="ident">addr</span>.<span class="ident">as_ptr</span>();
     <span class="ident">ffi::egl::GetProcAddress</span>(<span class="ident">addr</span>) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>
@@ -374,15 +374,15 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>)]</span>
 <span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">BufferAccessError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">formatter</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::std::result::Result</span><span class="op">&lt;</span>(), <span class="ident">fmt::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">formatter</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">::std::result::Result</span><span class="op">&lt;</span>(), <span class="ident">fmt::Error</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">BufferAccessError::ContextLost</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">write!</span>(<span class="ident">formatter</span>, <span class="string">&quot;BufferAccessError::ContextLost&quot;</span>),
-            <span class="ident">BufferAccessError::NotManaged</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">write!</span>(<span class="ident">formatter</span>, <span class="string">&quot;BufferAccessError::NotManaged&quot;</span>),
-            <span class="ident">BufferAccessError::EGLImageCreationFailed</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">BufferAccessError::ContextLost</span> =&gt; <span class="macro">write!</span>(<span class="ident">formatter</span>, <span class="string">&quot;BufferAccessError::ContextLost&quot;</span>),
+            <span class="ident">BufferAccessError::NotManaged</span>(<span class="kw">_</span>) =&gt; <span class="macro">write!</span>(<span class="ident">formatter</span>, <span class="string">&quot;BufferAccessError::NotManaged&quot;</span>),
+            <span class="ident">BufferAccessError::EGLImageCreationFailed</span>(<span class="kw">_</span>) =&gt; {
                 <span class="macro">write!</span>(<span class="ident">formatter</span>, <span class="string">&quot;BufferAccessError::EGLImageCreationFailed&quot;</span>)
             }
-            <span class="ident">BufferAccessError::EglExtensionNotSupported</span>(<span class="kw-2">ref</span> <span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">write!</span>(<span class="ident">formatter</span>, <span class="string">&quot;{:?}&quot;</span>, <span class="ident">err</span>),
-            <span class="ident">BufferAccessError::UnsupportedMultiPlanarFormat</span>(<span class="kw-2">ref</span> <span class="ident">fmt</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">write!</span>(
+            <span class="ident">BufferAccessError::EglExtensionNotSupported</span>(<span class="kw-2">ref</span> <span class="ident">err</span>) =&gt; <span class="macro">write!</span>(<span class="ident">formatter</span>, <span class="string">&quot;{:?}&quot;</span>, <span class="ident">err</span>),
+            <span class="ident">BufferAccessError::UnsupportedMultiPlanarFormat</span>(<span class="kw-2">ref</span> <span class="ident">fmt</span>) =&gt; <span class="macro">write!</span>(
                 <span class="ident">formatter</span>,
                 <span class="string">&quot;BufferAccessError::UnsupportedMultiPlanerFormat({:?})&quot;</span>,
                 <span class="ident">fmt</span>
@@ -403,15 +403,15 @@
 }
 
 <span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">SwapBuffersError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">GraphicsSwapBuffersError</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">value</span>: <span class="ident">SwapBuffersError</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">value</span>: <span class="ident">SwapBuffersError</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">match</span> <span class="ident">value</span> {
             <span class="comment">// bad surface is answered with a surface recreation in `swap_buffers`</span>
-            <span class="ident">x</span> @ <span class="ident">SwapBuffersError::EGLSwapBuffers</span>(<span class="ident">EGLError::BadSurface</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">x</span> @ <span class="ident">SwapBuffersError::EGLSwapBuffers</span>(<span class="ident">EGLError::BadSurface</span>) =&gt; {
                 <span class="ident">GraphicsSwapBuffersError::TemporaryFailure</span>(<span class="ident">Box::new</span>(<span class="ident">x</span>))
             }
             <span class="comment">// the rest is either never happening or are unrecoverable</span>
-            <span class="ident">x</span> @ <span class="ident">SwapBuffersError::EGLSwapBuffers</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">GraphicsSwapBuffersError::ContextLost</span>(<span class="ident">Box::new</span>(<span class="ident">x</span>)),
-            <span class="ident">x</span> @ <span class="ident">SwapBuffersError::EGLCreateSurface</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">GraphicsSwapBuffersError::ContextLost</span>(<span class="ident">Box::new</span>(<span class="ident">x</span>)),
+            <span class="ident">x</span> @ <span class="ident">SwapBuffersError::EGLSwapBuffers</span>(<span class="kw">_</span>) =&gt; <span class="ident">GraphicsSwapBuffersError::ContextLost</span>(<span class="ident">Box::new</span>(<span class="ident">x</span>)),
+            <span class="ident">x</span> @ <span class="ident">SwapBuffersError::EGLCreateSurface</span>(<span class="kw">_</span>) =&gt; <span class="ident">GraphicsSwapBuffersError::ContextLost</span>(<span class="ident">Box::new</span>(<span class="ident">x</span>)),
         }
     }
 }
@@ -422,7 +422,7 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MakeCurrentError</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">EGLError</span>);
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">MakeCurrentError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">GraphicsSwapBuffersError</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">MakeCurrentError</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">GraphicsSwapBuffersError</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">MakeCurrentError</span>) -&gt; <span class="ident">GraphicsSwapBuffersError</span> {
         <span class="kw">match</span> <span class="ident">err</span> {
             <span class="comment">/*
             From khronos docs:
@@ -433,11 +433,11 @@
 
             Except for the first case all of these recoverable. This conversation is mostly used in winit &amp; EglSurface, where compatible context and surfaces are build.
             */</span>
-            <span class="ident">x</span> @ <span class="ident">MakeCurrentError</span>(<span class="ident">EGLError::BadAccess</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">x</span> @ <span class="ident">MakeCurrentError</span>(<span class="ident">EGLError::BadAccess</span>) =&gt; {
                 <span class="ident">GraphicsSwapBuffersError::TemporaryFailure</span>(<span class="ident">Box::new</span>(<span class="ident">x</span>))
             }
             <span class="comment">// BadSurface would result in a recreation in `eglSwapBuffers` -&gt; recoverable</span>
-            <span class="ident">x</span> @ <span class="ident">MakeCurrentError</span>(<span class="ident">EGLError::BadSurface</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">x</span> @ <span class="ident">MakeCurrentError</span>(<span class="ident">EGLError::BadSurface</span>) =&gt; {
                 <span class="ident">GraphicsSwapBuffersError::TemporaryFailure</span>(<span class="ident">Box::new</span>(<span class="ident">x</span>))
             }
             <span class="comment">/*
@@ -446,11 +446,11 @@
 
             This does not consern this or future `makeCurrent`-calls.
             */</span>
-            <span class="ident">x</span> @ <span class="ident">MakeCurrentError</span>(<span class="ident">EGLError::BadCurrentSurface</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">x</span> @ <span class="ident">MakeCurrentError</span>(<span class="ident">EGLError::BadCurrentSurface</span>) =&gt; {
                 <span class="ident">GraphicsSwapBuffersError::TemporaryFailure</span>(<span class="ident">Box::new</span>(<span class="ident">x</span>))
             }
             <span class="comment">// the rest is either never happening or are unrecoverable</span>
-            <span class="ident">x</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">GraphicsSwapBuffersError::ContextLost</span>(<span class="ident">Box::new</span>(<span class="ident">x</span>)),
+            <span class="ident">x</span> =&gt; <span class="ident">GraphicsSwapBuffersError::ContextLost</span>(<span class="ident">Box::new</span>(<span class="ident">x</span>)),
         }
     }
 }
@@ -476,11 +476,11 @@
 
 <span class="kw">impl</span> <span class="ident">Format</span> {
     <span class="doccomment">/// Amount of planes this format uses</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">num_planes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">num_planes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">Format::RGB</span> <span class="op">|</span> <span class="ident">Format::RGBA</span> <span class="op">|</span> <span class="ident">Format::External</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">1</span>,
-            <span class="ident">Format::Y_UV</span> <span class="op">|</span> <span class="ident">Format::Y_XUXV</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">2</span>,
-            <span class="ident">Format::Y_U_V</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">3</span>,
+            <span class="ident">Format::RGB</span> <span class="op">|</span> <span class="ident">Format::RGBA</span> <span class="op">|</span> <span class="ident">Format::External</span> =&gt; <span class="number">1</span>,
+            <span class="ident">Format::Y_UV</span> <span class="op">|</span> <span class="ident">Format::Y_XUXV</span> =&gt; <span class="number">2</span>,
+            <span class="ident">Format::Y_U_V</span> =&gt; <span class="number">3</span>,
         }
     }
 }
@@ -502,12 +502,12 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>)]</span>
 <span class="kw">impl</span> <span class="ident">EGLBuffer</span> {
     <span class="doccomment">/// Amount of planes of this EGLBuffer</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">num_planes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">num_planes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
         <span class="self">self</span>.<span class="ident">format</span>.<span class="ident">num_planes</span>()
     }
 
     <span class="doccomment">/// Returns the `EGLImage` handle for a given plane</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">image</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">plane</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">EGLImage</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">image</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">plane</span>: <span class="ident">usize</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">EGLImage</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="ident">plane</span> <span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">format</span>.<span class="ident">num_planes</span>() {
             <span class="prelude-val">None</span>
         } <span class="kw">else</span> {
@@ -516,7 +516,7 @@
     }
 
     <span class="doccomment">/// Returns the underlying images</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_images</span>(<span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EGLImage</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_images</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EGLImage</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">images</span>.<span class="ident">drain</span>(..).<span class="ident">collect</span>()
     }
 }

@@ -139,19 +139,19 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Handle</span>(<span class="ident">control::RawResourceHandle</span>);
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Handle</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">control::RawResourceHandle</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">handle</span>: <span class="ident">Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">handle</span>: <span class="ident">Handle</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">handle</span>.<span class="number">0</span>
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Handle</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">u32</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">handle</span>: <span class="ident">Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">handle</span>: <span class="ident">Handle</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">handle</span>.<span class="number">0</span>.<span class="ident">into</span>()
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">control::RawResourceHandle</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Handle</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">handle</span>: <span class="ident">control::RawResourceHandle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">handle</span>: <span class="ident">control::RawResourceHandle</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">Handle</span>(<span class="ident">handle</span>)
     }
 }
@@ -161,7 +161,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">std::fmt::Debug</span> <span class="kw">for</span> <span class="ident">Handle</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span>) -&gt; <span class="ident">std::fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_tuple</span>(<span class="string">&quot;encoder::Handle&quot;</span>).<span class="ident">field</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>).<span class="ident">finish</span>()
     }
 }
@@ -178,17 +178,17 @@
 
 <span class="kw">impl</span> <span class="ident">Info</span> {
     <span class="doccomment">/// Returns the handle to this encoder.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">handle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Handle</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">handle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Handle</span> {
         <span class="self">self</span>.<span class="ident">handle</span>
     }
 
     <span class="doccomment">/// Returns the `Kind` of encoder this is.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Kind</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Kind</span> {
         <span class="self">self</span>.<span class="ident">enc_type</span>
     }
 
     <span class="doccomment">/// Returns a handle to the CRTC this encoder is attached to.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">crtc</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">control::crtc::Handle</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">crtc</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">control::crtc::Handle</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">crtc</span>
     }
 
@@ -196,7 +196,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Use with [`control::ResourceHandles::filter_crtcs`]</span>
     <span class="doccomment">/// to receive a list of crtcs.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">possible_crtcs</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">control::CrtcListFilter</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">possible_crtcs</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">control::CrtcListFilter</span> {
         <span class="ident">control::CrtcListFilter</span>(<span class="self">self</span>.<span class="ident">pos_crtcs</span>)
     }
 
@@ -223,34 +223,34 @@
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Kind</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">n</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">n</span>: <span class="ident">u32</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">match</span> <span class="ident">n</span> {
-            <span class="ident">ffi::DRM_MODE_ENCODER_NONE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind::None</span>,
-            <span class="ident">ffi::DRM_MODE_ENCODER_DAC</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind::DAC</span>,
-            <span class="ident">ffi::DRM_MODE_ENCODER_TMDS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind::TMDS</span>,
-            <span class="ident">ffi::DRM_MODE_ENCODER_LVDS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind::LVDS</span>,
-            <span class="ident">ffi::DRM_MODE_ENCODER_TVDAC</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind::TVDAC</span>,
-            <span class="ident">ffi::DRM_MODE_ENCODER_VIRTUAL</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind::Virtual</span>,
-            <span class="ident">ffi::DRM_MODE_ENCODER_DSI</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind::DSI</span>,
-            <span class="ident">ffi::DRM_MODE_ENCODER_DPMST</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind::DPMST</span>,
-            <span class="ident">ffi::DRM_MODE_ENCODER_DPI</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind::DPI</span>,
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Kind::None</span>,
+            <span class="ident">ffi::DRM_MODE_ENCODER_NONE</span> =&gt; <span class="ident">Kind::None</span>,
+            <span class="ident">ffi::DRM_MODE_ENCODER_DAC</span> =&gt; <span class="ident">Kind::DAC</span>,
+            <span class="ident">ffi::DRM_MODE_ENCODER_TMDS</span> =&gt; <span class="ident">Kind::TMDS</span>,
+            <span class="ident">ffi::DRM_MODE_ENCODER_LVDS</span> =&gt; <span class="ident">Kind::LVDS</span>,
+            <span class="ident">ffi::DRM_MODE_ENCODER_TVDAC</span> =&gt; <span class="ident">Kind::TVDAC</span>,
+            <span class="ident">ffi::DRM_MODE_ENCODER_VIRTUAL</span> =&gt; <span class="ident">Kind::Virtual</span>,
+            <span class="ident">ffi::DRM_MODE_ENCODER_DSI</span> =&gt; <span class="ident">Kind::DSI</span>,
+            <span class="ident">ffi::DRM_MODE_ENCODER_DPMST</span> =&gt; <span class="ident">Kind::DPMST</span>,
+            <span class="ident">ffi::DRM_MODE_ENCODER_DPI</span> =&gt; <span class="ident">Kind::DPI</span>,
+            <span class="kw">_</span> =&gt; <span class="ident">Kind::None</span>,
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Kind</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">u32</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">kind</span>: <span class="ident">Kind</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">kind</span>: <span class="ident">Kind</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">match</span> <span class="ident">kind</span> {
-            <span class="ident">Kind::None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_ENCODER_NONE</span>,
-            <span class="ident">Kind::DAC</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_ENCODER_DAC</span>,
-            <span class="ident">Kind::TMDS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_ENCODER_TMDS</span>,
-            <span class="ident">Kind::LVDS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_ENCODER_LVDS</span>,
-            <span class="ident">Kind::TVDAC</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_ENCODER_TVDAC</span>,
-            <span class="ident">Kind::Virtual</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_ENCODER_VIRTUAL</span>,
-            <span class="ident">Kind::DSI</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_ENCODER_DSI</span>,
-            <span class="ident">Kind::DPMST</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_ENCODER_DPMST</span>,
-            <span class="ident">Kind::DPI</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ffi::DRM_MODE_ENCODER_DPI</span>,
+            <span class="ident">Kind::None</span> =&gt; <span class="ident">ffi::DRM_MODE_ENCODER_NONE</span>,
+            <span class="ident">Kind::DAC</span> =&gt; <span class="ident">ffi::DRM_MODE_ENCODER_DAC</span>,
+            <span class="ident">Kind::TMDS</span> =&gt; <span class="ident">ffi::DRM_MODE_ENCODER_TMDS</span>,
+            <span class="ident">Kind::LVDS</span> =&gt; <span class="ident">ffi::DRM_MODE_ENCODER_LVDS</span>,
+            <span class="ident">Kind::TVDAC</span> =&gt; <span class="ident">ffi::DRM_MODE_ENCODER_TVDAC</span>,
+            <span class="ident">Kind::Virtual</span> =&gt; <span class="ident">ffi::DRM_MODE_ENCODER_VIRTUAL</span>,
+            <span class="ident">Kind::DSI</span> =&gt; <span class="ident">ffi::DRM_MODE_ENCODER_DSI</span>,
+            <span class="ident">Kind::DPMST</span> =&gt; <span class="ident">ffi::DRM_MODE_ENCODER_DPMST</span>,
+            <span class="ident">Kind::DPI</span> =&gt; <span class="ident">ffi::DRM_MODE_ENCODER_DPI</span>,
         }
     }
 }

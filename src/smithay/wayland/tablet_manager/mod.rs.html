@@ -138,11 +138,11 @@
 <span class="doccomment">/// Extends [Seat] with graphic tablet specific functionality</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">TabletSeatTrait</span> {
     <span class="doccomment">/// Get tablet seat associated with this seat</span>
-    <span class="kw">fn</span> <span class="ident">tablet_seat</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">TabletSeatHandle</span>;
+    <span class="kw">fn</span> <span class="ident">tablet_seat</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TabletSeatHandle</span>;
 }
 
 <span class="kw">impl</span> <span class="ident">TabletSeatTrait</span> <span class="kw">for</span> <span class="ident">Seat</span> {
-    <span class="kw">fn</span> <span class="ident">tablet_seat</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">TabletSeatHandle</span> {
+    <span class="kw">fn</span> <span class="ident">tablet_seat</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TabletSeatHandle</span> {
         <span class="kw">let</span> <span class="ident">user_data</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">user_data</span>();
         <span class="ident">user_data</span>.<span class="ident">insert_if_missing</span>(<span class="ident">TabletSeatHandle::default</span>);
         <span class="ident">user_data</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">TabletSeatHandle</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>().<span class="ident">clone</span>()
@@ -150,13 +150,13 @@
 }
 
 <span class="doccomment">/// Initialize a tablet manager global.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">init_tablet_manager_global</span>(<span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Display</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Global</span><span class="op">&lt;</span><span class="ident">ZwpTabletManagerV2</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">init_tablet_manager_global</span>(<span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Display</span>) -&gt; <span class="ident">Global</span><span class="op">&lt;</span><span class="ident">ZwpTabletManagerV2</span><span class="op">&gt;</span> {
     <span class="ident">display</span>.<span class="ident">create_global</span>::<span class="op">&lt;</span><span class="ident">ZwpTabletManagerV2</span>, <span class="kw">_</span><span class="op">&gt;</span>(
         <span class="ident">MANAGER_VERSION</span>,
         <span class="ident">Filter::new</span>(
             <span class="kw">move</span> <span class="op">|</span>(<span class="ident">manager</span>, <span class="ident">_version</span>): (<span class="ident">Main</span><span class="op">&lt;</span><span class="ident">ZwpTabletManagerV2</span><span class="op">&gt;</span>, <span class="ident">u32</span>), <span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> {
                 <span class="ident">manager</span>.<span class="ident">quick_assign</span>(<span class="op">|</span><span class="ident">_manager</span>, <span class="ident">req</span>, <span class="kw">_</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">req</span> {
-                    <span class="ident">zwp_tablet_manager_v2::Request::GetTabletSeat</span> { <span class="ident">tablet_seat</span>, <span class="ident">seat</span> } <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="ident">zwp_tablet_manager_v2::Request::GetTabletSeat</span> { <span class="ident">tablet_seat</span>, <span class="ident">seat</span> } =&gt; {
                         <span class="kw">let</span> <span class="ident">seat</span> <span class="op">=</span> <span class="ident">Seat::from_resource</span>(<span class="kw-2">&amp;</span><span class="ident">seat</span>).<span class="ident">unwrap</span>();
 
                         <span class="kw">let</span> <span class="ident">user_data</span> <span class="op">=</span> <span class="ident">seat</span>.<span class="ident">user_data</span>();
@@ -167,10 +167,10 @@
 
                         <span class="ident">tablet_seat</span>.<span class="ident">add_instance</span>(<span class="ident">instance</span>);
                     }
-                    <span class="ident">zwp_tablet_manager_v2::Request::Destroy</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="ident">zwp_tablet_manager_v2::Request::Destroy</span> =&gt; {
                         <span class="comment">// Nothing to do</span>
                     }
-                    <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {}
+                    <span class="kw">_</span> =&gt; {}
                 });
             },
         ),

@@ -215,8 +215,8 @@
 }
 
 <span class="kw">impl</span> <span class="ident">XdgOutput</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">output</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="kw">super</span>::Inner</span>, <span class="ident">log</span>: <span class="ident">::slog::Logger</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="macro">trace!</span>(<span class="ident">log</span>, <span class="string">&quot;Creating new xdg_output&quot;</span>; <span class="string">&quot;name&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">output</span>.<span class="ident">name</span>);
+    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">output</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="kw">super</span>::Inner</span>, <span class="ident">log</span>: <span class="ident">::slog::Logger</span>) -&gt; <span class="self">Self</span> {
+        <span class="macro">trace!</span>(<span class="ident">log</span>, <span class="string">&quot;Creating new xdg_output&quot;</span>; <span class="string">&quot;name&quot;</span> =&gt; <span class="kw-2">&amp;</span><span class="ident">output</span>.<span class="ident">name</span>);
 
         <span class="kw">let</span> <span class="ident">description</span> <span class="op">=</span> <span class="macro">format!</span>(
             <span class="string">&quot;{} - {} - {}&quot;</span>,
@@ -320,11 +320,11 @@
 }
 
 <span class="doccomment">/// Initialize a xdg output manager global.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">init_xdg_output_manager</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>(<span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Display</span>, <span class="ident">logger</span>: <span class="ident">L</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Global</span><span class="op">&lt;</span><span class="ident">ZxdgOutputManagerV1</span><span class="op">&gt;</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">init_xdg_output_manager</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>(<span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Display</span>, <span class="ident">logger</span>: <span class="ident">L</span>) -&gt; <span class="ident">Global</span><span class="op">&lt;</span><span class="ident">ZxdgOutputManagerV1</span><span class="op">&gt;</span>
 <span class="kw">where</span>
     <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">::slog::Logger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 {
-    <span class="kw">let</span> <span class="ident">log</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::slog_or_fallback</span>(<span class="ident">logger</span>).<span class="ident">new</span>(<span class="macro">o!</span>(<span class="string">&quot;smithay_module&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;xdg_output_handler&quot;</span>));
+    <span class="kw">let</span> <span class="ident">log</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::slog_or_fallback</span>(<span class="ident">logger</span>).<span class="ident">new</span>(<span class="macro">o!</span>(<span class="string">&quot;smithay_module&quot;</span> =&gt; <span class="string">&quot;xdg_output_handler&quot;</span>));
 
     <span class="ident">display</span>.<span class="ident">create_global</span>(
         <span class="number">3</span>,
@@ -334,7 +334,7 @@
                 <span class="ident">zxdg_output_manager_v1::Request::GetXdgOutput</span> {
                     <span class="ident">id</span>,
                     <span class="ident">output</span>: <span class="ident">wl_output</span>,
-                } <span class="op">=</span><span class="op">&gt;</span> {
+                } =&gt; {
                     <span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">Output::from_resource</span>(<span class="kw-2">&amp;</span><span class="ident">wl_output</span>).<span class="ident">unwrap</span>();
                     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inner</span> <span class="op">=</span> <span class="ident">output</span>.<span class="ident">inner</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
 
@@ -344,10 +344,10 @@
 
                     <span class="ident">inner</span>.<span class="ident">xdg_output</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>().<span class="ident">add_instance</span>(<span class="ident">id</span>, <span class="kw-2">&amp;</span><span class="ident">wl_output</span>);
                 }
-                <span class="ident">zxdg_output_manager_v1::Request::Destroy</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">zxdg_output_manager_v1::Request::Destroy</span> =&gt; {
                     <span class="comment">// Nothing to do</span>
                 }
-                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {}
+                <span class="kw">_</span> =&gt; {}
             });
         }),
     )

@@ -627,7 +627,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">EventLoop</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">EventLoop</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">EventLoop</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="comment">// Connect to wayland server and setup event queue.</span>
         <span class="kw">let</span> <span class="ident">display</span> <span class="op">=</span> <span class="ident">Display::connect_to_env</span>()<span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">event_queue</span> <span class="op">=</span> <span class="ident">display</span>.<span class="ident">create_event_queue</span>();
@@ -719,7 +719,7 @@
         <span class="prelude-val">Ok</span>(<span class="ident">event_loop</span>)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">run</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">callback</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="op">!</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">run</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">callback</span>: <span class="ident">F</span>) -&gt; <span class="op">!</span>
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">Event</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">T</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="ident">RootEventLoopWindowTarget</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ControlFlow</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span>,
     {
@@ -816,7 +816,7 @@
 
                         <span class="comment">// Always issue resize event on scale factor change.</span>
                         <span class="kw">let</span> <span class="ident">physical_size</span> <span class="op">=</span>
-                            <span class="kw">if</span> <span class="ident">window_update</span>.<span class="ident">scale_factor</span>.<span class="ident">is_none</span>() <span class="op">&amp;&amp;</span> <span class="kw-2">*</span><span class="ident">window_size</span> <span class="op">=</span><span class="op">=</span> <span class="ident">size</span> {
+                            <span class="kw">if</span> <span class="ident">window_update</span>.<span class="ident">scale_factor</span>.<span class="ident">is_none</span>() <span class="op">&amp;&amp;</span> <span class="kw-2">*</span><span class="ident">window_size</span> <span class="op">==</span> <span class="ident">size</span> {
                                 <span class="comment">// The size hasn&#39;t changed, don&#39;t inform downstream about that.</span>
                                 <span class="prelude-val">None</span>
                             } <span class="kw">else</span> {
@@ -955,8 +955,8 @@
             };
 
             <span class="kw">match</span> <span class="ident">control_flow</span> {
-                <span class="ident">ControlFlow::Exit</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">break</span>,
-                <span class="ident">ControlFlow::Poll</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">ControlFlow::Exit</span> =&gt; <span class="kw">break</span>,
+                <span class="ident">ControlFlow::Poll</span> =&gt; {
                     <span class="comment">// Non-blocking dispatch.</span>
                     <span class="kw">let</span> <span class="ident">timeout</span> <span class="op">=</span> <span class="ident">Duration::from_millis</span>(<span class="number">0</span>);
                     <span class="kw">if</span> <span class="self">self</span>.<span class="ident">loop_dispatch</span>(<span class="prelude-val">Some</span>(<span class="ident">timeout</span>)).<span class="ident">is_err</span>() {
@@ -969,7 +969,7 @@
                         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">control_flow</span>,
                     );
                 }
-                <span class="ident">ControlFlow::Wait</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">ControlFlow::Wait</span> =&gt; {
                     <span class="kw">let</span> <span class="ident">timeout</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">instant_wakeup</span> {
                         <span class="prelude-val">Some</span>(<span class="ident">Duration::from_millis</span>(<span class="number">0</span>))
                     } <span class="kw">else</span> {
@@ -989,7 +989,7 @@
                         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">control_flow</span>,
                     );
                 }
-                <span class="ident">ControlFlow::WaitUntil</span>(<span class="ident">deadline</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">ControlFlow::WaitUntil</span>(<span class="ident">deadline</span>) =&gt; {
                     <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="ident">Instant::now</span>();
 
                     <span class="comment">// Compute the amount of time we&#39;ll block for.</span>
@@ -1032,22 +1032,22 @@
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_proxy</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">EventLoopProxy</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_proxy</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">EventLoopProxy</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
         <span class="ident">EventLoopProxy::new</span>(<span class="self">self</span>.<span class="ident">user_events_sender</span>.<span class="ident">clone</span>())
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">window_target</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">RootEventLoopWindowTarget</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">window_target</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">RootEventLoopWindowTarget</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">window_target</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">with_state</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">WinitState</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">U</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">U</span> {
+    <span class="kw">fn</span> <span class="ident">with_state</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">WinitState</span>) -&gt; <span class="ident">U</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">U</span> {
         <span class="kw">let</span> <span class="ident">state</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">window_target</span>.<span class="ident">p</span> {
-            <span class="ident"><span class="kw">crate</span>::platform_impl::EventLoopWindowTarget::Wayland</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">window_target</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident"><span class="kw">crate</span>::platform_impl::EventLoopWindowTarget::Wayland</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">window_target</span>) =&gt; {
                 <span class="ident">window_target</span>.<span class="ident">state</span>.<span class="ident">get_mut</span>()
             }
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;x11&quot;</span>)]</span>
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
+            <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
         };
 
         <span class="ident">f</span>(<span class="ident">state</span>)
@@ -1056,13 +1056,13 @@
     <span class="kw">fn</span> <span class="ident">loop_dispatch</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">std::time::Duration</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">timeout</span>: <span class="ident">D</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    ) -&gt; <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">state</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">window_target</span>.<span class="ident">p</span> {
-            <span class="ident"><span class="kw">crate</span>::platform_impl::EventLoopWindowTarget::Wayland</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">window_target</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident"><span class="kw">crate</span>::platform_impl::EventLoopWindowTarget::Wayland</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">window_target</span>) =&gt; {
                 <span class="ident">window_target</span>.<span class="ident">state</span>.<span class="ident">get_mut</span>()
             }
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;x11&quot;</span>)]</span>
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
+            <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
         };
 
         <span class="self">self</span>.<span class="ident">event_loop</span>.<span class="ident">dispatch</span>(<span class="ident">timeout</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">state</span>)

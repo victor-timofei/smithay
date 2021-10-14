@@ -343,7 +343,7 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">tarpaulin_include</span>))]</span>
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
         <span class="ident">Sender</span> {
             <span class="ident">sender</span>: <span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">clone</span>(),
             <span class="ident">ping</span>: <span class="self">self</span>.<span class="ident">ping</span>.<span class="ident">clone</span>(),
@@ -356,7 +356,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This will wake the event loop and deliver an `Event::Msg` to</span>
     <span class="doccomment">/// it containing the provided value.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">t</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">mpsc::SendError</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">t</span>: <span class="ident">T</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">mpsc::SendError</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">send</span>(<span class="ident">t</span>).<span class="ident">map</span>(<span class="op">|</span>()<span class="op">|</span> <span class="self">self</span>.<span class="ident">ping</span>.<span class="ident">ping</span>())
     }
 }
@@ -379,7 +379,7 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">tarpaulin_include</span>))]</span>
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">SyncSender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">SyncSender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">SyncSender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
         <span class="ident">SyncSender</span> {
             <span class="ident">sender</span>: <span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">clone</span>(),
             <span class="ident">ping</span>: <span class="self">self</span>.<span class="ident">ping</span>.<span class="ident">clone</span>(),
@@ -397,12 +397,12 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Due to the blocking behavior, this method should not be used on the</span>
     <span class="doccomment">/// same thread as the one running the event loop, as it could cause deadlocks.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">t</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">mpsc::SendError</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">t</span>: <span class="ident">T</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">mpsc::SendError</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">try_send</span>(<span class="ident">t</span>);
         <span class="kw">match</span> <span class="ident">ret</span> {
-            <span class="prelude-val">Ok</span>(()) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(()),
-            <span class="prelude-val">Err</span>(<span class="ident">mpsc::TrySendError::Full</span>(<span class="ident">t</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">send</span>(<span class="ident">t</span>).<span class="ident">map</span>(<span class="op">|</span>()<span class="op">|</span> <span class="self">self</span>.<span class="ident">ping</span>.<span class="ident">ping</span>()),
-            <span class="prelude-val">Err</span>(<span class="ident">mpsc::TrySendError::Disconnected</span>(<span class="ident">t</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">mpsc::SendError</span>(<span class="ident">t</span>)),
+            <span class="prelude-val">Ok</span>(()) =&gt; <span class="prelude-val">Ok</span>(()),
+            <span class="prelude-val">Err</span>(<span class="ident">mpsc::TrySendError::Full</span>(<span class="ident">t</span>)) =&gt; <span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">send</span>(<span class="ident">t</span>).<span class="ident">map</span>(<span class="op">|</span>()<span class="op">|</span> <span class="self">self</span>.<span class="ident">ping</span>.<span class="ident">ping</span>()),
+            <span class="prelude-val">Err</span>(<span class="ident">mpsc::TrySendError::Disconnected</span>(<span class="ident">t</span>)) =&gt; <span class="prelude-val">Err</span>(<span class="ident">mpsc::SendError</span>(<span class="ident">t</span>)),
         }
     }
 
@@ -412,7 +412,7 @@
     <span class="doccomment">/// it containing the provided value. If the channel is full, this</span>
     <span class="doccomment">/// function will return an error, but the event loop will still be</span>
     <span class="doccomment">/// signaled for readiness.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_send</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">t</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">mpsc::TrySendError</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_send</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">t</span>: <span class="ident">T</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">mpsc::TrySendError</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">try_send</span>(<span class="ident">t</span>);
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(()) <span class="op">|</span> <span class="prelude-val">Err</span>(<span class="ident">mpsc::TrySendError::Full</span>(<span class="kw">_</span>)) <span class="op">=</span> <span class="ident">ret</span> {
             <span class="self">self</span>.<span class="ident">ping</span>.<span class="ident">ping</span>();
@@ -438,14 +438,14 @@
 <span class="kw">unsafe</span> <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Send</span><span class="op">&gt;</span> <span class="ident">Send</span> <span class="kw">for</span> <span class="ident">Channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {}
 
 <span class="doccomment">/// Create a new asynchronous channel</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>() <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">Channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>() -&gt; (<span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">Channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) {
     <span class="kw">let</span> (<span class="ident">sender</span>, <span class="ident">receiver</span>) <span class="op">=</span> <span class="ident">mpsc::channel</span>();
     <span class="kw">let</span> (<span class="ident">ping</span>, <span class="ident">source</span>) <span class="op">=</span> <span class="ident">make_ping</span>().<span class="ident">expect</span>(<span class="string">&quot;Failed to create a Ping.&quot;</span>);
     (<span class="ident">Sender</span> { <span class="ident">sender</span>, <span class="ident">ping</span> }, <span class="ident">Channel</span> { <span class="ident">receiver</span>, <span class="ident">source</span> })
 }
 
 <span class="doccomment">/// Create a new synchronous, bounded channel</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sync_channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">bound</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">SyncSender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">Channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sync_channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">bound</span>: <span class="ident">usize</span>) -&gt; (<span class="ident">SyncSender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">Channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) {
     <span class="kw">let</span> (<span class="ident">sender</span>, <span class="ident">receiver</span>) <span class="op">=</span> <span class="ident">mpsc::sync_channel</span>(<span class="ident">bound</span>);
     <span class="kw">let</span> (<span class="ident">ping</span>, <span class="ident">source</span>) <span class="op">=</span> <span class="ident">make_ping</span>().<span class="ident">expect</span>(<span class="string">&quot;Failed to create a Ping.&quot;</span>);
     (<span class="ident">SyncSender</span> { <span class="ident">sender</span>, <span class="ident">ping</span> }, <span class="ident">Channel</span> { <span class="ident">receiver</span>, <span class="ident">source</span> })
@@ -461,17 +461,17 @@
         <span class="ident">readiness</span>: <span class="ident">Readiness</span>,
         <span class="ident">token</span>: <span class="ident">Token</span>,
         <span class="kw-2">mut</span> <span class="ident">callback</span>: <span class="ident">C</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span><span class="ident">PostAction</span><span class="op">&gt;</span>
+    ) -&gt; <span class="ident">std::io::Result</span><span class="op">&lt;</span><span class="ident">PostAction</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="ident">C</span>: <span class="ident">FnMut</span>(<span class="ident"><span class="self">Self</span>::Event</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident"><span class="self">Self</span>::Metadata</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Ret</span>,
+        <span class="ident">C</span>: <span class="ident">FnMut</span>(<span class="ident"><span class="self">Self</span>::Event</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident"><span class="self">Self</span>::Metadata</span>) -&gt; <span class="ident"><span class="self">Self</span>::Ret</span>,
     {
         <span class="kw">let</span> <span class="ident">receiver</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">receiver</span>;
         <span class="self">self</span>.<span class="ident">source</span>
             .<span class="ident">process_events</span>(<span class="ident">readiness</span>, <span class="ident">token</span>, <span class="op">|</span>(), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> ()<span class="op">|</span> <span class="kw">loop</span> {
                 <span class="kw">match</span> <span class="ident">receiver</span>.<span class="ident">try_recv</span>() {
-                    <span class="prelude-val">Ok</span>(<span class="ident">val</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">callback</span>(<span class="ident">Event::Msg</span>(<span class="ident">val</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> ()),
-                    <span class="prelude-val">Err</span>(<span class="ident">mpsc::TryRecvError::Empty</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">break</span>,
-                    <span class="prelude-val">Err</span>(<span class="ident">mpsc::TryRecvError::Disconnected</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="prelude-val">Ok</span>(<span class="ident">val</span>) =&gt; <span class="ident">callback</span>(<span class="ident">Event::Msg</span>(<span class="ident">val</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> ()),
+                    <span class="prelude-val">Err</span>(<span class="ident">mpsc::TryRecvError::Empty</span>) =&gt; <span class="kw">break</span>,
+                    <span class="prelude-val">Err</span>(<span class="ident">mpsc::TryRecvError::Disconnected</span>) =&gt; {
                         <span class="ident">callback</span>(<span class="ident">Event::Closed</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> ());
                         <span class="kw">break</span>;
                     }
@@ -483,7 +483,7 @@
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>,
         <span class="ident">token_factory</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">TokenFactory</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    ) -&gt; <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">source</span>.<span class="ident">register</span>(<span class="ident">poll</span>, <span class="ident">token_factory</span>)
     }
 
@@ -491,11 +491,11 @@
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>,
         <span class="ident">token_factory</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">TokenFactory</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    ) -&gt; <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">source</span>.<span class="ident">reregister</span>(<span class="ident">poll</span>, <span class="ident">token_factory</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">unregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">unregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>) -&gt; <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">source</span>.<span class="ident">unregister</span>(<span class="ident">poll</span>)
     }
 }
@@ -517,10 +517,10 @@
 
         <span class="kw">let</span> <span class="ident">_channel_token</span> <span class="op">=</span> <span class="ident">handle</span>
             .<span class="ident">insert_source</span>(<span class="ident">rx</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">evt</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> (), <span class="ident">got</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> (<span class="ident">bool</span>, <span class="ident">bool</span>)<span class="op">|</span> <span class="kw">match</span> <span class="ident">evt</span> {
-                <span class="ident">Event::Msg</span>(()) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">Event::Msg</span>(()) =&gt; {
                     <span class="ident">got</span>.<span class="number">0</span> <span class="op">=</span> <span class="bool-val">true</span>;
                 }
-                <span class="ident">Event::Closed</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">Event::Closed</span> =&gt; {
                     <span class="ident">got</span>.<span class="number">1</span> <span class="op">=</span> <span class="bool-val">true</span>;
                 }
             })
@@ -565,10 +565,10 @@
             .<span class="ident">insert_source</span>(
                 <span class="ident">rx</span>,
                 <span class="kw">move</span> <span class="op">|</span><span class="ident">evt</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> (), <span class="ident">received</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> (<span class="ident">u32</span>, <span class="ident">bool</span>)<span class="op">|</span> <span class="kw">match</span> <span class="ident">evt</span> {
-                    <span class="ident">Event::Msg</span>(()) <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="ident">Event::Msg</span>(()) =&gt; {
                         <span class="ident">received</span>.<span class="number">0</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                     }
-                    <span class="ident">Event::Closed</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="ident">Event::Closed</span> =&gt; {
                         <span class="ident">received</span>.<span class="number">1</span> <span class="op">=</span> <span class="bool-val">true</span>;
                     }
                 },

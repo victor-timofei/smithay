@@ -37,7 +37,7 @@
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::icon</span>::{<span class="ident">Icon</span>, <span class="ident">Pixel</span>, <span class="ident">PIXEL_SIZE</span>};
 
 <span class="kw">impl</span> <span class="ident">Pixel</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_packed_argb</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Cardinal</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_packed_argb</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Cardinal</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cardinal</span> <span class="op">=</span> <span class="number">0</span>;
         <span class="macro">assert!</span>(<span class="ident">CARDINAL_SIZE</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">PIXEL_SIZE</span>);
         <span class="kw">let</span> <span class="ident">as_bytes</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">cardinal</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u8</span>;
@@ -52,7 +52,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Icon</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">to_cardinals</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Cardinal</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">to_cardinals</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Cardinal</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">rgba_icon</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">inner</span>;
         <span class="macro">assert_eq!</span>(<span class="ident">rgba_icon</span>.<span class="ident">rgba</span>.<span class="ident">len</span>() <span class="op">%</span> <span class="ident">PIXEL_SIZE</span>, <span class="number">0</span>);
         <span class="kw">let</span> <span class="ident">pixel_count</span> <span class="op">=</span> <span class="ident">rgba_icon</span>.<span class="ident">rgba</span>.<span class="ident">len</span>() <span class="op">/</span> <span class="ident">PIXEL_SIZE</span>;

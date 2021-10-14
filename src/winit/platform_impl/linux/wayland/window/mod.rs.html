@@ -734,7 +734,7 @@
         <span class="ident">event_loop_window_target</span>: <span class="kw-2">&amp;</span><span class="ident">EventLoopWindowTarget</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
         <span class="ident">attributes</span>: <span class="ident">WindowAttributes</span>,
         <span class="ident">platform_attributes</span>: <span class="ident">PlatformAttributes</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">RootOsError</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">RootOsError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">surface</span> <span class="op">=</span> <span class="ident">event_loop_window_target</span>
             .<span class="ident">env</span>
             .<span class="ident">create_surface_with_scale_callback</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">scale</span>, <span class="ident">surface</span>, <span class="kw-2">mut</span> <span class="ident">dispatch_data</span><span class="op">|</span> {
@@ -777,10 +777,10 @@
                     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">window_update</span> <span class="op">=</span> <span class="ident">winit_state</span>.<span class="ident">window_updates</span>.<span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="ident">window_id</span>).<span class="ident">unwrap</span>();
 
                     <span class="kw">match</span> <span class="ident">event</span> {
-                        <span class="ident">Event::Refresh</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Event::Refresh</span> =&gt; {
                             <span class="ident">window_update</span>.<span class="ident">refresh_frame</span> <span class="op">=</span> <span class="bool-val">true</span>;
                         }
-                        <span class="ident">Event::Configure</span> { <span class="ident">new_size</span>, <span class="ident">states</span> } <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Event::Configure</span> { <span class="ident">new_size</span>, <span class="ident">states</span> } =&gt; {
                             <span class="kw">let</span> <span class="ident">is_fullscreen</span> <span class="op">=</span> <span class="ident">states</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">State::Fullscreen</span>);
                             <span class="ident">fullscreen_clone</span>.<span class="ident">store</span>(<span class="ident">is_fullscreen</span>, <span class="ident">Ordering::Relaxed</span>);
 
@@ -790,7 +790,7 @@
                                 <span class="ident">window_update</span>.<span class="ident">size</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">LogicalSize::new</span>(<span class="ident">w</span>, <span class="ident">h</span>));
                             }
                         }
-                        <span class="ident">Event::Close</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Event::Close</span> =&gt; {
                             <span class="ident">window_update</span>.<span class="ident">close_window</span> <span class="op">=</span> <span class="bool-val">true</span>;
                         }
                     }
@@ -831,20 +831,20 @@
 
         <span class="comment">// Set fullscreen/maximized if so was requested.</span>
         <span class="kw">match</span> <span class="ident">attributes</span>.<span class="ident">fullscreen</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">Fullscreen::Exclusive</span>(<span class="kw">_</span>)) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Some</span>(<span class="ident">Fullscreen::Exclusive</span>(<span class="kw">_</span>)) =&gt; {
                 <span class="macro">warn!</span>(<span class="string">&quot;`Fullscreen::Exclusive` is ignored on Wayland&quot;</span>)
             }
-            <span class="prelude-val">Some</span>(<span class="ident">Fullscreen::Borderless</span>(<span class="ident">monitor</span>)) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Some</span>(<span class="ident">Fullscreen::Borderless</span>(<span class="ident">monitor</span>)) =&gt; {
                 <span class="kw">let</span> <span class="ident">monitor</span> <span class="op">=</span>
                     <span class="ident">monitor</span>.<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">RootMonitorHandle</span> { <span class="ident">inner</span>: <span class="ident">monitor</span> }<span class="op">|</span> <span class="kw">match</span> <span class="ident">monitor</span> {
-                        <span class="ident">PlatformMonitorHandle::Wayland</span>(<span class="ident">monitor</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">monitor</span>.<span class="ident">proxy</span>),
+                        <span class="ident">PlatformMonitorHandle::Wayland</span>(<span class="ident">monitor</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">monitor</span>.<span class="ident">proxy</span>),
                         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;x11&quot;</span>)]</span>
-                        <span class="ident">PlatformMonitorHandle::X</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
+                        <span class="ident">PlatformMonitorHandle::X</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
                     });
 
                 <span class="ident">window</span>.<span class="ident">set_fullscreen</span>(<span class="ident">monitor</span>.<span class="ident">as_ref</span>());
             }
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">None</span> =&gt; {
                 <span class="kw">if</span> <span class="ident">attributes</span>.<span class="ident">maximized</span> {
                     <span class="ident">window</span>.<span class="ident">set_maximized</span>();
                 }
@@ -912,7 +912,7 @@
 
 <span class="kw">impl</span> <span class="ident">Window</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">WindowId</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WindowId</span> {
         <span class="self">self</span>.<span class="ident">window_id</span>
     }
 
@@ -929,12 +929,12 @@
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">outer_position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PhysicalPosition</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>, <span class="ident">NotSupportedError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">outer_position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PhysicalPosition</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>, <span class="ident">NotSupportedError</span><span class="op">&gt;</span> {
         <span class="prelude-val">Err</span>(<span class="ident">NotSupportedError::new</span>())
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inner_position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PhysicalPosition</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>, <span class="ident">NotSupportedError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inner_position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PhysicalPosition</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>, <span class="ident">NotSupportedError</span><span class="op">&gt;</span> {
         <span class="prelude-val">Err</span>(<span class="ident">NotSupportedError::new</span>())
     }
 
@@ -943,7 +943,7 @@
         <span class="comment">// Not possible on Wayland.</span>
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inner_size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PhysicalSize</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inner_size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">PhysicalSize</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">size</span>
             .<span class="ident">lock</span>()
             .<span class="ident">unwrap</span>()
@@ -958,7 +958,7 @@
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">outer_size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PhysicalSize</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">outer_size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">PhysicalSize</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">size</span>
             .<span class="ident">lock</span>()
             .<span class="ident">unwrap</span>()
@@ -1011,7 +1011,7 @@
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">scale_factor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">scale_factor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u32</span> {
         <span class="comment">// The scale factor from `get_surface_scale_factor` is always greater than zero, so</span>
         <span class="comment">// u32 conversion is safe.</span>
         <span class="ident">sctk::get_surface_scale_factor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">surface</span>) <span class="kw">as</span> <span class="ident">u32</span>
@@ -1044,7 +1044,7 @@
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">fullscreen</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Fullscreen</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">fullscreen</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Fullscreen</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">fullscreen</span>.<span class="ident">load</span>(<span class="ident">Ordering::Relaxed</span>) {
             <span class="kw">let</span> <span class="ident">current_monitor</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">current_monitor</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">monitor</span><span class="op">|</span> <span class="ident">RootMonitorHandle</span> {
                 <span class="ident">inner</span>: <span class="ident">PlatformMonitorHandle::Wayland</span>(<span class="ident">monitor</span>),
@@ -1059,21 +1059,21 @@
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_fullscreen</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fullscreen</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Fullscreen</span><span class="op">&gt;</span>) {
         <span class="kw">let</span> <span class="ident">fullscreen_request</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">fullscreen</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">Fullscreen::Exclusive</span>(<span class="kw">_</span>)) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Some</span>(<span class="ident">Fullscreen::Exclusive</span>(<span class="kw">_</span>)) =&gt; {
                 <span class="macro">warn!</span>(<span class="string">&quot;`Fullscreen::Exclusive` is ignored on Wayland&quot;</span>);
                 <span class="kw">return</span>;
             }
-            <span class="prelude-val">Some</span>(<span class="ident">Fullscreen::Borderless</span>(<span class="ident">monitor</span>)) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Some</span>(<span class="ident">Fullscreen::Borderless</span>(<span class="ident">monitor</span>)) =&gt; {
                 <span class="kw">let</span> <span class="ident">monitor</span> <span class="op">=</span>
                     <span class="ident">monitor</span>.<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">RootMonitorHandle</span> { <span class="ident">inner</span>: <span class="ident">monitor</span> }<span class="op">|</span> <span class="kw">match</span> <span class="ident">monitor</span> {
-                        <span class="ident">PlatformMonitorHandle::Wayland</span>(<span class="ident">monitor</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">monitor</span>.<span class="ident">proxy</span>),
+                        <span class="ident">PlatformMonitorHandle::Wayland</span>(<span class="ident">monitor</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">monitor</span>.<span class="ident">proxy</span>),
                         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;x11&quot;</span>)]</span>
-                        <span class="ident">PlatformMonitorHandle::X</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
+                        <span class="ident">PlatformMonitorHandle::X</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
                     });
 
                 <span class="ident">WindowRequest::Fullscreen</span>(<span class="ident">monitor</span>)
             }
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">WindowRequest::UnsetFullscreen</span>,
+            <span class="prelude-val">None</span> =&gt; <span class="ident">WindowRequest::UnsetFullscreen</span>,
         };
 
         <span class="self">self</span>.<span class="ident">window_requests</span>
@@ -1227,7 +1227,7 @@
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_cursor_grab</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">grab</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ExternalError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_cursor_grab</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">grab</span>: <span class="ident">bool</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ExternalError</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">windowing_features</span>.<span class="ident">cursor_grab</span>() {
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ExternalError::NotSupported</span>(<span class="ident">NotSupportedError::new</span>()));
         }
@@ -1243,7 +1243,7 @@
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_cursor_position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="ident">Position</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ExternalError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_cursor_position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="ident">Position</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ExternalError</span><span class="op">&gt;</span> {
         <span class="comment">// XXX This is possible if the locked pointer is being used. We don&#39;t have any</span>
         <span class="comment">// API for that right now, but it could be added in</span>
         <span class="comment">// https://github.com/rust-windowing/winit/issues/1677.</span>
@@ -1255,7 +1255,7 @@
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">drag_window</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ExternalError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">drag_window</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ExternalError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">drag_window_request</span> <span class="op">=</span> <span class="ident">WindowRequest::DragWindow</span>;
         <span class="self">self</span>.<span class="ident">window_requests</span>
             .<span class="ident">lock</span>()
@@ -1279,33 +1279,33 @@
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">display</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Display</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">display</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">Display</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">display</span>
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">surface</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">WlSurface</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">surface</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">WlSurface</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">surface</span>
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">current_monitor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">MonitorHandle</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">current_monitor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">MonitorHandle</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">sctk::get_surface_outputs</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">surface</span>).<span class="ident">last</span>()<span class="question-mark">?</span>.<span class="ident">clone</span>();
         <span class="prelude-val">Some</span>(<span class="ident">MonitorHandle::new</span>(<span class="ident">output</span>))
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">available_monitors</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">MonitorHandle</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">available_monitors</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">MonitorHandle</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">output_manager_handle</span>.<span class="ident">available_outputs</span>()
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">primary_monitor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RootMonitorHandle</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">primary_monitor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RootMonitorHandle</span><span class="op">&gt;</span> {
         <span class="prelude-val">None</span>
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">raw_window_handle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">WaylandHandle</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">raw_window_handle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WaylandHandle</span> {
         <span class="kw">let</span> <span class="ident">display</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">display</span>.<span class="ident">get_display_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>;
         <span class="kw">let</span> <span class="ident">surface</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">surface</span>.<span class="ident">as_ref</span>().<span class="ident">c_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>;
 
@@ -1318,7 +1318,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">LocalARGBColor</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ARGBColor</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">color</span>: <span class="ident">LocalARGBColor</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">color</span>: <span class="ident">LocalARGBColor</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">color</span>.<span class="ident">a</span>;
         <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">color</span>.<span class="ident">r</span>;
         <span class="kw">let</span> <span class="ident">g</span> <span class="op">=</span> <span class="ident">color</span>.<span class="ident">g</span>;

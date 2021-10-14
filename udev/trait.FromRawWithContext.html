@@ -3,7 +3,7 @@
 }</code></pre></div><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Convert from a raw pointer for types which must be associated with a <code>Udev</code> context object.</p>
 </div></details><h2 id="required-methods" class="small-section-header">Required methods<a href="#required-methods" class="anchor"></a></h2><div class="methods"><details class="rustdoc-toggle" open><summary><div id="tymethod.from_raw_with_context" class="method has-srclink"><div class="rightside"><a class="srclink" href="../src/udev/lib.rs.html#94" title="goto source code">[src]</a></div><h4 class="code-header">unsafe fn <a href="#tymethod.from_raw_with_context" class="fnname">from_raw_with_context</a>(udev: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.pointer.html">*mut </a>udev, ptr: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.pointer.html">*mut T</a>) -&gt; Self</h4></div></summary><div class="docblock"><p>Create an object from a given raw pointer and <code>udev</code> context pointer.</p>
 <p>The reference count will not be increased, be sure not to free this pointer.</p>
-<h2 id="safety" class="section-header"><a href="#safety">Safety</a></h2>
+<h6 id="safety" class="section-header"><a href="#safety">Safety</a></h6>
 <p>The <code>udev</code> pointer must correspond to the <code>udev</code> pointer used when <code>ptr</code> was created.  If
 not memory corruption and undefined behavior will result.</p>
 <p>Both the <code>udev</code> and <code>ptr</code> pointers must be a valid reference to the expected underlying udev-struct or undefined

@@ -394,7 +394,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">ExplicitSyncState</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
         <span class="ident">ExplicitSyncState</span> {
             <span class="ident">acquire</span>: <span class="prelude-val">None</span>,
             <span class="ident">release</span>: <span class="prelude-val">None</span>,
@@ -403,7 +403,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Cacheable</span> <span class="kw">for</span> <span class="ident">ExplicitSyncState</span> {
-    <span class="kw">fn</span> <span class="ident">commit</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">commit</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">std::mem::take</span>(<span class="self">self</span>)
     }
     <span class="kw">fn</span> <span class="ident">merge_into</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">into</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span>) {
@@ -442,7 +442,7 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NoExplicitSync</span>;
 
 <span class="kw">impl</span> <span class="ident">std::fmt::Display</span> <span class="kw">for</span> <span class="ident">NoExplicitSync</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;The surface is not explicitly synchronized.&quot;</span>)
     }
 }
@@ -458,15 +458,15 @@
     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">data</span>) <span class="op">=</span> <span class="ident">attrs</span>.<span class="ident">data_map</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ESUserData</span><span class="op">&gt;</span>() {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">sync_resource</span>) <span class="op">=</span> <span class="ident">data</span>.<span class="ident">state</span>.<span class="ident">borrow</span>().<span class="ident">deref</span>() {
             <span class="kw">match</span> <span class="ident">error</span> {
-                <span class="ident">ExplicitSyncError::InvalidFence</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">sync_resource</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
+                <span class="ident">ExplicitSyncError::InvalidFence</span> =&gt; <span class="ident">sync_resource</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
                     <span class="ident">zwp_linux_surface_synchronization_v1::Error::InvalidFence</span> <span class="kw">as</span> <span class="ident">u32</span>,
                     <span class="string">&quot;The fence specified by the client could not be imported.&quot;</span>.<span class="ident">into</span>(),
                 ),
-                <span class="ident">ExplicitSyncError::UnsupportedBuffer</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">sync_resource</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
+                <span class="ident">ExplicitSyncError::UnsupportedBuffer</span> =&gt; <span class="ident">sync_resource</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
                     <span class="ident">zwp_linux_surface_synchronization_v1::Error::UnsupportedBuffer</span> <span class="kw">as</span> <span class="ident">u32</span>,
                     <span class="string">&quot;The buffer does not support explicit synchronization.&quot;</span>.<span class="ident">into</span>(),
                 ),
-                <span class="ident">ExplicitSyncError::NoBuffer</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">sync_resource</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
+                <span class="ident">ExplicitSyncError::NoBuffer</span> =&gt; <span class="ident">sync_resource</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
                     <span class="ident">zwp_linux_surface_synchronization_v1::Error::NoBuffer</span> <span class="kw">as</span> <span class="ident">u32</span>,
                     <span class="string">&quot;No buffer was attached.&quot;</span>.<span class="ident">into</span>(),
                 ),
@@ -481,12 +481,12 @@
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">init_explicit_synchronization_global</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>(
     <span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Display</span>,
     <span class="ident">logger</span>: <span class="ident">L</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Global</span><span class="op">&lt;</span><span class="ident">ZwpLinuxExplicitSynchronizationV1</span><span class="op">&gt;</span>
+) -&gt; <span class="ident">Global</span><span class="op">&lt;</span><span class="ident">ZwpLinuxExplicitSynchronizationV1</span><span class="op">&gt;</span>
 <span class="kw">where</span>
     <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">::slog::Logger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 {
     <span class="kw">let</span> <span class="ident">_log</span> <span class="op">=</span>
-        <span class="ident"><span class="kw">crate</span>::slog_or_fallback</span>(<span class="ident">logger</span>).<span class="ident">new</span>(<span class="macro">slog::o!</span>(<span class="string">&quot;smithay_module&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;wayland_explicit_synchronization&quot;</span>));
+        <span class="ident"><span class="kw">crate</span>::slog_or_fallback</span>(<span class="ident">logger</span>).<span class="ident">new</span>(<span class="macro">slog::o!</span>(<span class="string">&quot;smithay_module&quot;</span> =&gt; <span class="string">&quot;wayland_explicit_synchronization&quot;</span>));
 
     <span class="ident">display</span>.<span class="ident">create_global</span>::<span class="op">&lt;</span><span class="ident">ZwpLinuxExplicitSynchronizationV1</span>, <span class="kw">_</span><span class="op">&gt;</span>(
         <span class="number">2</span>,
@@ -532,9 +532,9 @@
 <span class="kw">fn</span> <span class="ident">implement_surface_sync</span>(
     <span class="ident">id</span>: <span class="ident">Main</span><span class="op">&lt;</span><span class="ident">ZwpLinuxSurfaceSynchronizationV1</span><span class="op">&gt;</span>,
     <span class="ident">surface</span>: <span class="ident">WlSurface</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ZwpLinuxSurfaceSynchronizationV1</span> {
+) -&gt; <span class="ident">ZwpLinuxSurfaceSynchronizationV1</span> {
     <span class="ident">id</span>.<span class="ident">quick_assign</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">surface_sync</span>, <span class="ident">req</span>, <span class="kw">_</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">req</span> {
-        <span class="ident">zwp_linux_surface_synchronization_v1::Request::SetAcquireFence</span> { <span class="ident">fd</span> } <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">zwp_linux_surface_synchronization_v1::Request::SetAcquireFence</span> { <span class="ident">fd</span> } =&gt; {
             <span class="kw">if</span> <span class="op">!</span><span class="ident">surface</span>.<span class="ident">as_ref</span>().<span class="ident">is_alive</span>() {
                 <span class="ident">surface_sync</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
                     <span class="ident">zwp_linux_surface_synchronization_v1::Error::NoSurface</span> <span class="kw">as</span> <span class="ident">u32</span>,
@@ -554,7 +554,7 @@
             })
             .<span class="ident">unwrap</span>();
         }
-        <span class="ident">zwp_linux_surface_synchronization_v1::Request::GetRelease</span> { <span class="ident">release</span> } <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">zwp_linux_surface_synchronization_v1::Request::GetRelease</span> { <span class="ident">release</span> } =&gt; {
             <span class="kw">if</span> <span class="op">!</span><span class="ident">surface</span>.<span class="ident">as_ref</span>().<span class="ident">is_alive</span>() {
                 <span class="ident">surface_sync</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
                     <span class="ident">zwp_linux_surface_synchronization_v1::Error::NoSurface</span> <span class="kw">as</span> <span class="ident">u32</span>,
@@ -577,7 +577,7 @@
             })
             .<span class="ident">unwrap</span>();
         }
-        <span class="ident">zwp_linux_surface_synchronization_v1::Request::Destroy</span> <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">zwp_linux_surface_synchronization_v1::Request::Destroy</span> =&gt; {
             <span class="comment">// disable the ESUserData</span>
             <span class="ident">with_states</span>(<span class="kw-2">&amp;</span><span class="ident">surface</span>, <span class="op">|</span><span class="ident">states</span><span class="op">|</span> {
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">data</span>) <span class="op">=</span> <span class="ident">states</span>.<span class="ident">data_map</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ESUserData</span><span class="op">&gt;</span>() {
@@ -586,7 +586,7 @@
             })
             .<span class="ident">unwrap</span>();
         }
-        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> (),
+        <span class="kw">_</span> =&gt; (),
     });
     <span class="ident">id</span>.<span class="ident">deref</span>().<span class="ident">clone</span>()
 }

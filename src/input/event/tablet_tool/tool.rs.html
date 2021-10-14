@@ -208,29 +208,29 @@
     <span class="doccomment">/// Return the tool type for a tool object,</span>
     <span class="doccomment">/// see [Vendor-specific tablet tool types](https://wayland.freedesktop.org/libinput/doc/latest/tablet-support.html#tablet-tool-types)</span>
     <span class="doccomment">/// for details.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tool_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">TabletToolType</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tool_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TabletToolType</span> {
         <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_tablet_tool_get_type</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) } {
-            <span class="ident">ffi::libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_PEN</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType::Pen</span>,
-            <span class="ident">ffi::libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_ERASER</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ffi::libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_PEN</span> =&gt; <span class="ident">TabletToolType::Pen</span>,
+            <span class="ident">ffi::libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_ERASER</span> =&gt; {
                 <span class="ident">TabletToolType::Eraser</span>
             }
-            <span class="ident">ffi::libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_BRUSH</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType::Brush</span>,
-            <span class="ident">ffi::libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_PENCIL</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ffi::libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_BRUSH</span> =&gt; <span class="ident">TabletToolType::Brush</span>,
+            <span class="ident">ffi::libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_PENCIL</span> =&gt; {
                 <span class="ident">TabletToolType::Pencil</span>
             }
-            <span class="ident">ffi::libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_AIRBRUSH</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ffi::libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_AIRBRUSH</span> =&gt; {
                 <span class="ident">TabletToolType::Airbrush</span>
             }
-            <span class="ident">ffi::libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_MOUSE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType::Mouse</span>,
-            <span class="ident">ffi::libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_LENS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType::Lens</span>,
+            <span class="ident">ffi::libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_MOUSE</span> =&gt; <span class="ident">TabletToolType::Mouse</span>,
+            <span class="ident">ffi::libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_LENS</span> =&gt; <span class="ident">TabletToolType::Lens</span>,
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;libinput_1_14&quot;</span>)]</span>
-            <span class="ident">ffi::libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_TOTEM</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TabletToolType::Totem</span>,
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_tablet_tool_type&#39;&quot;</span>),
+            <span class="ident">ffi::libinput_tablet_tool_type_LIBINPUT_TABLET_TOOL_TYPE_TOTEM</span> =&gt; <span class="ident">TabletToolType::Totem</span>,
+            <span class="kw">_</span> =&gt; <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_tablet_tool_type&#39;&quot;</span>),
         }
     }
 
     <span class="doccomment">/// Check if a tablet tool has a button with the passed-in code (see linux/input.h).</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_button</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">button</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_button</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">button</span>: <span class="ident">u32</span>) -&gt; <span class="ident">bool</span> {
         <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_tablet_tool_has_button</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="ident">button</span>) <span class="op">!</span><span class="op">=</span> <span class="number">0</span> }
     }
 

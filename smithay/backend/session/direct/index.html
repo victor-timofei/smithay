@@ -3,7 +3,7 @@
 interface. This means it will almost certainly require root permissions and not allow to run
 the compositor as an unprivileged user. Use this session type <em>only</em> as a fallback or for testing,
 if anything better is available.</p>
-<h2 id="how-to-use-it" class="section-header"><a href="#how-to-use-it">How to use it</a></h2><h3 id="initialization" class="section-header"><a href="#initialization">Initialization</a></h3>
+<h3 id="how-to-use-it" class="section-header"><a href="#how-to-use-it">How to use it</a></h3><h4 id="initialization" class="section-header"><a href="#initialization">Initialization</a></h4>
 <p>To initialize the session you may pass the path to any tty device, that shall be used.
 If no path is given the tty used to start this compositor (if any) will be used unless
 the <a href="constant.SMITHAY_DIRECT_TTY_ENV.html" title="SMITHAY_DIRECT_TTY_ENV">SMITHAY_DIRECT_TTY_ENV</a> environment variable is set.
@@ -14,14 +14,14 @@ A new session and its notifier will be returned.</p>
 <span class="kw">use</span> <span class="ident">smithay::backend::session::direct::DirectSession</span>;
 
 <span class="kw">let</span> (<span class="ident">session</span>, <span class="kw-2">mut</span> <span class="ident">notifier</span>) <span class="op">=</span> <span class="ident">DirectSession::new</span>(<span class="prelude-val">None</span>, <span class="prelude-val">None</span>).<span class="ident">unwrap</span>();</code></pre></div>
-<h3 id="usage-of-the-session" class="section-header"><a href="#usage-of-the-session">Usage of the session</a></h3>
+<h4 id="usage-of-the-session" class="section-header"><a href="#usage-of-the-session">Usage of the session</a></h4>
 <p>The session may be used to open devices manually through the <a href="../trait.Session.html" title="Session"><code>Session</code></a> interface
 or be passed to other objects that need it to open devices themselves.</p>
 <p>Examples for those are e.g. the <a href="../../libinput/struct.LibinputInputBackend.html"><code>LibinputInputBackend</code></a>
 (its context might be initialized through a <a href="../trait.Session.html" title="Session"><code>Session</code></a> via the <a href="../../libinput/struct.LibinputSessionInterface.html"><code>LibinputSessionInterface</code></a>).</p>
 <p>In case you want to pass the same <a href="../trait.Session.html" title="Session"><code>Session</code></a> to multiple objects, <a href="../trait.Session.html" title="Session"><code>Session</code></a> is implement for
 every <code>Rc&lt;RefCell&lt;Session&gt;&gt;</code> or <code>Arc&lt;Mutex&lt;Session&gt;&gt;</code>.</p>
-<h3 id="usage-of-the-session-notifier" class="section-header"><a href="#usage-of-the-session-notifier">Usage of the session notifier</a></h3>
+<h4 id="usage-of-the-session-notifier" class="section-header"><a href="#usage-of-the-session-notifier">Usage of the session notifier</a></h4>
 <p>The notifier might be used to pause device access, when the session gets paused (e.g. by
 switching the tty via <a href="../trait.Session.html#tymethod.change_vt"><code>DirectSession::change_vt</code></a>)
 and to automatically enable it again, when the session becomes active again.</p>
@@ -30,15 +30,15 @@ for notifications are the <a href="../../../../input/context/struct.Libinput.htm
 <p>The <a href="struct.DirectSessionNotifier.html" title="DirectSessionNotifier"><code>DirectSessionNotifier</code></a> is to be inserted into
 a calloop event source to have its events processed.</p>
 </div></details><h2 id="structs" class="section-header"><a href="#structs">Structs</a></h2>
-<div class="item-table"><div class="item-left module-item"><a class="struct" href="struct.DirectSession.html" title="smithay::backend::session::direct::DirectSession struct">DirectSession</a></div><div class="item-right docblock-short"><p><a href="../trait.Session.html" title="Session"><code>Session</code></a> via the virtual terminal direct kernel interface</p>
-</div><div class="item-left module-item"><a class="struct" href="struct.DirectSessionNotifier.html" title="smithay::backend::session::direct::DirectSessionNotifier struct">DirectSessionNotifier</a></div><div class="item-right docblock-short"><p>Notifier of the virtual terminal direct kernel interface</p>
-</div><div class="item-left module-item"><a class="struct" href="struct.Id.html" title="smithay::backend::session::direct::Id struct">Id</a></div><div class="item-right docblock-short"><p>Ids of registered observers of the <a href="struct.DirectSessionNotifier.html" title="DirectSessionNotifier"><code>DirectSessionNotifier</code></a></p>
-</div></div><h2 id="enums" class="section-header"><a href="#enums">Enums</a></h2>
-<div class="item-table"><div class="item-left module-item"><a class="enum" href="enum.Error.html" title="smithay::backend::session::direct::Error enum">Error</a></div><div class="item-right docblock-short"><p>Errors related to direct/tty sessions</p>
-</div></div><h2 id="constants" class="section-header"><a href="#constants">Constants</a></h2>
-<div class="item-table"><div class="item-left module-item"><a class="constant" href="constant.SMITHAY_DIRECT_TTY_ENV.html" title="smithay::backend::session::direct::SMITHAY_DIRECT_TTY_ENV constant">SMITHAY_DIRECT_TTY_ENV</a></div><div class="item-right docblock-short"><p>This environment variable can be used to specify a tty path
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.DirectSession.html" title="smithay::backend::session::direct::DirectSession struct">DirectSession</a></div><div class="item-right docblock-short"><p><a href="../trait.Session.html" title="Session"><code>Session</code></a> via the virtual terminal direct kernel interface</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.DirectSessionNotifier.html" title="smithay::backend::session::direct::DirectSessionNotifier struct">DirectSessionNotifier</a></div><div class="item-right docblock-short"><p>Notifier of the virtual terminal direct kernel interface</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.Id.html" title="smithay::backend::session::direct::Id struct">Id</a></div><div class="item-right docblock-short"><p>Ids of registered observers of the <a href="struct.DirectSessionNotifier.html" title="DirectSessionNotifier"><code>DirectSessionNotifier</code></a></p>
+</div></div></div><h2 id="enums" class="section-header"><a href="#enums">Enums</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.Error.html" title="smithay::backend::session::direct::Error enum">Error</a></div><div class="item-right docblock-short"><p>Errors related to direct/tty sessions</p>
+</div></div></div><h2 id="constants" class="section-header"><a href="#constants">Constants</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.SMITHAY_DIRECT_TTY_ENV.html" title="smithay::backend::session::direct::SMITHAY_DIRECT_TTY_ENV constant">SMITHAY_DIRECT_TTY_ENV</a></div><div class="item-right docblock-short"><p>This environment variable can be used to specify a tty path
 that will be used in <a href="struct.DirectSession.html#method.new" title="DirectSession::new">DirectSession::new</a> in case no explicit
 tty path has been provided.</p>
-</div></div></section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-search-index-js="../../../../search-index.js" data-search-js="../../../../search.js"></div>
+</div></div></div></section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-search-index-js="../../../../search-index.js" data-search-js="../../../../search.js"></div>
     <script src="../../../../main.js"></script>
 </body></html>

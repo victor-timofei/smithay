@@ -1010,19 +1010,19 @@
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::event::VirtualKeyCode</span>;
 <span class="kw">use</span> <span class="ident">libc</span>;
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">keysym_to_element</span>(<span class="ident">keysym</span>: <span class="ident">libc::c_uint</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">VirtualKeyCode</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">keysym_to_element</span>(<span class="ident">keysym</span>: <span class="ident">libc::c_uint</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">VirtualKeyCode</span><span class="op">&gt;</span> {
     <span class="prelude-val">Some</span>(<span class="kw">match</span> <span class="ident">keysym</span> {
-        <span class="ident">ffi::XK_BackSpace</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Back</span>,
-        <span class="ident">ffi::XK_Tab</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Tab</span>,
+        <span class="ident">ffi::XK_BackSpace</span> =&gt; <span class="ident">VirtualKeyCode::Back</span>,
+        <span class="ident">ffi::XK_Tab</span> =&gt; <span class="ident">VirtualKeyCode::Tab</span>,
         <span class="comment">//ffi::XK_Linefeed =&gt; VirtualKeyCode::Linefeed,</span>
         <span class="comment">//ffi::XK_Clear =&gt; VirtualKeyCode::Clear,</span>
-        <span class="ident">ffi::XK_Return</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Return</span>,
+        <span class="ident">ffi::XK_Return</span> =&gt; <span class="ident">VirtualKeyCode::Return</span>,
         <span class="comment">//ffi::XK_Pause =&gt; VirtualKeyCode::Pause,</span>
         <span class="comment">//ffi::XK_Scroll_Lock =&gt; VirtualKeyCode::Scroll_lock,</span>
         <span class="comment">//ffi::XK_Sys_Req =&gt; VirtualKeyCode::Sys_req,</span>
-        <span class="ident">ffi::XK_Escape</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Escape</span>,
-        <span class="ident">ffi::XK_Delete</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Delete</span>,
-        <span class="ident">ffi::XK_Multi_key</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Compose</span>,
+        <span class="ident">ffi::XK_Escape</span> =&gt; <span class="ident">VirtualKeyCode::Escape</span>,
+        <span class="ident">ffi::XK_Delete</span> =&gt; <span class="ident">VirtualKeyCode::Delete</span>,
+        <span class="ident">ffi::XK_Multi_key</span> =&gt; <span class="ident">VirtualKeyCode::Compose</span>,
         <span class="comment">//ffi::XK_Kanji =&gt; VirtualKeyCode::Kanji,</span>
         <span class="comment">//ffi::XK_Muhenkan =&gt; VirtualKeyCode::Muhenkan,</span>
         <span class="comment">//ffi::XK_Henkan_Mode =&gt; VirtualKeyCode::Henkan_mode,</span>
@@ -1040,16 +1040,16 @@
         <span class="comment">//ffi::XK_Kana_Shift =&gt; VirtualKeyCode::Kana_shift,</span>
         <span class="comment">//ffi::XK_Eisu_Shift =&gt; VirtualKeyCode::Eisu_shift,</span>
         <span class="comment">//ffi::XK_Eisu_toggle =&gt; VirtualKeyCode::Eisu_toggle,</span>
-        <span class="ident">ffi::XK_Home</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Home</span>,
-        <span class="ident">ffi::XK_Left</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Left</span>,
-        <span class="ident">ffi::XK_Up</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Up</span>,
-        <span class="ident">ffi::XK_Right</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Right</span>,
-        <span class="ident">ffi::XK_Down</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Down</span>,
+        <span class="ident">ffi::XK_Home</span> =&gt; <span class="ident">VirtualKeyCode::Home</span>,
+        <span class="ident">ffi::XK_Left</span> =&gt; <span class="ident">VirtualKeyCode::Left</span>,
+        <span class="ident">ffi::XK_Up</span> =&gt; <span class="ident">VirtualKeyCode::Up</span>,
+        <span class="ident">ffi::XK_Right</span> =&gt; <span class="ident">VirtualKeyCode::Right</span>,
+        <span class="ident">ffi::XK_Down</span> =&gt; <span class="ident">VirtualKeyCode::Down</span>,
         <span class="comment">//ffi::XK_Prior =&gt; VirtualKeyCode::Prior,</span>
-        <span class="ident">ffi::XK_Page_Up</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::PageUp</span>,
+        <span class="ident">ffi::XK_Page_Up</span> =&gt; <span class="ident">VirtualKeyCode::PageUp</span>,
         <span class="comment">//ffi::XK_Next =&gt; VirtualKeyCode::Next,</span>
-        <span class="ident">ffi::XK_Page_Down</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::PageDown</span>,
-        <span class="ident">ffi::XK_End</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::End</span>,
+        <span class="ident">ffi::XK_Page_Down</span> =&gt; <span class="ident">VirtualKeyCode::PageDown</span>,
+        <span class="ident">ffi::XK_End</span> =&gt; <span class="ident">VirtualKeyCode::End</span>,
         <span class="comment">//ffi::XK_Begin =&gt; VirtualKeyCode::Begin,</span>
         <span class="comment">//ffi::XK_Win_L =&gt; VirtualKeyCode::Win_l,</span>
         <span class="comment">//ffi::XK_Win_R =&gt; VirtualKeyCode::Win_r,</span>
@@ -1057,7 +1057,7 @@
         <span class="comment">//ffi::XK_Select =&gt; VirtualKeyCode::Select,</span>
         <span class="comment">//ffi::XK_Print =&gt; VirtualKeyCode::Print,</span>
         <span class="comment">//ffi::XK_Execute =&gt; VirtualKeyCode::Execute,</span>
-        <span class="ident">ffi::XK_Insert</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Insert</span>,
+        <span class="ident">ffi::XK_Insert</span> =&gt; <span class="ident">VirtualKeyCode::Insert</span>,
         <span class="comment">//ffi::XK_Undo =&gt; VirtualKeyCode::Undo,</span>
         <span class="comment">//ffi::XK_Redo =&gt; VirtualKeyCode::Redo,</span>
         <span class="comment">//ffi::XK_Menu =&gt; VirtualKeyCode::Menu,</span>
@@ -1075,73 +1075,73 @@
         <span class="comment">//ffi::XK_KP_F2 =&gt; VirtualKeyCode::Kp_f2,</span>
         <span class="comment">//ffi::XK_KP_F3 =&gt; VirtualKeyCode::Kp_f3,</span>
         <span class="comment">//ffi::XK_KP_F4 =&gt; VirtualKeyCode::Kp_f4,</span>
-        <span class="ident">ffi::XK_KP_Home</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Home</span>,
-        <span class="ident">ffi::XK_KP_Left</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Left</span>,
-        <span class="ident">ffi::XK_KP_Up</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Up</span>,
-        <span class="ident">ffi::XK_KP_Right</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Right</span>,
-        <span class="ident">ffi::XK_KP_Down</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Down</span>,
+        <span class="ident">ffi::XK_KP_Home</span> =&gt; <span class="ident">VirtualKeyCode::Home</span>,
+        <span class="ident">ffi::XK_KP_Left</span> =&gt; <span class="ident">VirtualKeyCode::Left</span>,
+        <span class="ident">ffi::XK_KP_Up</span> =&gt; <span class="ident">VirtualKeyCode::Up</span>,
+        <span class="ident">ffi::XK_KP_Right</span> =&gt; <span class="ident">VirtualKeyCode::Right</span>,
+        <span class="ident">ffi::XK_KP_Down</span> =&gt; <span class="ident">VirtualKeyCode::Down</span>,
         <span class="comment">//ffi::XK_KP_Prior =&gt; VirtualKeyCode::Kp_prior,</span>
-        <span class="ident">ffi::XK_KP_Page_Up</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::PageUp</span>,
+        <span class="ident">ffi::XK_KP_Page_Up</span> =&gt; <span class="ident">VirtualKeyCode::PageUp</span>,
         <span class="comment">//ffi::XK_KP_Next =&gt; VirtualKeyCode::Kp_next,</span>
-        <span class="ident">ffi::XK_KP_Page_Down</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::PageDown</span>,
-        <span class="ident">ffi::XK_KP_End</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::End</span>,
+        <span class="ident">ffi::XK_KP_Page_Down</span> =&gt; <span class="ident">VirtualKeyCode::PageDown</span>,
+        <span class="ident">ffi::XK_KP_End</span> =&gt; <span class="ident">VirtualKeyCode::End</span>,
         <span class="comment">//ffi::XK_KP_Begin =&gt; VirtualKeyCode::Kp_begin,</span>
-        <span class="ident">ffi::XK_KP_Insert</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Insert</span>,
-        <span class="ident">ffi::XK_KP_Delete</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Delete</span>,
-        <span class="ident">ffi::XK_KP_Equal</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::NumpadEquals</span>,
-        <span class="ident">ffi::XK_KP_Multiply</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::NumpadMultiply</span>,
-        <span class="ident">ffi::XK_KP_Add</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::NumpadAdd</span>,
+        <span class="ident">ffi::XK_KP_Insert</span> =&gt; <span class="ident">VirtualKeyCode::Insert</span>,
+        <span class="ident">ffi::XK_KP_Delete</span> =&gt; <span class="ident">VirtualKeyCode::Delete</span>,
+        <span class="ident">ffi::XK_KP_Equal</span> =&gt; <span class="ident">VirtualKeyCode::NumpadEquals</span>,
+        <span class="ident">ffi::XK_KP_Multiply</span> =&gt; <span class="ident">VirtualKeyCode::NumpadMultiply</span>,
+        <span class="ident">ffi::XK_KP_Add</span> =&gt; <span class="ident">VirtualKeyCode::NumpadAdd</span>,
         <span class="comment">//ffi::XK_KP_Separator =&gt; VirtualKeyCode::Kp_separator,</span>
-        <span class="ident">ffi::XK_KP_Subtract</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::NumpadSubtract</span>,
-        <span class="ident">ffi::XK_KP_Decimal</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::NumpadDecimal</span>,
-        <span class="ident">ffi::XK_KP_Divide</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::NumpadDivide</span>,
-        <span class="ident">ffi::XK_KP_0</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Numpad0</span>,
-        <span class="ident">ffi::XK_KP_1</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Numpad1</span>,
-        <span class="ident">ffi::XK_KP_2</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Numpad2</span>,
-        <span class="ident">ffi::XK_KP_3</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Numpad3</span>,
-        <span class="ident">ffi::XK_KP_4</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Numpad4</span>,
-        <span class="ident">ffi::XK_KP_5</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Numpad5</span>,
-        <span class="ident">ffi::XK_KP_6</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Numpad6</span>,
-        <span class="ident">ffi::XK_KP_7</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Numpad7</span>,
-        <span class="ident">ffi::XK_KP_8</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Numpad8</span>,
-        <span class="ident">ffi::XK_KP_9</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Numpad9</span>,
-        <span class="ident">ffi::XK_F1</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::F1</span>,
-        <span class="ident">ffi::XK_F2</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::F2</span>,
-        <span class="ident">ffi::XK_F3</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::F3</span>,
-        <span class="ident">ffi::XK_F4</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::F4</span>,
-        <span class="ident">ffi::XK_F5</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::F5</span>,
-        <span class="ident">ffi::XK_F6</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::F6</span>,
-        <span class="ident">ffi::XK_F7</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::F7</span>,
-        <span class="ident">ffi::XK_F8</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::F8</span>,
-        <span class="ident">ffi::XK_F9</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::F9</span>,
-        <span class="ident">ffi::XK_F10</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::F10</span>,
-        <span class="ident">ffi::XK_F11</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::F11</span>,
+        <span class="ident">ffi::XK_KP_Subtract</span> =&gt; <span class="ident">VirtualKeyCode::NumpadSubtract</span>,
+        <span class="ident">ffi::XK_KP_Decimal</span> =&gt; <span class="ident">VirtualKeyCode::NumpadDecimal</span>,
+        <span class="ident">ffi::XK_KP_Divide</span> =&gt; <span class="ident">VirtualKeyCode::NumpadDivide</span>,
+        <span class="ident">ffi::XK_KP_0</span> =&gt; <span class="ident">VirtualKeyCode::Numpad0</span>,
+        <span class="ident">ffi::XK_KP_1</span> =&gt; <span class="ident">VirtualKeyCode::Numpad1</span>,
+        <span class="ident">ffi::XK_KP_2</span> =&gt; <span class="ident">VirtualKeyCode::Numpad2</span>,
+        <span class="ident">ffi::XK_KP_3</span> =&gt; <span class="ident">VirtualKeyCode::Numpad3</span>,
+        <span class="ident">ffi::XK_KP_4</span> =&gt; <span class="ident">VirtualKeyCode::Numpad4</span>,
+        <span class="ident">ffi::XK_KP_5</span> =&gt; <span class="ident">VirtualKeyCode::Numpad5</span>,
+        <span class="ident">ffi::XK_KP_6</span> =&gt; <span class="ident">VirtualKeyCode::Numpad6</span>,
+        <span class="ident">ffi::XK_KP_7</span> =&gt; <span class="ident">VirtualKeyCode::Numpad7</span>,
+        <span class="ident">ffi::XK_KP_8</span> =&gt; <span class="ident">VirtualKeyCode::Numpad8</span>,
+        <span class="ident">ffi::XK_KP_9</span> =&gt; <span class="ident">VirtualKeyCode::Numpad9</span>,
+        <span class="ident">ffi::XK_F1</span> =&gt; <span class="ident">VirtualKeyCode::F1</span>,
+        <span class="ident">ffi::XK_F2</span> =&gt; <span class="ident">VirtualKeyCode::F2</span>,
+        <span class="ident">ffi::XK_F3</span> =&gt; <span class="ident">VirtualKeyCode::F3</span>,
+        <span class="ident">ffi::XK_F4</span> =&gt; <span class="ident">VirtualKeyCode::F4</span>,
+        <span class="ident">ffi::XK_F5</span> =&gt; <span class="ident">VirtualKeyCode::F5</span>,
+        <span class="ident">ffi::XK_F6</span> =&gt; <span class="ident">VirtualKeyCode::F6</span>,
+        <span class="ident">ffi::XK_F7</span> =&gt; <span class="ident">VirtualKeyCode::F7</span>,
+        <span class="ident">ffi::XK_F8</span> =&gt; <span class="ident">VirtualKeyCode::F8</span>,
+        <span class="ident">ffi::XK_F9</span> =&gt; <span class="ident">VirtualKeyCode::F9</span>,
+        <span class="ident">ffi::XK_F10</span> =&gt; <span class="ident">VirtualKeyCode::F10</span>,
+        <span class="ident">ffi::XK_F11</span> =&gt; <span class="ident">VirtualKeyCode::F11</span>,
         <span class="comment">//ffi::XK_L1 =&gt; VirtualKeyCode::L1,</span>
-        <span class="ident">ffi::XK_F12</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::F12</span>,
+        <span class="ident">ffi::XK_F12</span> =&gt; <span class="ident">VirtualKeyCode::F12</span>,
         <span class="comment">//ffi::XK_L2 =&gt; VirtualKeyCode::L2,</span>
-        <span class="ident">ffi::XK_F13</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::F13</span>,
+        <span class="ident">ffi::XK_F13</span> =&gt; <span class="ident">VirtualKeyCode::F13</span>,
         <span class="comment">//ffi::XK_L3 =&gt; VirtualKeyCode::L3,</span>
-        <span class="ident">ffi::XK_F14</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::F14</span>,
+        <span class="ident">ffi::XK_F14</span> =&gt; <span class="ident">VirtualKeyCode::F14</span>,
         <span class="comment">//ffi::XK_L4 =&gt; VirtualKeyCode::L4,</span>
-        <span class="ident">ffi::XK_F15</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::F15</span>,
+        <span class="ident">ffi::XK_F15</span> =&gt; <span class="ident">VirtualKeyCode::F15</span>,
         <span class="comment">//ffi::XK_L5 =&gt; VirtualKeyCode::L5,</span>
-        <span class="ident">ffi::XK_F16</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::F16</span>,
+        <span class="ident">ffi::XK_F16</span> =&gt; <span class="ident">VirtualKeyCode::F16</span>,
         <span class="comment">//ffi::XK_L6 =&gt; VirtualKeyCode::L6,</span>
-        <span class="ident">ffi::XK_F17</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::F17</span>,
+        <span class="ident">ffi::XK_F17</span> =&gt; <span class="ident">VirtualKeyCode::F17</span>,
         <span class="comment">//ffi::XK_L7 =&gt; VirtualKeyCode::L7,</span>
-        <span class="ident">ffi::XK_F18</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::F18</span>,
+        <span class="ident">ffi::XK_F18</span> =&gt; <span class="ident">VirtualKeyCode::F18</span>,
         <span class="comment">//ffi::XK_L8 =&gt; VirtualKeyCode::L8,</span>
-        <span class="ident">ffi::XK_F19</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::F19</span>,
+        <span class="ident">ffi::XK_F19</span> =&gt; <span class="ident">VirtualKeyCode::F19</span>,
         <span class="comment">//ffi::XK_L9 =&gt; VirtualKeyCode::L9,</span>
-        <span class="ident">ffi::XK_F20</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::F20</span>,
+        <span class="ident">ffi::XK_F20</span> =&gt; <span class="ident">VirtualKeyCode::F20</span>,
         <span class="comment">//ffi::XK_L10 =&gt; VirtualKeyCode::L10,</span>
-        <span class="ident">ffi::XK_F21</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::F21</span>,
+        <span class="ident">ffi::XK_F21</span> =&gt; <span class="ident">VirtualKeyCode::F21</span>,
         <span class="comment">//ffi::XK_R1 =&gt; VirtualKeyCode::R1,</span>
-        <span class="ident">ffi::XK_F22</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::F22</span>,
+        <span class="ident">ffi::XK_F22</span> =&gt; <span class="ident">VirtualKeyCode::F22</span>,
         <span class="comment">//ffi::XK_R2 =&gt; VirtualKeyCode::R2,</span>
-        <span class="ident">ffi::XK_F23</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::F23</span>,
+        <span class="ident">ffi::XK_F23</span> =&gt; <span class="ident">VirtualKeyCode::F23</span>,
         <span class="comment">//ffi::XK_R3 =&gt; VirtualKeyCode::R3,</span>
-        <span class="ident">ffi::XK_F24</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::F24</span>,
+        <span class="ident">ffi::XK_F24</span> =&gt; <span class="ident">VirtualKeyCode::F24</span>,
         <span class="comment">//ffi::XK_R4 =&gt; VirtualKeyCode::R4,</span>
         <span class="comment">//ffi::XK_F25 =&gt; VirtualKeyCode::F25,</span>
         <span class="comment">//ffi::XK_R5 =&gt; VirtualKeyCode::R5,</span>
@@ -1165,114 +1165,114 @@
         <span class="comment">//ffi::XK_R14 =&gt; VirtualKeyCode::R14,</span>
         <span class="comment">//ffi::XK_F35 =&gt; VirtualKeyCode::F35,</span>
         <span class="comment">//ffi::XK_R15 =&gt; VirtualKeyCode::R15,</span>
-        <span class="ident">ffi::XK_Shift_L</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::LShift</span>,
-        <span class="ident">ffi::XK_Shift_R</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::RShift</span>,
-        <span class="ident">ffi::XK_Control_L</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::LControl</span>,
-        <span class="ident">ffi::XK_Control_R</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::RControl</span>,
+        <span class="ident">ffi::XK_Shift_L</span> =&gt; <span class="ident">VirtualKeyCode::LShift</span>,
+        <span class="ident">ffi::XK_Shift_R</span> =&gt; <span class="ident">VirtualKeyCode::RShift</span>,
+        <span class="ident">ffi::XK_Control_L</span> =&gt; <span class="ident">VirtualKeyCode::LControl</span>,
+        <span class="ident">ffi::XK_Control_R</span> =&gt; <span class="ident">VirtualKeyCode::RControl</span>,
         <span class="comment">//ffi::XK_Caps_Lock =&gt; VirtualKeyCode::Caps_lock,</span>
         <span class="comment">//ffi::XK_Shift_Lock =&gt; VirtualKeyCode::Shift_lock,</span>
         <span class="comment">//ffi::XK_Meta_L =&gt; VirtualKeyCode::Meta_l,</span>
         <span class="comment">//ffi::XK_Meta_R =&gt; VirtualKeyCode::Meta_r,</span>
-        <span class="ident">ffi::XK_Alt_L</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::LAlt</span>,
-        <span class="ident">ffi::XK_Alt_R</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::RAlt</span>,
+        <span class="ident">ffi::XK_Alt_L</span> =&gt; <span class="ident">VirtualKeyCode::LAlt</span>,
+        <span class="ident">ffi::XK_Alt_R</span> =&gt; <span class="ident">VirtualKeyCode::RAlt</span>,
         <span class="comment">//ffi::XK_Super_L =&gt; VirtualKeyCode::Super_l,</span>
         <span class="comment">//ffi::XK_Super_R =&gt; VirtualKeyCode::Super_r,</span>
         <span class="comment">//ffi::XK_Hyper_L =&gt; VirtualKeyCode::Hyper_l,</span>
         <span class="comment">//ffi::XK_Hyper_R =&gt; VirtualKeyCode::Hyper_r,</span>
-        <span class="ident">ffi::XK_ISO_Left_Tab</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Tab</span>,
-        <span class="ident">ffi::XK_space</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Space</span>,
+        <span class="ident">ffi::XK_ISO_Left_Tab</span> =&gt; <span class="ident">VirtualKeyCode::Tab</span>,
+        <span class="ident">ffi::XK_space</span> =&gt; <span class="ident">VirtualKeyCode::Space</span>,
         <span class="comment">//ffi::XK_exclam =&gt; VirtualKeyCode::Exclam,</span>
         <span class="comment">//ffi::XK_quotedbl =&gt; VirtualKeyCode::Quotedbl,</span>
         <span class="comment">//ffi::XK_numbersign =&gt; VirtualKeyCode::Numbersign,</span>
         <span class="comment">//ffi::XK_dollar =&gt; VirtualKeyCode::Dollar,</span>
         <span class="comment">//ffi::XK_percent =&gt; VirtualKeyCode::Percent,</span>
         <span class="comment">//ffi::XK_ampersand =&gt; VirtualKeyCode::Ampersand,</span>
-        <span class="ident">ffi::XK_apostrophe</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Apostrophe</span>,
+        <span class="ident">ffi::XK_apostrophe</span> =&gt; <span class="ident">VirtualKeyCode::Apostrophe</span>,
         <span class="comment">//ffi::XK_quoteright =&gt; VirtualKeyCode::Quoteright,</span>
         <span class="comment">//ffi::XK_parenleft =&gt; VirtualKeyCode::Parenleft,</span>
         <span class="comment">//ffi::XK_parenright =&gt; VirtualKeyCode::Parenright,</span>
-        <span class="ident">ffi::XK_asterisk</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Asterisk</span>,
-        <span class="ident">ffi::XK_plus</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Plus</span>,
-        <span class="ident">ffi::XK_comma</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Comma</span>,
-        <span class="ident">ffi::XK_minus</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Minus</span>,
-        <span class="ident">ffi::XK_period</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Period</span>,
-        <span class="ident">ffi::XK_slash</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Slash</span>,
-        <span class="ident">ffi::XK_0</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Key0</span>,
-        <span class="ident">ffi::XK_1</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Key1</span>,
-        <span class="ident">ffi::XK_2</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Key2</span>,
-        <span class="ident">ffi::XK_3</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Key3</span>,
-        <span class="ident">ffi::XK_4</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Key4</span>,
-        <span class="ident">ffi::XK_5</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Key5</span>,
-        <span class="ident">ffi::XK_6</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Key6</span>,
-        <span class="ident">ffi::XK_7</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Key7</span>,
-        <span class="ident">ffi::XK_8</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Key8</span>,
-        <span class="ident">ffi::XK_9</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Key9</span>,
-        <span class="ident">ffi::XK_colon</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Colon</span>,
-        <span class="ident">ffi::XK_semicolon</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Semicolon</span>,
+        <span class="ident">ffi::XK_asterisk</span> =&gt; <span class="ident">VirtualKeyCode::Asterisk</span>,
+        <span class="ident">ffi::XK_plus</span> =&gt; <span class="ident">VirtualKeyCode::Plus</span>,
+        <span class="ident">ffi::XK_comma</span> =&gt; <span class="ident">VirtualKeyCode::Comma</span>,
+        <span class="ident">ffi::XK_minus</span> =&gt; <span class="ident">VirtualKeyCode::Minus</span>,
+        <span class="ident">ffi::XK_period</span> =&gt; <span class="ident">VirtualKeyCode::Period</span>,
+        <span class="ident">ffi::XK_slash</span> =&gt; <span class="ident">VirtualKeyCode::Slash</span>,
+        <span class="ident">ffi::XK_0</span> =&gt; <span class="ident">VirtualKeyCode::Key0</span>,
+        <span class="ident">ffi::XK_1</span> =&gt; <span class="ident">VirtualKeyCode::Key1</span>,
+        <span class="ident">ffi::XK_2</span> =&gt; <span class="ident">VirtualKeyCode::Key2</span>,
+        <span class="ident">ffi::XK_3</span> =&gt; <span class="ident">VirtualKeyCode::Key3</span>,
+        <span class="ident">ffi::XK_4</span> =&gt; <span class="ident">VirtualKeyCode::Key4</span>,
+        <span class="ident">ffi::XK_5</span> =&gt; <span class="ident">VirtualKeyCode::Key5</span>,
+        <span class="ident">ffi::XK_6</span> =&gt; <span class="ident">VirtualKeyCode::Key6</span>,
+        <span class="ident">ffi::XK_7</span> =&gt; <span class="ident">VirtualKeyCode::Key7</span>,
+        <span class="ident">ffi::XK_8</span> =&gt; <span class="ident">VirtualKeyCode::Key8</span>,
+        <span class="ident">ffi::XK_9</span> =&gt; <span class="ident">VirtualKeyCode::Key9</span>,
+        <span class="ident">ffi::XK_colon</span> =&gt; <span class="ident">VirtualKeyCode::Colon</span>,
+        <span class="ident">ffi::XK_semicolon</span> =&gt; <span class="ident">VirtualKeyCode::Semicolon</span>,
         <span class="comment">//ffi::XK_less =&gt; VirtualKeyCode::Less,</span>
-        <span class="ident">ffi::XK_equal</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Equals</span>,
+        <span class="ident">ffi::XK_equal</span> =&gt; <span class="ident">VirtualKeyCode::Equals</span>,
         <span class="comment">//ffi::XK_greater =&gt; VirtualKeyCode::Greater,</span>
         <span class="comment">//ffi::XK_question =&gt; VirtualKeyCode::Question,</span>
-        <span class="ident">ffi::XK_at</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::At</span>,
-        <span class="ident">ffi::XK_A</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::A</span>,
-        <span class="ident">ffi::XK_B</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::B</span>,
-        <span class="ident">ffi::XK_C</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::C</span>,
-        <span class="ident">ffi::XK_D</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::D</span>,
-        <span class="ident">ffi::XK_E</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::E</span>,
-        <span class="ident">ffi::XK_F</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::F</span>,
-        <span class="ident">ffi::XK_G</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::G</span>,
-        <span class="ident">ffi::XK_H</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::H</span>,
-        <span class="ident">ffi::XK_I</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::I</span>,
-        <span class="ident">ffi::XK_J</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::J</span>,
-        <span class="ident">ffi::XK_K</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::K</span>,
-        <span class="ident">ffi::XK_L</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::L</span>,
-        <span class="ident">ffi::XK_M</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::M</span>,
-        <span class="ident">ffi::XK_N</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::N</span>,
-        <span class="ident">ffi::XK_O</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::O</span>,
-        <span class="ident">ffi::XK_P</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::P</span>,
-        <span class="ident">ffi::XK_Q</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Q</span>,
-        <span class="ident">ffi::XK_R</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::R</span>,
-        <span class="ident">ffi::XK_S</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::S</span>,
-        <span class="ident">ffi::XK_T</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::T</span>,
-        <span class="ident">ffi::XK_U</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::U</span>,
-        <span class="ident">ffi::XK_V</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::V</span>,
-        <span class="ident">ffi::XK_W</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::W</span>,
-        <span class="ident">ffi::XK_X</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::X</span>,
-        <span class="ident">ffi::XK_Y</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Y</span>,
-        <span class="ident">ffi::XK_Z</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Z</span>,
-        <span class="ident">ffi::XK_bracketleft</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::LBracket</span>,
-        <span class="ident">ffi::XK_backslash</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Backslash</span>,
-        <span class="ident">ffi::XK_bracketright</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::RBracket</span>,
+        <span class="ident">ffi::XK_at</span> =&gt; <span class="ident">VirtualKeyCode::At</span>,
+        <span class="ident">ffi::XK_A</span> =&gt; <span class="ident">VirtualKeyCode::A</span>,
+        <span class="ident">ffi::XK_B</span> =&gt; <span class="ident">VirtualKeyCode::B</span>,
+        <span class="ident">ffi::XK_C</span> =&gt; <span class="ident">VirtualKeyCode::C</span>,
+        <span class="ident">ffi::XK_D</span> =&gt; <span class="ident">VirtualKeyCode::D</span>,
+        <span class="ident">ffi::XK_E</span> =&gt; <span class="ident">VirtualKeyCode::E</span>,
+        <span class="ident">ffi::XK_F</span> =&gt; <span class="ident">VirtualKeyCode::F</span>,
+        <span class="ident">ffi::XK_G</span> =&gt; <span class="ident">VirtualKeyCode::G</span>,
+        <span class="ident">ffi::XK_H</span> =&gt; <span class="ident">VirtualKeyCode::H</span>,
+        <span class="ident">ffi::XK_I</span> =&gt; <span class="ident">VirtualKeyCode::I</span>,
+        <span class="ident">ffi::XK_J</span> =&gt; <span class="ident">VirtualKeyCode::J</span>,
+        <span class="ident">ffi::XK_K</span> =&gt; <span class="ident">VirtualKeyCode::K</span>,
+        <span class="ident">ffi::XK_L</span> =&gt; <span class="ident">VirtualKeyCode::L</span>,
+        <span class="ident">ffi::XK_M</span> =&gt; <span class="ident">VirtualKeyCode::M</span>,
+        <span class="ident">ffi::XK_N</span> =&gt; <span class="ident">VirtualKeyCode::N</span>,
+        <span class="ident">ffi::XK_O</span> =&gt; <span class="ident">VirtualKeyCode::O</span>,
+        <span class="ident">ffi::XK_P</span> =&gt; <span class="ident">VirtualKeyCode::P</span>,
+        <span class="ident">ffi::XK_Q</span> =&gt; <span class="ident">VirtualKeyCode::Q</span>,
+        <span class="ident">ffi::XK_R</span> =&gt; <span class="ident">VirtualKeyCode::R</span>,
+        <span class="ident">ffi::XK_S</span> =&gt; <span class="ident">VirtualKeyCode::S</span>,
+        <span class="ident">ffi::XK_T</span> =&gt; <span class="ident">VirtualKeyCode::T</span>,
+        <span class="ident">ffi::XK_U</span> =&gt; <span class="ident">VirtualKeyCode::U</span>,
+        <span class="ident">ffi::XK_V</span> =&gt; <span class="ident">VirtualKeyCode::V</span>,
+        <span class="ident">ffi::XK_W</span> =&gt; <span class="ident">VirtualKeyCode::W</span>,
+        <span class="ident">ffi::XK_X</span> =&gt; <span class="ident">VirtualKeyCode::X</span>,
+        <span class="ident">ffi::XK_Y</span> =&gt; <span class="ident">VirtualKeyCode::Y</span>,
+        <span class="ident">ffi::XK_Z</span> =&gt; <span class="ident">VirtualKeyCode::Z</span>,
+        <span class="ident">ffi::XK_bracketleft</span> =&gt; <span class="ident">VirtualKeyCode::LBracket</span>,
+        <span class="ident">ffi::XK_backslash</span> =&gt; <span class="ident">VirtualKeyCode::Backslash</span>,
+        <span class="ident">ffi::XK_bracketright</span> =&gt; <span class="ident">VirtualKeyCode::RBracket</span>,
         <span class="comment">//ffi::XK_asciicircum =&gt; VirtualKeyCode::Asciicircum,</span>
         <span class="comment">//ffi::XK_underscore =&gt; VirtualKeyCode::Underscore,</span>
-        <span class="ident">ffi::XK_grave</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Grave</span>,
+        <span class="ident">ffi::XK_grave</span> =&gt; <span class="ident">VirtualKeyCode::Grave</span>,
         <span class="comment">//ffi::XK_quoteleft =&gt; VirtualKeyCode::Quoteleft,</span>
-        <span class="ident">ffi::XK_a</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::A</span>,
-        <span class="ident">ffi::XK_b</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::B</span>,
-        <span class="ident">ffi::XK_c</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::C</span>,
-        <span class="ident">ffi::XK_d</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::D</span>,
-        <span class="ident">ffi::XK_e</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::E</span>,
-        <span class="ident">ffi::XK_f</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::F</span>,
-        <span class="ident">ffi::XK_g</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::G</span>,
-        <span class="ident">ffi::XK_h</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::H</span>,
-        <span class="ident">ffi::XK_i</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::I</span>,
-        <span class="ident">ffi::XK_j</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::J</span>,
-        <span class="ident">ffi::XK_k</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::K</span>,
-        <span class="ident">ffi::XK_l</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::L</span>,
-        <span class="ident">ffi::XK_m</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::M</span>,
-        <span class="ident">ffi::XK_n</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::N</span>,
-        <span class="ident">ffi::XK_o</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::O</span>,
-        <span class="ident">ffi::XK_p</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::P</span>,
-        <span class="ident">ffi::XK_q</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Q</span>,
-        <span class="ident">ffi::XK_r</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::R</span>,
-        <span class="ident">ffi::XK_s</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::S</span>,
-        <span class="ident">ffi::XK_t</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::T</span>,
-        <span class="ident">ffi::XK_u</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::U</span>,
-        <span class="ident">ffi::XK_v</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::V</span>,
-        <span class="ident">ffi::XK_w</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::W</span>,
-        <span class="ident">ffi::XK_x</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::X</span>,
-        <span class="ident">ffi::XK_y</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Y</span>,
-        <span class="ident">ffi::XK_z</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Z</span>,
+        <span class="ident">ffi::XK_a</span> =&gt; <span class="ident">VirtualKeyCode::A</span>,
+        <span class="ident">ffi::XK_b</span> =&gt; <span class="ident">VirtualKeyCode::B</span>,
+        <span class="ident">ffi::XK_c</span> =&gt; <span class="ident">VirtualKeyCode::C</span>,
+        <span class="ident">ffi::XK_d</span> =&gt; <span class="ident">VirtualKeyCode::D</span>,
+        <span class="ident">ffi::XK_e</span> =&gt; <span class="ident">VirtualKeyCode::E</span>,
+        <span class="ident">ffi::XK_f</span> =&gt; <span class="ident">VirtualKeyCode::F</span>,
+        <span class="ident">ffi::XK_g</span> =&gt; <span class="ident">VirtualKeyCode::G</span>,
+        <span class="ident">ffi::XK_h</span> =&gt; <span class="ident">VirtualKeyCode::H</span>,
+        <span class="ident">ffi::XK_i</span> =&gt; <span class="ident">VirtualKeyCode::I</span>,
+        <span class="ident">ffi::XK_j</span> =&gt; <span class="ident">VirtualKeyCode::J</span>,
+        <span class="ident">ffi::XK_k</span> =&gt; <span class="ident">VirtualKeyCode::K</span>,
+        <span class="ident">ffi::XK_l</span> =&gt; <span class="ident">VirtualKeyCode::L</span>,
+        <span class="ident">ffi::XK_m</span> =&gt; <span class="ident">VirtualKeyCode::M</span>,
+        <span class="ident">ffi::XK_n</span> =&gt; <span class="ident">VirtualKeyCode::N</span>,
+        <span class="ident">ffi::XK_o</span> =&gt; <span class="ident">VirtualKeyCode::O</span>,
+        <span class="ident">ffi::XK_p</span> =&gt; <span class="ident">VirtualKeyCode::P</span>,
+        <span class="ident">ffi::XK_q</span> =&gt; <span class="ident">VirtualKeyCode::Q</span>,
+        <span class="ident">ffi::XK_r</span> =&gt; <span class="ident">VirtualKeyCode::R</span>,
+        <span class="ident">ffi::XK_s</span> =&gt; <span class="ident">VirtualKeyCode::S</span>,
+        <span class="ident">ffi::XK_t</span> =&gt; <span class="ident">VirtualKeyCode::T</span>,
+        <span class="ident">ffi::XK_u</span> =&gt; <span class="ident">VirtualKeyCode::U</span>,
+        <span class="ident">ffi::XK_v</span> =&gt; <span class="ident">VirtualKeyCode::V</span>,
+        <span class="ident">ffi::XK_w</span> =&gt; <span class="ident">VirtualKeyCode::W</span>,
+        <span class="ident">ffi::XK_x</span> =&gt; <span class="ident">VirtualKeyCode::X</span>,
+        <span class="ident">ffi::XK_y</span> =&gt; <span class="ident">VirtualKeyCode::Y</span>,
+        <span class="ident">ffi::XK_z</span> =&gt; <span class="ident">VirtualKeyCode::Z</span>,
         <span class="comment">//ffi::XK_braceleft =&gt; VirtualKeyCode::Braceleft,</span>
         <span class="comment">//ffi::XK_bar =&gt; VirtualKeyCode::Bar,</span>
         <span class="comment">//ffi::XK_braceright =&gt; VirtualKeyCode::Braceright,</span>
@@ -2006,12 +2006,12 @@
         <span class="comment">//ffi::XK_hebrew_taw =&gt; VirtualKeyCode::Hebrew_taw,</span>
         <span class="comment">//ffi::XK_hebrew_taf =&gt; VirtualKeyCode::Hebrew_taf,</span>
         <span class="comment">//ffi::XK_Hebrew_switch =&gt; VirtualKeyCode::Hebrew_switch,</span>
-        <span class="ident">ffi::XF86XK_Back</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::NavigateBackward</span>,
-        <span class="ident">ffi::XF86XK_Forward</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::NavigateForward</span>,
-        <span class="ident">ffi::XF86XK_Copy</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Copy</span>,
-        <span class="ident">ffi::XF86XK_Paste</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Paste</span>,
-        <span class="ident">ffi::XF86XK_Cut</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VirtualKeyCode::Cut</span>,
-        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="prelude-val">None</span>,
+        <span class="ident">ffi::XF86XK_Back</span> =&gt; <span class="ident">VirtualKeyCode::NavigateBackward</span>,
+        <span class="ident">ffi::XF86XK_Forward</span> =&gt; <span class="ident">VirtualKeyCode::NavigateForward</span>,
+        <span class="ident">ffi::XF86XK_Copy</span> =&gt; <span class="ident">VirtualKeyCode::Copy</span>,
+        <span class="ident">ffi::XF86XK_Paste</span> =&gt; <span class="ident">VirtualKeyCode::Paste</span>,
+        <span class="ident">ffi::XF86XK_Cut</span> =&gt; <span class="ident">VirtualKeyCode::Cut</span>,
+        <span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="prelude-val">None</span>,
     })
 }
 </code></pre></div>

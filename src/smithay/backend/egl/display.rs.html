@@ -956,7 +956,7 @@
 <span class="kw">impl</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">EGLDisplayHandle</span> {
     <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="ident">ffi::egl::types::EGLDisplay</span>;
 
-    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span> {
+    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">handle</span>
     }
 }
@@ -986,16 +986,16 @@
     <span class="ident">native</span>: <span class="kw-2">&amp;</span><span class="ident">N</span>,
     <span class="ident">dp_extensions</span>: <span class="kw-2">&amp;</span>[<span class="ident">String</span>],
     <span class="ident">log</span>: <span class="kw-2">&amp;</span><span class="ident">::slog::Logger</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_void</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_void</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
     <span class="kw">for</span> <span class="ident">platform</span> <span class="kw">in</span> <span class="ident">native</span>.<span class="ident">supported_platforms</span>() {
         <span class="macro">debug!</span>(<span class="ident">log</span>, <span class="string">&quot;Trying EGL platform: {}&quot;</span>, <span class="ident">platform</span>.<span class="ident">platform_name</span>);
 
-        <span class="kw">let</span> <span class="ident">log</span> <span class="op">=</span> <span class="ident">log</span>.<span class="ident">new</span>(<span class="macro">o!</span>(<span class="string">&quot;platform&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">platform</span>)));
+        <span class="kw">let</span> <span class="ident">log</span> <span class="op">=</span> <span class="ident">log</span>.<span class="ident">new</span>(<span class="macro">o!</span>(<span class="string">&quot;platform&quot;</span> =&gt; <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">platform</span>)));
 
         <span class="kw">let</span> <span class="ident">missing_extensions</span> <span class="op">=</span> <span class="ident">platform</span>
             .<span class="ident">required_extensions</span>
             .<span class="ident">iter</span>()
-            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">ext</span><span class="op">|</span> <span class="op">!</span><span class="ident">dp_extensions</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span> <span class="op">=</span><span class="op">=</span> <span class="kw-2">*</span><span class="ident">ext</span>))
+            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">ext</span><span class="op">|</span> <span class="op">!</span><span class="ident">dp_extensions</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span> <span class="op">==</span> <span class="kw-2">*</span><span class="ident">ext</span>))
             .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
 
         <span class="kw">if</span> <span class="op">!</span><span class="ident">missing_extensions</span>.<span class="ident">is_empty</span>() {
@@ -1018,15 +1018,15 @@
         };
 
         <span class="kw">let</span> <span class="ident">display</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">display</span> {
-            <span class="prelude-val">Ok</span>(<span class="ident">display</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="kw">if</span> <span class="ident">display</span> <span class="op">=</span><span class="op">=</span> <span class="ident">ffi::egl::NO_DISPLAY</span> {
+            <span class="prelude-val">Ok</span>(<span class="ident">display</span>) =&gt; {
+                <span class="kw">if</span> <span class="ident">display</span> <span class="op">==</span> <span class="ident">ffi::egl::NO_DISPLAY</span> {
                     <span class="macro">info!</span>(<span class="ident">log</span>, <span class="string">&quot;Skipping platform because the display is not supported&quot;</span>);
                     <span class="kw">continue</span>;
                 }
 
                 <span class="ident">display</span>
             }
-            <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Err</span>(<span class="ident">err</span>) =&gt; {
                 <span class="macro">info!</span>(
                     <span class="ident">log</span>,
                     <span class="string">&quot;Skipping platform because of an display creation error: {:?}&quot;</span>, <span class="ident">err</span>
@@ -1048,12 +1048,12 @@
 
 <span class="kw">impl</span> <span class="ident">EGLDisplay</span> {
     <span class="doccomment">/// Create a new [`EGLDisplay`] from a given [`EGLNativeDisplay`]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">L</span><span class="op">&gt;</span>(<span class="ident">native</span>: <span class="kw-2">&amp;</span><span class="ident">N</span>, <span class="ident">logger</span>: <span class="ident">L</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">EGLDisplay</span>, <span class="ident">Error</span><span class="op">&gt;</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">L</span><span class="op">&gt;</span>(<span class="ident">native</span>: <span class="kw-2">&amp;</span><span class="ident">N</span>, <span class="ident">logger</span>: <span class="ident">L</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">EGLDisplay</span>, <span class="ident">Error</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">N</span>: <span class="ident">EGLNativeDisplay</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
         <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">::slog::Logger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     {
-        <span class="kw">let</span> <span class="ident">log</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::slog_or_fallback</span>(<span class="ident">logger</span>.<span class="ident">into</span>()).<span class="ident">new</span>(<span class="macro">o!</span>(<span class="string">&quot;smithay_module&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;backend_egl&quot;</span>));
+        <span class="kw">let</span> <span class="ident">log</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::slog_or_fallback</span>(<span class="ident">logger</span>.<span class="ident">into</span>()).<span class="ident">new</span>(<span class="macro">o!</span>(<span class="string">&quot;smithay_module&quot;</span> =&gt; <span class="string">&quot;backend_egl&quot;</span>));
 
         <span class="kw">let</span> <span class="ident">dp_extensions</span> <span class="op">=</span> <span class="ident">ffi::make_sure_egl_is_loaded</span>()<span class="question-mark">?</span>;
         <span class="macro">debug!</span>(<span class="ident">log</span>, <span class="string">&quot;Supported EGL client extensions: {:?}&quot;</span>, <span class="ident">dp_extensions</span>);
@@ -1121,7 +1121,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">attributes</span>: <span class="ident">GlAttributes</span>,
         <span class="ident">reqs</span>: <span class="ident">PixelFormatRequirements</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">PixelFormat</span>, <span class="ident">ffi::egl::types::EGLConfig</span>), <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">PixelFormat</span>, <span class="ident">ffi::egl::types::EGLConfig</span>), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">descriptor</span> <span class="op">=</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">out</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">c_int</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="number">37</span>);
 
@@ -1137,7 +1137,7 @@
             <span class="ident">out</span>.<span class="ident">push</span>(<span class="self">self</span>.<span class="ident">surface_type</span>);
 
             <span class="kw">match</span> <span class="ident">attributes</span>.<span class="ident">version</span> {
-                (<span class="number">3</span>, <span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                (<span class="number">3</span>, <span class="kw">_</span>) =&gt; {
                     <span class="kw">if</span> <span class="self">self</span>.<span class="ident">egl_version</span> <span class="op">&lt;</span> (<span class="number">1</span>, <span class="number">3</span>) {
                         <span class="macro">error!</span>(
                             <span class="self">self</span>.<span class="ident">logger</span>,
@@ -1152,7 +1152,7 @@
                     <span class="ident">out</span>.<span class="ident">push</span>(<span class="ident">ffi::egl::CONFORMANT</span> <span class="kw">as</span> <span class="ident">c_int</span>);
                     <span class="ident">out</span>.<span class="ident">push</span>(<span class="ident">ffi::egl::OPENGL_ES3_BIT</span> <span class="kw">as</span> <span class="ident">c_int</span>);
                 }
-                (<span class="number">2</span>, <span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                (<span class="number">2</span>, <span class="kw">_</span>) =&gt; {
                     <span class="kw">if</span> <span class="self">self</span>.<span class="ident">egl_version</span> <span class="op">&lt;</span> (<span class="number">1</span>, <span class="number">3</span>) {
                         <span class="macro">error!</span>(
                             <span class="self">self</span>.<span class="ident">logger</span>,
@@ -1167,7 +1167,7 @@
                     <span class="ident">out</span>.<span class="ident">push</span>(<span class="ident">ffi::egl::CONFORMANT</span> <span class="kw">as</span> <span class="ident">c_int</span>);
                     <span class="ident">out</span>.<span class="ident">push</span>(<span class="ident">ffi::egl::OPENGL_ES2_BIT</span> <span class="kw">as</span> <span class="ident">c_int</span>);
                 }
-                <span class="ident">ver</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">ver</span> =&gt; {
                     <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::OpenGlVersionNotSupported</span>(<span class="ident">ver</span>));
                 }
             };
@@ -1189,7 +1189,7 @@
             )
         })
         .<span class="ident">map_err</span>(<span class="ident">Error::ConfigFailed</span>)<span class="question-mark">?</span>;
-        <span class="kw">if</span> <span class="ident">num_configs</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
+        <span class="kw">if</span> <span class="ident">num_configs</span> <span class="op">==</span> <span class="number">0</span> {
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::NoAvailablePixelFormat</span>);
         }
 
@@ -1258,7 +1258,7 @@
 
         <span class="comment">// analyzing each config</span>
         <span class="macro">macro_rules!</span> <span class="ident">attrib</span> {
-            (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">display</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">config</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">attr</span>:<span class="ident">expr</span>) <span class="op">=</span><span class="op">&gt;</span> {{
+            (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">display</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">config</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">attr</span>:<span class="ident">expr</span>) =&gt; {{
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">MaybeUninit::uninit</span>();
                 <span class="ident">wrap_egl_call</span>(<span class="op">|</span><span class="op">|</span> {
                     <span class="ident">ffi::egl::GetConfigAttrib</span>(
@@ -1286,8 +1286,8 @@
                 <span class="ident">stencil_bits</span>: <span class="macro">attrib!</span>(<span class="self">self</span>.<span class="ident">display</span>, <span class="ident">config_id</span>, <span class="ident">ffi::egl::STENCIL_SIZE</span>) <span class="kw">as</span> <span class="ident">u8</span>,
                 <span class="ident">stereoscopy</span>: <span class="bool-val">false</span>,
                 <span class="ident">multisampling</span>: <span class="kw">match</span> <span class="macro">attrib!</span>(<span class="self">self</span>.<span class="ident">display</span>, <span class="ident">config_id</span>, <span class="ident">ffi::egl::SAMPLES</span>) {
-                    <span class="number">0</span> <span class="op">|</span> <span class="number">1</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
-                    <span class="ident">a</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">a</span> <span class="kw">as</span> <span class="ident">u16</span>),
+                    <span class="number">0</span> <span class="op">|</span> <span class="number">1</span> =&gt; <span class="prelude-val">None</span>,
+                    <span class="ident">a</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident">a</span> <span class="kw">as</span> <span class="ident">u16</span>),
                 },
                 <span class="ident">srgb</span>: <span class="bool-val">false</span>, <span class="comment">// TODO: use EGL_KHR_gl_colorspace to know that</span>
             }
@@ -1299,27 +1299,27 @@
     }
 
     <span class="doccomment">/// Get a handle to the underlying raw EGLDisplay handle</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_display_handle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">EGLDisplayHandle</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_display_handle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">EGLDisplayHandle</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">display</span>.<span class="ident">clone</span>()
     }
 
     <span class="doccomment">/// Returns the runtime egl version of this display</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_egl_version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">i32</span>, <span class="ident">i32</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_egl_version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">i32</span>, <span class="ident">i32</span>) {
         <span class="self">self</span>.<span class="ident">egl_version</span>
     }
 
     <span class="doccomment">/// Returns the supported extensions of this display</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_extensions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_extensions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">extensions</span>.<span class="ident">clone</span>()
     }
 
     <span class="doccomment">/// Imports a [`Dmabuf`] as an [`EGLImage`]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_image_from_dmabuf</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">dmabuf</span>: <span class="kw-2">&amp;</span><span class="ident">Dmabuf</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">EGLImage</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">extensions</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span> <span class="op">=</span><span class="op">=</span> <span class="string">&quot;EGL_KHR_image_base&quot;</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_image_from_dmabuf</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">dmabuf</span>: <span class="kw-2">&amp;</span><span class="ident">Dmabuf</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">EGLImage</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">extensions</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span> <span class="op">==</span> <span class="string">&quot;EGL_KHR_image_base&quot;</span>)
             <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="self">self</span>
                 .<span class="ident">extensions</span>
                 .<span class="ident">iter</span>()
-                .<span class="ident">any</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span> <span class="op">=</span><span class="op">=</span> <span class="string">&quot;EGL_EXT_image_dma_buf_import&quot;</span>)
+                .<span class="ident">any</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span> <span class="op">==</span> <span class="string">&quot;EGL_EXT_image_dma_buf_import&quot;</span>)
         {
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::EglExtensionNotSupported</span>(<span class="kw-2">&amp;</span>[
                 <span class="string">&quot;EGL_KHR_image_base&quot;</span>,
@@ -1331,7 +1331,7 @@
             <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="self">self</span>
                 .<span class="ident">extensions</span>
                 .<span class="ident">iter</span>()
-                .<span class="ident">any</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span> <span class="op">=</span><span class="op">=</span> <span class="string">&quot;EGL_EXT_image_dma_buf_import_modifiers&quot;</span>)
+                .<span class="ident">any</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span> <span class="op">==</span> <span class="string">&quot;EGL_EXT_image_dma_buf_import_modifiers&quot;</span>)
         {
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::EglExtensionNotSupported</span>(<span class="kw-2">&amp;</span>[
                 <span class="string">&quot;EGL_EXT_image_dma_buf_import_modifiers&quot;</span>,
@@ -1415,7 +1415,7 @@
                 <span class="ident">out</span>.<span class="ident">as_ptr</span>(),
             );
 
-            <span class="kw">if</span> <span class="ident">image</span> <span class="op">=</span><span class="op">=</span> <span class="ident">ffi::egl::NO_IMAGE_KHR</span> {
+            <span class="kw">if</span> <span class="ident">image</span> <span class="op">==</span> <span class="ident">ffi::egl::NO_IMAGE_KHR</span> {
                 <span class="prelude-val">Err</span>(<span class="ident">Error::EGLImageCreationFailed</span>)
             } <span class="kw">else</span> {
                 <span class="prelude-val">Ok</span>(<span class="ident">image</span>)
@@ -1436,8 +1436,8 @@
     <span class="doccomment">/// This might return [`OtherEGLDisplayAlreadyBound`](Error::OtherEGLDisplayAlreadyBound)</span>
     <span class="doccomment">/// if called for the same [`Display`] multiple times, as only one egl display may be bound at any given time.</span>
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_system_lib&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>))]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bind_wl_display</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="ident">Display</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">EGLBufferReader</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">extensions</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span> <span class="op">=</span><span class="op">=</span> <span class="string">&quot;EGL_WL_bind_wayland_display&quot;</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bind_wl_display</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="ident">Display</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">EGLBufferReader</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">extensions</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span> <span class="op">==</span> <span class="string">&quot;EGL_WL_bind_wayland_display&quot;</span>) {
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::EglExtensionNotSupported</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;EGL_WL_bind_wayland_display&quot;</span>]));
         }
         <span class="ident">wrap_egl_call</span>(<span class="op">|</span><span class="op">|</span> <span class="kw">unsafe</span> {
@@ -1464,10 +1464,10 @@
     <span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="ident">ffi::egl::types::EGLDisplay</span>,
     <span class="ident">extensions</span>: <span class="kw-2">&amp;</span>[<span class="ident">String</span>],
     <span class="ident">log</span>: <span class="kw-2">&amp;</span><span class="ident">::slog::Logger</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">DrmFormat</span><span class="op">&gt;</span>, <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">DrmFormat</span><span class="op">&gt;</span>), <span class="ident">EGLError</span><span class="op">&gt;</span> {
+) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">DrmFormat</span><span class="op">&gt;</span>, <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">DrmFormat</span><span class="op">&gt;</span>), <span class="ident">EGLError</span><span class="op">&gt;</span> {
     <span class="kw">use</span> <span class="ident">std::convert::TryFrom</span>;
 
-    <span class="kw">if</span> <span class="op">!</span><span class="ident">extensions</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span> <span class="op">=</span><span class="op">=</span> <span class="string">&quot;EGL_EXT_image_dma_buf_import&quot;</span>) {
+    <span class="kw">if</span> <span class="op">!</span><span class="ident">extensions</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span> <span class="op">==</span> <span class="string">&quot;EGL_EXT_image_dma_buf_import&quot;</span>) {
         <span class="macro">warn!</span>(<span class="ident">log</span>, <span class="string">&quot;Dmabuf import extension not available&quot;</span>);
         <span class="kw">return</span> <span class="prelude-val">Ok</span>((<span class="ident">HashSet::new</span>(), <span class="ident">HashSet::new</span>()));
     }
@@ -1480,7 +1480,7 @@
         <span class="comment">// given that the modifiers extension isn&#39;t supported everywhere.</span>
         <span class="kw">if</span> <span class="op">!</span><span class="ident">extensions</span>
             .<span class="ident">iter</span>()
-            .<span class="ident">any</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span> <span class="op">=</span><span class="op">=</span> <span class="string">&quot;EGL_EXT_image_dma_buf_import_modifiers&quot;</span>)
+            .<span class="ident">any</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span> <span class="op">==</span> <span class="string">&quot;EGL_EXT_image_dma_buf_import_modifiers&quot;</span>)
         {
             <span class="macro">vec!</span>[<span class="ident">Fourcc::Argb8888</span>, <span class="ident">Fourcc::Xrgb8888</span>]
         } <span class="kw">else</span> {
@@ -1488,7 +1488,7 @@
             <span class="ident">wrap_egl_call</span>(<span class="op">|</span><span class="op">|</span> <span class="kw">unsafe</span> {
                 <span class="ident">ffi::egl::QueryDmaBufFormatsEXT</span>(<span class="kw-2">*</span><span class="ident">display</span>, <span class="number">0</span>, <span class="ident">std::ptr::null_mut</span>(), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">num</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>)
             })<span class="question-mark">?</span>;
-            <span class="kw">if</span> <span class="ident">num</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
+            <span class="kw">if</span> <span class="ident">num</span> <span class="op">==</span> <span class="number">0</span> {
                 <span class="kw">return</span> <span class="prelude-val">Ok</span>((<span class="ident">HashSet::new</span>(), <span class="ident">HashSet::new</span>()));
             }
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">formats</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">num</span> <span class="kw">as</span> <span class="ident">usize</span>);
@@ -1526,7 +1526,7 @@
             )
         })<span class="question-mark">?</span>;
 
-        <span class="kw">if</span> <span class="ident">num</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
+        <span class="kw">if</span> <span class="ident">num</span> <span class="op">==</span> <span class="number">0</span> {
             <span class="ident">texture_formats</span>.<span class="ident">insert</span>(<span class="ident">DrmFormat</span> {
                 <span class="ident">code</span>: <span class="ident">fourcc</span>,
                 <span class="ident">modifier</span>: <span class="ident">Modifier::Invalid</span>,
@@ -1561,7 +1561,7 @@
                     <span class="ident">modifier</span>: <span class="ident">Modifier::from</span>(<span class="ident">modifier</span>),
                 };
                 <span class="ident">texture_formats</span>.<span class="ident">insert</span>(<span class="ident">format</span>);
-                <span class="kw">if</span> <span class="ident">external_only</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
+                <span class="kw">if</span> <span class="ident">external_only</span> <span class="op">==</span> <span class="number">0</span> {
                     <span class="ident">render_formats</span>.<span class="ident">insert</span>(<span class="ident">format</span>);
                 }
             }
@@ -1593,7 +1593,7 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_system_lib&quot;</span>)]</span>
 <span class="kw">impl</span> <span class="ident">WeakBufferReader</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">upgrade</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">EGLBufferReader</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">upgrade</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">EGLBufferReader</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="ident">EGLBufferReader</span> {
             <span class="ident">display</span>: <span class="self">self</span>.<span class="ident">display</span>.<span class="ident">upgrade</span>()<span class="question-mark">?</span>,
             <span class="ident">wayland</span>: <span class="prelude-val">None</span>,
@@ -1607,11 +1607,11 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_system_lib&quot;</span>)]</span>
 <span class="kw">impl</span> <span class="ident">EGLBufferReader</span> {
-    <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>(<span class="ident">display</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">EGLDisplayHandle</span><span class="op">&gt;</span>, <span class="ident">wayland</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wl_display</span>, <span class="ident">log</span>: <span class="ident">L</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span>
+    <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>(<span class="ident">display</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">EGLDisplayHandle</span><span class="op">&gt;</span>, <span class="ident">wayland</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wl_display</span>, <span class="ident">log</span>: <span class="ident">L</span>) -&gt; <span class="self">Self</span>
     <span class="kw">where</span>
         <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">::slog::Logger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     {
-        <span class="kw">let</span> <span class="ident">logger</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::slog_or_fallback</span>(<span class="ident">log</span>.<span class="ident">into</span>()).<span class="ident">new</span>(<span class="macro">o!</span>(<span class="string">&quot;smithay_module&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;egl_buffer_reader&quot;</span>));
+        <span class="kw">let</span> <span class="ident">logger</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::slog_or_fallback</span>(<span class="ident">log</span>.<span class="ident">into</span>()).<span class="ident">new</span>(<span class="macro">o!</span>(<span class="string">&quot;smithay_module&quot;</span> =&gt; <span class="string">&quot;egl_buffer_reader&quot;</span>));
 
         <span class="self">Self</span> {
             <span class="ident">display</span>,
@@ -1627,7 +1627,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">egl_buffer_contents</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="ident">WlBuffer</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">::std::result::Result</span><span class="op">&lt;</span><span class="ident">EGLBuffer</span>, <span class="ident">BufferAccessError</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="ident">::std::result::Result</span><span class="op">&lt;</span><span class="ident">EGLBuffer</span>, <span class="ident">BufferAccessError</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="op">!</span><span class="ident">buffer</span>.<span class="ident">as_ref</span>().<span class="ident">is_alive</span>() {
             <span class="macro">debug!</span>(<span class="self">self</span>.<span class="ident">logger</span>, <span class="string">&quot;Suplied buffer is no longer alive&quot;</span>);
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">BufferAccessError::NotManaged</span>(<span class="ident">EGLError::BadParameter</span>));
@@ -1643,24 +1643,24 @@
             )
         })
         .<span class="ident">map_err</span>(<span class="ident">BufferAccessError::NotManaged</span>)<span class="question-mark">?</span>;
-        <span class="kw">if</span> <span class="ident">query</span> <span class="op">=</span><span class="op">=</span> <span class="ident">ffi::egl::FALSE</span> {
+        <span class="kw">if</span> <span class="ident">query</span> <span class="op">==</span> <span class="ident">ffi::egl::FALSE</span> {
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">BufferAccessError::NotManaged</span>(<span class="ident">EGLError::BadParameter</span>));
         }
 
         <span class="kw">let</span> <span class="ident">format</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">format</span> {
-            <span class="ident">x</span> <span class="kw">if</span> <span class="ident">x</span> <span class="op">=</span><span class="op">=</span> <span class="ident">ffi::egl::TEXTURE_RGB</span> <span class="kw">as</span> <span class="ident">i32</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Format::RGB</span>,
-            <span class="ident">x</span> <span class="kw">if</span> <span class="ident">x</span> <span class="op">=</span><span class="op">=</span> <span class="ident">ffi::egl::TEXTURE_RGBA</span> <span class="kw">as</span> <span class="ident">i32</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Format::RGBA</span>,
-            <span class="ident">ffi::egl::TEXTURE_EXTERNAL_WL</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Format::External</span>,
-            <span class="ident">ffi::egl::TEXTURE_Y_UV_WL</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">x</span> <span class="kw">if</span> <span class="ident">x</span> <span class="op">==</span> <span class="ident">ffi::egl::TEXTURE_RGB</span> <span class="kw">as</span> <span class="ident">i32</span> =&gt; <span class="ident">Format::RGB</span>,
+            <span class="ident">x</span> <span class="kw">if</span> <span class="ident">x</span> <span class="op">==</span> <span class="ident">ffi::egl::TEXTURE_RGBA</span> <span class="kw">as</span> <span class="ident">i32</span> =&gt; <span class="ident">Format::RGBA</span>,
+            <span class="ident">ffi::egl::TEXTURE_EXTERNAL_WL</span> =&gt; <span class="ident">Format::External</span>,
+            <span class="ident">ffi::egl::TEXTURE_Y_UV_WL</span> =&gt; {
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">BufferAccessError::UnsupportedMultiPlanarFormat</span>(<span class="ident">Format::Y_UV</span>))
             }
-            <span class="ident">ffi::egl::TEXTURE_Y_U_V_WL</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ffi::egl::TEXTURE_Y_U_V_WL</span> =&gt; {
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">BufferAccessError::UnsupportedMultiPlanarFormat</span>(<span class="ident">Format::Y_U_V</span>))
             }
-            <span class="ident">ffi::egl::TEXTURE_Y_XUXV_WL</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ffi::egl::TEXTURE_Y_XUXV_WL</span> =&gt; {
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">BufferAccessError::UnsupportedMultiPlanarFormat</span>(<span class="ident">Format::Y_XUXV</span>))
             }
-            <span class="ident">x</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;EGL returned invalid texture type: {}&quot;</span>, <span class="ident">x</span>),
+            <span class="ident">x</span> =&gt; <span class="macro">panic!</span>(<span class="string">&quot;EGL returned invalid texture type: {}&quot;</span>, <span class="ident">x</span>),
         };
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">width</span>: <span class="ident">i32</span> <span class="op">=</span> <span class="number">0</span>;
@@ -1706,9 +1706,9 @@
             })
             .<span class="ident">map_err</span>(<span class="ident">BufferAccessError::NotManaged</span>)<span class="question-mark">?</span>
             {
-                <span class="ident">ffi::egl::TRUE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">inverted</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span>,
-                <span class="ident">ffi::egl::FALSE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">true</span>,
-                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
+                <span class="ident">ffi::egl::TRUE</span> =&gt; <span class="ident">inverted</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span>,
+                <span class="ident">ffi::egl::FALSE</span> =&gt; <span class="bool-val">true</span>,
+                <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
             }
         };
 
@@ -1748,7 +1748,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">egl_buffer_dimensions</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="ident">WlBuffer</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="kw">crate</span>::utils::Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident"><span class="kw">crate</span>::utils::Physical</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="kw">crate</span>::utils::Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident"><span class="kw">crate</span>::utils::Physical</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="op">!</span><span class="ident">buffer</span>.<span class="ident">as_ref</span>().<span class="ident">is_alive</span>() {
             <span class="macro">debug!</span>(<span class="self">self</span>.<span class="ident">logger</span>, <span class="string">&quot;Suplied buffer is no longer alive&quot;</span>);
             <span class="kw">return</span> <span class="prelude-val">None</span>;
@@ -1761,7 +1761,7 @@
                 <span class="ident">buffer</span>.<span class="ident">as_ref</span>().<span class="ident">c_ptr</span>() <span class="kw">as</span> <span class="kw">_</span>,
                 <span class="ident">ffi::egl::WIDTH</span> <span class="kw">as</span> <span class="kw">_</span>,
                 <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">width</span>,
-            ) <span class="op">=</span><span class="op">=</span> <span class="number">0</span>
+            ) <span class="op">==</span> <span class="number">0</span>
         } {
             <span class="kw">return</span> <span class="prelude-val">None</span>;
         }
@@ -1773,7 +1773,7 @@
                 <span class="ident">buffer</span>.<span class="ident">as_ref</span>().<span class="ident">c_ptr</span>() <span class="kw">as</span> <span class="kw">_</span>,
                 <span class="ident">ffi::egl::HEIGHT</span> <span class="kw">as</span> <span class="kw">_</span>,
                 <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">height</span>,
-            ) <span class="op">=</span><span class="op">=</span> <span class="number">0</span>
+            ) <span class="op">==</span> <span class="number">0</span>
         } {
             <span class="kw">return</span> <span class="prelude-val">None</span>;
         }

@@ -299,8 +299,8 @@
 }
 
 <span class="kw">impl</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="ident">WinitPointer</span> {
-    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-        <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">pointer</span> <span class="op">=</span><span class="op">=</span> <span class="kw-2">*</span><span class="ident">other</span>.<span class="ident">pointer</span>
+    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="ident">bool</span> {
+        <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">pointer</span> <span class="op">==</span> <span class="kw-2">*</span><span class="ident">other</span>.<span class="ident">pointer</span>
     }
 }
 
@@ -312,8 +312,8 @@
     <span class="doccomment">/// Providing `None` will hide the cursor.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_cursor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cursor_icon</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CursorIcon</span><span class="op">&gt;</span>) {
         <span class="kw">let</span> <span class="ident">cursor_icon</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">cursor_icon</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">cursor_icon</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">cursor_icon</span>,
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Some</span>(<span class="ident">cursor_icon</span>) =&gt; <span class="ident">cursor_icon</span>,
+            <span class="prelude-val">None</span> =&gt; {
                 <span class="comment">// Hide the cursor.</span>
                 (<span class="kw-2">*</span><span class="self">self</span>.<span class="ident">pointer</span>).<span class="ident">set_cursor</span>(<span class="self">self</span>.<span class="ident">latest_serial</span>.<span class="ident">get</span>(), <span class="prelude-val">None</span>, <span class="number">0</span>, <span class="number">0</span>);
                 <span class="kw">return</span>;
@@ -321,46 +321,46 @@
         };
 
         <span class="kw">let</span> <span class="ident">cursors</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>] <span class="op">=</span> <span class="kw">match</span> <span class="ident">cursor_icon</span> {
-            <span class="ident">CursorIcon::Alias</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;link&quot;</span>],
-            <span class="ident">CursorIcon::Arrow</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;arrow&quot;</span>],
-            <span class="ident">CursorIcon::Cell</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;plus&quot;</span>],
-            <span class="ident">CursorIcon::Copy</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;copy&quot;</span>],
-            <span class="ident">CursorIcon::Crosshair</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;crosshair&quot;</span>],
-            <span class="ident">CursorIcon::Default</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;left_ptr&quot;</span>],
-            <span class="ident">CursorIcon::Hand</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;hand&quot;</span>],
-            <span class="ident">CursorIcon::Help</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;question_arrow&quot;</span>],
-            <span class="ident">CursorIcon::Move</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;move&quot;</span>],
-            <span class="ident">CursorIcon::Grab</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;openhand&quot;</span>, <span class="string">&quot;grab&quot;</span>],
-            <span class="ident">CursorIcon::Grabbing</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;closedhand&quot;</span>, <span class="string">&quot;grabbing&quot;</span>],
-            <span class="ident">CursorIcon::Progress</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;progress&quot;</span>],
-            <span class="ident">CursorIcon::AllScroll</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;all-scroll&quot;</span>],
-            <span class="ident">CursorIcon::ContextMenu</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;context-menu&quot;</span>],
+            <span class="ident">CursorIcon::Alias</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;link&quot;</span>],
+            <span class="ident">CursorIcon::Arrow</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;arrow&quot;</span>],
+            <span class="ident">CursorIcon::Cell</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;plus&quot;</span>],
+            <span class="ident">CursorIcon::Copy</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;copy&quot;</span>],
+            <span class="ident">CursorIcon::Crosshair</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;crosshair&quot;</span>],
+            <span class="ident">CursorIcon::Default</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;left_ptr&quot;</span>],
+            <span class="ident">CursorIcon::Hand</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;hand&quot;</span>],
+            <span class="ident">CursorIcon::Help</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;question_arrow&quot;</span>],
+            <span class="ident">CursorIcon::Move</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;move&quot;</span>],
+            <span class="ident">CursorIcon::Grab</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;openhand&quot;</span>, <span class="string">&quot;grab&quot;</span>],
+            <span class="ident">CursorIcon::Grabbing</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;closedhand&quot;</span>, <span class="string">&quot;grabbing&quot;</span>],
+            <span class="ident">CursorIcon::Progress</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;progress&quot;</span>],
+            <span class="ident">CursorIcon::AllScroll</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;all-scroll&quot;</span>],
+            <span class="ident">CursorIcon::ContextMenu</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;context-menu&quot;</span>],
 
-            <span class="ident">CursorIcon::NoDrop</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;no-drop&quot;</span>, <span class="string">&quot;circle&quot;</span>],
-            <span class="ident">CursorIcon::NotAllowed</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;crossed_circle&quot;</span>],
+            <span class="ident">CursorIcon::NoDrop</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;no-drop&quot;</span>, <span class="string">&quot;circle&quot;</span>],
+            <span class="ident">CursorIcon::NotAllowed</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;crossed_circle&quot;</span>],
 
             <span class="comment">// Resize cursors</span>
-            <span class="ident">CursorIcon::EResize</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;right_side&quot;</span>],
-            <span class="ident">CursorIcon::NResize</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;top_side&quot;</span>],
-            <span class="ident">CursorIcon::NeResize</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;top_right_corner&quot;</span>],
-            <span class="ident">CursorIcon::NwResize</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;top_left_corner&quot;</span>],
-            <span class="ident">CursorIcon::SResize</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;bottom_side&quot;</span>],
-            <span class="ident">CursorIcon::SeResize</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;bottom_right_corner&quot;</span>],
-            <span class="ident">CursorIcon::SwResize</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;bottom_left_corner&quot;</span>],
-            <span class="ident">CursorIcon::WResize</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;left_side&quot;</span>],
-            <span class="ident">CursorIcon::EwResize</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;h_double_arrow&quot;</span>],
-            <span class="ident">CursorIcon::NsResize</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;v_double_arrow&quot;</span>],
-            <span class="ident">CursorIcon::NwseResize</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;bd_double_arrow&quot;</span>, <span class="string">&quot;size_bdiag&quot;</span>],
-            <span class="ident">CursorIcon::NeswResize</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;fd_double_arrow&quot;</span>, <span class="string">&quot;size_fdiag&quot;</span>],
-            <span class="ident">CursorIcon::ColResize</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;split_h&quot;</span>, <span class="string">&quot;h_double_arrow&quot;</span>],
-            <span class="ident">CursorIcon::RowResize</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;split_v&quot;</span>, <span class="string">&quot;v_double_arrow&quot;</span>],
-            <span class="ident">CursorIcon::Text</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;text&quot;</span>, <span class="string">&quot;xterm&quot;</span>],
-            <span class="ident">CursorIcon::VerticalText</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;vertical-text&quot;</span>],
+            <span class="ident">CursorIcon::EResize</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;right_side&quot;</span>],
+            <span class="ident">CursorIcon::NResize</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;top_side&quot;</span>],
+            <span class="ident">CursorIcon::NeResize</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;top_right_corner&quot;</span>],
+            <span class="ident">CursorIcon::NwResize</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;top_left_corner&quot;</span>],
+            <span class="ident">CursorIcon::SResize</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;bottom_side&quot;</span>],
+            <span class="ident">CursorIcon::SeResize</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;bottom_right_corner&quot;</span>],
+            <span class="ident">CursorIcon::SwResize</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;bottom_left_corner&quot;</span>],
+            <span class="ident">CursorIcon::WResize</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;left_side&quot;</span>],
+            <span class="ident">CursorIcon::EwResize</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;h_double_arrow&quot;</span>],
+            <span class="ident">CursorIcon::NsResize</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;v_double_arrow&quot;</span>],
+            <span class="ident">CursorIcon::NwseResize</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;bd_double_arrow&quot;</span>, <span class="string">&quot;size_bdiag&quot;</span>],
+            <span class="ident">CursorIcon::NeswResize</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;fd_double_arrow&quot;</span>, <span class="string">&quot;size_fdiag&quot;</span>],
+            <span class="ident">CursorIcon::ColResize</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;split_h&quot;</span>, <span class="string">&quot;h_double_arrow&quot;</span>],
+            <span class="ident">CursorIcon::RowResize</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;split_v&quot;</span>, <span class="string">&quot;v_double_arrow&quot;</span>],
+            <span class="ident">CursorIcon::Text</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;text&quot;</span>, <span class="string">&quot;xterm&quot;</span>],
+            <span class="ident">CursorIcon::VerticalText</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;vertical-text&quot;</span>],
 
-            <span class="ident">CursorIcon::Wait</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;watch&quot;</span>],
+            <span class="ident">CursorIcon::Wait</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;watch&quot;</span>],
 
-            <span class="ident">CursorIcon::ZoomIn</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;zoom-in&quot;</span>],
-            <span class="ident">CursorIcon::ZoomOut</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;zoom-out&quot;</span>],
+            <span class="ident">CursorIcon::ZoomIn</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;zoom-in&quot;</span>],
+            <span class="ident">CursorIcon::ZoomOut</span> =&gt; <span class="kw-2">&amp;</span>[<span class="string">&quot;zoom-out&quot;</span>],
         };
 
         <span class="kw">let</span> <span class="ident">serial</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">latest_serial</span>.<span class="ident">get</span>());
@@ -374,14 +374,14 @@
     <span class="doccomment">/// Confine the pointer to a surface.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">confine</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>) {
         <span class="kw">let</span> <span class="ident">pointer_constraints</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">pointer_constraints</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">pointer_constraints</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">pointer_constraints</span>,
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span>,
+            <span class="prelude-val">Some</span>(<span class="ident">pointer_constraints</span>) =&gt; <span class="ident">pointer_constraints</span>,
+            <span class="prelude-val">None</span> =&gt; <span class="kw">return</span>,
         };
 
         <span class="kw">let</span> <span class="ident">confined_pointer</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">confined_pointer</span>.<span class="ident">upgrade</span>() {
-            <span class="prelude-val">Some</span>(<span class="ident">confined_pointer</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">confined_pointer</span>,
+            <span class="prelude-val">Some</span>(<span class="ident">confined_pointer</span>) =&gt; <span class="ident">confined_pointer</span>,
             <span class="comment">// A pointer is gone.</span>
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span>,
+            <span class="prelude-val">None</span> =&gt; <span class="kw">return</span>,
         };
 
         <span class="kw-2">*</span><span class="ident">confined_pointer</span>.<span class="ident">borrow_mut</span>() <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">init_confined_pointer</span>(
@@ -394,9 +394,9 @@
     <span class="doccomment">/// Tries to unconfine the pointer if the current pointer is confined.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unconfine</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
         <span class="kw">let</span> <span class="ident">confined_pointer</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">confined_pointer</span>.<span class="ident">upgrade</span>() {
-            <span class="prelude-val">Some</span>(<span class="ident">confined_pointer</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">confined_pointer</span>,
+            <span class="prelude-val">Some</span>(<span class="ident">confined_pointer</span>) =&gt; <span class="ident">confined_pointer</span>,
             <span class="comment">// A pointer is gone.</span>
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span>,
+            <span class="prelude-val">None</span> =&gt; <span class="kw">return</span>,
         };
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">confined_pointer</span> <span class="op">=</span> <span class="ident">confined_pointer</span>.<span class="ident">borrow_mut</span>();
@@ -430,7 +430,7 @@
         <span class="ident">relative_pointer_manager</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Attached</span><span class="op">&lt;</span><span class="ident">ZwpRelativePointerManagerV1</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">pointer_constraints</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Attached</span><span class="op">&lt;</span><span class="ident">ZwpPointerConstraintsV1</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">modifiers_state</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">ModifiersState</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    ) -&gt; <span class="self">Self</span> {
         <span class="kw">let</span> <span class="ident">confined_pointer</span> <span class="op">=</span> <span class="ident">Rc::new</span>(<span class="ident">RefCell::new</span>(<span class="prelude-val">None</span>));
         <span class="kw">let</span> <span class="ident">pointer_data</span> <span class="op">=</span> <span class="ident">Rc::new</span>(<span class="ident">RefCell::new</span>(<span class="ident">PointerData::new</span>(
             <span class="ident">confined_pointer</span>.<span class="ident">clone</span>(),
@@ -454,10 +454,10 @@
 
         <span class="comment">// Setup relative_pointer if it&#39;s available.</span>
         <span class="kw">let</span> <span class="ident">relative_pointer</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">relative_pointer_manager</span>.<span class="ident">as_ref</span>() {
-            <span class="prelude-val">Some</span>(<span class="ident">relative_pointer_manager</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Some</span>(<span class="ident">relative_pointer_manager</span>) =&gt; {
                 <span class="prelude-val">Some</span>(<span class="ident">init_relative_pointer</span>(<span class="kw-2">&amp;</span><span class="ident">relative_pointer_manager</span>, <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">pointer</span>))
             }
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
+            <span class="prelude-val">None</span> =&gt; <span class="prelude-val">None</span>,
         };
 
         <span class="self">Self</span> {
@@ -490,7 +490,7 @@
 <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">init_relative_pointer</span>(
     <span class="ident">relative_pointer_manager</span>: <span class="kw-2">&amp;</span><span class="ident">ZwpRelativePointerManagerV1</span>,
     <span class="ident">pointer</span>: <span class="kw-2">&amp;</span><span class="ident">WlPointer</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ZwpRelativePointerV1</span> {
+) -&gt; <span class="ident">ZwpRelativePointerV1</span> {
     <span class="kw">let</span> <span class="ident">relative_pointer</span> <span class="op">=</span> <span class="ident">relative_pointer_manager</span>.<span class="ident">get_relative_pointer</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">pointer</span>);
     <span class="ident">relative_pointer</span>.<span class="ident">quick_assign</span>(<span class="kw">move</span> <span class="op">|</span><span class="kw">_</span>, <span class="ident">event</span>, <span class="kw-2">mut</span> <span class="ident">dispatch_data</span><span class="op">|</span> {
         <span class="kw">let</span> <span class="ident">winit_state</span> <span class="op">=</span> <span class="ident">dispatch_data</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">WinitState</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
@@ -504,7 +504,7 @@
     <span class="ident">pointer_constraints</span>: <span class="kw-2">&amp;</span><span class="ident">Attached</span><span class="op">&lt;</span><span class="ident">ZwpPointerConstraintsV1</span><span class="op">&gt;</span>,
     <span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>,
     <span class="ident">pointer</span>: <span class="kw-2">&amp;</span><span class="ident">WlPointer</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ZwpConfinedPointerV1</span> {
+) -&gt; <span class="ident">ZwpConfinedPointerV1</span> {
     <span class="kw">let</span> <span class="ident">confined_pointer</span> <span class="op">=</span>
         <span class="ident">pointer_constraints</span>.<span class="ident">confine_pointer</span>(<span class="ident">surface</span>, <span class="ident">pointer</span>, <span class="prelude-val">None</span>, <span class="ident">Lifetime::Persistent</span>.<span class="ident">to_raw</span>());
 

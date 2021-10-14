@@ -60,7 +60,7 @@
 
 <span class="kw">impl</span> <span class="ident">Seat</span> {
     <span class="doccomment">/// Get the libinput context from the seat.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Libinput</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Libinput</span> {
         <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">clone</span>()
     }
 
@@ -74,7 +74,7 @@
     <span class="doccomment">/// system or lower levels of the stack. In most cases, this is the</span>
     <span class="doccomment">/// base filter for devices - devices assigned to seats outside the</span>
     <span class="doccomment">/// current seat will not be available to the caller.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">physical_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">physical_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
         <span class="kw">unsafe</span> {
             <span class="ident">CStr::from_ptr</span>(<span class="ident">ffi::libinput_seat_get_physical_name</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()))
                 .<span class="ident">to_str</span>()
@@ -86,7 +86,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This is an identifier to group sets of devices within the</span>
     <span class="doccomment">/// compositor.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">logical_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">logical_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
         <span class="kw">unsafe</span> {
             <span class="ident">CStr::from_ptr</span>(<span class="ident">ffi::libinput_seat_get_logical_name</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()))
                 .<span class="ident">to_str</span>()

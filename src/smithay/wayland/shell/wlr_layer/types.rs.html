@@ -255,13 +255,13 @@
 <span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="ident">zwlr_layer_shell_v1::Layer</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Layer</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> (<span class="ident">zwlr_layer_shell_v1::Error</span>, <span class="ident">String</span>);
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">layer</span>: <span class="ident">zwlr_layer_shell_v1::Layer</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">layer</span>: <span class="ident">zwlr_layer_shell_v1::Layer</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="ident">layer</span> {
-            <span class="ident">zwlr_layer_shell_v1::Layer::Background</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::Background</span>),
-            <span class="ident">zwlr_layer_shell_v1::Layer::Bottom</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::Bottom</span>),
-            <span class="ident">zwlr_layer_shell_v1::Layer::Top</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::Top</span>),
-            <span class="ident">zwlr_layer_shell_v1::Layer::Overlay</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::Overlay</span>),
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>((
+            <span class="ident">zwlr_layer_shell_v1::Layer::Background</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::Background</span>),
+            <span class="ident">zwlr_layer_shell_v1::Layer::Bottom</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::Bottom</span>),
+            <span class="ident">zwlr_layer_shell_v1::Layer::Top</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::Top</span>),
+            <span class="ident">zwlr_layer_shell_v1::Layer::Overlay</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::Overlay</span>),
+            <span class="kw">_</span> =&gt; <span class="prelude-val">Err</span>((
                 <span class="ident">zwlr_layer_shell_v1::Error::InvalidLayer</span>,
                 <span class="macro">format!</span>(<span class="string">&quot;invalid layer: {:?}&quot;</span>, <span class="ident">layer</span>),
             )),
@@ -270,7 +270,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Layer</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::Background</span>
     }
 }
@@ -320,7 +320,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">KeyboardInteractivity</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::None</span>
     }
 }
@@ -328,12 +328,12 @@
 <span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="ident">zwlr_layer_surface_v1::KeyboardInteractivity</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">KeyboardInteractivity</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> (<span class="ident">zwlr_layer_surface_v1::Error</span>, <span class="ident">String</span>);
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">ki</span>: <span class="ident">zwlr_layer_surface_v1::KeyboardInteractivity</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">ki</span>: <span class="ident">zwlr_layer_surface_v1::KeyboardInteractivity</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="ident">ki</span> {
-            <span class="ident">zwlr_layer_surface_v1::KeyboardInteractivity::None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::None</span>),
-            <span class="ident">zwlr_layer_surface_v1::KeyboardInteractivity::Exclusive</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::Exclusive</span>),
-            <span class="ident">zwlr_layer_surface_v1::KeyboardInteractivity::OnDemand</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::OnDemand</span>),
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>((
+            <span class="ident">zwlr_layer_surface_v1::KeyboardInteractivity::None</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::None</span>),
+            <span class="ident">zwlr_layer_surface_v1::KeyboardInteractivity::Exclusive</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::Exclusive</span>),
+            <span class="ident">zwlr_layer_surface_v1::KeyboardInteractivity::OnDemand</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::OnDemand</span>),
+            <span class="kw">_</span> =&gt; <span class="prelude-val">Err</span>((
                 <span class="ident">zwlr_layer_surface_v1::Error::InvalidKeyboardInteractivity</span>,
                 <span class="macro">format!</span>(<span class="string">&quot;wrong keyboard interactivity value: {:?}&quot;</span>, <span class="ident">ki</span>),
             )),
@@ -360,20 +360,20 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// If it is anchored to `left` and `right` anchor at the same time</span>
     <span class="doccomment">/// it returns `true`</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">anchored_horizontally</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">anchored_horizontally</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="ident">contains</span>(<span class="ident"><span class="self">Self</span>::LEFT</span>) <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">contains</span>(<span class="ident"><span class="self">Self</span>::RIGHT</span>)
     }
     <span class="doccomment">/// Check if anchored vertically</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// If it is anchored to `top` and `bottom` anchor at the same time</span>
     <span class="doccomment">/// it returns `true`</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">anchored_vertically</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">anchored_vertically</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="ident">contains</span>(<span class="ident"><span class="self">Self</span>::TOP</span>) <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">contains</span>(<span class="ident"><span class="self">Self</span>::BOTTOM</span>)
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Anchor</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::empty</span>()
     }
 }
@@ -381,10 +381,10 @@
 <span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="ident">zwlr_layer_surface_v1::Anchor</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Anchor</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> (<span class="ident">zwlr_layer_surface_v1::Error</span>, <span class="ident">String</span>);
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">anchor</span>: <span class="ident">zwlr_layer_surface_v1::Anchor</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">anchor</span>: <span class="ident">zwlr_layer_surface_v1::Anchor</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="ident">Anchor::from_bits</span>(<span class="ident">anchor</span>.<span class="ident">bits</span>()) {
-            <span class="prelude-val">Some</span>(<span class="ident">a</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">a</span>),
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>((
+            <span class="prelude-val">Some</span>(<span class="ident">a</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">a</span>),
+            <span class="kw">_</span> =&gt; <span class="prelude-val">Err</span>((
                 <span class="ident">zwlr_layer_surface_v1::Error::InvalidAnchor</span>,
                 <span class="macro">format!</span>(<span class="string">&quot;invalid anchor {:?}&quot;</span>, <span class="ident">anchor</span>),
             )),
@@ -419,27 +419,27 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">ExclusiveZone</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::Neutral</span>
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ExclusiveZone</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">v</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">v</span>: <span class="ident">i32</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">match</span> <span class="ident">v</span>.<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="number">0</span>) {
-            <span class="ident">Ordering::Greater</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Exclusive</span>(<span class="ident">v</span> <span class="kw">as</span> <span class="ident">u32</span>),
-            <span class="ident">Ordering::Equal</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Neutral</span>,
-            <span class="ident">Ordering::Less</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::DontCare</span>,
+            <span class="ident">Ordering::Greater</span> =&gt; <span class="ident"><span class="self">Self</span>::Exclusive</span>(<span class="ident">v</span> <span class="kw">as</span> <span class="ident">u32</span>),
+            <span class="ident">Ordering::Equal</span> =&gt; <span class="ident"><span class="self">Self</span>::Neutral</span>,
+            <span class="ident">Ordering::Less</span> =&gt; <span class="ident"><span class="self">Self</span>::DontCare</span>,
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">ExclusiveZone</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">i32</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">z</span>: <span class="ident">ExclusiveZone</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i32</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">z</span>: <span class="ident">ExclusiveZone</span>) -&gt; <span class="ident">i32</span> {
         <span class="kw">match</span> <span class="ident">z</span> {
-            <span class="ident">ExclusiveZone::Exclusive</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span> <span class="kw">as</span> <span class="ident">i32</span>,
-            <span class="ident">ExclusiveZone::Neutral</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">0</span>,
-            <span class="ident">ExclusiveZone::DontCare</span> <span class="op">=</span><span class="op">&gt;</span> <span class="op">-</span><span class="number">1</span>,
+            <span class="ident">ExclusiveZone::Exclusive</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span> <span class="kw">as</span> <span class="ident">i32</span>,
+            <span class="ident">ExclusiveZone::Neutral</span> =&gt; <span class="number">0</span>,
+            <span class="ident">ExclusiveZone::DontCare</span> =&gt; <span class="op">-</span><span class="number">1</span>,
         }
     }
 }

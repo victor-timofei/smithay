@@ -8,7 +8,7 @@ although slog comes with default implementations within its macros (the
 <p>If you don’t use this trait, you must emit your structured data by
 specifying both key and value in each log event:</p>
 
-<div class='information'><div class='tooltip ignore'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore"><code><span class="macro">info!</span>(<span class="ident">logger</span>, <span class="string">&quot;my event&quot;</span>; <span class="string">&quot;type_key&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="op">%</span><span class="ident">my_val</span>);</code></pre></div>
+<div class='information'><div class='tooltip ignore'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore"><code><span class="macro">info!</span>(<span class="ident">logger</span>, <span class="string">&quot;my event&quot;</span>; <span class="string">&quot;type_key&quot;</span> =&gt; <span class="op">%</span><span class="ident">my_val</span>);</code></pre></div>
 <p>If you implement this trait, that can become:</p>
 
 <div class='information'><div class='tooltip ignore'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore"><code><span class="macro">info!</span>(<span class="ident">logger</span>, <span class="string">&quot;my event&quot;</span>; <span class="ident">my_val</span>);</code></pre></div>
@@ -21,13 +21,13 @@ in other words: from newest to oldest.</p>
 <code>Serializer</code> passed in, the <code>Record</code> can be used to make display decisions
 based on context, but for most plain-value structs you will just call
 <code>emit_*</code>.</p>
-<h1 id="example" class="section-header"><a href="#example">Example</a></h1>
+<h2 id="example" class="section-header"><a href="#example">Example</a></h2>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">KV</span>, <span class="ident">Record</span>, <span class="prelude-ty">Result</span>, <span class="ident">Serializer</span>};
 
 <span class="kw">struct</span> <span class="ident">MyNewType</span>(<span class="ident">i64</span>);
 
 <span class="kw">impl</span> <span class="ident">KV</span> <span class="kw">for</span> <span class="ident">MyNewType</span> {
-   <span class="kw">fn</span> <span class="ident">serialize</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_rec</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>, <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span> {
+   <span class="kw">fn</span> <span class="ident">serialize</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_rec</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>, <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>) -&gt; <span class="prelude-ty">Result</span> {
        <span class="ident">serializer</span>.<span class="ident">emit_i64</span>(<span class="string">&quot;my_new_type&quot;</span>, <span class="self">self</span>.<span class="number">0</span>)
    }
 }</code></pre></div>

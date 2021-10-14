@@ -1189,7 +1189,7 @@
 <span class="doccomment">/// Convert from a raw drm object value to a typed Handle</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// Note: This does no verification on the validity of the original value</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_u32</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">ResourceHandle</span><span class="op">&gt;</span>(<span class="ident">raw</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_u32</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">ResourceHandle</span><span class="op">&gt;</span>(<span class="ident">raw</span>: <span class="ident">u32</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="ident">RawResourceHandle::new</span>(<span class="ident">raw</span>).<span class="ident">map</span>(<span class="ident">T::from</span>)
 }
 
@@ -1208,7 +1208,7 @@
 <span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Device</span>: <span class="ident"><span class="kw">super</span>::Device</span> {
     <span class="doccomment">/// Gets the set of resource handles that this device currently controls</span>
-    <span class="kw">fn</span> <span class="ident">resource_handles</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceHandles</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">resource_handles</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceHandles</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fbs</span> <span class="op">=</span> [<span class="number">0u32</span>; <span class="number">32</span>];
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">crtcs</span> <span class="op">=</span> [<span class="number">0u32</span>; <span class="number">32</span>];
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">connectors</span> <span class="op">=</span> [<span class="number">0u32</span>; <span class="number">32</span>];
@@ -1249,7 +1249,7 @@
     }
 
     <span class="doccomment">/// Gets the set of plane handles that this device currently has</span>
-    <span class="kw">fn</span> <span class="ident">plane_handles</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PlaneResourceHandles</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">plane_handles</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PlaneResourceHandles</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">planes</span> <span class="op">=</span> [<span class="number">0u32</span>; <span class="number">32</span>];
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">plane_slice</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">planes</span>[..];
 
@@ -1266,7 +1266,7 @@
     }
 
     <span class="doccomment">/// Returns information about a specific connector</span>
-    <span class="kw">fn</span> <span class="ident">get_connector</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">handle</span>: <span class="ident">connector::Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">connector::Info</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">get_connector</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">handle</span>: <span class="ident">connector::Handle</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">connector::Info</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="comment">// Maximum number of encoders is 3 due to kernel restrictions</span>
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">encoders</span> <span class="op">=</span> [<span class="number">0u32</span>; <span class="number">3</span>];
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">enc_slice</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">encoders</span>[..];
@@ -1287,8 +1287,8 @@
             <span class="ident">interface_id</span>: <span class="ident">ffi_info</span>.<span class="ident">connector_type_id</span>,
             <span class="ident">connection</span>: <span class="ident">connector::State::from</span>(<span class="ident">ffi_info</span>.<span class="ident">connection</span>),
             <span class="ident">size</span>: <span class="kw">match</span> (<span class="ident">ffi_info</span>.<span class="ident">mm_width</span>, <span class="ident">ffi_info</span>.<span class="ident">mm_height</span>) {
-                (<span class="number">0</span>, <span class="number">0</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
-                (<span class="ident">x</span>, <span class="ident">y</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>((<span class="ident">x</span>, <span class="ident">y</span>)),
+                (<span class="number">0</span>, <span class="number">0</span>) =&gt; <span class="prelude-val">None</span>,
+                (<span class="ident">x</span>, <span class="ident">y</span>) =&gt; <span class="prelude-val">Some</span>((<span class="ident">x</span>, <span class="ident">y</span>)),
             },
             <span class="ident">modes</span>: <span class="kw">unsafe</span> { <span class="ident">mem::transmute</span>(<span class="ident">modes</span>) },
             <span class="ident">encoders</span>: <span class="kw">unsafe</span> { <span class="ident">mem::transmute</span>(<span class="ident">encoders</span>) },
@@ -1299,7 +1299,7 @@
     }
 
     <span class="doccomment">/// Returns information about a specific encoder</span>
-    <span class="kw">fn</span> <span class="ident">get_encoder</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">handle</span>: <span class="ident">encoder::Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">encoder::Info</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">get_encoder</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">handle</span>: <span class="ident">encoder::Handle</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">encoder::Info</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">info</span> <span class="op">=</span> <span class="ident">ffi::mode::get_encoder</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="ident">handle</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">enc</span> <span class="op">=</span> <span class="ident">encoder::Info</span> {
@@ -1314,15 +1314,15 @@
     }
 
     <span class="doccomment">/// Returns information about a specific CRTC</span>
-    <span class="kw">fn</span> <span class="ident">get_crtc</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">handle</span>: <span class="ident">crtc::Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">crtc::Info</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">get_crtc</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">handle</span>: <span class="ident">crtc::Handle</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">crtc::Info</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">info</span> <span class="op">=</span> <span class="ident">ffi::mode::get_crtc</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="ident">handle</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">crtc</span> <span class="op">=</span> <span class="ident">crtc::Info</span> {
             <span class="ident">handle</span>,
             <span class="ident">position</span>: (<span class="ident">info</span>.<span class="ident">x</span>, <span class="ident">info</span>.<span class="ident">y</span>),
             <span class="ident">mode</span>: <span class="kw">match</span> <span class="ident">info</span>.<span class="ident">mode_valid</span> {
-                <span class="number">0</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
-                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">Mode::from</span>(<span class="ident">info</span>.<span class="ident">mode</span>)),
+                <span class="number">0</span> =&gt; <span class="prelude-val">None</span>,
+                <span class="kw">_</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident">Mode::from</span>(<span class="ident">info</span>.<span class="ident">mode</span>)),
             },
             <span class="ident">fb</span>: <span class="ident">from_u32</span>(<span class="ident">info</span>.<span class="ident">fb_id</span>),
             <span class="ident">gamma_length</span>: <span class="ident">info</span>.<span class="ident">gamma_size</span>,
@@ -1339,7 +1339,7 @@
         <span class="ident">pos</span>: (<span class="ident">u32</span>, <span class="ident">u32</span>),
         <span class="ident">conns</span>: <span class="kw-2">&amp;</span>[<span class="ident">connector::Handle</span>],
         <span class="ident">mode</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Mode</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">_info</span> <span class="op">=</span> <span class="ident">ffi::mode::set_crtc</span>(
             <span class="self">self</span>.<span class="ident">as_raw_fd</span>(),
             <span class="ident">handle</span>.<span class="ident">into</span>(),
@@ -1357,7 +1357,7 @@
     <span class="kw">fn</span> <span class="ident">get_framebuffer</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">handle</span>: <span class="ident">framebuffer::Handle</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">framebuffer::Info</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">framebuffer::Info</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">info</span> <span class="op">=</span> <span class="ident">ffi::mode::get_framebuffer</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="ident">handle</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">fb</span> <span class="op">=</span> <span class="ident">framebuffer::Info</span> {
@@ -1378,7 +1378,7 @@
         <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="ident">B</span>,
         <span class="ident">depth</span>: <span class="ident">u32</span>,
         <span class="ident">bpp</span>: <span class="ident">u32</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">framebuffer::Handle</span>, <span class="ident">SystemError</span><span class="op">&gt;</span>
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">framebuffer::Handle</span>, <span class="ident">SystemError</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">B</span>: <span class="ident">buffer::Buffer</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span>,
     {
@@ -1402,7 +1402,7 @@
         <span class="ident">planar_buffer</span>: <span class="kw-2">&amp;</span><span class="ident">B</span>,
         <span class="ident">modifiers</span>: <span class="kw-2">&amp;</span>[<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DrmModifier</span><span class="op">&gt;</span>; <span class="number">4</span>],
         <span class="ident">flags</span>: <span class="ident">u32</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">framebuffer::Handle</span>, <span class="ident">SystemError</span><span class="op">&gt;</span>
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">framebuffer::Handle</span>, <span class="ident">SystemError</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">B</span>: <span class="ident">buffer::PlanarBuffer</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span>,
     {
@@ -1441,18 +1441,18 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">handle</span>: <span class="ident">framebuffer::Handle</span>,
         <span class="ident">clips</span>: <span class="kw-2">&amp;</span>[<span class="ident">ClipRect</span>],
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="ident">ffi::mode::dirty_fb</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="ident">handle</span>.<span class="ident">into</span>(), <span class="ident">clips</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="doccomment">/// Destroy a framebuffer</span>
-    <span class="kw">fn</span> <span class="ident">destroy_framebuffer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">handle</span>: <span class="ident">framebuffer::Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">destroy_framebuffer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">handle</span>: <span class="ident">framebuffer::Handle</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="ident">ffi::mode::rm_fb</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="ident">handle</span>.<span class="ident">into</span>())
     }
 
     <span class="doccomment">/// Returns information about a specific plane</span>
-    <span class="kw">fn</span> <span class="ident">get_plane</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">handle</span>: <span class="ident">plane::Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">plane::Info</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">get_plane</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">handle</span>: <span class="ident">plane::Handle</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">plane::Info</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">formats</span> <span class="op">=</span> [<span class="number">0u32</span>; <span class="number">8</span>];
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fmt_slice</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">formats</span>[..];
 
@@ -1483,7 +1483,7 @@
         <span class="ident">flags</span>: <span class="ident">u32</span>,
         <span class="ident">crtc_rect</span>: (<span class="ident">i32</span>, <span class="ident">i32</span>, <span class="ident">u32</span>, <span class="ident">u32</span>),
         <span class="ident">src_rect</span>: (<span class="ident">u32</span>, <span class="ident">u32</span>, <span class="ident">u32</span>, <span class="ident">u32</span>),
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">_info</span> <span class="op">=</span> <span class="ident">ffi::mode::set_plane</span>(
             <span class="self">self</span>.<span class="ident">as_raw_fd</span>(),
             <span class="ident">handle</span>.<span class="ident">into</span>(),
@@ -1504,7 +1504,7 @@
     }
 
     <span class="doccomment">/// Returns information about a specific property.</span>
-    <span class="kw">fn</span> <span class="ident">get_property</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">handle</span>: <span class="ident">property::Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">property::Info</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">get_property</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">handle</span>: <span class="ident">property::Handle</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">property::Info</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">values</span> <span class="op">=</span> [<span class="number">0u64</span>; <span class="number">24</span>];
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">enums</span> <span class="op">=</span> [<span class="ident">ffi::drm_mode_property_enum::default</span>(); <span class="number">24</span>];
 
@@ -1529,8 +1529,8 @@
                 <span class="kw">let</span> <span class="ident">max</span> <span class="op">=</span> <span class="ident">values</span>[<span class="number">1</span>];
 
                 <span class="kw">match</span> (<span class="ident">min</span>, <span class="ident">max</span>) {
-                    (<span class="number">0</span>, <span class="number">1</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ValueType::Boolean</span>,
-                    (<span class="ident">min</span>, <span class="ident">max</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ValueType::UnsignedRange</span>(<span class="ident">min</span>, <span class="ident">max</span>),
+                    (<span class="number">0</span>, <span class="number">1</span>) =&gt; <span class="ident">ValueType::Boolean</span>,
+                    (<span class="ident">min</span>, <span class="ident">max</span>) =&gt; <span class="ident">ValueType::UnsignedRange</span>(<span class="ident">min</span>, <span class="ident">max</span>),
                 }
             } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">flags</span> <span class="op">&amp;</span> <span class="ident">ffi::DRM_MODE_PROP_SIGNED_RANGE</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
                 <span class="kw">let</span> <span class="ident">min</span> <span class="op">=</span> <span class="ident">values</span>[<span class="number">0</span>];
@@ -1551,15 +1551,15 @@
                 <span class="ident">ValueType::Bitmask</span>
             } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">flags</span> <span class="op">&amp;</span> <span class="ident">ffi::DRM_MODE_PROP_OBJECT</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
                 <span class="kw">match</span> <span class="ident">values</span>[<span class="number">0</span>] <span class="kw">as</span> <span class="ident">u32</span> {
-                    <span class="ident">ffi::DRM_MODE_OBJECT_CRTC</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ValueType::CRTC</span>,
-                    <span class="ident">ffi::DRM_MODE_OBJECT_CONNECTOR</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ValueType::Connector</span>,
-                    <span class="ident">ffi::DRM_MODE_OBJECT_ENCODER</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ValueType::Encoder</span>,
-                    <span class="ident">ffi::DRM_MODE_OBJECT_FB</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ValueType::Framebuffer</span>,
-                    <span class="ident">ffi::DRM_MODE_OBJECT_PLANE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ValueType::Plane</span>,
-                    <span class="ident">ffi::DRM_MODE_OBJECT_PROPERTY</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ValueType::Property</span>,
-                    <span class="ident">ffi::DRM_MODE_OBJECT_BLOB</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ValueType::Blob</span>,
-                    <span class="ident">ffi::DRM_MODE_OBJECT_ANY</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ValueType::Object</span>,
-                    <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ValueType::Unknown</span>,
+                    <span class="ident">ffi::DRM_MODE_OBJECT_CRTC</span> =&gt; <span class="ident">ValueType::CRTC</span>,
+                    <span class="ident">ffi::DRM_MODE_OBJECT_CONNECTOR</span> =&gt; <span class="ident">ValueType::Connector</span>,
+                    <span class="ident">ffi::DRM_MODE_OBJECT_ENCODER</span> =&gt; <span class="ident">ValueType::Encoder</span>,
+                    <span class="ident">ffi::DRM_MODE_OBJECT_FB</span> =&gt; <span class="ident">ValueType::Framebuffer</span>,
+                    <span class="ident">ffi::DRM_MODE_OBJECT_PLANE</span> =&gt; <span class="ident">ValueType::Plane</span>,
+                    <span class="ident">ffi::DRM_MODE_OBJECT_PROPERTY</span> =&gt; <span class="ident">ValueType::Property</span>,
+                    <span class="ident">ffi::DRM_MODE_OBJECT_BLOB</span> =&gt; <span class="ident">ValueType::Blob</span>,
+                    <span class="ident">ffi::DRM_MODE_OBJECT_ANY</span> =&gt; <span class="ident">ValueType::Object</span>,
+                    <span class="kw">_</span> =&gt; <span class="ident">ValueType::Unknown</span>,
                 }
             } <span class="kw">else</span> {
                 <span class="ident">ValueType::Unknown</span>
@@ -1569,8 +1569,8 @@
         <span class="kw">let</span> <span class="ident">property</span> <span class="op">=</span> <span class="ident">property::Info</span> {
             <span class="ident">handle</span>,
             <span class="ident">val_type</span>,
-            <span class="ident">mutable</span>: <span class="ident">info</span>.<span class="ident">flags</span> <span class="op">&amp;</span> <span class="ident">ffi::DRM_MODE_PROP_IMMUTABLE</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span>,
-            <span class="ident">atomic</span>: <span class="ident">info</span>.<span class="ident">flags</span> <span class="op">&amp;</span> <span class="ident">ffi::DRM_MODE_PROP_ATOMIC</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span>,
+            <span class="ident">mutable</span>: <span class="ident">info</span>.<span class="ident">flags</span> <span class="op">&amp;</span> <span class="ident">ffi::DRM_MODE_PROP_IMMUTABLE</span> <span class="op">==</span> <span class="number">0</span>,
+            <span class="ident">atomic</span>: <span class="ident">info</span>.<span class="ident">flags</span> <span class="op">&amp;</span> <span class="ident">ffi::DRM_MODE_PROP_ATOMIC</span> <span class="op">==</span> <span class="number">0</span>,
             <span class="ident">info</span>,
         };
 
@@ -1583,7 +1583,7 @@
         <span class="ident">handle</span>: <span class="ident">T</span>,
         <span class="ident">prop</span>: <span class="ident">property::Handle</span>,
         <span class="ident">value</span>: <span class="ident">property::RawValue</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="ident">ffi::mode::set_property</span>(
             <span class="self">self</span>.<span class="ident">as_raw_fd</span>(),
             <span class="ident">prop</span>.<span class="ident">into</span>(),
@@ -1596,7 +1596,7 @@
     }
 
     <span class="doccomment">/// Create a property blob value from a given data blob</span>
-    <span class="kw">fn</span> <span class="ident">create_property_blob</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">property::Value</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">create_property_blob</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">property::Value</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="kw">unsafe</span> {
             <span class="ident">std::slice::from_raw_parts_mut</span>(<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u8</span>, <span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>())
         };
@@ -1606,7 +1606,7 @@
     }
 
     <span class="doccomment">/// Get a property blob&#39;s data</span>
-    <span class="kw">fn</span> <span class="ident">get_property_blob</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">blob</span>: <span class="ident">u64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">get_property_blob</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">blob</span>: <span class="ident">u64</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">ffi::mode::get_property_blob</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="ident">blob</span> <span class="kw">as</span> <span class="ident">u32</span>, <span class="prelude-val">None</span>)<span class="question-mark">?</span>.<span class="ident">length</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0u8</span>; <span class="ident">len</span> <span class="kw">as</span> <span class="ident">usize</span>];
         <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">ffi::mode::get_property_blob</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="ident">blob</span> <span class="kw">as</span> <span class="ident">u32</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">data</span>))<span class="question-mark">?</span>;
@@ -1614,14 +1614,14 @@
     }
 
     <span class="doccomment">/// Destroy a given property blob value</span>
-    <span class="kw">fn</span> <span class="ident">destroy_property_blob</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">blob</span>: <span class="ident">u64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">destroy_property_blob</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">blob</span>: <span class="ident">u64</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="ident">ffi::mode::destroy_property_blob</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="ident">blob</span> <span class="kw">as</span> <span class="ident">u32</span>)<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="doccomment">/// Returns the set of [`Mode`]s that a particular connector supports.</span>
-    <span class="kw">fn</span> <span class="ident">get_modes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">handle</span>: <span class="ident">connector::Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Mode</span><span class="op">&gt;</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">get_modes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">handle</span>: <span class="ident">connector::Handle</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Mode</span><span class="op">&gt;</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">modes</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
 
         <span class="kw">let</span> <span class="ident">_ffi_info</span> <span class="op">=</span> <span class="ident">ffi::mode::get_connector</span>(
@@ -1640,7 +1640,7 @@
     <span class="kw">fn</span> <span class="ident">get_properties</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">ResourceHandle</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">handle</span>: <span class="ident">T</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PropertyValueSet</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PropertyValueSet</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">prop_ids</span> <span class="op">=</span> [<span class="number">0u32</span>; <span class="number">32</span>];
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">prop_vals</span> <span class="op">=</span> [<span class="number">0u64</span>; <span class="number">32</span>];
 
@@ -1673,7 +1673,7 @@
         <span class="ident">red</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u16</span>],
         <span class="ident">green</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u16</span>],
         <span class="ident">blue</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u16</span>],
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">crtc_info</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_crtc</span>(<span class="ident">crtc</span>)<span class="question-mark">?</span>;
         <span class="kw">if</span> <span class="ident">crtc_info</span>.<span class="ident">gamma_length</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">&gt;</span> <span class="ident">red</span>.<span class="ident">len</span>()
             <span class="op">|</span><span class="op">|</span> <span class="ident">crtc_info</span>.<span class="ident">gamma_length</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">&gt;</span> <span class="ident">green</span>.<span class="ident">len</span>()
@@ -1701,7 +1701,7 @@
         <span class="ident">red</span>: <span class="kw-2">&amp;</span>[<span class="ident">u16</span>],
         <span class="ident">green</span>: <span class="kw-2">&amp;</span>[<span class="ident">u16</span>],
         <span class="ident">blue</span>: <span class="kw-2">&amp;</span>[<span class="ident">u16</span>],
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">crtc_info</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_crtc</span>(<span class="ident">crtc</span>)<span class="question-mark">?</span>;
         <span class="kw">if</span> <span class="ident">crtc_info</span>.<span class="ident">gamma_length</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">&gt;</span> <span class="ident">red</span>.<span class="ident">len</span>()
             <span class="op">|</span><span class="op">|</span> <span class="ident">crtc_info</span>.<span class="ident">gamma_length</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">&gt;</span> <span class="ident">green</span>.<span class="ident">len</span>()
@@ -1723,13 +1723,13 @@
     }
 
     <span class="doccomment">/// Open a GEM buffer handle by name</span>
-    <span class="kw">fn</span> <span class="ident">open_buffer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="ident">buffer::Name</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">buffer::Handle</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">open_buffer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="ident">buffer::Name</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">buffer::Handle</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">info</span> <span class="op">=</span> <span class="ident">drm_ffi::gem::open</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="ident">name</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="kw">unsafe</span> { <span class="ident">mem::transmute</span>(<span class="ident">info</span>.<span class="ident">handle</span>) })
     }
 
     <span class="doccomment">/// Close a GEM buffer handle</span>
-    <span class="kw">fn</span> <span class="ident">close_buffer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">handle</span>: <span class="ident">buffer::Handle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">close_buffer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">handle</span>: <span class="ident">buffer::Handle</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">_info</span> <span class="op">=</span> <span class="ident">drm_ffi::gem::close</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="ident">handle</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
@@ -1740,7 +1740,7 @@
         <span class="ident">size</span>: (<span class="ident">u32</span>, <span class="ident">u32</span>),
         <span class="ident">format</span>: <span class="ident">buffer::DrmFourcc</span>,
         <span class="ident">bpp</span>: <span class="ident">u32</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DumbBuffer</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DumbBuffer</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">info</span> <span class="op">=</span> <span class="ident">drm_ffi::mode::dumbbuffer::create</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="ident">size</span>.<span class="number">0</span>, <span class="ident">size</span>.<span class="number">1</span>, <span class="ident">bpp</span>, <span class="number">0</span>)<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">dumb</span> <span class="op">=</span> <span class="ident">DumbBuffer</span> {
@@ -1757,7 +1757,7 @@
     <span class="kw">fn</span> <span class="ident">map_dumb_buffer</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">DumbBuffer</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DumbMapping</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DumbMapping</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">info</span> <span class="op">=</span> <span class="ident">drm_ffi::mode::dumbbuffer::map</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="ident">buffer</span>.<span class="ident">handle</span>.<span class="ident">into</span>(), <span class="number">0</span>, <span class="number">0</span>)<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">map</span> <span class="op">=</span> {
@@ -1780,7 +1780,7 @@
     }
 
     <span class="doccomment">/// Free the memory resources of a dumb buffer</span>
-    <span class="kw">fn</span> <span class="ident">destroy_dumb_buffer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">buffer</span>: <span class="ident">DumbBuffer</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">destroy_dumb_buffer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">buffer</span>: <span class="ident">DumbBuffer</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">_info</span> <span class="op">=</span> <span class="ident">drm_ffi::mode::dumbbuffer::destroy</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="ident">buffer</span>.<span class="ident">handle</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(())
@@ -1791,7 +1791,7 @@
     <span class="doccomment">/// A buffer argument of [`None`] will clear the cursor.</span>
     <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;Usage of deprecated ioctl set_cursor: use a cursor plane instead&quot;</span>)]</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">set_cursor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">crtc</span>: <span class="ident">crtc::Handle</span>, <span class="ident">buffer</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">B</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">set_cursor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">crtc</span>: <span class="ident">crtc::Handle</span>, <span class="ident">buffer</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">B</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">B</span>: <span class="ident">buffer::Buffer</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span>,
     {
@@ -1817,7 +1817,7 @@
         <span class="ident">crtc</span>: <span class="ident">crtc::Handle</span>,
         <span class="ident">buffer</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">B</span><span class="op">&gt;</span>,
         <span class="ident">hotspot</span>: (<span class="ident">i32</span>, <span class="ident">i32</span>),
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span>
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">B</span>: <span class="ident">buffer::Buffer</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span>,
     {
@@ -1843,7 +1843,7 @@
     <span class="doccomment">/// Moves a set cursor on a given crtc</span>
     <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;Usage of deprecated ioctl move_cursor: use a cursor plane instead&quot;</span>)]</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">move_cursor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">crtc</span>: <span class="ident">crtc::Handle</span>, <span class="ident">pos</span>: (<span class="ident">i32</span>, <span class="ident">i32</span>)) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">move_cursor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">crtc</span>: <span class="ident">crtc::Handle</span>, <span class="ident">pos</span>: (<span class="ident">i32</span>, <span class="ident">i32</span>)) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="ident">drm_ffi::mode::move_cursor</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="ident">crtc</span>.<span class="ident">into</span>(), <span class="ident">pos</span>.<span class="number">0</span>, <span class="ident">pos</span>.<span class="number">1</span>)<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(())
@@ -1854,7 +1854,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">flags</span>: <span class="kw-2">&amp;</span>[<span class="ident">AtomicCommitFlags</span>],
         <span class="kw-2">mut</span> <span class="ident">req</span>: <span class="ident">atomic::AtomicModeReq</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="ident">drm_ffi::mode::atomic_commit</span>(
             <span class="self">self</span>.<span class="ident">as_raw_fd</span>(),
             <span class="ident">flags</span>.<span class="ident">iter</span>().<span class="ident">fold</span>(<span class="number">0</span>, <span class="op">|</span><span class="ident">acc</span>, <span class="ident">x</span><span class="op">|</span> <span class="ident">acc</span> <span class="op">|</span> <span class="kw-2">*</span><span class="ident">x</span> <span class="kw">as</span> <span class="ident">u32</span>),
@@ -1866,13 +1866,13 @@
     }
 
     <span class="doccomment">/// Convert a prime file descriptor to a GEM buffer handle</span>
-    <span class="kw">fn</span> <span class="ident">prime_fd_to_buffer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fd</span>: <span class="ident">RawFd</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">buffer::Handle</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">prime_fd_to_buffer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fd</span>: <span class="ident">RawFd</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">buffer::Handle</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">info</span> <span class="op">=</span> <span class="ident">ffi::gem::fd_to_handle</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="ident">fd</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="kw">unsafe</span> { <span class="ident">mem::transmute</span>(<span class="ident">info</span>.<span class="ident">handle</span>) })
     }
 
     <span class="doccomment">/// Convert a prime file descriptor to a GEM buffer handle</span>
-    <span class="kw">fn</span> <span class="ident">buffer_to_prime_fd</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">handle</span>: <span class="ident">buffer::Handle</span>, <span class="ident">flags</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RawFd</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">buffer_to_prime_fd</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">handle</span>: <span class="ident">buffer::Handle</span>, <span class="ident">flags</span>: <span class="ident">u32</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RawFd</span>, <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">info</span> <span class="op">=</span> <span class="ident">ffi::gem::handle_to_fd</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="ident">handle</span>.<span class="ident">into</span>(), <span class="ident">flags</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">info</span>.<span class="ident">fd</span>)
     }
@@ -1884,7 +1884,7 @@
         <span class="ident">framebuffer</span>: <span class="ident">framebuffer::Handle</span>,
         <span class="ident">flags</span>: <span class="kw-2">&amp;</span>[<span class="ident">PageFlipFlags</span>],
         <span class="ident">target</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PageFlipTarget</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">flags</span> <span class="op">=</span> <span class="ident">flags</span>.<span class="ident">iter</span>().<span class="ident">fold</span>(<span class="number">0</span>, <span class="op">|</span><span class="ident">val</span>, <span class="ident">flag</span><span class="op">|</span> <span class="ident">val</span> <span class="op">|</span> <span class="kw-2">*</span><span class="ident">flag</span> <span class="kw">as</span> <span class="ident">u32</span>);
         <span class="kw">if</span> <span class="ident">target</span>.<span class="ident">is_some</span>() {
             <span class="ident">flags</span> <span class="op">|</span><span class="op">=</span> <span class="ident">ffi::drm_sys::DRM_MODE_PAGE_FLIP_TARGET</span>;
@@ -1902,7 +1902,7 @@
     }
 
     <span class="doccomment">/// Receive pending events</span>
-    <span class="kw">fn</span> <span class="ident">receive_events</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Events</span>, <span class="ident">SystemError</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">receive_events</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Events</span>, <span class="ident">SystemError</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
     {
@@ -1977,12 +1977,12 @@
 <span class="kw">impl</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">Events</span> {
     <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">Event</span>;
 
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">amount</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">i</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">amount</span> {
             <span class="kw">let</span> <span class="ident">event</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="self">self</span>.<span class="ident">event_buf</span>.<span class="ident">as_ptr</span>().<span class="ident">add</span>(<span class="self">self</span>.<span class="ident">i</span>) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">ffi::drm_event</span>) };
             <span class="self">self</span>.<span class="ident">i</span> <span class="op">+</span><span class="op">=</span> <span class="ident">event</span>.<span class="ident">length</span> <span class="kw">as</span> <span class="ident">usize</span>;
             <span class="kw">match</span> <span class="ident">event</span>.<span class="ident">type_</span> {
-                <span class="ident">x</span> <span class="kw">if</span> <span class="ident">x</span> <span class="op">=</span><span class="op">=</span> <span class="ident">ffi::DRM_EVENT_VBLANK</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">x</span> <span class="kw">if</span> <span class="ident">x</span> <span class="op">==</span> <span class="ident">ffi::DRM_EVENT_VBLANK</span> =&gt; {
                     <span class="kw">let</span> <span class="ident">vblank_event</span> <span class="op">=</span>
                         <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">event</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">ffi::drm_event_vblank</span>) };
                     <span class="prelude-val">Some</span>(<span class="ident">Event::Vblank</span>(<span class="ident">VblankEvent</span> {
@@ -1994,7 +1994,7 @@
                         <span class="ident">crtc</span>: <span class="kw">unsafe</span> { <span class="ident">mem::transmute</span>(<span class="ident">vblank_event</span>.<span class="ident">user_data</span> <span class="kw">as</span> <span class="ident">u32</span>) },
                     }))
                 }
-                <span class="ident">x</span> <span class="kw">if</span> <span class="ident">x</span> <span class="op">=</span><span class="op">=</span> <span class="ident">ffi::DRM_EVENT_FLIP_COMPLETE</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">x</span> <span class="kw">if</span> <span class="ident">x</span> <span class="op">==</span> <span class="ident">ffi::DRM_EVENT_FLIP_COMPLETE</span> =&gt; {
                     <span class="kw">let</span> <span class="ident">vblank_event</span> <span class="op">=</span>
                         <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">event</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">ffi::drm_event_vblank</span>) };
                     <span class="prelude-val">Some</span>(<span class="ident">Event::PageFlip</span>(<span class="ident">PageFlipEvent</span> {
@@ -2012,7 +2012,7 @@
                         },
                     }))
                 }
-                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">Event::Unknown</span>(
+                <span class="kw">_</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident">Event::Unknown</span>(
                     <span class="self">self</span>.<span class="ident">event_buf</span>[<span class="self">self</span>.<span class="ident">i</span> <span class="op">-</span> (<span class="ident">event</span>.<span class="ident">length</span> <span class="kw">as</span> <span class="ident">usize</span>)..<span class="self">self</span>.<span class="ident">i</span>].<span class="ident">to_vec</span>(),
                 )),
             }
@@ -2040,31 +2040,31 @@
 
 <span class="kw">impl</span> <span class="ident">ResourceHandles</span> {
     <span class="doccomment">/// Returns the set of [`connector::Handle`]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">connectors</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">connector::Handle</span>] {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">connectors</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">connector::Handle</span>] {
         <span class="kw">let</span> <span class="ident">buf_len</span> <span class="op">=</span> <span class="ident">std::cmp::min</span>(<span class="self">self</span>.<span class="ident">connectors</span>.<span class="ident">len</span>(), <span class="self">self</span>.<span class="ident">conn_len</span>);
         <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">connectors</span>[..<span class="ident">buf_len</span>] <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> [<span class="ident">connector::Handle</span>]) }
     }
 
     <span class="doccomment">/// Returns the set of [`encoder::Handle`]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">encoders</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">encoder::Handle</span>] {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">encoders</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">encoder::Handle</span>] {
         <span class="kw">let</span> <span class="ident">buf_len</span> <span class="op">=</span> <span class="ident">std::cmp::min</span>(<span class="self">self</span>.<span class="ident">encoders</span>.<span class="ident">len</span>(), <span class="self">self</span>.<span class="ident">enc_len</span>);
         <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">encoders</span>[..<span class="ident">buf_len</span>] <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> [<span class="ident">encoder::Handle</span>]) }
     }
 
     <span class="doccomment">/// Returns the set of [`crtc::Handle`]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">crtcs</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">crtc::Handle</span>] {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">crtcs</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">crtc::Handle</span>] {
         <span class="kw">let</span> <span class="ident">buf_len</span> <span class="op">=</span> <span class="ident">std::cmp::min</span>(<span class="self">self</span>.<span class="ident">crtcs</span>.<span class="ident">len</span>(), <span class="self">self</span>.<span class="ident">crtc_len</span>);
         <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">crtcs</span>[..<span class="ident">buf_len</span>] <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> [<span class="ident">crtc::Handle</span>]) }
     }
 
     <span class="doccomment">/// Returns the set of [`framebuffer::Handle`]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">framebuffers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">framebuffer::Handle</span>] {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">framebuffers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">framebuffer::Handle</span>] {
         <span class="kw">let</span> <span class="ident">buf_len</span> <span class="op">=</span> <span class="ident">std::cmp::min</span>(<span class="self">self</span>.<span class="ident">fbs</span>.<span class="ident">len</span>(), <span class="self">self</span>.<span class="ident">fb_len</span>);
         <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">fbs</span>[..<span class="ident">buf_len</span>] <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> [<span class="ident">framebuffer::Handle</span>]) }
     }
 
     <span class="doccomment">/// Apply a filter the all crtcs of these resources, resulting in a list of crtcs allowed.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">filter_crtcs</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">filter</span>: <span class="ident">CrtcListFilter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">crtc::Handle</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">filter_crtcs</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">filter</span>: <span class="ident">CrtcListFilter</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">crtc::Handle</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">crtcs</span>
             .<span class="ident">iter</span>()
             .<span class="ident">enumerate</span>()
@@ -2075,7 +2075,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">std::fmt::Debug</span> <span class="kw">for</span> <span class="ident">ResourceHandles</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span>) -&gt; <span class="ident">std::fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;ResourceHandles&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;fbs&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">framebuffers</span>())
             .<span class="ident">field</span>(<span class="string">&quot;crtcs&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">crtcs</span>())
@@ -2097,14 +2097,14 @@
 
 <span class="kw">impl</span> <span class="ident">PlaneResourceHandles</span> {
     <span class="doccomment">/// Returns the set of [`plane::Handle`]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">planes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">plane::Handle</span>] {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">planes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">plane::Handle</span>] {
         <span class="kw">let</span> <span class="ident">buf_len</span> <span class="op">=</span> <span class="ident">std::cmp::min</span>(<span class="self">self</span>.<span class="ident">planes</span>.<span class="ident">len</span>(), <span class="self">self</span>.<span class="ident">plane_len</span>);
         <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">planes</span>[..<span class="ident">buf_len</span>] <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> [<span class="ident">plane::Handle</span>]) }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">std::fmt::Debug</span> <span class="kw">for</span> <span class="ident">PlaneResourceHandles</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span>) -&gt; <span class="ident">std::fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;PlaneResourceHandles&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;planes&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">planes</span>())
             .<span class="ident">finish</span>()
@@ -2128,60 +2128,60 @@
 
 <span class="kw">impl</span> <span class="ident">Mode</span> {
     <span class="doccomment">/// Returns the name of this mode.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">std::ffi::CStr</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">std::ffi::CStr</span> {
         <span class="kw">unsafe</span> { <span class="ident">std::ffi::CStr::from_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">mode</span>.<span class="ident">name</span>[<span class="number">0</span>] <span class="kw">as</span> <span class="kw">_</span>) }
     }
 
     <span class="doccomment">/// Returns the clock speed of this mode.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clock</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clock</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u32</span> {
         <span class="self">self</span>.<span class="ident">mode</span>.<span class="ident">clock</span>
     }
 
     <span class="doccomment">/// Returns the size (resolution) of the mode.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">u16</span>, <span class="ident">u16</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">u16</span>, <span class="ident">u16</span>) {
         (<span class="self">self</span>.<span class="ident">mode</span>.<span class="ident">hdisplay</span>, <span class="self">self</span>.<span class="ident">mode</span>.<span class="ident">vdisplay</span>)
     }
 
     <span class="doccomment">/// Returns the horizontal sync start, end, and total.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">hsync</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">u16</span>, <span class="ident">u16</span>, <span class="ident">u16</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">hsync</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">u16</span>, <span class="ident">u16</span>, <span class="ident">u16</span>) {
         (<span class="self">self</span>.<span class="ident">mode</span>.<span class="ident">hsync_start</span>, <span class="self">self</span>.<span class="ident">mode</span>.<span class="ident">hsync_end</span>, <span class="self">self</span>.<span class="ident">mode</span>.<span class="ident">htotal</span>)
     }
 
     <span class="doccomment">/// Returns the vertical sync start, end, and total.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">vsync</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">u16</span>, <span class="ident">u16</span>, <span class="ident">u16</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">vsync</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">u16</span>, <span class="ident">u16</span>, <span class="ident">u16</span>) {
         (<span class="self">self</span>.<span class="ident">mode</span>.<span class="ident">vsync_start</span>, <span class="self">self</span>.<span class="ident">mode</span>.<span class="ident">vsync_end</span>, <span class="self">self</span>.<span class="ident">mode</span>.<span class="ident">vtotal</span>)
     }
 
     <span class="doccomment">/// Returns the horizontal skew of this mode.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">hskew</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u16</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">hskew</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u16</span> {
         <span class="self">self</span>.<span class="ident">mode</span>.<span class="ident">hskew</span>
     }
 
     <span class="doccomment">/// Returns the vertical scan of this mode.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">vscan</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u16</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">vscan</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u16</span> {
         <span class="self">self</span>.<span class="ident">mode</span>.<span class="ident">vscan</span>
     }
 
     <span class="doccomment">/// Returns the vertical refresh rate of this mode</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">vrefresh</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">vrefresh</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u32</span> {
         <span class="self">self</span>.<span class="ident">mode</span>.<span class="ident">vrefresh</span>
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">ffi::drm_mode_modeinfo</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Mode</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">raw</span>: <span class="ident">ffi::drm_mode_modeinfo</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Mode</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">raw</span>: <span class="ident">ffi::drm_mode_modeinfo</span>) -&gt; <span class="ident">Mode</span> {
         <span class="ident">Mode</span> { <span class="ident">mode</span>: <span class="ident">raw</span> }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Mode</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ffi::drm_mode_modeinfo</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">mode</span>: <span class="ident">Mode</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">mode</span>: <span class="ident">Mode</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">mode</span>.<span class="ident">mode</span>
     }
 }
 
 <span class="kw">impl</span> <span class="ident">std::fmt::Debug</span> <span class="kw">for</span> <span class="ident">Mode</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span>) -&gt; <span class="ident">std::fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Mode&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;name&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>())
             .<span class="ident">field</span>(<span class="string">&quot;clock&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">clock</span>())
@@ -2217,7 +2217,7 @@
 
 <span class="kw">impl</span> <span class="ident">PropertyValueSet</span> {
     <span class="doccomment">/// Returns a pair representing a set of [`property::Handle`] and their raw values</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_props_and_values</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="kw-2">&amp;</span>[<span class="ident">property::Handle</span>], <span class="kw-2">&amp;</span>[<span class="ident">property::RawValue</span>]) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_props_and_values</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="kw-2">&amp;</span>[<span class="ident">property::Handle</span>], <span class="kw-2">&amp;</span>[<span class="ident">property::RawValue</span>]) {
         <span class="kw">unsafe</span> {
             (
                 <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">prop_ids</span>[..<span class="self">self</span>.<span class="ident">len</span>] <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> [<span class="ident">property::Handle</span>]),

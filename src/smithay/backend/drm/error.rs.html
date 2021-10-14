@@ -148,9 +148,9 @@
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SwapBuffersError</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">Error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">SwapBuffersError</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">Error</span>) -&gt; <span class="ident">SwapBuffersError</span> {
         <span class="kw">match</span> <span class="ident">err</span> {
-            <span class="ident">x</span> @ <span class="ident">Error::DeviceInactive</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">SwapBuffersError::TemporaryFailure</span>(<span class="ident">Box::new</span>(<span class="ident">x</span>)),
+            <span class="ident">x</span> @ <span class="ident">Error::DeviceInactive</span> =&gt; <span class="ident">SwapBuffersError::TemporaryFailure</span>(<span class="ident">Box::new</span>(<span class="ident">x</span>)),
             <span class="ident">Error::Access</span> {
                 <span class="ident">errmsg</span>, <span class="ident">dev</span>, <span class="ident">source</span>, ..
             } <span class="kw">if</span> <span class="macro">matches!</span>(
@@ -162,11 +162,11 @@
                     <span class="op">|</span> <span class="ident">drm::SystemError::Unknown</span> {
                         <span class="ident">errno</span>: <span class="ident">nix::errno::Errno::EINTR</span>,
                     }
-            ) <span class="op">=</span><span class="op">&gt;</span>
+            ) =&gt;
             {
                 <span class="ident">SwapBuffersError::TemporaryFailure</span>(<span class="ident">Box::new</span>(<span class="ident">Error::Access</span> { <span class="ident">errmsg</span>, <span class="ident">dev</span>, <span class="ident">source</span> }))
             }
-            <span class="ident">x</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">SwapBuffersError::ContextLost</span>(<span class="ident">Box::new</span>(<span class="ident">x</span>)),
+            <span class="ident">x</span> =&gt; <span class="ident">SwapBuffersError::ContextLost</span>(<span class="ident">Box::new</span>(<span class="ident">x</span>)),
         }
     }
 }

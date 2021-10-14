@@ -7,7 +7,7 @@
 </div></details><h2 id="required-methods" class="small-section-header">Required methods<a href="#required-methods" class="anchor"></a></h2><div class="methods"><details class="rustdoc-toggle" open><summary><div id="tymethod.bind_wl_display" class="method has-srclink"><div class="rightside"><a class="srclink" href="../../../src/smithay/backend/renderer/mod.rs.html#329" title="goto source code">[src]</a></div><h4 class="code-header">fn <a href="#tymethod.bind_wl_display" class="fnname">bind_wl_display</a>(&amp;mut self, display: &amp;<a class="struct" href="../../../wayland_server/display/struct.Display.html" title="struct wayland_server::display::Display">Display</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>, <a class="enum" href="../egl/enum.Error.html" title="enum smithay::backend::egl::Error">EglError</a>&gt;</h4></div></summary><div class="docblock"><p>Binds the underlying EGL display to the given Wayland display.</p>
 <p>This will allow clients to utilize EGL to create hardware-accelerated
 surfaces. This renderer will thus be able to handle wl_drm-based buffers.</p>
-<h2 id="errors" class="section-header"><a href="#errors">Errors</a></h2>
+<h6 id="errors" class="section-header"><a href="#errors">Errors</a></h6>
 <p>This might return <a href="../egl/enum.Error.html#variant.EglExtensionNotSupported"><code>EglExtensionNotSupported</code></a>
 if binding is not supported by the EGL implementation.</p>
 <p>This might return <a href="../egl/enum.Error.html#variant.OtherEGLDisplayAlreadyBound"><code>OtherEGLDisplayAlreadyBound</code></a>

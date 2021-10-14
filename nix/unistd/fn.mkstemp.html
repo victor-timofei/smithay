@@ -6,15 +6,15 @@
 <p>Err is returned either if no temporary filename could be created or the template doesn’t
 end with XXXXXX</p>
 <p>See also <a href="http://pubs.opengroup.org/onlinepubs/9699919799/functions/mkstemp.html">mkstemp(2)</a></p>
-<h1 id="example" class="section-header"><a href="#example">Example</a></h1>
+<h2 id="example" class="section-header"><a href="#example">Example</a></h2>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">nix::unistd</span>;
 
 <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">unistd::mkstemp</span>(<span class="string">&quot;/tmp/tempfile_XXXXXX&quot;</span>) {
-    <span class="prelude-val">Ok</span>((<span class="ident">fd</span>, <span class="ident">path</span>)) <span class="op">=</span><span class="op">&gt;</span> {
+    <span class="prelude-val">Ok</span>((<span class="ident">fd</span>, <span class="ident">path</span>)) =&gt; {
         <span class="ident">unistd::unlink</span>(<span class="ident">path</span>.<span class="ident">as_path</span>()).<span class="ident">unwrap</span>(); <span class="comment">// flag file to be deleted at app termination</span>
         <span class="ident">fd</span>
     }
-    <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;mkstemp failed: {}&quot;</span>, <span class="ident">e</span>)
+    <span class="prelude-val">Err</span>(<span class="ident">e</span>) =&gt; <span class="macro">panic!</span>(<span class="string">&quot;mkstemp failed: {}&quot;</span>, <span class="ident">e</span>)
 };
 <span class="comment">// do something with fd</span></code></pre></div>
 </div></details></section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="nix" data-search-index-js="../../search-index.js" data-search-js="../../search.js"></div>

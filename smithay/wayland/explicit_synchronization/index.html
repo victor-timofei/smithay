@@ -12,7 +12,7 @@ release only applies for the surface associated with this release object, not th
 </ul>
 <p>The use of these <code>dma_fence</code>s in conjunction with the graphics stack allows for efficient synchronization
 between the clients and the compositor.</p>
-<h2 id="usage" class="section-header"><a href="#usage">Usage</a></h2>
+<h3 id="usage" class="section-header"><a href="#usage">Usage</a></h3>
 <p>First, you need to initialize the global:</p>
 
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">smithay::wayland::explicit_synchronization</span>::<span class="kw-2">*</span>;
@@ -28,14 +28,14 @@ between the clients and the compositor.</p>
     <span class="comment">/* process the explicit_sync_state */</span>
 });</code></pre></div>
 </div></details><h2 id="structs" class="section-header"><a href="#structs">Structs</a></h2>
-<div class="item-table"><div class="item-left module-item"><a class="struct" href="struct.ExplicitBufferRelease.html" title="smithay::wayland::explicit_synchronization::ExplicitBufferRelease struct">ExplicitBufferRelease</a></div><div class="item-right docblock-short"><p>An object to signal end of use of a buffer</p>
-</div><div class="item-left module-item"><a class="struct" href="struct.ExplicitSyncState.html" title="smithay::wayland::explicit_synchronization::ExplicitSyncState struct">ExplicitSyncState</a></div><div class="item-right docblock-short"><p>An explicit synchronization state</p>
-</div><div class="item-left module-item"><a class="struct" href="struct.NoExplicitSync.html" title="smithay::wayland::explicit_synchronization::NoExplicitSync struct">NoExplicitSync</a></div><div class="item-right docblock-short"><p>This surface is not explicitly synchronized</p>
-</div></div><h2 id="enums" class="section-header"><a href="#enums">Enums</a></h2>
-<div class="item-table"><div class="item-left module-item"><a class="enum" href="enum.ExplicitSyncError.html" title="smithay::wayland::explicit_synchronization::ExplicitSyncError enum">ExplicitSyncError</a></div><div class="item-right docblock-short"><p>Possible errors you can send to an ill-behaving clients</p>
-</div></div><h2 id="functions" class="section-header"><a href="#functions">Functions</a></h2>
-<div class="item-table"><div class="item-left module-item"><a class="fn" href="fn.init_explicit_synchronization_global.html" title="smithay::wayland::explicit_synchronization::init_explicit_synchronization_global fn">init_explicit_synchronization_global</a></div><div class="item-right docblock-short"><p>Initialize the explicit synchronization global</p>
-</div><div class="item-left module-item"><a class="fn" href="fn.send_explicit_synchronization_error.html" title="smithay::wayland::explicit_synchronization::send_explicit_synchronization_error fn">send_explicit_synchronization_error</a></div><div class="item-right docblock-short"><p>Send a synchronization error to a client</p>
-</div></div></section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="smithay" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.ExplicitBufferRelease.html" title="smithay::wayland::explicit_synchronization::ExplicitBufferRelease struct">ExplicitBufferRelease</a></div><div class="item-right docblock-short"><p>An object to signal end of use of a buffer</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.ExplicitSyncState.html" title="smithay::wayland::explicit_synchronization::ExplicitSyncState struct">ExplicitSyncState</a></div><div class="item-right docblock-short"><p>An explicit synchronization state</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.NoExplicitSync.html" title="smithay::wayland::explicit_synchronization::NoExplicitSync struct">NoExplicitSync</a></div><div class="item-right docblock-short"><p>This surface is not explicitly synchronized</p>
+</div></div></div><h2 id="enums" class="section-header"><a href="#enums">Enums</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.ExplicitSyncError.html" title="smithay::wayland::explicit_synchronization::ExplicitSyncError enum">ExplicitSyncError</a></div><div class="item-right docblock-short"><p>Possible errors you can send to an ill-behaving clients</p>
+</div></div></div><h2 id="functions" class="section-header"><a href="#functions">Functions</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.init_explicit_synchronization_global.html" title="smithay::wayland::explicit_synchronization::init_explicit_synchronization_global fn">init_explicit_synchronization_global</a></div><div class="item-right docblock-short"><p>Initialize the explicit synchronization global</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.send_explicit_synchronization_error.html" title="smithay::wayland::explicit_synchronization::send_explicit_synchronization_error fn">send_explicit_synchronization_error</a></div><div class="item-right docblock-short"><p>Send a synchronization error to a client</p>
+</div></div></div></section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="smithay" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div>
     <script src="../../../main.js"></script>
 </body></html>

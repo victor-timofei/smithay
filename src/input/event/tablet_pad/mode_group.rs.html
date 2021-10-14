@@ -102,7 +102,7 @@
     <span class="doccomment">/// group.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Devices without mode switching capabilities return `false` for every button.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">button_is_toggle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">button</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">button_is_toggle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">button</span>: <span class="ident">u32</span>) -&gt; <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
             <span class="ident">ffi::libinput_tablet_pad_mode_group_button_is_toggle</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="ident">button</span>) <span class="op">!</span><span class="op">=</span> <span class="number">0</span>
         }
@@ -136,17 +136,17 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">number_of_modes</span>, <span class="ident">ffi::libinput_tablet_pad_mode_group_get_num_modes</span>, <span class="ident">u32</span>);
 
     <span class="doccomment">/// Devices without mode switching capabilities return `true` for every button.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_button</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">button</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_button</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">button</span>: <span class="ident">u32</span>) -&gt; <span class="ident">bool</span> {
         <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_tablet_pad_mode_group_has_button</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="ident">button</span>) <span class="op">!</span><span class="op">=</span> <span class="number">0</span> }
     }
 
     <span class="doccomment">/// Devices without mode switching capabilities return `true` for every ring.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_ring</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">ring</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_ring</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">ring</span>: <span class="ident">u32</span>) -&gt; <span class="ident">bool</span> {
         <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_tablet_pad_mode_group_has_ring</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="ident">ring</span>) <span class="op">!</span><span class="op">=</span> <span class="number">0</span> }
     }
 
     <span class="doccomment">/// Devices without mode switching capabilities return `true` for every strip.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_strip</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">strip</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_strip</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">strip</span>: <span class="ident">u32</span>) -&gt; <span class="ident">bool</span> {
         <span class="kw">unsafe</span> { <span class="ident">ffi::libinput_tablet_pad_mode_group_has_strip</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>(), <span class="ident">strip</span>) <span class="op">!</span><span class="op">=</span> <span class="number">0</span> }
     }
 }

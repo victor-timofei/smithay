@@ -293,7 +293,7 @@
     <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">GLOBAL_LOCK</span>: <span class="ident">Mutex</span><span class="op">&lt;</span>()<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Default::default</span>();
 }
 
-<span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">open_im</span>(<span class="ident">xconn</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">XConnection</span><span class="op">&gt;</span>, <span class="ident">locale_modifiers</span>: <span class="kw-2">&amp;</span><span class="ident">CStr</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ffi::XIM</span><span class="op">&gt;</span> {
+<span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">open_im</span>(<span class="ident">xconn</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">XConnection</span><span class="op">&gt;</span>, <span class="ident">locale_modifiers</span>: <span class="kw-2">&amp;</span><span class="ident">CStr</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ffi::XIM</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">_lock</span> <span class="op">=</span> <span class="ident">GLOBAL_LOCK</span>.<span class="ident">lock</span>();
 
     <span class="comment">// XSetLocaleModifiers returns...</span>
@@ -324,7 +324,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">InputMethod</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">im</span>: <span class="ident">ffi::XIM</span>, <span class="ident">name</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">im</span>: <span class="ident">ffi::XIM</span>, <span class="ident">name</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">InputMethod</span> { <span class="ident">im</span>, <span class="ident">name</span> }
     }
 }
@@ -340,7 +340,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">InputMethodResult</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_fallback</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_fallback</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="kw-2">&amp;</span><span class="ident">InputMethodResult::Fallback</span>(<span class="kw">_</span>) <span class="op">=</span> <span class="self">self</span> {
             <span class="bool-val">true</span>
         } <span class="kw">else</span> {
@@ -348,11 +348,11 @@
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ok</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">InputMethod</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ok</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">InputMethod</span><span class="op">&gt;</span> {
         <span class="kw">use</span> <span class="ident"><span class="self">self</span>::InputMethodResult</span>::<span class="kw-2">*</span>;
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">XModifiers</span>(<span class="ident">im</span>) <span class="op">|</span> <span class="ident">Fallback</span>(<span class="ident">im</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">im</span>),
-            <span class="ident">Failure</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
+            <span class="ident">XModifiers</span>(<span class="ident">im</span>) <span class="op">|</span> <span class="ident">Fallback</span>(<span class="ident">im</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">im</span>),
+            <span class="ident">Failure</span> =&gt; <span class="prelude-val">None</span>,
         }
     }
 }
@@ -370,7 +370,7 @@
 <span class="comment">// rare. Note that we replace &quot;@server=&quot; with &quot;@im=&quot; in order to match the format of locale</span>
 <span class="comment">// modifiers, since we don&#39;t want a user who&#39;s looking at logs to ask &quot;am I supposed to set</span>
 <span class="comment">// XMODIFIERS to `@server=ibus`?!?&quot;</span>
-<span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">get_xim_servers</span>(<span class="ident">xconn</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">XConnection</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">GetXimServersError</span><span class="op">&gt;</span> {
+<span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">get_xim_servers</span>(<span class="ident">xconn</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">XConnection</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">GetXimServersError</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">servers_atom</span> <span class="op">=</span> <span class="ident">xconn</span>.<span class="ident">get_atom_unchecked</span>(<span class="string">b&quot;XIM_SERVERS\0&quot;</span>);
 
     <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> (<span class="ident">xconn</span>.<span class="ident">xlib</span>.<span class="ident">XDefaultRootWindow</span>)(<span class="ident">xconn</span>.<span class="ident">display</span>);
@@ -408,13 +408,13 @@
 }
 
 <span class="kw">impl</span> <span class="ident">InputMethodName</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_string</span>(<span class="ident">string</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_string</span>(<span class="ident">string</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">let</span> <span class="ident">c_string</span> <span class="op">=</span> <span class="ident">CString::new</span>(<span class="ident">string</span>.<span class="ident">clone</span>())
             .<span class="ident">expect</span>(<span class="string">&quot;String used to construct CString contained null byte&quot;</span>);
         <span class="ident">InputMethodName</span> { <span class="ident">c_string</span>, <span class="ident">string</span> }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_str</span>(<span class="ident">string</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_str</span>(<span class="ident">string</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">let</span> <span class="ident">c_string</span> <span class="op">=</span>
             <span class="ident">CString::new</span>(<span class="ident">string</span>).<span class="ident">expect</span>(<span class="string">&quot;String used to construct CString contained null byte&quot;</span>);
         <span class="ident">InputMethodName</span> {
@@ -425,7 +425,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">InputMethodName</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="self">self</span>.<span class="ident">string</span>.<span class="ident">fmt</span>(<span class="ident">f</span>)
     }
 }
@@ -437,14 +437,14 @@
 }
 
 <span class="kw">impl</span> <span class="ident">PotentialInputMethod</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_string</span>(<span class="ident">string</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_string</span>(<span class="ident">string</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">PotentialInputMethod</span> {
             <span class="ident">name</span>: <span class="ident">InputMethodName::from_string</span>(<span class="ident">string</span>),
             <span class="ident">successful</span>: <span class="prelude-val">None</span>,
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_str</span>(<span class="ident">string</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_str</span>(<span class="ident">string</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">PotentialInputMethod</span> {
             <span class="ident">name</span>: <span class="ident">InputMethodName::from_str</span>(<span class="ident">string</span>),
             <span class="ident">successful</span>: <span class="prelude-val">None</span>,
@@ -455,7 +455,7 @@
         <span class="self">self</span>.<span class="ident">successful</span> <span class="op">=</span> <span class="prelude-val">None</span>;
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">open_im</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">xconn</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">XConnection</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">InputMethod</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">open_im</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">xconn</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">XConnection</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">InputMethod</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">im</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">open_im</span>(<span class="ident">xconn</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>.<span class="ident">c_string</span>) };
         <span class="self">self</span>.<span class="ident">successful</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">im</span>.<span class="ident">is_some</span>());
         <span class="ident">im</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">im</span><span class="op">|</span> <span class="ident">InputMethod::new</span>(<span class="ident">im</span>, <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">string</span>.<span class="ident">clone</span>()))
@@ -481,7 +481,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">PotentialInputMethods</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">xconn</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">XConnection</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">xconn</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">XConnection</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">let</span> <span class="ident">xmodifiers</span> <span class="op">=</span> <span class="ident">env::var</span>(<span class="string">&quot;XMODIFIERS&quot;</span>)
             .<span class="ident">ok</span>()
             .<span class="ident">map</span>(<span class="ident">PotentialInputMethod::from_string</span>);
@@ -527,8 +527,8 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">open_im</span>(
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">xconn</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">XConnection</span><span class="op">&gt;</span>,
-        <span class="ident">callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">Fn</span>() <span class="op">-</span><span class="op">&gt;</span> ()<span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">InputMethodResult</span> {
+        <span class="ident">callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">Fn</span>() -&gt; ()<span class="op">&gt;</span>,
+    ) -&gt; <span class="ident">InputMethodResult</span> {
         <span class="kw">use</span> <span class="ident"><span class="self">self</span>::InputMethodResult</span>::<span class="kw-2">*</span>;
 
         <span class="self">self</span>.<span class="ident">reset</span>();

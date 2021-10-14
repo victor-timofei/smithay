@@ -91,7 +91,7 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// This is method checks if the surface roles is one of `wl_shell_surface`, `xdg_toplevel`</span>
 <span class="doccomment">/// or `zxdg_toplevel`.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_toplevel_equivalent</span>(<span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_toplevel_equivalent</span>(<span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>) -&gt; <span class="ident">bool</span> {
     <span class="comment">// (z)xdg_toplevel and wl_shell_surface are toplevel like, so verify if the roles match.</span>
     <span class="kw">let</span> <span class="ident">role</span> <span class="op">=</span> <span class="ident">compositor::get_role</span>(<span class="ident">surface</span>);
 

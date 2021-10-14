@@ -38,13 +38,13 @@ and need to retrieve its contents, use the
 );
 
 <span class="kw">match</span> <span class="ident">content</span> {
-    <span class="prelude-val">Ok</span>(<span class="ident">something</span>) <span class="op">=</span><span class="op">&gt;</span>  {
+    <span class="prelude-val">Ok</span>(<span class="ident">something</span>) =&gt;  {
         <span class="comment">/* `something` is the value you returned from the closure */</span>
     },
-    <span class="prelude-val">Err</span>(<span class="ident">BufferAccessError::NotManaged</span>) <span class="op">=</span><span class="op">&gt;</span> {
+    <span class="prelude-val">Err</span>(<span class="ident">BufferAccessError::NotManaged</span>) =&gt; {
         <span class="comment">/* This buffer is not managed by the SHM global, but by something else */</span>
     },
-    <span class="prelude-val">Err</span>(<span class="ident">BufferAccessError::BadMap</span>) <span class="op">=</span><span class="op">&gt;</span> {
+    <span class="prelude-val">Err</span>(<span class="ident">BufferAccessError::BadMap</span>) =&gt; {
         <span class="comment">/* The client supplied invalid content specification for this buffer,
            and was killed.
          */</span>
@@ -55,12 +55,12 @@ and need to retrieve its contents, use the
 by using a SIGBUS handler.</p>
 <p>If you are already using an handler for this signal, you probably don’t want to use this handler.</p>
 </div></details><h2 id="structs" class="section-header"><a href="#structs">Structs</a></h2>
-<div class="item-table"><div class="item-left module-item"><a class="struct" href="struct.BufferData.html" title="smithay::wayland::shm::BufferData struct">BufferData</a></div><div class="item-right docblock-short"><p>Details of the contents of a buffer relative to its pool</p>
-</div></div><h2 id="enums" class="section-header"><a href="#enums">Enums</a></h2>
-<div class="item-table"><div class="item-left module-item"><a class="enum" href="enum.BufferAccessError.html" title="smithay::wayland::shm::BufferAccessError enum">BufferAccessError</a></div><div class="item-right docblock-short"><p>Error that can occur when accessing an SHM buffer</p>
-</div></div><h2 id="functions" class="section-header"><a href="#functions">Functions</a></h2>
-<div class="item-table"><div class="item-left module-item"><a class="fn" href="fn.init_shm_global.html" title="smithay::wayland::shm::init_shm_global fn">init_shm_global</a></div><div class="item-right docblock-short"><p>Create a new SHM global advertizing given supported formats.</p>
-</div><div class="item-left module-item"><a class="fn" href="fn.with_buffer_contents.html" title="smithay::wayland::shm::with_buffer_contents fn">with_buffer_contents</a></div><div class="item-right docblock-short"><p>Call given closure with the contents of the given buffer</p>
-</div></div></section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="smithay" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.BufferData.html" title="smithay::wayland::shm::BufferData struct">BufferData</a></div><div class="item-right docblock-short"><p>Details of the contents of a buffer relative to its pool</p>
+</div></div></div><h2 id="enums" class="section-header"><a href="#enums">Enums</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.BufferAccessError.html" title="smithay::wayland::shm::BufferAccessError enum">BufferAccessError</a></div><div class="item-right docblock-short"><p>Error that can occur when accessing an SHM buffer</p>
+</div></div></div><h2 id="functions" class="section-header"><a href="#functions">Functions</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.init_shm_global.html" title="smithay::wayland::shm::init_shm_global fn">init_shm_global</a></div><div class="item-right docblock-short"><p>Create a new SHM global advertizing given supported formats.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.with_buffer_contents.html" title="smithay::wayland::shm::with_buffer_contents fn">with_buffer_contents</a></div><div class="item-right docblock-short"><p>Call given closure with the contents of the given buffer</p>
+</div></div></div></section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="smithay" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div>
     <script src="../../../main.js"></script>
 </body></html>

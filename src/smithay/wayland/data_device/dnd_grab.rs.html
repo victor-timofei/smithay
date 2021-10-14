@@ -370,7 +370,7 @@
         <span class="ident">seat</span>: <span class="ident">Seat</span>,
         <span class="ident">icon</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">wl_surface::WlSurface</span><span class="op">&gt;</span>,
         <span class="ident">callback</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">FnMut</span>(<span class="ident"><span class="kw">super</span>::DataDeviceEvent</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">DnDGrab</span> {
+    ) -&gt; <span class="ident">DnDGrab</span> {
         <span class="ident">DnDGrab</span> {
             <span class="ident">start_data</span>,
             <span class="ident">data_source</span>: <span class="ident">source</span>,
@@ -421,8 +421,8 @@
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">surface</span>, <span class="ident">surface_location</span>)) <span class="op">=</span> <span class="ident">focus</span> {
             <span class="comment">// early return if the surface is no longer valid</span>
             <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">surface</span>.<span class="ident">as_ref</span>().<span class="ident">client</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">c</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">c</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">c</span>) =&gt; <span class="ident">c</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="kw">return</span>,
             };
             <span class="kw">let</span> (<span class="ident">x</span>, <span class="ident">y</span>) <span class="op">=</span> (<span class="ident">location</span> <span class="op">-</span> <span class="ident">surface_location</span>.<span class="ident">to_f64</span>()).<span class="ident">into</span>();
             <span class="kw">if</span> <span class="self">self</span>.<span class="ident">current_focus</span>.<span class="ident">is_none</span>() {
@@ -557,7 +557,7 @@
         <span class="ident">handle</span>.<span class="ident">axis</span>(<span class="ident">details</span>);
     }
 
-    <span class="kw">fn</span> <span class="ident">start_data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">GrabStartData</span> {
+    <span class="kw">fn</span> <span class="ident">start_data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">GrabStartData</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">start_data</span>
     }
 }
@@ -573,13 +573,13 @@
     <span class="ident">offer</span>: <span class="ident">Main</span><span class="op">&lt;</span><span class="ident">wl_data_offer::WlDataOffer</span><span class="op">&gt;</span>,
     <span class="ident">source</span>: <span class="ident">wl_data_source::WlDataSource</span>,
     <span class="ident">offer_data</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">OfferData</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">action_choice</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">FnMut</span>(<span class="ident">DndAction</span>, <span class="ident">DndAction</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">DndAction</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">wl_data_offer::WlDataOffer</span> {
+    <span class="ident">action_choice</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">FnMut</span>(<span class="ident">DndAction</span>, <span class="ident">DndAction</span>) -&gt; <span class="ident">DndAction</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+) -&gt; <span class="ident">wl_data_offer::WlDataOffer</span> {
     <span class="kw">use</span> <span class="ident"><span class="self">self</span>::wl_data_offer::Request</span>;
     <span class="ident">offer</span>.<span class="ident">quick_assign</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">offer</span>, <span class="ident">req</span>, <span class="kw">_</span><span class="op">|</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">offer_data</span>.<span class="ident">borrow_mut</span>();
         <span class="kw">match</span> <span class="ident">req</span> {
-            <span class="ident">Request::Accept</span> { <span class="ident">mime_type</span>, .. } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">Request::Accept</span> { <span class="ident">mime_type</span>, .. } =&gt; {
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">mtype</span>) <span class="op">=</span> <span class="ident">mime_type</span> {
                     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident"><span class="kw">crate</span>::utils::UnmanagedResource</span>) <span class="op">=</span> <span class="ident">with_source_metadata</span>(<span class="kw-2">&amp;</span><span class="ident">source</span>, <span class="op">|</span><span class="ident">meta</span><span class="op">|</span> {
                         <span class="ident">data</span>.<span class="ident">accepted</span> <span class="op">=</span> <span class="ident">meta</span>.<span class="ident">mime_types</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">mtype</span>);
@@ -590,7 +590,7 @@
                     <span class="ident">data</span>.<span class="ident">accepted</span> <span class="op">=</span> <span class="bool-val">false</span>;
                 }
             }
-            <span class="ident">Request::Receive</span> { <span class="ident">mime_type</span>, <span class="ident">fd</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">Request::Receive</span> { <span class="ident">mime_type</span>, <span class="ident">fd</span> } =&gt; {
                 <span class="comment">// check if the source and associated mime type is still valid</span>
                 <span class="kw">let</span> <span class="ident">valid</span> <span class="op">=</span> <span class="ident">with_source_metadata</span>(<span class="kw-2">&amp;</span><span class="ident">source</span>, <span class="op">|</span><span class="ident">meta</span><span class="op">|</span> <span class="ident">meta</span>.<span class="ident">mime_types</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">mime_type</span>))
                     .<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>)
@@ -601,8 +601,8 @@
                 }
                 <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">::nix::unistd::close</span>(<span class="ident">fd</span>);
             }
-            <span class="ident">Request::Destroy</span> <span class="op">=</span><span class="op">&gt;</span> {}
-            <span class="ident">Request::Finish</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">Request::Destroy</span> =&gt; {}
+            <span class="ident">Request::Finish</span> =&gt; {
                 <span class="kw">if</span> <span class="op">!</span><span class="ident">data</span>.<span class="ident">active</span> {
                     <span class="ident">offer</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
                         <span class="ident">wl_data_offer::Error::InvalidFinish</span> <span class="kw">as</span> <span class="ident">u32</span>,
@@ -637,7 +637,7 @@
             <span class="ident">Request::SetActions</span> {
                 <span class="ident">dnd_actions</span>,
                 <span class="ident">preferred_action</span>,
-            } <span class="op">=</span><span class="op">&gt;</span> {
+            } =&gt; {
                 <span class="kw">let</span> <span class="ident">preferred_action</span> <span class="op">=</span> <span class="ident">preferred_action</span>;
 
                 <span class="comment">// preferred_action must only contain one bitflag at the same time</span>
@@ -662,7 +662,7 @@
                 <span class="ident">offer</span>.<span class="ident">action</span>(<span class="ident">data</span>.<span class="ident">chosen_action</span>);
                 <span class="ident">source</span>.<span class="ident">action</span>(<span class="ident">data</span>.<span class="ident">chosen_action</span>);
             }
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
+            <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
         }
     });
 

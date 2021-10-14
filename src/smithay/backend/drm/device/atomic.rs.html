@@ -334,13 +334,13 @@
         <span class="ident">active</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">AtomicBool</span><span class="op">&gt;</span>,
         <span class="ident">disable_connectors</span>: <span class="ident">bool</span>,
         <span class="ident">logger</span>: <span class="ident">::slog::Logger</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dev</span> <span class="op">=</span> <span class="ident">AtomicDrmDevice</span> {
             <span class="ident">fd</span>,
             <span class="ident">active</span>,
             <span class="ident">old_state</span>: (<span class="ident">Vec::new</span>(), <span class="ident">Vec::new</span>(), <span class="ident">Vec::new</span>(), <span class="ident">Vec::new</span>()),
             <span class="ident">prop_mapping</span>: (<span class="ident">HashMap::new</span>(), <span class="ident">HashMap::new</span>(), <span class="ident">HashMap::new</span>(), <span class="ident">HashMap::new</span>()),
-            <span class="ident">logger</span>: <span class="ident">logger</span>.<span class="ident">new</span>(<span class="macro">o!</span>(<span class="string">&quot;smithay_module&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;backend_drm_atomic&quot;</span>, <span class="string">&quot;drm_module&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;device&quot;</span>)),
+            <span class="ident">logger</span>: <span class="ident">logger</span>.<span class="ident">new</span>(<span class="macro">o!</span>(<span class="string">&quot;smithay_module&quot;</span> =&gt; <span class="string">&quot;backend_drm_atomic&quot;</span>, <span class="string">&quot;drm_module&quot;</span> =&gt; <span class="string">&quot;device&quot;</span>)),
         };
 
         <span class="comment">// Enumerate (and save) the current device state.</span>
@@ -399,7 +399,7 @@
 
     <span class="comment">// Add all properties of given handles to a given drm resource type to state.</span>
     <span class="comment">// You may use this to snapshot the current state of the drm device (fully or partially).</span>
-    <span class="kw">fn</span> <span class="ident">add_props</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">handles</span>: <span class="kw-2">&amp;</span>[<span class="ident">T</span>], <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">PropertyValueSet</span>)<span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">add_props</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">handles</span>: <span class="kw-2">&amp;</span>[<span class="ident">T</span>], <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">PropertyValueSet</span>)<span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">T</span>: <span class="ident">ResourceHandle</span>,
     {
@@ -410,11 +410,11 @@
 
         <span class="ident">iter</span>.<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">x</span>, <span class="ident">y</span>)<span class="op">|</span> (<span class="kw-2">*</span><span class="ident">x</span>, <span class="ident">y</span>))
             .<span class="ident">try_for_each</span>(<span class="op">|</span>(<span class="ident">x</span>, <span class="ident">y</span>)<span class="op">|</span> <span class="kw">match</span> <span class="ident">y</span> {
-                <span class="prelude-val">Ok</span>(<span class="ident">y</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Ok</span>(<span class="ident">y</span>) =&gt; {
                     <span class="ident">state</span>.<span class="ident">push</span>((<span class="ident">x</span>, <span class="ident">y</span>));
                     <span class="prelude-val">Ok</span>(())
                 }
-                <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>),
+                <span class="prelude-val">Err</span>(<span class="ident">err</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident">err</span>),
             })
             .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">Error::Access</span> {
                 <span class="ident">errmsg</span>: <span class="string">&quot;Error reading properties&quot;</span>,
@@ -429,7 +429,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">handles</span>: <span class="kw-2">&amp;</span>[<span class="ident">T</span>],
         <span class="ident">mapping</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">property::Handle</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">T</span>: <span class="ident">ResourceHandle</span> <span class="op">+</span> <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">std::hash::Hash</span>,
     {
@@ -439,7 +439,7 @@
             .<span class="ident">try_for_each</span>(<span class="op">|</span>(<span class="ident">handle</span>, <span class="ident">props</span>)<span class="op">|</span> {
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">map</span> <span class="op">=</span> <span class="ident">HashMap::new</span>();
                 <span class="kw">match</span> <span class="ident">props</span> {
-                    <span class="prelude-val">Ok</span>(<span class="ident">props</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="prelude-val">Ok</span>(<span class="ident">props</span>) =&gt; {
                         <span class="kw">let</span> (<span class="ident">prop_handles</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">props</span>.<span class="ident">as_props_and_values</span>();
                         <span class="kw">for</span> <span class="ident">prop</span> <span class="kw">in</span> <span class="ident">prop_handles</span> {
                             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">info</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">fd</span>.<span class="ident">get_property</span>(<span class="kw-2">*</span><span class="ident">prop</span>) {
@@ -450,7 +450,7 @@
                         <span class="ident">mapping</span>.<span class="ident">insert</span>(<span class="kw-2">*</span><span class="ident">handle</span>, <span class="ident">map</span>);
                         <span class="prelude-val">Ok</span>(())
                     }
-                    <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>),
+                    <span class="prelude-val">Err</span>(<span class="ident">err</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident">err</span>),
                 }
             })
             .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">Error::Access</span> {
@@ -460,7 +460,7 @@
             })
     }
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">reset_state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">reset_state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="comment">// reset state sets the connectors into a known state (all disabled),</span>
         <span class="comment">// for the same reasons we do this on device creation.</span>
         <span class="comment">//</span>

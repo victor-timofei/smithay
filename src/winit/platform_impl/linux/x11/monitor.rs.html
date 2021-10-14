@@ -336,7 +336,7 @@
     <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">MONITORS</span>: <span class="ident">Mutex</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MonitorHandle</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Mutex::default</span>();
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">invalidate_cached_monitor_list</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MonitorHandle</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">invalidate_cached_monitor_list</span>() -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MonitorHandle</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="comment">// We update this lazily.</span>
     (<span class="kw-2">*</span><span class="ident">MONITORS</span>.<span class="ident">lock</span>()).<span class="ident">take</span>()
 }
@@ -352,22 +352,22 @@
 
 <span class="kw">impl</span> <span class="ident">VideoMode</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PhysicalSize</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">PhysicalSize</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">into</span>()
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bit_depth</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u16</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bit_depth</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u16</span> {
         <span class="self">self</span>.<span class="ident">bit_depth</span>
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">refresh_rate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u16</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">refresh_rate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u16</span> {
         <span class="self">self</span>.<span class="ident">refresh_rate</span>
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">monitor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RootMonitorHandle</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">monitor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">RootMonitorHandle</span> {
         <span class="ident">RootMonitorHandle</span> {
             <span class="ident">inner</span>: <span class="ident">PlatformMonitorHandle::X</span>(<span class="self">self</span>.<span class="ident">monitor</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>()),
         }
@@ -395,21 +395,21 @@
 }
 
 <span class="kw">impl</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="ident">MonitorHandle</span> {
-    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">id</span> <span class="op">=</span><span class="op">=</span> <span class="ident">other</span>.<span class="ident">id</span>
+    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">id</span> <span class="op">==</span> <span class="ident">other</span>.<span class="ident">id</span>
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Eq</span> <span class="kw">for</span> <span class="ident">MonitorHandle</span> {}
 
 <span class="kw">impl</span> <span class="ident">PartialOrd</span> <span class="kw">for</span> <span class="ident">MonitorHandle</span> {
-    <span class="kw">fn</span> <span class="ident">partial_cmp</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">std::cmp::Ordering</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">partial_cmp</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">std::cmp::Ordering</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">other</span>))
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Ord</span> <span class="kw">for</span> <span class="ident">MonitorHandle</span> {
-    <span class="kw">fn</span> <span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::cmp::Ordering</span> {
+    <span class="kw">fn</span> <span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="ident">std::cmp::Ordering</span> {
         <span class="self">self</span>.<span class="ident">id</span>.<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">other</span>.<span class="ident">id</span>)
     }
 }
@@ -427,7 +427,7 @@
         <span class="ident">id</span>: <span class="ident">RRCrtc</span>,
         <span class="ident">crtc</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">XRRCrtcInfo</span>,
         <span class="ident">primary</span>: <span class="ident">bool</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">name</span>, <span class="ident">scale_factor</span>, <span class="ident">video_modes</span>) <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">xconn</span>.<span class="ident">get_output_info</span>(<span class="ident">resources</span>, <span class="ident">crtc</span>)<span class="question-mark">?</span> };
         <span class="kw">let</span> <span class="ident">dimensions</span> <span class="op">=</span> <span class="kw">unsafe</span> { ((<span class="kw-2">*</span><span class="ident">crtc</span>).<span class="ident">width</span> <span class="kw">as</span> <span class="ident">u32</span>, (<span class="kw-2">*</span><span class="ident">crtc</span>).<span class="ident">height</span> <span class="kw">as</span> <span class="ident">u32</span>) };
         <span class="kw">let</span> <span class="ident">position</span> <span class="op">=</span> <span class="kw">unsafe</span> { ((<span class="kw-2">*</span><span class="ident">crtc</span>).<span class="ident">x</span> <span class="kw">as</span> <span class="ident">i32</span>, (<span class="kw-2">*</span><span class="ident">crtc</span>).<span class="ident">y</span> <span class="kw">as</span> <span class="ident">i32</span>) };
@@ -444,7 +444,7 @@
         })
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dummy</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dummy</span>() -&gt; <span class="self">Self</span> {
         <span class="ident">MonitorHandle</span> {
             <span class="ident">id</span>: <span class="number">0</span>,
             <span class="ident">name</span>: <span class="string">&quot;&lt;dummy monitor&gt;&quot;</span>.<span class="ident">into</span>(),
@@ -457,35 +457,35 @@
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">is_dummy</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">is_dummy</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="comment">// Zero is an invalid XID value; no real monitor will have it</span>
-        <span class="self">self</span>.<span class="ident">id</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span>
+        <span class="self">self</span>.<span class="ident">id</span> <span class="op">==</span> <span class="number">0</span>
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">name</span>.<span class="ident">clone</span>())
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">native_identifier</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">native_identifier</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u32</span> {
         <span class="self">self</span>.<span class="ident">id</span> <span class="kw">as</span> <span class="ident">u32</span>
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PhysicalSize</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">PhysicalSize</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">dimensions</span>.<span class="ident">into</span>()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PhysicalPosition</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">PhysicalPosition</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">position</span>.<span class="ident">into</span>()
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">scale_factor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">scale_factor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f64</span> {
         <span class="self">self</span>.<span class="ident">scale_factor</span>
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">video_modes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">RootVideoMode</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">video_modes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">RootVideoMode</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">monitor</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">clone</span>();
         <span class="self">self</span>.<span class="ident">video_modes</span>.<span class="ident">clone</span>().<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="kw">move</span> <span class="op">|</span><span class="kw-2">mut</span> <span class="ident">x</span><span class="op">|</span> {
             <span class="ident">x</span>.<span class="ident">monitor</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">monitor</span>.<span class="ident">clone</span>());
@@ -497,7 +497,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">XConnection</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_monitor_for_window</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">window_rect</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">util::AaRect</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MonitorHandle</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_monitor_for_window</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">window_rect</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">util::AaRect</span><span class="op">&gt;</span>) -&gt; <span class="ident">MonitorHandle</span> {
         <span class="kw">let</span> <span class="ident">monitors</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">available_monitors</span>();
 
         <span class="kw">if</span> <span class="ident">monitors</span>.<span class="ident">is_empty</span>() {
@@ -508,8 +508,8 @@
         <span class="kw">let</span> <span class="ident">default</span> <span class="op">=</span> <span class="ident">monitors</span>.<span class="ident">get</span>(<span class="number">0</span>).<span class="ident">unwrap</span>();
 
         <span class="kw">let</span> <span class="ident">window_rect</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">window_rect</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">rect</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">rect</span>,
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="ident">default</span>.<span class="ident">to_owned</span>(),
+            <span class="prelude-val">Some</span>(<span class="ident">rect</span>) =&gt; <span class="ident">rect</span>,
+            <span class="prelude-val">None</span> =&gt; <span class="kw">return</span> <span class="ident">default</span>.<span class="ident">to_owned</span>(),
         };
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">largest_overlap</span> <span class="op">=</span> <span class="number">0</span>;
@@ -525,14 +525,14 @@
         <span class="ident">matched_monitor</span>.<span class="ident">to_owned</span>()
     }
 
-    <span class="kw">fn</span> <span class="ident">query_monitor_list</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MonitorHandle</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">query_monitor_list</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MonitorHandle</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">major</span> <span class="op">=</span> <span class="number">0</span>;
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">minor</span> <span class="op">=</span> <span class="number">0</span>;
             (<span class="self">self</span>.<span class="ident">xrandr</span>.<span class="ident">XRRQueryVersion</span>)(<span class="self">self</span>.<span class="ident">display</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">major</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">minor</span>);
 
             <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">xlib</span>.<span class="ident">XDefaultRootWindow</span>)(<span class="self">self</span>.<span class="ident">display</span>);
-            <span class="kw">let</span> <span class="ident">resources</span> <span class="op">=</span> <span class="kw">if</span> (<span class="ident">major</span> <span class="op">=</span><span class="op">=</span> <span class="number">1</span> <span class="op">&amp;&amp;</span> <span class="ident">minor</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">3</span>) <span class="op">|</span><span class="op">|</span> <span class="ident">major</span> <span class="op">&gt;</span> <span class="number">1</span> {
+            <span class="kw">let</span> <span class="ident">resources</span> <span class="op">=</span> <span class="kw">if</span> (<span class="ident">major</span> <span class="op">==</span> <span class="number">1</span> <span class="op">&amp;&amp;</span> <span class="ident">minor</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">3</span>) <span class="op">|</span><span class="op">|</span> <span class="ident">major</span> <span class="op">&gt;</span> <span class="number">1</span> {
                 (<span class="self">self</span>.<span class="ident">xrandr</span>.<span class="ident">XRRGetScreenResourcesCurrent</span>)(<span class="self">self</span>.<span class="ident">display</span>, <span class="ident">root</span>)
             } <span class="kw">else</span> {
                 <span class="comment">// WARNING: this function is supposedly very slow, on the order of hundreds of ms.</span>
@@ -554,7 +554,7 @@
                 <span class="kw">let</span> <span class="ident">crtc</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">xrandr</span>.<span class="ident">XRRGetCrtcInfo</span>)(<span class="self">self</span>.<span class="ident">display</span>, <span class="ident">resources</span>, <span class="ident">crtc_id</span>);
                 <span class="kw">let</span> <span class="ident">is_active</span> <span class="op">=</span> (<span class="kw-2">*</span><span class="ident">crtc</span>).<span class="ident">width</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> (<span class="kw-2">*</span><span class="ident">crtc</span>).<span class="ident">height</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> (<span class="kw-2">*</span><span class="ident">crtc</span>).<span class="ident">noutput</span> <span class="op">&gt;</span> <span class="number">0</span>;
                 <span class="kw">if</span> <span class="ident">is_active</span> {
-                    <span class="kw">let</span> <span class="ident">is_primary</span> <span class="op">=</span> <span class="kw-2">*</span>(<span class="kw-2">*</span><span class="ident">crtc</span>).<span class="ident">outputs</span>.<span class="ident">offset</span>(<span class="number">0</span>) <span class="op">=</span><span class="op">=</span> <span class="ident">primary</span>;
+                    <span class="kw">let</span> <span class="ident">is_primary</span> <span class="op">=</span> <span class="kw-2">*</span>(<span class="kw-2">*</span><span class="ident">crtc</span>).<span class="ident">outputs</span>.<span class="ident">offset</span>(<span class="number">0</span>) <span class="op">==</span> <span class="ident">primary</span>;
                     <span class="ident">has_primary</span> <span class="op">|</span><span class="op">=</span> <span class="ident">is_primary</span>;
                     <span class="ident">MonitorHandle::new</span>(<span class="self">self</span>, <span class="ident">resources</span>, <span class="ident">crtc_id</span>, <span class="ident">crtc</span>, <span class="ident">is_primary</span>)
                         .<span class="ident">map</span>(<span class="op">|</span><span class="ident">monitor_id</span><span class="op">|</span> <span class="ident">available</span>.<span class="ident">push</span>(<span class="ident">monitor_id</span>));
@@ -575,7 +575,7 @@
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">available_monitors</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MonitorHandle</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">available_monitors</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MonitorHandle</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">monitors_lock</span> <span class="op">=</span> <span class="ident">MONITORS</span>.<span class="ident">lock</span>();
         (<span class="kw-2">*</span><span class="ident">monitors_lock</span>)
             .<span class="ident">as_ref</span>()
@@ -591,21 +591,21 @@
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">primary_monitor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MonitorHandle</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">primary_monitor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MonitorHandle</span> {
         <span class="self">self</span>.<span class="ident">available_monitors</span>()
             .<span class="ident">into_iter</span>()
             .<span class="ident">find</span>(<span class="op">|</span><span class="ident">monitor</span><span class="op">|</span> <span class="ident">monitor</span>.<span class="ident">primary</span>)
             .<span class="ident">unwrap_or_else</span>(<span class="ident">MonitorHandle::dummy</span>)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">select_xrandr_input</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">root</span>: <span class="ident">Window</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">c_int</span>, <span class="ident">XError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">select_xrandr_input</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">root</span>: <span class="ident">Window</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">c_int</span>, <span class="ident">XError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">has_xrandr</span> <span class="op">=</span> <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">major</span> <span class="op">=</span> <span class="number">0</span>;
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">minor</span> <span class="op">=</span> <span class="number">0</span>;
             (<span class="self">self</span>.<span class="ident">xrandr</span>.<span class="ident">XRRQueryVersion</span>)(<span class="self">self</span>.<span class="ident">display</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">major</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">minor</span>)
         };
         <span class="macro">assert!</span>(
-            <span class="ident">has_xrandr</span> <span class="op">=</span><span class="op">=</span> <span class="ident">True</span>,
+            <span class="ident">has_xrandr</span> <span class="op">==</span> <span class="ident">True</span>,
             <span class="string">&quot;[winit] XRandR extension not available.&quot;</span>
         );
 

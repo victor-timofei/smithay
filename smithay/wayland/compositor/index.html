@@ -3,7 +3,7 @@
 and region Wayland objects, by registering an implementation for
 for the <a href="../../../wayland_server/protocol/wl_compositor/index.html"><code>wl_compositor</code></a>
 and <a href="../../../wayland_server/protocol/wl_subcompositor/index.html"><code>wl_subcompositor</code></a> globals.</p>
-<h2 id="why-use-this-implementation" class="section-header"><a href="#why-use-this-implementation">Why use this implementation</a></h2>
+<h3 id="why-use-this-implementation" class="section-header"><a href="#why-use-this-implementation">Why use this implementation</a></h3>
 <p>This implementation does a simple job: it stores in a coherent way the state of
 surface trees with subsurfaces, to provide you direct access to the tree
 structure and all surface attributes, and handles the application of double-buffered
@@ -14,7 +14,7 @@ need to display the subsurface tree.</p>
 <p>This implementation will not do anything more than present you the metadata specified by the
 client in a coherent and practical way. All the logic regarding drawing itself, and
 the positioning of windows (surface trees) one relative to another is out of its scope.</p>
-<h2 id="how-to-use-it" class="section-header"><a href="#how-to-use-it">How to use it</a></h2><h3 id="initialization" class="section-header"><a href="#initialization">Initialization</a></h3>
+<h3 id="how-to-use-it" class="section-header"><a href="#how-to-use-it">How to use it</a></h3><h4 id="initialization" class="section-header"><a href="#initialization">Initialization</a></h4>
 <p>To initialize this implementation, use the <a href="fn.compositor_init.html" title="compositor_init"><code>compositor_init</code></a>
 method provided by this module. It’ll require you to first define as few things, as shown in
 this example:</p>
@@ -33,12 +33,12 @@ this example:</p>
 );
 
 <span class="comment">// You&#39;re now ready to go!</span></code></pre></div>
-<h3 id="use-the-surface-states" class="section-header"><a href="#use-the-surface-states">Use the surface states</a></h3>
+<h4 id="use-the-surface-states" class="section-header"><a href="#use-the-surface-states">Use the surface states</a></h4>
 <p>The main access to surface states is done through the <a href="fn.with_states.html" title="with_states"><code>with_states</code></a> function, which
 gives you access to the <a href="struct.SurfaceData.html" title="SurfaceData"><code>SurfaceData</code></a> instance associated with this surface. It acts
 as a general purpose container for associating state to a surface, double-buffered or
 not. See its documentation for more details.</p>
-<h3 id="state-application-and-hooks" class="section-header"><a href="#state-application-and-hooks">State application and hooks</a></h3>
+<h4 id="state-application-and-hooks" class="section-header"><a href="#state-application-and-hooks">State application and hooks</a></h4>
 <p>On commit of a surface several steps are taken to update the state of the surface. Actions
 are taken by smithay in the following order:</p>
 <ol>
@@ -56,41 +56,41 @@ like <a href="fn.with_surface_tree_upward.html" title="with_surface_tree_upward"
 if the surface is a sync subsurface, its current state will note have changed as
 the result of that commit. You can check if it is using <a href="fn.is_sync_subsurface.html" title="is_sync_subsurface"><code>is_sync_subsurface</code></a>.</li>
 </ol>
-<h3 id="surface-roles" class="section-header"><a href="#surface-roles">Surface roles</a></h3>
+<h4 id="surface-roles" class="section-header"><a href="#surface-roles">Surface roles</a></h4>
 <p>The wayland protocol specifies that a surface needs to be assigned a role before it can
 be displayed. Furthermore, a surface can only have a single role during its whole lifetime.
 Smithay represents this role as a <code>&amp;'static str</code> identifier, that can only be set once
 on a surface. See <a href="fn.give_role.html" title="give_role"><code>give_role</code></a> and <a href="fn.get_role.html" title="get_role"><code>get_role</code></a> for details. This module manages the
 subsurface role, which is identified by the string <code>&quot;subsurface&quot;</code>.</p>
 </div></details><h2 id="structs" class="section-header"><a href="#structs">Structs</a></h2>
-<div class="item-table"><div class="item-left module-item"><a class="struct" href="struct.AlreadyHasRole.html" title="smithay::wayland::compositor::AlreadyHasRole struct">AlreadyHasRole</a></div><div class="item-right docblock-short"><p>An error type signifying that the surface already has a role and
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.AlreadyHasRole.html" title="smithay::wayland::compositor::AlreadyHasRole struct">AlreadyHasRole</a></div><div class="item-right docblock-short"><p>An error type signifying that the surface already has a role and
 cannot be assigned an other</p>
-</div><div class="item-left module-item"><a class="struct" href="struct.MultiCache.html" title="smithay::wayland::compositor::MultiCache struct">MultiCache</a></div><div class="item-right docblock-short"><p>A typemap-like container for double-buffered values</p>
-</div><div class="item-left module-item"><a class="struct" href="struct.RegionAttributes.html" title="smithay::wayland::compositor::RegionAttributes struct">RegionAttributes</a></div><div class="item-right docblock-short"><p>Description of the contents of a region</p>
-</div><div class="item-left module-item"><a class="struct" href="struct.SubsurfaceCachedState.html" title="smithay::wayland::compositor::SubsurfaceCachedState struct">SubsurfaceCachedState</a></div><div class="item-right docblock-short"><p>The cached state associated with a subsurface</p>
-</div><div class="item-left module-item"><a class="struct" href="struct.SurfaceAttributes.html" title="smithay::wayland::compositor::SurfaceAttributes struct">SurfaceAttributes</a></div><div class="item-right docblock-short"><p>General state associated with a surface</p>
-</div><div class="item-left module-item"><a class="struct" href="struct.SurfaceData.html" title="smithay::wayland::compositor::SurfaceData struct">SurfaceData</a></div><div class="item-right docblock-short"><p>The state container associated with a surface</p>
-</div></div><h2 id="enums" class="section-header"><a href="#enums">Enums</a></h2>
-<div class="item-table"><div class="item-left module-item"><a class="enum" href="enum.BufferAssignment.html" title="smithay::wayland::compositor::BufferAssignment enum">BufferAssignment</a></div><div class="item-right docblock-short"><p>New buffer assignation for a surface</p>
-</div><div class="item-left module-item"><a class="enum" href="enum.Damage.html" title="smithay::wayland::compositor::Damage enum">Damage</a></div><div class="item-right docblock-short"><p>Description of a part of a surface that
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.MultiCache.html" title="smithay::wayland::compositor::MultiCache struct">MultiCache</a></div><div class="item-right docblock-short"><p>A typemap-like container for double-buffered values</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.RegionAttributes.html" title="smithay::wayland::compositor::RegionAttributes struct">RegionAttributes</a></div><div class="item-right docblock-short"><p>Description of the contents of a region</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.SubsurfaceCachedState.html" title="smithay::wayland::compositor::SubsurfaceCachedState struct">SubsurfaceCachedState</a></div><div class="item-right docblock-short"><p>The cached state associated with a subsurface</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.SurfaceAttributes.html" title="smithay::wayland::compositor::SurfaceAttributes struct">SurfaceAttributes</a></div><div class="item-right docblock-short"><p>General state associated with a surface</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.SurfaceData.html" title="smithay::wayland::compositor::SurfaceData struct">SurfaceData</a></div><div class="item-right docblock-short"><p>The state container associated with a surface</p>
+</div></div></div><h2 id="enums" class="section-header"><a href="#enums">Enums</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.BufferAssignment.html" title="smithay::wayland::compositor::BufferAssignment enum">BufferAssignment</a></div><div class="item-right docblock-short"><p>New buffer assignation for a surface</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.Damage.html" title="smithay::wayland::compositor::Damage enum">Damage</a></div><div class="item-right docblock-short"><p>Description of a part of a surface that
 should be considered damaged and needs to be redrawn</p>
-</div><div class="item-left module-item"><a class="enum" href="enum.RectangleKind.html" title="smithay::wayland::compositor::RectangleKind enum">RectangleKind</a></div><div class="item-right docblock-short"><p>Kind of a rectangle part of a region</p>
-</div><div class="item-left module-item"><a class="enum" href="enum.TraversalAction.html" title="smithay::wayland::compositor::TraversalAction enum">TraversalAction</a></div><div class="item-right docblock-short"><p>Possible actions to do after handling a node during tree traversal</p>
-</div></div><h2 id="traits" class="section-header"><a href="#traits">Traits</a></h2>
-<div class="item-table"><div class="item-left module-item"><a class="trait" href="trait.Cacheable.html" title="smithay::wayland::compositor::Cacheable trait">Cacheable</a></div><div class="item-right docblock-short"><p>Trait representing a value that can be used in double-buffered storage</p>
-</div></div><h2 id="functions" class="section-header"><a href="#functions">Functions</a></h2>
-<div class="item-table"><div class="item-left module-item"><a class="fn" href="fn.add_commit_hook.html" title="smithay::wayland::compositor::add_commit_hook fn">add_commit_hook</a></div><div class="item-right docblock-short"><p>Register a commit hook to be invoked on surface commit</p>
-</div><div class="item-left module-item"><a class="fn" href="fn.compositor_init.html" title="smithay::wayland::compositor::compositor_init fn">compositor_init</a></div><div class="item-right docblock-short"><p>Create new <a href="../../../wayland_server/protocol/wl_compositor/index.html"><code>wl_compositor</code></a>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.RectangleKind.html" title="smithay::wayland::compositor::RectangleKind enum">RectangleKind</a></div><div class="item-right docblock-short"><p>Kind of a rectangle part of a region</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.TraversalAction.html" title="smithay::wayland::compositor::TraversalAction enum">TraversalAction</a></div><div class="item-right docblock-short"><p>Possible actions to do after handling a node during tree traversal</p>
+</div></div></div><h2 id="traits" class="section-header"><a href="#traits">Traits</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.Cacheable.html" title="smithay::wayland::compositor::Cacheable trait">Cacheable</a></div><div class="item-right docblock-short"><p>Trait representing a value that can be used in double-buffered storage</p>
+</div></div></div><h2 id="functions" class="section-header"><a href="#functions">Functions</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.add_commit_hook.html" title="smithay::wayland::compositor::add_commit_hook fn">add_commit_hook</a></div><div class="item-right docblock-short"><p>Register a commit hook to be invoked on surface commit</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.compositor_init.html" title="smithay::wayland::compositor::compositor_init fn">compositor_init</a></div><div class="item-right docblock-short"><p>Create new <a href="../../../wayland_server/protocol/wl_compositor/index.html"><code>wl_compositor</code></a>
 and <a href="../../../wayland_server/protocol/wl_subcompositor/index.html"><code>wl_subcompositor</code></a> globals.</p>
-</div><div class="item-left module-item"><a class="fn" href="fn.get_children.html" title="smithay::wayland::compositor::get_children fn">get_children</a></div><div class="item-right docblock-short"><p>Retrieve the children of this surface</p>
-</div><div class="item-left module-item"><a class="fn" href="fn.get_parent.html" title="smithay::wayland::compositor::get_parent fn">get_parent</a></div><div class="item-right docblock-short"><p>Retrieve the parent of this surface</p>
-</div><div class="item-left module-item"><a class="fn" href="fn.get_region_attributes.html" title="smithay::wayland::compositor::get_region_attributes fn">get_region_attributes</a></div><div class="item-right docblock-short"><p>Retrieve the metadata associated with a <code>wl_region</code></p>
-</div><div class="item-left module-item"><a class="fn" href="fn.get_role.html" title="smithay::wayland::compositor::get_role fn">get_role</a></div><div class="item-right docblock-short"><p>Get the current role of this surface</p>
-</div><div class="item-left module-item"><a class="fn" href="fn.give_role.html" title="smithay::wayland::compositor::give_role fn">give_role</a></div><div class="item-right docblock-short"><p>Register that this surface has given role</p>
-</div><div class="item-left module-item"><a class="fn" href="fn.is_sync_subsurface.html" title="smithay::wayland::compositor::is_sync_subsurface fn">is_sync_subsurface</a></div><div class="item-right docblock-short"><p>Check if this subsurface is a synchronized subsurface</p>
-</div><div class="item-left module-item"><a class="fn" href="fn.with_states.html" title="smithay::wayland::compositor::with_states fn">with_states</a></div><div class="item-right docblock-short"><p>Access the states associated to this surface</p>
-</div><div class="item-left module-item"><a class="fn" href="fn.with_surface_tree_downward.html" title="smithay::wayland::compositor::with_surface_tree_downward fn">with_surface_tree_downward</a></div><div class="item-right docblock-short"><p>Access the data of a surface tree from top to bottom</p>
-</div><div class="item-left module-item"><a class="fn" href="fn.with_surface_tree_upward.html" title="smithay::wayland::compositor::with_surface_tree_upward fn">with_surface_tree_upward</a></div><div class="item-right docblock-short"><p>Access the data of a surface tree from bottom to top</p>
-</div></div></section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="smithay" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.get_children.html" title="smithay::wayland::compositor::get_children fn">get_children</a></div><div class="item-right docblock-short"><p>Retrieve the children of this surface</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.get_parent.html" title="smithay::wayland::compositor::get_parent fn">get_parent</a></div><div class="item-right docblock-short"><p>Retrieve the parent of this surface</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.get_region_attributes.html" title="smithay::wayland::compositor::get_region_attributes fn">get_region_attributes</a></div><div class="item-right docblock-short"><p>Retrieve the metadata associated with a <code>wl_region</code></p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.get_role.html" title="smithay::wayland::compositor::get_role fn">get_role</a></div><div class="item-right docblock-short"><p>Get the current role of this surface</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.give_role.html" title="smithay::wayland::compositor::give_role fn">give_role</a></div><div class="item-right docblock-short"><p>Register that this surface has given role</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.is_sync_subsurface.html" title="smithay::wayland::compositor::is_sync_subsurface fn">is_sync_subsurface</a></div><div class="item-right docblock-short"><p>Check if this subsurface is a synchronized subsurface</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.with_states.html" title="smithay::wayland::compositor::with_states fn">with_states</a></div><div class="item-right docblock-short"><p>Access the states associated to this surface</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.with_surface_tree_downward.html" title="smithay::wayland::compositor::with_surface_tree_downward fn">with_surface_tree_downward</a></div><div class="item-right docblock-short"><p>Access the data of a surface tree from top to bottom</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.with_surface_tree_upward.html" title="smithay::wayland::compositor::with_surface_tree_upward fn">with_surface_tree_upward</a></div><div class="item-right docblock-short"><p>Access the data of a surface tree from bottom to top</p>
+</div></div></div></section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="smithay" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div>
     <script src="../../../main.js"></script>
 </body></html>

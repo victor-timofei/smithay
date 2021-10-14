@@ -4,12 +4,12 @@
 supported variables also have associated compile-time constants, but POSIX
 allows their values to change at runtime.  There are generally two types of
 <code>pathconf</code> variables: options and limits.  See <a href="http://pubs.opengroup.org/onlinepubs/9699919799/functions/pathconf.html">pathconf(2)</a> for more details.</p>
-<h1 id="parameters" class="section-header"><a href="#parameters">Parameters</a></h1>
+<h2 id="parameters" class="section-header"><a href="#parameters">Parameters</a></h2>
 <ul>
 <li><code>path</code>: Lookup the value of <code>var</code> for this file or directory</li>
 <li><code>var</code>:  The <code>pathconf</code> variable to lookup</li>
 </ul>
-<h1 id="returns" class="section-header"><a href="#returns">Returns</a></h1>
+<h2 id="returns" class="section-header"><a href="#returns">Returns</a></h2>
 <ul>
 <li><code>Ok(Some(x))</code>: the variable’s limit (for limit variables) or its
 implementation level (for option variables).  Implementation levels are

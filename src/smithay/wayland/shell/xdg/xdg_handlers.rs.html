@@ -840,7 +840,7 @@
     <span class="ident">shell</span>: <span class="ident">Main</span><span class="op">&lt;</span><span class="ident">xdg_wm_base::XdgWmBase</span><span class="op">&gt;</span>,
     <span class="ident">shell_data</span>: <span class="kw-2">&amp;</span><span class="ident">ShellData</span>,
     <span class="ident">dispatch_data</span>: <span class="ident">DispatchData</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">xdg_wm_base::XdgWmBase</span> {
+) -&gt; <span class="ident">xdg_wm_base::XdgWmBase</span> {
     <span class="ident">shell</span>.<span class="ident">quick_assign</span>(<span class="ident">wm_implementation</span>);
     <span class="ident">shell</span>.<span class="ident">as_ref</span>().<span class="ident">user_data</span>().<span class="ident">set</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ShellUserData</span> {
         <span class="ident">shell_data</span>: <span class="ident">shell_data</span>.<span class="ident">clone</span>(),
@@ -865,7 +865,7 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">client_data</span>: <span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">ShellClientData</span><span class="op">&gt;</span>,
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">make_shell_client</span>(<span class="ident">resource</span>: <span class="kw-2">&amp;</span><span class="ident">xdg_wm_base::XdgWmBase</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ShellClient</span> {
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">make_shell_client</span>(<span class="ident">resource</span>: <span class="kw-2">&amp;</span><span class="ident">xdg_wm_base::XdgWmBase</span>) -&gt; <span class="ident">ShellClient</span> {
     <span class="ident">ShellClient</span> {
         <span class="ident">kind</span>: <span class="ident"><span class="kw">super</span>::ShellClientKind::Xdg</span>(<span class="ident">resource</span>.<span class="ident">clone</span>()),
     }
@@ -878,13 +878,13 @@
 ) {
     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">shell</span>.<span class="ident">as_ref</span>().<span class="ident">user_data</span>().<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ShellUserData</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
     <span class="kw">match</span> <span class="ident">request</span> {
-        <span class="ident">xdg_wm_base::Request::Destroy</span> <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">xdg_wm_base::Request::Destroy</span> =&gt; {
             <span class="comment">// all is handled by destructor</span>
         }
-        <span class="ident">xdg_wm_base::Request::CreatePositioner</span> { <span class="ident">id</span> } <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">xdg_wm_base::Request::CreatePositioner</span> { <span class="ident">id</span> } =&gt; {
             <span class="ident">implement_positioner</span>(<span class="ident">id</span>);
         }
-        <span class="ident">xdg_wm_base::Request::GetXdgSurface</span> { <span class="ident">id</span>, <span class="ident">surface</span> } <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">xdg_wm_base::Request::GetXdgSurface</span> { <span class="ident">id</span>, <span class="ident">surface</span> } =&gt; {
             <span class="comment">// Do not assign a role to the surface here</span>
             <span class="comment">// xdg_surface is not role, only xdg_toplevel and</span>
             <span class="comment">// xdg_popup are defined as roles</span>
@@ -899,11 +899,11 @@
                 <span class="ident">has_active_role</span>: <span class="ident">AtomicBool::new</span>(<span class="bool-val">false</span>),
             });
         }
-        <span class="ident">xdg_wm_base::Request::Pong</span> { <span class="ident">serial</span> } <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">xdg_wm_base::Request::Pong</span> { <span class="ident">serial</span> } =&gt; {
             <span class="kw">let</span> <span class="ident">serial</span> <span class="op">=</span> <span class="ident">Serial::from</span>(<span class="ident">serial</span>);
             <span class="kw">let</span> <span class="ident">valid</span> <span class="op">=</span> {
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">guard</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">client_data</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-                <span class="kw">if</span> <span class="ident">guard</span>.<span class="ident">pending_ping</span> <span class="op">=</span><span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">serial</span>) {
+                <span class="kw">if</span> <span class="ident">guard</span>.<span class="ident">pending_ping</span> <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="ident">serial</span>) {
                     <span class="ident">guard</span>.<span class="ident">pending_ping</span> <span class="op">=</span> <span class="prelude-val">None</span>;
                     <span class="bool-val">true</span>
                 } <span class="kw">else</span> {
@@ -920,7 +920,7 @@
                 );
             }
         }
-        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
+        <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
     }
 }
 
@@ -928,7 +928,7 @@
  * xdg_positioner
  */</span>
 
-<span class="kw">fn</span> <span class="ident">implement_positioner</span>(<span class="ident">positioner</span>: <span class="ident">Main</span><span class="op">&lt;</span><span class="ident">xdg_positioner::XdgPositioner</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">xdg_positioner::XdgPositioner</span> {
+<span class="kw">fn</span> <span class="ident">implement_positioner</span>(<span class="ident">positioner</span>: <span class="ident">Main</span><span class="op">&lt;</span><span class="ident">xdg_positioner::XdgPositioner</span><span class="op">&gt;</span>) -&gt; <span class="ident">xdg_positioner::XdgPositioner</span> {
     <span class="ident">positioner</span>.<span class="ident">quick_assign</span>(<span class="op">|</span><span class="ident">positioner</span>, <span class="ident">request</span>, <span class="ident">_data</span><span class="op">|</span> {
         <span class="kw">let</span> <span class="ident">mutex</span> <span class="op">=</span> <span class="ident">positioner</span>
             .<span class="ident">as_ref</span>()
@@ -937,10 +937,10 @@
             .<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">state</span> <span class="op">=</span> <span class="ident">mutex</span>.<span class="ident">borrow_mut</span>();
         <span class="kw">match</span> <span class="ident">request</span> {
-            <span class="ident">xdg_positioner::Request::Destroy</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">xdg_positioner::Request::Destroy</span> =&gt; {
                 <span class="comment">// handled by destructor</span>
             }
-            <span class="ident">xdg_positioner::Request::SetSize</span> { <span class="ident">width</span>, <span class="ident">height</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">xdg_positioner::Request::SetSize</span> { <span class="ident">width</span>, <span class="ident">height</span> } =&gt; {
                 <span class="kw">if</span> <span class="ident">width</span> <span class="op">&lt;</span> <span class="number">1</span> <span class="op">|</span><span class="op">|</span> <span class="ident">height</span> <span class="op">&lt;</span> <span class="number">1</span> {
                     <span class="ident">positioner</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
                         <span class="ident">xdg_positioner::Error::InvalidInput</span> <span class="kw">as</span> <span class="ident">u32</span>,
@@ -950,7 +950,7 @@
                     <span class="ident">state</span>.<span class="ident">rect_size</span> <span class="op">=</span> (<span class="ident">width</span>, <span class="ident">height</span>).<span class="ident">into</span>();
                 }
             }
-            <span class="ident">xdg_positioner::Request::SetAnchorRect</span> { <span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">width</span>, <span class="ident">height</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">xdg_positioner::Request::SetAnchorRect</span> { <span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">width</span>, <span class="ident">height</span> } =&gt; {
                 <span class="kw">if</span> <span class="ident">width</span> <span class="op">&lt;</span> <span class="number">1</span> <span class="op">|</span><span class="op">|</span> <span class="ident">height</span> <span class="op">&lt;</span> <span class="number">1</span> {
                     <span class="ident">positioner</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
                         <span class="ident">xdg_positioner::Error::InvalidInput</span> <span class="kw">as</span> <span class="ident">u32</span>,
@@ -960,35 +960,35 @@
                     <span class="ident">state</span>.<span class="ident">anchor_rect</span> <span class="op">=</span> <span class="ident">Rectangle::from_loc_and_size</span>((<span class="ident">x</span>, <span class="ident">y</span>), (<span class="ident">width</span>, <span class="ident">height</span>));
                 }
             }
-            <span class="ident">xdg_positioner::Request::SetAnchor</span> { <span class="ident">anchor</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">xdg_positioner::Request::SetAnchor</span> { <span class="ident">anchor</span> } =&gt; {
                 <span class="ident">state</span>.<span class="ident">anchor_edges</span> <span class="op">=</span> <span class="ident">anchor</span>;
             }
-            <span class="ident">xdg_positioner::Request::SetGravity</span> { <span class="ident">gravity</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">xdg_positioner::Request::SetGravity</span> { <span class="ident">gravity</span> } =&gt; {
                 <span class="ident">state</span>.<span class="ident">gravity</span> <span class="op">=</span> <span class="ident">gravity</span>;
             }
             <span class="ident">xdg_positioner::Request::SetConstraintAdjustment</span> {
                 <span class="ident">constraint_adjustment</span>,
-            } <span class="op">=</span><span class="op">&gt;</span> {
+            } =&gt; {
                 <span class="kw">let</span> <span class="ident">constraint_adjustment</span> <span class="op">=</span>
                     <span class="ident">xdg_positioner::ConstraintAdjustment::from_bits_truncate</span>(<span class="ident">constraint_adjustment</span>);
                 <span class="ident">state</span>.<span class="ident">constraint_adjustment</span> <span class="op">=</span> <span class="ident">constraint_adjustment</span>;
             }
-            <span class="ident">xdg_positioner::Request::SetOffset</span> { <span class="ident">x</span>, <span class="ident">y</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">xdg_positioner::Request::SetOffset</span> { <span class="ident">x</span>, <span class="ident">y</span> } =&gt; {
                 <span class="ident">state</span>.<span class="ident">offset</span> <span class="op">=</span> (<span class="ident">x</span>, <span class="ident">y</span>).<span class="ident">into</span>();
             }
-            <span class="ident">xdg_positioner::Request::SetReactive</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">xdg_positioner::Request::SetReactive</span> =&gt; {
                 <span class="ident">state</span>.<span class="ident">reactive</span> <span class="op">=</span> <span class="bool-val">true</span>;
             }
             <span class="ident">xdg_positioner::Request::SetParentSize</span> {
                 <span class="ident">parent_width</span>,
                 <span class="ident">parent_height</span>,
-            } <span class="op">=</span><span class="op">&gt;</span> {
+            } =&gt; {
                 <span class="ident">state</span>.<span class="ident">parent_size</span> <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="ident">parent_width</span>, <span class="ident">parent_height</span>).<span class="ident">into</span>());
             }
-            <span class="ident">xdg_positioner::Request::SetParentConfigure</span> { <span class="ident">serial</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">xdg_positioner::Request::SetParentConfigure</span> { <span class="ident">serial</span> } =&gt; {
                 <span class="ident">state</span>.<span class="ident">parent_configure</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Serial::from</span>(<span class="ident">serial</span>));
             }
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
+            <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
         }
     });
     <span class="ident">positioner</span>
@@ -1043,10 +1043,10 @@
         .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">XdgSurfaceUserData</span><span class="op">&gt;</span>()
         .<span class="ident">unwrap</span>();
     <span class="kw">match</span> <span class="ident">request</span> {
-        <span class="ident">xdg_surface::Request::Destroy</span> <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">xdg_surface::Request::Destroy</span> =&gt; {
             <span class="comment">// all is handled by our destructor</span>
         }
-        <span class="ident">xdg_surface::Request::GetToplevel</span> { <span class="ident">id</span> } <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">xdg_surface::Request::GetToplevel</span> { <span class="ident">id</span> } =&gt; {
             <span class="comment">// We now can assign a role to the surface</span>
             <span class="kw">let</span> <span class="ident">surface</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">wl_surface</span>;
             <span class="kw">let</span> <span class="ident">shell</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">wm_base</span>;
@@ -1094,7 +1094,7 @@
             <span class="ident">id</span>,
             <span class="ident">parent</span>,
             <span class="ident">positioner</span>,
-        } <span class="op">=</span><span class="op">&gt;</span> {
+        } =&gt; {
             <span class="kw">let</span> <span class="ident">positioner_data</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">positioner</span>
                 .<span class="ident">as_ref</span>()
                 .<span class="ident">user_data</span>()
@@ -1171,7 +1171,7 @@
                 <span class="ident">dispatch_data</span>,
             );
         }
-        <span class="ident">xdg_surface::Request::SetWindowGeometry</span> { <span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">width</span>, <span class="ident">height</span> } <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">xdg_surface::Request::SetWindowGeometry</span> { <span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">width</span>, <span class="ident">height</span> } =&gt; {
             <span class="comment">// Check the role of the surface, this can be either xdg_toplevel</span>
             <span class="comment">// or xdg_popup. If none of the role matches the xdg_surface has no role set</span>
             <span class="comment">// which is a protocol error.</span>
@@ -1200,7 +1200,7 @@
             })
             .<span class="ident">unwrap</span>();
         }
-        <span class="ident">xdg_surface::Request::AckConfigure</span> { <span class="ident">serial</span> } <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">xdg_surface::Request::AckConfigure</span> { <span class="ident">serial</span> } =&gt; {
             <span class="kw">let</span> <span class="ident">serial</span> <span class="op">=</span> <span class="ident">Serial::from</span>(<span class="ident">serial</span>);
             <span class="kw">let</span> <span class="ident">surface</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">wl_surface</span>;
 
@@ -1228,7 +1228,7 @@
             <span class="comment">//</span>
             <span class="comment">// This can be used to integrate custom protocol extensions</span>
             <span class="kw">let</span> <span class="ident">found_configure</span> <span class="op">=</span> <span class="ident">compositor::with_states</span>(<span class="ident">surface</span>, <span class="op">|</span><span class="ident">states</span><span class="op">|</span> {
-                <span class="kw">if</span> <span class="ident">states</span>.<span class="ident">role</span> <span class="op">=</span><span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">XDG_TOPLEVEL_ROLE</span>) {
+                <span class="kw">if</span> <span class="ident">states</span>.<span class="ident">role</span> <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="ident">XDG_TOPLEVEL_ROLE</span>) {
                     <span class="prelude-val">Ok</span>(<span class="ident">states</span>
                         .<span class="ident">data_map</span>
                         .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">XdgToplevelSurfaceRoleAttributes</span><span class="op">&gt;</span><span class="op">&gt;</span>()
@@ -1236,7 +1236,7 @@
                         .<span class="ident">lock</span>()
                         .<span class="ident">unwrap</span>()
                         .<span class="ident">ack_configure</span>(<span class="ident">serial</span>))
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">states</span>.<span class="ident">role</span> <span class="op">=</span><span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">XDG_POPUP_ROLE</span>) {
+                } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">states</span>.<span class="ident">role</span> <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="ident">XDG_POPUP_ROLE</span>) {
                     <span class="prelude-val">Ok</span>(<span class="ident">states</span>
                         .<span class="ident">data_map</span>
                         .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">XdgPopupSurfaceRoleAttributes</span><span class="op">&gt;</span><span class="op">&gt;</span>()
@@ -1250,15 +1250,15 @@
             })
             .<span class="ident">unwrap</span>();
             <span class="kw">let</span> <span class="ident">configure</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">found_configure</span> {
-                <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">configure</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">configure</span>,
-                <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">configure</span>)) =&gt; <span class="ident">configure</span>,
+                <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) =&gt; {
                     <span class="ident">data</span>.<span class="ident">wm_base</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
                         <span class="ident">xdg_wm_base::Error::InvalidSurfaceState</span> <span class="kw">as</span> <span class="ident">u32</span>,
                         <span class="macro">format!</span>(<span class="string">&quot;wrong configure serial: {}&quot;</span>, <span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span><span class="ident">::from</span>(<span class="ident">serial</span>)),
                     );
                     <span class="kw">return</span>;
                 }
-                <span class="prelude-val">Err</span>(()) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Err</span>(()) =&gt; {
                     <span class="ident">data</span>.<span class="ident">wm_base</span>.<span class="ident">as_ref</span>().<span class="ident">post_error</span>(
                         <span class="ident">xdg_wm_base::Error::Role</span> <span class="kw">as</span> <span class="ident">u32</span>,
                         <span class="string">&quot;xdg_surface must have a role of xdg_toplevel or xdg_popup.&quot;</span>.<span class="ident">into</span>(),
@@ -1276,7 +1276,7 @@
                 <span class="ident">dispatch_data</span>,
             );
         }
-        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
+        <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
     }
 }
 
@@ -1292,9 +1292,9 @@
 }
 
 <span class="comment">// Utility functions allowing to factor out a lot of the upcoming logic</span>
-<span class="kw">fn</span> <span class="ident">with_surface_toplevel_role_data</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">toplevel</span>: <span class="kw-2">&amp;</span><span class="ident">xdg_toplevel::XdgToplevel</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span>
+<span class="kw">fn</span> <span class="ident">with_surface_toplevel_role_data</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">toplevel</span>: <span class="kw-2">&amp;</span><span class="ident">xdg_toplevel::XdgToplevel</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">T</span>
 <span class="kw">where</span>
-    <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">XdgToplevelSurfaceRoleAttributes</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span>,
+    <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">XdgToplevelSurfaceRoleAttributes</span>) -&gt; <span class="ident">T</span>,
 {
     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">toplevel</span>
         .<span class="ident">as_ref</span>()
@@ -1312,9 +1312,9 @@
     .<span class="ident">unwrap</span>()
 }
 
-<span class="kw">fn</span> <span class="ident">with_toplevel_pending_state</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">toplevel</span>: <span class="kw-2">&amp;</span><span class="ident">xdg_toplevel::XdgToplevel</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span>
+<span class="kw">fn</span> <span class="ident">with_toplevel_pending_state</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">toplevel</span>: <span class="kw-2">&amp;</span><span class="ident">xdg_toplevel::XdgToplevel</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">T</span>
 <span class="kw">where</span>
-    <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">SurfaceCachedState</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span>,
+    <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">SurfaceCachedState</span>) -&gt; <span class="ident">T</span>,
 {
     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">toplevel</span>
         .<span class="ident">as_ref</span>()
@@ -1357,7 +1357,7 @@
     <span class="ident">data</span>.<span class="ident">xdg_surface</span>.<span class="ident">configure</span>(<span class="ident">serial</span>.<span class="ident">into</span>());
 }
 
-<span class="kw">fn</span> <span class="ident">make_toplevel_handle</span>(<span class="ident">resource</span>: <span class="kw-2">&amp;</span><span class="ident">xdg_toplevel::XdgToplevel</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="kw">super</span>::ToplevelSurface</span> {
+<span class="kw">fn</span> <span class="ident">make_toplevel_handle</span>(<span class="ident">resource</span>: <span class="kw-2">&amp;</span><span class="ident">xdg_toplevel::XdgToplevel</span>) -&gt; <span class="ident"><span class="kw">super</span>::ToplevelSurface</span> {
     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">resource</span>
         .<span class="ident">as_ref</span>()
         .<span class="ident">user_data</span>()
@@ -1380,10 +1380,10 @@
         .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ShellSurfaceUserData</span><span class="op">&gt;</span>()
         .<span class="ident">unwrap</span>();
     <span class="kw">match</span> <span class="ident">request</span> {
-        <span class="ident">xdg_toplevel::Request::Destroy</span> <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">xdg_toplevel::Request::Destroy</span> =&gt; {
             <span class="comment">// all it done by the destructor</span>
         }
-        <span class="ident">xdg_toplevel::Request::SetParent</span> { <span class="ident">parent</span> } <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">xdg_toplevel::Request::SetParent</span> { <span class="ident">parent</span> } =&gt; {
             <span class="kw">let</span> <span class="ident">parent_surface</span> <span class="op">=</span> <span class="ident">parent</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">toplevel_surface_parent</span><span class="op">|</span> {
                 <span class="ident">toplevel_surface_parent</span>
                     .<span class="ident">as_ref</span>()
@@ -1397,19 +1397,19 @@
             <span class="comment">// Parent is not double buffered, we can set it directly</span>
             <span class="ident">set_parent</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>, <span class="ident">parent_surface</span>);
         }
-        <span class="ident">xdg_toplevel::Request::SetTitle</span> { <span class="ident">title</span> } <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">xdg_toplevel::Request::SetTitle</span> { <span class="ident">title</span> } =&gt; {
             <span class="comment">// Title is not double buffered, we can set it directly</span>
             <span class="ident">with_surface_toplevel_role_data</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>, <span class="op">|</span><span class="ident">data</span><span class="op">|</span> {
                 <span class="ident">data</span>.<span class="ident">title</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">title</span>);
             });
         }
-        <span class="ident">xdg_toplevel::Request::SetAppId</span> { <span class="ident">app_id</span> } <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">xdg_toplevel::Request::SetAppId</span> { <span class="ident">app_id</span> } =&gt; {
             <span class="comment">// AppId is not double buffered, we can set it directly</span>
             <span class="ident">with_surface_toplevel_role_data</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>, <span class="op">|</span><span class="ident">role</span><span class="op">|</span> {
                 <span class="ident">role</span>.<span class="ident">app_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">app_id</span>);
             });
         }
-        <span class="ident">xdg_toplevel::Request::ShowWindowMenu</span> { <span class="ident">seat</span>, <span class="ident">serial</span>, <span class="ident">x</span>, <span class="ident">y</span> } <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">xdg_toplevel::Request::ShowWindowMenu</span> { <span class="ident">seat</span>, <span class="ident">serial</span>, <span class="ident">x</span>, <span class="ident">y</span> } =&gt; {
             <span class="comment">// This has to be handled by the compositor</span>
             <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">make_toplevel_handle</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>);
             <span class="kw">let</span> <span class="ident">serial</span> <span class="op">=</span> <span class="ident">Serial::from</span>(<span class="ident">serial</span>);
@@ -1424,7 +1424,7 @@
                 <span class="ident">dispatch_data</span>,
             );
         }
-        <span class="ident">xdg_toplevel::Request::Move</span> { <span class="ident">seat</span>, <span class="ident">serial</span> } <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">xdg_toplevel::Request::Move</span> { <span class="ident">seat</span>, <span class="ident">serial</span> } =&gt; {
             <span class="comment">// This has to be handled by the compositor</span>
             <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">make_toplevel_handle</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>);
             <span class="kw">let</span> <span class="ident">serial</span> <span class="op">=</span> <span class="ident">Serial::from</span>(<span class="ident">serial</span>);
@@ -1438,7 +1438,7 @@
                 <span class="ident">dispatch_data</span>,
             );
         }
-        <span class="ident">xdg_toplevel::Request::Resize</span> { <span class="ident">seat</span>, <span class="ident">serial</span>, <span class="ident">edges</span> } <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">xdg_toplevel::Request::Resize</span> { <span class="ident">seat</span>, <span class="ident">serial</span>, <span class="ident">edges</span> } =&gt; {
             <span class="comment">// This has to be handled by the compositor</span>
             <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">make_toplevel_handle</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>);
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_impl</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">user_impl</span>.<span class="ident">borrow_mut</span>();
@@ -1453,27 +1453,27 @@
                 <span class="ident">dispatch_data</span>,
             );
         }
-        <span class="ident">xdg_toplevel::Request::SetMaxSize</span> { <span class="ident">width</span>, <span class="ident">height</span> } <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">xdg_toplevel::Request::SetMaxSize</span> { <span class="ident">width</span>, <span class="ident">height</span> } =&gt; {
             <span class="ident">with_toplevel_pending_state</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>, <span class="op">|</span><span class="ident">toplevel_data</span><span class="op">|</span> {
                 <span class="ident">toplevel_data</span>.<span class="ident">max_size</span> <span class="op">=</span> (<span class="ident">width</span>, <span class="ident">height</span>).<span class="ident">into</span>();
             });
         }
-        <span class="ident">xdg_toplevel::Request::SetMinSize</span> { <span class="ident">width</span>, <span class="ident">height</span> } <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">xdg_toplevel::Request::SetMinSize</span> { <span class="ident">width</span>, <span class="ident">height</span> } =&gt; {
             <span class="ident">with_toplevel_pending_state</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>, <span class="op">|</span><span class="ident">toplevel_data</span><span class="op">|</span> {
                 <span class="ident">toplevel_data</span>.<span class="ident">min_size</span> <span class="op">=</span> (<span class="ident">width</span>, <span class="ident">height</span>).<span class="ident">into</span>();
             });
         }
-        <span class="ident">xdg_toplevel::Request::SetMaximized</span> <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">xdg_toplevel::Request::SetMaximized</span> =&gt; {
             <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">make_toplevel_handle</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>);
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_impl</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">user_impl</span>.<span class="ident">borrow_mut</span>();
             (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">XdgRequest::Maximize</span> { <span class="ident">surface</span>: <span class="ident">handle</span> }, <span class="ident">dispatch_data</span>);
         }
-        <span class="ident">xdg_toplevel::Request::UnsetMaximized</span> <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">xdg_toplevel::Request::UnsetMaximized</span> =&gt; {
             <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">make_toplevel_handle</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>);
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_impl</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">user_impl</span>.<span class="ident">borrow_mut</span>();
             (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">XdgRequest::UnMaximize</span> { <span class="ident">surface</span>: <span class="ident">handle</span> }, <span class="ident">dispatch_data</span>);
         }
-        <span class="ident">xdg_toplevel::Request::SetFullscreen</span> { <span class="ident">output</span> } <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">xdg_toplevel::Request::SetFullscreen</span> { <span class="ident">output</span> } =&gt; {
             <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">make_toplevel_handle</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>);
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_impl</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">user_impl</span>.<span class="ident">borrow_mut</span>();
             (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(
@@ -1484,19 +1484,19 @@
                 <span class="ident">dispatch_data</span>,
             );
         }
-        <span class="ident">xdg_toplevel::Request::UnsetFullscreen</span> <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">xdg_toplevel::Request::UnsetFullscreen</span> =&gt; {
             <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">make_toplevel_handle</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>);
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_impl</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">user_impl</span>.<span class="ident">borrow_mut</span>();
             (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">XdgRequest::UnFullscreen</span> { <span class="ident">surface</span>: <span class="ident">handle</span> }, <span class="ident">dispatch_data</span>);
         }
-        <span class="ident">xdg_toplevel::Request::SetMinimized</span> <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">xdg_toplevel::Request::SetMinimized</span> =&gt; {
             <span class="comment">// This has to be handled by the compositor, may not be</span>
             <span class="comment">// supported and just ignored</span>
             <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">make_toplevel_handle</span>(<span class="kw-2">&amp;</span><span class="ident">toplevel</span>);
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_impl</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">user_impl</span>.<span class="ident">borrow_mut</span>();
             (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(<span class="ident">XdgRequest::Minimize</span> { <span class="ident">surface</span>: <span class="ident">handle</span> }, <span class="ident">dispatch_data</span>);
         }
-        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
+        <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
     }
 }
 
@@ -1545,7 +1545,7 @@
     <span class="ident">data</span>.<span class="ident">xdg_surface</span>.<span class="ident">configure</span>(<span class="ident">serial</span>.<span class="ident">into</span>());
 }
 
-<span class="kw">fn</span> <span class="ident">make_popup_handle</span>(<span class="ident">resource</span>: <span class="kw-2">&amp;</span><span class="ident">xdg_popup::XdgPopup</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="kw">super</span>::PopupSurface</span> {
+<span class="kw">fn</span> <span class="ident">make_popup_handle</span>(<span class="ident">resource</span>: <span class="kw-2">&amp;</span><span class="ident">xdg_popup::XdgPopup</span>) -&gt; <span class="ident"><span class="kw">super</span>::PopupSurface</span> {
     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">resource</span>
         .<span class="ident">as_ref</span>()
         .<span class="ident">user_data</span>()
@@ -1564,10 +1564,10 @@
 ) {
     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">popup</span>.<span class="ident">as_ref</span>().<span class="ident">user_data</span>().<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ShellSurfaceUserData</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
     <span class="kw">match</span> <span class="ident">request</span> {
-        <span class="ident">xdg_popup::Request::Destroy</span> <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">xdg_popup::Request::Destroy</span> =&gt; {
             <span class="comment">// all is handled by our destructor</span>
         }
-        <span class="ident">xdg_popup::Request::Grab</span> { <span class="ident">seat</span>, <span class="ident">serial</span> } <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">xdg_popup::Request::Grab</span> { <span class="ident">seat</span>, <span class="ident">serial</span> } =&gt; {
             <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">make_popup_handle</span>(<span class="kw-2">&amp;</span><span class="ident">popup</span>);
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_impl</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">user_impl</span>.<span class="ident">borrow_mut</span>();
             <span class="kw">let</span> <span class="ident">serial</span> <span class="op">=</span> <span class="ident">Serial::from</span>(<span class="ident">serial</span>);
@@ -1580,7 +1580,7 @@
                 <span class="ident">dispatch_data</span>,
             );
         }
-        <span class="ident">xdg_popup::Request::Reposition</span> { <span class="ident">positioner</span>, <span class="ident">token</span> } <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">xdg_popup::Request::Reposition</span> { <span class="ident">positioner</span>, <span class="ident">token</span> } =&gt; {
             <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">make_popup_handle</span>(<span class="kw-2">&amp;</span><span class="ident">popup</span>);
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_impl</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">shell_data</span>.<span class="ident">user_impl</span>.<span class="ident">borrow_mut</span>();
 
@@ -1600,7 +1600,7 @@
                 <span class="ident">dispatch_data</span>,
             );
         }
-        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
+        <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
     }
 }
 
@@ -1618,7 +1618,7 @@
         .<span class="ident">retain</span>(<span class="op">|</span><span class="ident">other</span><span class="op">|</span> <span class="ident">other</span>.<span class="ident">alive</span>());
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">get_parent</span>(<span class="ident">toplevel</span>: <span class="kw-2">&amp;</span><span class="ident">xdg_toplevel::XdgToplevel</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">wl_surface::WlSurface</span><span class="op">&gt;</span> {
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">get_parent</span>(<span class="ident">toplevel</span>: <span class="kw-2">&amp;</span><span class="ident">xdg_toplevel::XdgToplevel</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">wl_surface::WlSurface</span><span class="op">&gt;</span> {
     <span class="ident">with_surface_toplevel_role_data</span>(<span class="ident">toplevel</span>, <span class="op">|</span><span class="ident">data</span><span class="op">|</span> <span class="ident">data</span>.<span class="ident">parent</span>.<span class="ident">clone</span>())
 }
 

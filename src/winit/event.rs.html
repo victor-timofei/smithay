@@ -1187,63 +1187,63 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Clone</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Event</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">use</span> <span class="ident"><span class="self">self</span>::Event</span>::<span class="kw-2">*</span>;
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">WindowEvent</span> { <span class="ident">window_id</span>, <span class="ident">event</span> } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">WindowEvent</span> {
+            <span class="ident">WindowEvent</span> { <span class="ident">window_id</span>, <span class="ident">event</span> } =&gt; <span class="ident">WindowEvent</span> {
                 <span class="ident">window_id</span>: <span class="kw-2">*</span><span class="ident">window_id</span>,
                 <span class="ident">event</span>: <span class="ident">event</span>.<span class="ident">clone</span>(),
             },
-            <span class="ident">UserEvent</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">UserEvent</span>(<span class="ident">event</span>.<span class="ident">clone</span>()),
-            <span class="ident">DeviceEvent</span> { <span class="ident">device_id</span>, <span class="ident">event</span> } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">DeviceEvent</span> {
+            <span class="ident">UserEvent</span>(<span class="ident">event</span>) =&gt; <span class="ident">UserEvent</span>(<span class="ident">event</span>.<span class="ident">clone</span>()),
+            <span class="ident">DeviceEvent</span> { <span class="ident">device_id</span>, <span class="ident">event</span> } =&gt; <span class="ident">DeviceEvent</span> {
                 <span class="ident">device_id</span>: <span class="kw-2">*</span><span class="ident">device_id</span>,
                 <span class="ident">event</span>: <span class="ident">event</span>.<span class="ident">clone</span>(),
             },
-            <span class="ident">NewEvents</span>(<span class="ident">cause</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NewEvents</span>(<span class="ident">cause</span>.<span class="ident">clone</span>()),
-            <span class="ident">MainEventsCleared</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">MainEventsCleared</span>,
-            <span class="ident">RedrawRequested</span>(<span class="ident">wid</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RedrawRequested</span>(<span class="kw-2">*</span><span class="ident">wid</span>),
-            <span class="ident">RedrawEventsCleared</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RedrawEventsCleared</span>,
-            <span class="ident">LoopDestroyed</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">LoopDestroyed</span>,
-            <span class="ident">Suspended</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Suspended</span>,
-            <span class="ident">Resumed</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Resumed</span>,
+            <span class="ident">NewEvents</span>(<span class="ident">cause</span>) =&gt; <span class="ident">NewEvents</span>(<span class="ident">cause</span>.<span class="ident">clone</span>()),
+            <span class="ident">MainEventsCleared</span> =&gt; <span class="ident">MainEventsCleared</span>,
+            <span class="ident">RedrawRequested</span>(<span class="ident">wid</span>) =&gt; <span class="ident">RedrawRequested</span>(<span class="kw-2">*</span><span class="ident">wid</span>),
+            <span class="ident">RedrawEventsCleared</span> =&gt; <span class="ident">RedrawEventsCleared</span>,
+            <span class="ident">LoopDestroyed</span> =&gt; <span class="ident">LoopDestroyed</span>,
+            <span class="ident">Suspended</span> =&gt; <span class="ident">Suspended</span>,
+            <span class="ident">Resumed</span> =&gt; <span class="ident">Resumed</span>,
         }
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Event</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">map_nonuser_event</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">U</span><span class="op">&gt;</span>, <span class="ident">Event</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">map_nonuser_event</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">U</span><span class="op">&gt;</span>, <span class="ident">Event</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">use</span> <span class="ident"><span class="self">self</span>::Event</span>::<span class="kw-2">*</span>;
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">UserEvent</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="self">self</span>),
-            <span class="ident">WindowEvent</span> { <span class="ident">window_id</span>, <span class="ident">event</span> } <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">WindowEvent</span> { <span class="ident">window_id</span>, <span class="ident">event</span> }),
-            <span class="ident">DeviceEvent</span> { <span class="ident">device_id</span>, <span class="ident">event</span> } <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">DeviceEvent</span> { <span class="ident">device_id</span>, <span class="ident">event</span> }),
-            <span class="ident">NewEvents</span>(<span class="ident">cause</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">NewEvents</span>(<span class="ident">cause</span>)),
-            <span class="ident">MainEventsCleared</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">MainEventsCleared</span>),
-            <span class="ident">RedrawRequested</span>(<span class="ident">wid</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">RedrawRequested</span>(<span class="ident">wid</span>)),
-            <span class="ident">RedrawEventsCleared</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">RedrawEventsCleared</span>),
-            <span class="ident">LoopDestroyed</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">LoopDestroyed</span>),
-            <span class="ident">Suspended</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Suspended</span>),
-            <span class="ident">Resumed</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Resumed</span>),
+            <span class="ident">UserEvent</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(<span class="self">self</span>),
+            <span class="ident">WindowEvent</span> { <span class="ident">window_id</span>, <span class="ident">event</span> } =&gt; <span class="prelude-val">Ok</span>(<span class="ident">WindowEvent</span> { <span class="ident">window_id</span>, <span class="ident">event</span> }),
+            <span class="ident">DeviceEvent</span> { <span class="ident">device_id</span>, <span class="ident">event</span> } =&gt; <span class="prelude-val">Ok</span>(<span class="ident">DeviceEvent</span> { <span class="ident">device_id</span>, <span class="ident">event</span> }),
+            <span class="ident">NewEvents</span>(<span class="ident">cause</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">NewEvents</span>(<span class="ident">cause</span>)),
+            <span class="ident">MainEventsCleared</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">MainEventsCleared</span>),
+            <span class="ident">RedrawRequested</span>(<span class="ident">wid</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">RedrawRequested</span>(<span class="ident">wid</span>)),
+            <span class="ident">RedrawEventsCleared</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">RedrawEventsCleared</span>),
+            <span class="ident">LoopDestroyed</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">LoopDestroyed</span>),
+            <span class="ident">Suspended</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Suspended</span>),
+            <span class="ident">Resumed</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Resumed</span>),
         }
     }
 
     <span class="doccomment">/// If the event doesn&#39;t contain a reference, turn it into an event with a `&#39;static` lifetime.</span>
     <span class="doccomment">/// Otherwise, return `None`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_static</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_static</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">use</span> <span class="ident"><span class="self">self</span>::Event</span>::<span class="kw-2">*</span>;
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">WindowEvent</span> { <span class="ident">window_id</span>, <span class="ident">event</span> } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>
+            <span class="ident">WindowEvent</span> { <span class="ident">window_id</span>, <span class="ident">event</span> } =&gt; <span class="ident">event</span>
                 .<span class="ident">to_static</span>()
                 .<span class="ident">map</span>(<span class="op">|</span><span class="ident">event</span><span class="op">|</span> <span class="ident">WindowEvent</span> { <span class="ident">window_id</span>, <span class="ident">event</span> }),
-            <span class="ident">UserEvent</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">UserEvent</span>(<span class="ident">event</span>)),
-            <span class="ident">DeviceEvent</span> { <span class="ident">device_id</span>, <span class="ident">event</span> } <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">DeviceEvent</span> { <span class="ident">device_id</span>, <span class="ident">event</span> }),
-            <span class="ident">NewEvents</span>(<span class="ident">cause</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">NewEvents</span>(<span class="ident">cause</span>)),
-            <span class="ident">MainEventsCleared</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">MainEventsCleared</span>),
-            <span class="ident">RedrawRequested</span>(<span class="ident">wid</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">RedrawRequested</span>(<span class="ident">wid</span>)),
-            <span class="ident">RedrawEventsCleared</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">RedrawEventsCleared</span>),
-            <span class="ident">LoopDestroyed</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">LoopDestroyed</span>),
-            <span class="ident">Suspended</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">Suspended</span>),
-            <span class="ident">Resumed</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">Resumed</span>),
+            <span class="ident">UserEvent</span>(<span class="ident">event</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">UserEvent</span>(<span class="ident">event</span>)),
+            <span class="ident">DeviceEvent</span> { <span class="ident">device_id</span>, <span class="ident">event</span> } =&gt; <span class="prelude-val">Some</span>(<span class="ident">DeviceEvent</span> { <span class="ident">device_id</span>, <span class="ident">event</span> }),
+            <span class="ident">NewEvents</span>(<span class="ident">cause</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">NewEvents</span>(<span class="ident">cause</span>)),
+            <span class="ident">MainEventsCleared</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident">MainEventsCleared</span>),
+            <span class="ident">RedrawRequested</span>(<span class="ident">wid</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">RedrawRequested</span>(<span class="ident">wid</span>)),
+            <span class="ident">RedrawEventsCleared</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident">RedrawEventsCleared</span>),
+            <span class="ident">LoopDestroyed</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident">LoopDestroyed</span>),
+            <span class="ident">Suspended</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident">Suspended</span>),
+            <span class="ident">Resumed</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident">Resumed</span>),
         }
     }
 }
@@ -1423,43 +1423,43 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">WindowEvent</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">use</span> <span class="ident"><span class="self">self</span>::WindowEvent</span>::<span class="kw-2">*</span>;
         <span class="kw">return</span> <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Resized</span>(<span class="ident">size</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Resized</span>(<span class="ident">size</span>.<span class="ident">clone</span>()),
-            <span class="ident">Moved</span>(<span class="ident">pos</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Moved</span>(<span class="ident">pos</span>.<span class="ident">clone</span>()),
-            <span class="ident">CloseRequested</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">CloseRequested</span>,
-            <span class="ident">Destroyed</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Destroyed</span>,
-            <span class="ident">DroppedFile</span>(<span class="ident">file</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">DroppedFile</span>(<span class="ident">file</span>.<span class="ident">clone</span>()),
-            <span class="ident">HoveredFile</span>(<span class="ident">file</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">HoveredFile</span>(<span class="ident">file</span>.<span class="ident">clone</span>()),
-            <span class="ident">HoveredFileCancelled</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">HoveredFileCancelled</span>,
-            <span class="ident">ReceivedCharacter</span>(<span class="ident">c</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ReceivedCharacter</span>(<span class="kw-2">*</span><span class="ident">c</span>),
-            <span class="ident">Focused</span>(<span class="ident">f</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Focused</span>(<span class="kw-2">*</span><span class="ident">f</span>),
+            <span class="ident">Resized</span>(<span class="ident">size</span>) =&gt; <span class="ident">Resized</span>(<span class="ident">size</span>.<span class="ident">clone</span>()),
+            <span class="ident">Moved</span>(<span class="ident">pos</span>) =&gt; <span class="ident">Moved</span>(<span class="ident">pos</span>.<span class="ident">clone</span>()),
+            <span class="ident">CloseRequested</span> =&gt; <span class="ident">CloseRequested</span>,
+            <span class="ident">Destroyed</span> =&gt; <span class="ident">Destroyed</span>,
+            <span class="ident">DroppedFile</span>(<span class="ident">file</span>) =&gt; <span class="ident">DroppedFile</span>(<span class="ident">file</span>.<span class="ident">clone</span>()),
+            <span class="ident">HoveredFile</span>(<span class="ident">file</span>) =&gt; <span class="ident">HoveredFile</span>(<span class="ident">file</span>.<span class="ident">clone</span>()),
+            <span class="ident">HoveredFileCancelled</span> =&gt; <span class="ident">HoveredFileCancelled</span>,
+            <span class="ident">ReceivedCharacter</span>(<span class="ident">c</span>) =&gt; <span class="ident">ReceivedCharacter</span>(<span class="kw-2">*</span><span class="ident">c</span>),
+            <span class="ident">Focused</span>(<span class="ident">f</span>) =&gt; <span class="ident">Focused</span>(<span class="kw-2">*</span><span class="ident">f</span>),
             <span class="ident">KeyboardInput</span> {
                 <span class="ident">device_id</span>,
                 <span class="ident">input</span>,
                 <span class="ident">is_synthetic</span>,
-            } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">KeyboardInput</span> {
+            } =&gt; <span class="ident">KeyboardInput</span> {
                 <span class="ident">device_id</span>: <span class="kw-2">*</span><span class="ident">device_id</span>,
                 <span class="ident">input</span>: <span class="kw-2">*</span><span class="ident">input</span>,
                 <span class="ident">is_synthetic</span>: <span class="kw-2">*</span><span class="ident">is_synthetic</span>,
             },
 
-            <span class="ident">ModifiersChanged</span>(<span class="ident">modifiers</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ModifiersChanged</span>(<span class="ident">modifiers</span>.<span class="ident">clone</span>()),
+            <span class="ident">ModifiersChanged</span>(<span class="ident">modifiers</span>) =&gt; <span class="ident">ModifiersChanged</span>(<span class="ident">modifiers</span>.<span class="ident">clone</span>()),
             <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
             <span class="ident">CursorMoved</span> {
                 <span class="ident">device_id</span>,
                 <span class="ident">position</span>,
                 <span class="ident">modifiers</span>,
-            } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">CursorMoved</span> {
+            } =&gt; <span class="ident">CursorMoved</span> {
                 <span class="ident">device_id</span>: <span class="kw-2">*</span><span class="ident">device_id</span>,
                 <span class="ident">position</span>: <span class="kw-2">*</span><span class="ident">position</span>,
                 <span class="ident">modifiers</span>: <span class="kw-2">*</span><span class="ident">modifiers</span>,
             },
-            <span class="ident">CursorEntered</span> { <span class="ident">device_id</span> } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">CursorEntered</span> {
+            <span class="ident">CursorEntered</span> { <span class="ident">device_id</span> } =&gt; <span class="ident">CursorEntered</span> {
                 <span class="ident">device_id</span>: <span class="kw-2">*</span><span class="ident">device_id</span>,
             },
-            <span class="ident">CursorLeft</span> { <span class="ident">device_id</span> } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">CursorLeft</span> {
+            <span class="ident">CursorLeft</span> { <span class="ident">device_id</span> } =&gt; <span class="ident">CursorLeft</span> {
                 <span class="ident">device_id</span>: <span class="kw-2">*</span><span class="ident">device_id</span>,
             },
             <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
@@ -1468,7 +1468,7 @@
                 <span class="ident">delta</span>,
                 <span class="ident">phase</span>,
                 <span class="ident">modifiers</span>,
-            } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">MouseWheel</span> {
+            } =&gt; <span class="ident">MouseWheel</span> {
                 <span class="ident">device_id</span>: <span class="kw-2">*</span><span class="ident">device_id</span>,
                 <span class="ident">delta</span>: <span class="kw-2">*</span><span class="ident">delta</span>,
                 <span class="ident">phase</span>: <span class="kw-2">*</span><span class="ident">phase</span>,
@@ -1480,7 +1480,7 @@
                 <span class="ident">state</span>,
                 <span class="ident">button</span>,
                 <span class="ident">modifiers</span>,
-            } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">MouseInput</span> {
+            } =&gt; <span class="ident">MouseInput</span> {
                 <span class="ident">device_id</span>: <span class="kw-2">*</span><span class="ident">device_id</span>,
                 <span class="ident">state</span>: <span class="kw-2">*</span><span class="ident">state</span>,
                 <span class="ident">button</span>: <span class="kw-2">*</span><span class="ident">button</span>,
@@ -1490,7 +1490,7 @@
                 <span class="ident">device_id</span>,
                 <span class="ident">pressure</span>,
                 <span class="ident">stage</span>,
-            } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TouchpadPressure</span> {
+            } =&gt; <span class="ident">TouchpadPressure</span> {
                 <span class="ident">device_id</span>: <span class="kw-2">*</span><span class="ident">device_id</span>,
                 <span class="ident">pressure</span>: <span class="kw-2">*</span><span class="ident">pressure</span>,
                 <span class="ident">stage</span>: <span class="kw-2">*</span><span class="ident">stage</span>,
@@ -1499,14 +1499,14 @@
                 <span class="ident">device_id</span>,
                 <span class="ident">axis</span>,
                 <span class="ident">value</span>,
-            } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AxisMotion</span> {
+            } =&gt; <span class="ident">AxisMotion</span> {
                 <span class="ident">device_id</span>: <span class="kw-2">*</span><span class="ident">device_id</span>,
                 <span class="ident">axis</span>: <span class="kw-2">*</span><span class="ident">axis</span>,
                 <span class="ident">value</span>: <span class="kw-2">*</span><span class="ident">value</span>,
             },
-            <span class="ident">Touch</span>(<span class="ident">touch</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Touch</span>(<span class="kw-2">*</span><span class="ident">touch</span>),
-            <span class="ident">ThemeChanged</span>(<span class="ident">theme</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ThemeChanged</span>(<span class="ident">theme</span>.<span class="ident">clone</span>()),
-            <span class="ident">ScaleFactorChanged</span> { .. } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">Touch</span>(<span class="ident">touch</span>) =&gt; <span class="ident">Touch</span>(<span class="kw-2">*</span><span class="ident">touch</span>),
+            <span class="ident">ThemeChanged</span>(<span class="ident">theme</span>) =&gt; <span class="ident">ThemeChanged</span>(<span class="ident">theme</span>.<span class="ident">clone</span>()),
+            <span class="ident">ScaleFactorChanged</span> { .. } =&gt; {
                 <span class="macro">unreachable!</span>(<span class="string">&quot;Static event can&#39;t be about scale factor changing&quot;</span>)
             }
         };
@@ -1514,47 +1514,47 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">WindowEvent</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_static</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">WindowEvent</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_static</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">WindowEvent</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">use</span> <span class="ident"><span class="self">self</span>::WindowEvent</span>::<span class="kw-2">*</span>;
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Resized</span>(<span class="ident">size</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">Resized</span>(<span class="ident">size</span>)),
-            <span class="ident">Moved</span>(<span class="ident">position</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">Moved</span>(<span class="ident">position</span>)),
-            <span class="ident">CloseRequested</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">CloseRequested</span>),
-            <span class="ident">Destroyed</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">Destroyed</span>),
-            <span class="ident">DroppedFile</span>(<span class="ident">file</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">DroppedFile</span>(<span class="ident">file</span>)),
-            <span class="ident">HoveredFile</span>(<span class="ident">file</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">HoveredFile</span>(<span class="ident">file</span>)),
-            <span class="ident">HoveredFileCancelled</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">HoveredFileCancelled</span>),
-            <span class="ident">ReceivedCharacter</span>(<span class="ident">c</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">ReceivedCharacter</span>(<span class="ident">c</span>)),
-            <span class="ident">Focused</span>(<span class="ident">focused</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">Focused</span>(<span class="ident">focused</span>)),
+            <span class="ident">Resized</span>(<span class="ident">size</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">Resized</span>(<span class="ident">size</span>)),
+            <span class="ident">Moved</span>(<span class="ident">position</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">Moved</span>(<span class="ident">position</span>)),
+            <span class="ident">CloseRequested</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident">CloseRequested</span>),
+            <span class="ident">Destroyed</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident">Destroyed</span>),
+            <span class="ident">DroppedFile</span>(<span class="ident">file</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">DroppedFile</span>(<span class="ident">file</span>)),
+            <span class="ident">HoveredFile</span>(<span class="ident">file</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">HoveredFile</span>(<span class="ident">file</span>)),
+            <span class="ident">HoveredFileCancelled</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident">HoveredFileCancelled</span>),
+            <span class="ident">ReceivedCharacter</span>(<span class="ident">c</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">ReceivedCharacter</span>(<span class="ident">c</span>)),
+            <span class="ident">Focused</span>(<span class="ident">focused</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">Focused</span>(<span class="ident">focused</span>)),
             <span class="ident">KeyboardInput</span> {
                 <span class="ident">device_id</span>,
                 <span class="ident">input</span>,
                 <span class="ident">is_synthetic</span>,
-            } <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">KeyboardInput</span> {
+            } =&gt; <span class="prelude-val">Some</span>(<span class="ident">KeyboardInput</span> {
                 <span class="ident">device_id</span>,
                 <span class="ident">input</span>,
                 <span class="ident">is_synthetic</span>,
             }),
-            <span class="ident">ModifiersChanged</span>(<span class="ident">modifiers</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">ModifiersChanged</span>(<span class="ident">modifiers</span>)),
+            <span class="ident">ModifiersChanged</span>(<span class="ident">modifiers</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">ModifiersChanged</span>(<span class="ident">modifiers</span>)),
             <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
             <span class="ident">CursorMoved</span> {
                 <span class="ident">device_id</span>,
                 <span class="ident">position</span>,
                 <span class="ident">modifiers</span>,
-            } <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">CursorMoved</span> {
+            } =&gt; <span class="prelude-val">Some</span>(<span class="ident">CursorMoved</span> {
                 <span class="ident">device_id</span>,
                 <span class="ident">position</span>,
                 <span class="ident">modifiers</span>,
             }),
-            <span class="ident">CursorEntered</span> { <span class="ident">device_id</span> } <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">CursorEntered</span> { <span class="ident">device_id</span> }),
-            <span class="ident">CursorLeft</span> { <span class="ident">device_id</span> } <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">CursorLeft</span> { <span class="ident">device_id</span> }),
+            <span class="ident">CursorEntered</span> { <span class="ident">device_id</span> } =&gt; <span class="prelude-val">Some</span>(<span class="ident">CursorEntered</span> { <span class="ident">device_id</span> }),
+            <span class="ident">CursorLeft</span> { <span class="ident">device_id</span> } =&gt; <span class="prelude-val">Some</span>(<span class="ident">CursorLeft</span> { <span class="ident">device_id</span> }),
             <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
             <span class="ident">MouseWheel</span> {
                 <span class="ident">device_id</span>,
                 <span class="ident">delta</span>,
                 <span class="ident">phase</span>,
                 <span class="ident">modifiers</span>,
-            } <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">MouseWheel</span> {
+            } =&gt; <span class="prelude-val">Some</span>(<span class="ident">MouseWheel</span> {
                 <span class="ident">device_id</span>,
                 <span class="ident">delta</span>,
                 <span class="ident">phase</span>,
@@ -1566,7 +1566,7 @@
                 <span class="ident">state</span>,
                 <span class="ident">button</span>,
                 <span class="ident">modifiers</span>,
-            } <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">MouseInput</span> {
+            } =&gt; <span class="prelude-val">Some</span>(<span class="ident">MouseInput</span> {
                 <span class="ident">device_id</span>,
                 <span class="ident">state</span>,
                 <span class="ident">button</span>,
@@ -1576,7 +1576,7 @@
                 <span class="ident">device_id</span>,
                 <span class="ident">pressure</span>,
                 <span class="ident">stage</span>,
-            } <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">TouchpadPressure</span> {
+            } =&gt; <span class="prelude-val">Some</span>(<span class="ident">TouchpadPressure</span> {
                 <span class="ident">device_id</span>,
                 <span class="ident">pressure</span>,
                 <span class="ident">stage</span>,
@@ -1585,14 +1585,14 @@
                 <span class="ident">device_id</span>,
                 <span class="ident">axis</span>,
                 <span class="ident">value</span>,
-            } <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">AxisMotion</span> {
+            } =&gt; <span class="prelude-val">Some</span>(<span class="ident">AxisMotion</span> {
                 <span class="ident">device_id</span>,
                 <span class="ident">axis</span>,
                 <span class="ident">value</span>,
             }),
-            <span class="ident">Touch</span>(<span class="ident">touch</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">Touch</span>(<span class="ident">touch</span>)),
-            <span class="ident">ThemeChanged</span>(<span class="ident">theme</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">ThemeChanged</span>(<span class="ident">theme</span>)),
-            <span class="ident">ScaleFactorChanged</span> { .. } <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
+            <span class="ident">Touch</span>(<span class="ident">touch</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">Touch</span>(<span class="ident">touch</span>)),
+            <span class="ident">ThemeChanged</span>(<span class="ident">theme</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">ThemeChanged</span>(<span class="ident">theme</span>)),
+            <span class="ident">ScaleFactorChanged</span> { .. } =&gt; <span class="prelude-val">None</span>,
         }
     }
 }
@@ -1611,7 +1611,7 @@
     <span class="doccomment">/// by this function.  No other guarantees are made. This may be equal to a real `DeviceId`.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// **Passing this into a winit function will result in undefined behavior.**</span>
-    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">dummy</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">dummy</span>() -&gt; <span class="self">Self</span> {
         <span class="ident">DeviceId</span>(<span class="ident">platform_impl::DeviceId::dummy</span>())
     }
 }
@@ -1771,20 +1771,20 @@
     <span class="doccomment">/// Instead of normalizing the force, you should prefer to handle</span>
     <span class="doccomment">/// `Force::Calibrated` so that the amount of force the user has to apply is</span>
     <span class="doccomment">/// consistent across devices.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">normalized</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">normalized</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f64</span> {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident">Force::Calibrated</span> {
                 <span class="ident">force</span>,
                 <span class="ident">max_possible_force</span>,
                 <span class="ident">altitude_angle</span>,
-            } <span class="op">=</span><span class="op">&gt;</span> {
+            } =&gt; {
                 <span class="kw">let</span> <span class="ident">force</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">altitude_angle</span> {
-                    <span class="prelude-val">Some</span>(<span class="ident">altitude_angle</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">force</span> <span class="op">/</span> <span class="ident">altitude_angle</span>.<span class="ident">sin</span>(),
-                    <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="ident">force</span>,
+                    <span class="prelude-val">Some</span>(<span class="ident">altitude_angle</span>) =&gt; <span class="ident">force</span> <span class="op">/</span> <span class="ident">altitude_angle</span>.<span class="ident">sin</span>(),
+                    <span class="prelude-val">None</span> =&gt; <span class="kw-2">*</span><span class="ident">force</span>,
                 };
                 <span class="ident">force</span> <span class="op">/</span> <span class="ident">max_possible_force</span>
             }
-            <span class="ident">Force::Normalized</span>(<span class="ident">force</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="ident">force</span>,
+            <span class="ident">Force::Normalized</span>(<span class="ident">force</span>) =&gt; <span class="kw-2">*</span><span class="ident">force</span>,
         }
     }
 }
@@ -2040,19 +2040,19 @@
 
 <span class="kw">impl</span> <span class="ident">ModifiersState</span> {
     <span class="doccomment">/// Returns `true` if the shift key is pressed.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shift</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shift</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="ident">intersects</span>(<span class="ident"><span class="self">Self</span>::SHIFT</span>)
     }
     <span class="doccomment">/// Returns `true` if the control key is pressed.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ctrl</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ctrl</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="ident">intersects</span>(<span class="ident"><span class="self">Self</span>::CTRL</span>)
     }
     <span class="doccomment">/// Returns `true` if the alt key is pressed.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">alt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">alt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="ident">intersects</span>(<span class="ident"><span class="self">Self</span>::ALT</span>)
     }
     <span class="doccomment">/// Returns `true` if the logo key is pressed.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">logo</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">logo</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="ident">intersects</span>(<span class="ident"><span class="self">Self</span>::LOGO</span>)
     }
 }
@@ -2100,7 +2100,7 @@
     }
 
     <span class="kw">impl</span> <span class="ident">Serialize</span> <span class="kw">for</span> <span class="ident">ModifiersState</span> {
-        <span class="kw">fn</span> <span class="ident">serialize</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">serializer</span>: <span class="ident">S</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">S::Ok</span>, <span class="ident">S::Error</span><span class="op">&gt;</span>
+        <span class="kw">fn</span> <span class="ident">serialize</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">serializer</span>: <span class="ident">S</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">S::Ok</span>, <span class="ident">S::Error</span><span class="op">&gt;</span>
         <span class="kw">where</span>
             <span class="ident">S</span>: <span class="ident">Serializer</span>,
         {
@@ -2115,7 +2115,7 @@
     }
 
     <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ModifiersState</span> {
-        <span class="kw">fn</span> <span class="ident">deserialize</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>(<span class="ident">deserializer</span>: <span class="ident">D</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">D::Error</span><span class="op">&gt;</span>
+        <span class="kw">fn</span> <span class="ident">deserialize</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>(<span class="ident">deserializer</span>: <span class="ident">D</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">D::Error</span><span class="op">&gt;</span>
         <span class="kw">where</span>
             <span class="ident">D</span>: <span class="ident">Deserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>,
         {

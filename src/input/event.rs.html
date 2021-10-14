@@ -251,10 +251,10 @@
 <span class="doccomment">/// Common functions all (Sub-)Events implement.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">EventTrait</span>: <span class="ident">Context</span> {
     <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">as_raw_event</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::libinput_event</span>;
+    <span class="kw">fn</span> <span class="ident">as_raw_event</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::libinput_event</span>;
 
     <span class="doccomment">/// Convert into a general `Event` again</span>
-    <span class="kw">fn</span> <span class="ident">into_event</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Event</span>
+    <span class="kw">fn</span> <span class="ident">into_event</span>(<span class="self">self</span>) -&gt; <span class="ident">Event</span>
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
     {
@@ -265,7 +265,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// For device added/removed events this is the device added or removed.</span>
     <span class="doccomment">/// For all other device events, this is the device that generated the event.</span>
-    <span class="kw">fn</span> <span class="ident">device</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Device</span> {
+    <span class="kw">fn</span> <span class="ident">device</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Device</span> {
         <span class="kw">unsafe</span> {
             <span class="ident">Device::from_raw</span>(
                 <span class="ident">ffi::libinput_event_get_device</span>(<span class="self">self</span>.<span class="ident">as_raw_event</span>()),
@@ -276,39 +276,39 @@
 }
 
 <span class="kw">impl</span> <span class="ident">EventTrait</span> <span class="kw">for</span> <span class="ident">Event</span> {
-    <span class="kw">fn</span> <span class="ident">as_raw_event</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::libinput_event</span> {
+    <span class="kw">fn</span> <span class="ident">as_raw_event</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::libinput_event</span> {
         <span class="self">self</span>.<span class="ident">as_raw_mut</span>()
     }
 }
 
 <span class="kw">impl</span> <span class="ident">FromRaw</span><span class="op">&lt;</span><span class="ident">ffi::libinput_event</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Event</span> {
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">event</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::libinput_event</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">Libinput</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">event</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::libinput_event</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">Libinput</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">match</span> <span class="ident">ffi::libinput_event_get_type</span>(<span class="ident">event</span>) {
-            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_NONE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;Trying to convert null event&quot;</span>),
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_NONE</span> =&gt; <span class="macro">panic!</span>(<span class="string">&quot;Trying to convert null event&quot;</span>),
             <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_DEVICE_ADDED</span>
-            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_DEVICE_REMOVED</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Event::Device</span>(
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_DEVICE_REMOVED</span> =&gt; <span class="ident">Event::Device</span>(
                 <span class="ident">DeviceEvent::from_raw</span>(<span class="ident">ffi::libinput_event_get_device_notify_event</span>(<span class="ident">event</span>), <span class="ident">context</span>),
             ),
-            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_KEYBOARD_KEY</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Event::Keyboard</span>(
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_KEYBOARD_KEY</span> =&gt; <span class="ident">Event::Keyboard</span>(
                 <span class="ident">KeyboardEvent::from_raw</span>(<span class="ident">ffi::libinput_event_get_keyboard_event</span>(<span class="ident">event</span>), <span class="ident">context</span>),
             ),
             <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_POINTER_MOTION</span>
             <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE</span>
             <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_POINTER_BUTTON</span>
-            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_POINTER_AXIS</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Event::Pointer</span>(
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_POINTER_AXIS</span> =&gt; <span class="ident">Event::Pointer</span>(
                 <span class="ident">PointerEvent::from_raw</span>(<span class="ident">ffi::libinput_event_get_pointer_event</span>(<span class="ident">event</span>), <span class="ident">context</span>),
             ),
             <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TOUCH_DOWN</span>
             <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TOUCH_UP</span>
             <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TOUCH_MOTION</span>
             <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TOUCH_CANCEL</span>
-            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TOUCH_FRAME</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Event::Touch</span>(
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TOUCH_FRAME</span> =&gt; <span class="ident">Event::Touch</span>(
                 <span class="ident">TouchEvent::from_raw</span>(<span class="ident">ffi::libinput_event_get_touch_event</span>(<span class="ident">event</span>), <span class="ident">context</span>),
             ),
             <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TABLET_TOOL_AXIS</span>
             <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TABLET_TOOL_PROXIMITY</span>
             <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TABLET_TOOL_TIP</span>
-            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TABLET_TOOL_BUTTON</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TABLET_TOOL_BUTTON</span> =&gt; {
                 <span class="ident">Event::Tablet</span>(<span class="ident">TabletToolEvent::from_raw</span>(
                     <span class="ident">ffi::libinput_event_get_tablet_tool_event</span>(<span class="ident">event</span>),
                     <span class="ident">context</span>,
@@ -316,7 +316,7 @@
             }
             <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TABLET_PAD_BUTTON</span>
             <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TABLET_PAD_RING</span>
-            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TABLET_PAD_STRIP</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Event::TabletPad</span>(
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_TABLET_PAD_STRIP</span> =&gt; <span class="ident">Event::TabletPad</span>(
                 <span class="ident">TabletPadEvent::from_raw</span>(<span class="ident">ffi::libinput_event_get_tablet_pad_event</span>(<span class="ident">event</span>), <span class="ident">context</span>),
             ),
             <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_SWIPE_BEGIN</span>
@@ -324,49 +324,49 @@
             <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_SWIPE_END</span>
             <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_PINCH_BEGIN</span>
             <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_PINCH_UPDATE</span>
-            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_PINCH_END</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Event::Gesture</span>(
+            <span class="op">|</span> <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_GESTURE_PINCH_END</span> =&gt; <span class="ident">Event::Gesture</span>(
                 <span class="ident">GestureEvent::from_raw</span>(<span class="ident">ffi::libinput_event_get_gesture_event</span>(<span class="ident">event</span>), <span class="ident">context</span>),
             ),
-            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_SWITCH_TOGGLE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Event::Switch</span>(
+            <span class="ident">ffi::libinput_event_type_LIBINPUT_EVENT_SWITCH_TOGGLE</span> =&gt; <span class="ident">Event::Switch</span>(
                 <span class="ident">SwitchEvent::from_raw</span>(<span class="ident">ffi::libinput_event_get_switch_event</span>(<span class="ident">event</span>), <span class="ident">context</span>),
             ),
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_event_type&#39;&quot;</span>),
+            <span class="kw">_</span> =&gt; <span class="macro">panic!</span>(<span class="string">&quot;libinput returned invalid &#39;libinput_event_type&#39;&quot;</span>),
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">ffi::libinput_event</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Event</span> {
-    <span class="kw">fn</span> <span class="ident">as_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">ffi::libinput_event</span> {
+    <span class="kw">fn</span> <span class="ident">as_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">ffi::libinput_event</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Event::Device</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-            <span class="ident">Event::Keyboard</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-            <span class="ident">Event::Pointer</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-            <span class="ident">Event::Touch</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-            <span class="ident">Event::Tablet</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-            <span class="ident">Event::TabletPad</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-            <span class="ident">Event::Gesture</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-            <span class="ident">Event::Switch</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+            <span class="ident">Event::Device</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+            <span class="ident">Event::Keyboard</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+            <span class="ident">Event::Pointer</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+            <span class="ident">Event::Touch</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+            <span class="ident">Event::Tablet</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+            <span class="ident">Event::TabletPad</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+            <span class="ident">Event::Gesture</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+            <span class="ident">Event::Switch</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">as_raw_event</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Context</span> <span class="kw">for</span> <span class="ident">Event</span> {
-    <span class="kw">fn</span> <span class="ident">context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident"><span class="kw">crate</span>::Libinput</span> {
+    <span class="kw">fn</span> <span class="ident">context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="kw">crate</span>::Libinput</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Event::Device</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
-            <span class="ident">Event::Keyboard</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
-            <span class="ident">Event::Pointer</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
-            <span class="ident">Event::Touch</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
-            <span class="ident">Event::Tablet</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
-            <span class="ident">Event::TabletPad</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
-            <span class="ident">Event::Gesture</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
-            <span class="ident">Event::Switch</span>(<span class="ident">event</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">Event::Device</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">Event::Keyboard</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">Event::Pointer</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">Event::Touch</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">Event::Tablet</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">Event::TabletPad</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">Event::Gesture</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">context</span>(),
+            <span class="ident">Event::Switch</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>.<span class="ident">context</span>(),
         }
     }
 }
 
 <span class="macro">macro_rules!</span> <span class="ident">ffi_event_struct</span> {
-    ($(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">attr</span>:<span class="ident">meta</span>]</span>)<span class="op">*</span> <span class="kw">struct</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ffi_name</span>:<span class="ident">path</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">get_base_fn</span>:<span class="ident">path</span>) <span class="op">=</span><span class="op">&gt;</span> (
+    ($(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">attr</span>:<span class="ident">meta</span>]</span>)<span class="op">*</span> <span class="kw">struct</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ffi_name</span>:<span class="ident">path</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">get_base_fn</span>:<span class="ident">path</span>) =&gt; (
         <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Eq</span>)]</span>
         $(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">attr</span>]</span>)<span class="op">*</span>
         <span class="kw">pub</span> <span class="kw">struct</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span>
@@ -376,14 +376,14 @@
         }
 
         <span class="kw">impl</span> <span class="ident">std::fmt::Debug</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span> {
-            <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+            <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span>) -&gt; <span class="ident">std::fmt::Result</span> {
                 <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;$struct_name @{:p}&quot;</span>, <span class="self">self</span>.<span class="ident">as_raw</span>())
             }
         }
 
         <span class="kw">impl</span> <span class="ident">FromRaw</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">ffi_name</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span>
         {
-            <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">ffi</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ffi_name</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::context::Libinput</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+            <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">ffi</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ffi_name</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::context::Libinput</span>) -&gt; <span class="self">Self</span> {
                 <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span> {
                     <span class="ident">ffi</span>,
                     <span class="ident">context</span>: <span class="ident">context</span>.<span class="ident">clone</span>(),
@@ -393,20 +393,20 @@
 
         <span class="kw">impl</span> <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">ffi_name</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span>
         {
-            <span class="kw">fn</span> <span class="ident">as_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ffi_name</span> {
+            <span class="kw">fn</span> <span class="ident">as_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw">const</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ffi_name</span> {
                 <span class="self">self</span>.<span class="ident">ffi</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>
             }
         }
 
         <span class="kw">impl</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::Context</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span> {
-            <span class="kw">fn</span> <span class="ident">context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::context::Libinput</span> {
+            <span class="kw">fn</span> <span class="ident">context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::context::Libinput</span> {
                 <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">context</span>
             }
         }
 
         <span class="kw">impl</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span> {
-            <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-                <span class="self">self</span>.<span class="ident">as_raw</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">other</span>.<span class="ident">as_raw</span>()
+            <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="ident">bool</span> {
+                <span class="self">self</span>.<span class="ident">as_raw</span>() <span class="op">==</span> <span class="ident">other</span>.<span class="ident">as_raw</span>()
             }
         }
 
@@ -418,7 +418,7 @@
 
         <span class="kw">impl</span> <span class="ident">EventTrait</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span> {
             <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-            <span class="kw">fn</span> <span class="ident">as_raw_event</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::ffi::libinput_event</span> {
+            <span class="kw">fn</span> <span class="ident">as_raw_event</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::ffi::libinput_event</span> {
                 <span class="kw">unsafe</span> { <span class="macro-nonterminal">$</span><span class="macro-nonterminal">get_base_fn</span>(<span class="self">self</span>.<span class="ident">as_raw_mut</span>()) }
             }
         }

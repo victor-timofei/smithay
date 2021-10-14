@@ -2,7 +2,7 @@
 <code>ptrace(PTRACE_SINGLESTEP, ...)</code></p>
 <p>Advances the execution of the process with PID <code>pid</code> by a single step optionally delivering a
 signal specified by <code>sig</code>.</p>
-<h1 id="example" class="section-header"><a href="#example">Example</a></h1>
+<h2 id="example" class="section-header"><a href="#example">Example</a></h2>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">nix::sys::ptrace::step</span>;
 <span class="kw">use</span> <span class="ident">nix::unistd::Pid</span>;
 <span class="kw">use</span> <span class="ident">nix::sys::signal::Signal</span>; 
@@ -12,10 +12,10 @@ signal specified by <code>sig</code>.</p>
     <span class="comment">// signal, this will step the process forward and forward the user </span>
     <span class="comment">// signal to the stopped process</span>
     <span class="kw">match</span> <span class="ident">waitpid</span>(<span class="ident">Pid::from_raw</span>(<span class="op">-</span><span class="number">1</span>), <span class="prelude-val">None</span>) {
-        <span class="prelude-val">Ok</span>(<span class="ident">WaitStatus::Stopped</span>(<span class="ident">pid</span>, <span class="ident">Signal::SIGUSR1</span>)) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="ident">WaitStatus::Stopped</span>(<span class="ident">pid</span>, <span class="ident">Signal::SIGUSR1</span>)) =&gt; {
             <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">step</span>(<span class="ident">pid</span>, <span class="ident">Signal::SIGUSR1</span>);
         }
-        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {},
+        <span class="kw">_</span> =&gt; {},
     }
 }</code></pre></div>
 </div></details></section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="nix" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div>

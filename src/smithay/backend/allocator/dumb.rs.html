@@ -108,7 +108,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">DumbBuffer</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;DumbBuffer&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;handle&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">handle</span>)
             .<span class="ident">field</span>(<span class="string">&quot;format&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">format</span>)
@@ -125,7 +125,7 @@
         <span class="ident">height</span>: <span class="ident">u32</span>,
         <span class="ident">fourcc</span>: <span class="ident">Fourcc</span>,
         <span class="ident">modifiers</span>: <span class="kw-2">&amp;</span>[<span class="ident">Modifier</span>],
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DumbBuffer</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DumbBuffer</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="comment">// dumb buffers are always linear</span>
         <span class="kw">if</span> <span class="ident">modifiers</span>
             .<span class="ident">iter</span>()
@@ -138,8 +138,8 @@
 
         <span class="prelude-val">Ok</span>(<span class="ident">DumbBuffer</span> {
             <span class="ident">fd</span>: <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">internal</span> {
-                <span class="ident">DrmDeviceInternal::Atomic</span>(<span class="ident">dev</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">dev</span>.<span class="ident">fd</span>.<span class="ident">clone</span>(),
-                <span class="ident">DrmDeviceInternal::Legacy</span>(<span class="ident">dev</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">dev</span>.<span class="ident">fd</span>.<span class="ident">clone</span>(),
+                <span class="ident">DrmDeviceInternal::Atomic</span>(<span class="ident">dev</span>) =&gt; <span class="ident">dev</span>.<span class="ident">fd</span>.<span class="ident">clone</span>(),
+                <span class="ident">DrmDeviceInternal::Legacy</span>(<span class="ident">dev</span>) =&gt; <span class="ident">dev</span>.<span class="ident">fd</span>.<span class="ident">clone</span>(),
             },
             <span class="ident">handle</span>,
             <span class="ident">format</span>: <span class="ident">Format</span> {
@@ -151,12 +151,12 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">Buffer</span> <span class="kw">for</span> <span class="ident">DumbBuffer</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">BufferCoords</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">BufferCoords</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">w</span>, <span class="ident">h</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">handle</span>.<span class="ident">size</span>();
         (<span class="ident">w</span> <span class="kw">as</span> <span class="ident">i32</span>, <span class="ident">h</span> <span class="kw">as</span> <span class="ident">i32</span>).<span class="ident">into</span>()
     }
 
-    <span class="kw">fn</span> <span class="ident">format</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Format</span> {
+    <span class="kw">fn</span> <span class="ident">format</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Format</span> {
         <span class="self">self</span>.<span class="ident">format</span>
     }
 }
@@ -166,7 +166,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Note: This handle will become invalid, once the `DumbBuffer` wrapper is dropped</span>
     <span class="doccomment">/// or the device used to create is closed. Do not copy this handle and assume it keeps being valid.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">handle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Handle</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">handle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">Handle</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">handle</span>
     }
 }
