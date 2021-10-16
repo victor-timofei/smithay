@@ -831,9 +831,9 @@
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::Rectangle</span>;
 
 <span class="kw">use</span> <span class="kw">super</span>::{
-    <span class="ident">make_shell_client_data</span>, <span class="ident">PopupConfigure</span>, <span class="ident">PopupKind</span>, <span class="ident">PositionerState</span>, <span class="ident">ShellClient</span>, <span class="ident">ShellClientData</span>,
-    <span class="ident">ShellData</span>, <span class="ident">SurfaceCachedState</span>, <span class="ident">ToplevelConfigure</span>, <span class="ident">ToplevelKind</span>, <span class="ident">XdgPopupSurfaceRoleAttributes</span>,
-    <span class="ident">XdgRequest</span>, <span class="ident">XdgToplevelSurfaceRoleAttributes</span>,
+    <span class="ident">make_shell_client_data</span>, <span class="ident">PopupConfigure</span>, <span class="ident">PositionerState</span>, <span class="ident">ShellClient</span>, <span class="ident">ShellClientData</span>, <span class="ident">ShellData</span>,
+    <span class="ident">SurfaceCachedState</span>, <span class="ident">ToplevelConfigure</span>, <span class="ident">XdgPopupSurfaceRoleAttributes</span>, <span class="ident">XdgRequest</span>,
+    <span class="ident">XdgToplevelSurfaceRoleAttributes</span>,
 };
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">implement_wm_base</span>(
@@ -867,7 +867,7 @@
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">make_shell_client</span>(<span class="ident">resource</span>: <span class="kw-2">&amp;</span><span class="ident">xdg_wm_base::XdgWmBase</span>) -&gt; <span class="ident">ShellClient</span> {
     <span class="ident">ShellClient</span> {
-        <span class="ident">kind</span>: <span class="ident"><span class="kw">super</span>::ShellClientKind::Xdg</span>(<span class="ident">resource</span>.<span class="ident">clone</span>()),
+        <span class="ident">kind</span>: <span class="ident">resource</span>.<span class="ident">clone</span>(),
     }
 }
 
@@ -1365,7 +1365,7 @@
         .<span class="ident">unwrap</span>();
     <span class="ident"><span class="kw">super</span>::ToplevelSurface</span> {
         <span class="ident">wl_surface</span>: <span class="ident">data</span>.<span class="ident">wl_surface</span>.<span class="ident">clone</span>(),
-        <span class="ident">shell_surface</span>: <span class="ident">ToplevelKind::Xdg</span>(<span class="ident">resource</span>.<span class="ident">clone</span>()),
+        <span class="ident">shell_surface</span>: <span class="ident">resource</span>.<span class="ident">clone</span>(),
     }
 }
 
@@ -1553,7 +1553,7 @@
         .<span class="ident">unwrap</span>();
     <span class="ident"><span class="kw">super</span>::PopupSurface</span> {
         <span class="ident">wl_surface</span>: <span class="ident">data</span>.<span class="ident">wl_surface</span>.<span class="ident">clone</span>(),
-        <span class="ident">shell_surface</span>: <span class="ident">PopupKind::Xdg</span>(<span class="ident">resource</span>.<span class="ident">clone</span>()),
+        <span class="ident">shell_surface</span>: <span class="ident">resource</span>.<span class="ident">clone</span>(),
     }
 }
 
