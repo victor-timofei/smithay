@@ -515,6 +515,21 @@
 <span id="515">515</span>
 <span id="516">516</span>
 <span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Implementation of backend traits for types provided by `winit`</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! This module provides the appropriate implementations of the backend</span>
@@ -623,6 +638,8 @@
     <span class="ident">initialized</span>: <span class="ident">bool</span>,
     <span class="ident">size</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">WindowSize</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">resize_notification</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">Cell</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Physical</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Whether winit is using Wayland or X11 as it&#39;s backend.</span>
+    <span class="ident">is_x11</span>: <span class="ident">bool</span>,
 }
 
 <span class="doccomment">/// Create a new [`WinitGraphicsBackend`], which implements the [`Renderer`] trait and a corresponding</span>
@@ -681,41 +698,47 @@
     <span class="macro">debug!</span>(<span class="ident">log</span>, <span class="string">&quot;Window created&quot;</span>);
 
     <span class="kw">let</span> <span class="ident">reqs</span> <span class="op">=</span> <span class="ident">Default::default</span>();
-    <span class="kw">let</span> (<span class="ident">display</span>, <span class="ident">context</span>, <span class="ident">surface</span>) <span class="op">=</span> {
+    <span class="kw">let</span> (<span class="ident">display</span>, <span class="ident">context</span>, <span class="ident">surface</span>, <span class="ident">is_x11</span>) <span class="op">=</span> {
         <span class="kw">let</span> <span class="ident">display</span> <span class="op">=</span> <span class="ident">EGLDisplay::new</span>(<span class="kw-2">&amp;</span><span class="ident">winit_window</span>, <span class="ident">log</span>.<span class="ident">clone</span>())<span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">context</span> <span class="op">=</span> <span class="ident">EGLContext::new_with_config</span>(<span class="kw-2">&amp;</span><span class="ident">display</span>, <span class="ident">attributes</span>, <span class="ident">reqs</span>, <span class="ident">log</span>.<span class="ident">clone</span>())<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">surface</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">wl_surface</span>) <span class="op">=</span> <span class="ident">winit_window</span>.<span class="ident">wayland_surface</span>() {
+        <span class="kw">let</span> (<span class="ident">surface</span>, <span class="ident">is_x11</span>) <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">wl_surface</span>) <span class="op">=</span> <span class="ident">winit_window</span>.<span class="ident">wayland_surface</span>() {
             <span class="macro">debug!</span>(<span class="ident">log</span>, <span class="string">&quot;Winit backend: Wayland&quot;</span>);
             <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">winit_window</span>.<span class="ident">inner_size</span>();
             <span class="kw">let</span> <span class="ident">surface</span> <span class="op">=</span> <span class="kw">unsafe</span> {
                 <span class="ident">wegl::WlEglSurface::new_from_raw</span>(<span class="ident">wl_surface</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>, <span class="ident">size</span>.<span class="ident">width</span> <span class="kw">as</span> <span class="ident">i32</span>, <span class="ident">size</span>.<span class="ident">height</span> <span class="kw">as</span> <span class="ident">i32</span>)
             };
-            <span class="ident">EGLSurface::new</span>(
-                <span class="kw-2">&amp;</span><span class="ident">display</span>,
-                <span class="ident">context</span>.<span class="ident">pixel_format</span>().<span class="ident">unwrap</span>(),
-                <span class="ident">context</span>.<span class="ident">config_id</span>(),
-                <span class="ident">surface</span>,
-                <span class="ident">log</span>.<span class="ident">clone</span>(),
+            (
+                <span class="ident">EGLSurface::new</span>(
+                    <span class="kw-2">&amp;</span><span class="ident">display</span>,
+                    <span class="ident">context</span>.<span class="ident">pixel_format</span>().<span class="ident">unwrap</span>(),
+                    <span class="ident">context</span>.<span class="ident">config_id</span>(),
+                    <span class="ident">surface</span>,
+                    <span class="ident">log</span>.<span class="ident">clone</span>(),
+                )
+                .<span class="ident">map_err</span>(<span class="ident">EGLError::CreationFailed</span>)<span class="question-mark">?</span>,
+                <span class="bool-val">false</span>,
             )
-            .<span class="ident">map_err</span>(<span class="ident">EGLError::CreationFailed</span>)<span class="question-mark">?</span>
         } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">xlib_window</span>) <span class="op">=</span> <span class="ident">winit_window</span>.<span class="ident">xlib_window</span>().<span class="ident">map</span>(<span class="ident">native::XlibWindow</span>) {
             <span class="macro">debug!</span>(<span class="ident">log</span>, <span class="string">&quot;Winit backend: X11&quot;</span>);
-            <span class="ident">EGLSurface::new</span>(
-                <span class="kw-2">&amp;</span><span class="ident">display</span>,
-                <span class="ident">context</span>.<span class="ident">pixel_format</span>().<span class="ident">unwrap</span>(),
-                <span class="ident">context</span>.<span class="ident">config_id</span>(),
-                <span class="ident">xlib_window</span>,
-                <span class="ident">log</span>.<span class="ident">clone</span>(),
+            (
+                <span class="ident">EGLSurface::new</span>(
+                    <span class="kw-2">&amp;</span><span class="ident">display</span>,
+                    <span class="ident">context</span>.<span class="ident">pixel_format</span>().<span class="ident">unwrap</span>(),
+                    <span class="ident">context</span>.<span class="ident">config_id</span>(),
+                    <span class="ident">xlib_window</span>,
+                    <span class="ident">log</span>.<span class="ident">clone</span>(),
+                )
+                .<span class="ident">map_err</span>(<span class="ident">EGLError::CreationFailed</span>)<span class="question-mark">?</span>,
+                <span class="bool-val">true</span>,
             )
-            .<span class="ident">map_err</span>(<span class="ident">EGLError::CreationFailed</span>)<span class="question-mark">?</span>
         } <span class="kw">else</span> {
             <span class="macro">unreachable!</span>(<span class="string">&quot;No backends for winit other then Wayland and X11 are supported&quot;</span>)
         };
 
         <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">unbind</span>();
 
-        (<span class="ident">display</span>, <span class="ident">context</span>, <span class="ident">surface</span>)
+        (<span class="ident">display</span>, <span class="ident">context</span>, <span class="ident">surface</span>, <span class="ident">is_x11</span>)
     };
 
     <span class="kw">let</span> (<span class="ident">w</span>, <span class="ident">h</span>): (<span class="ident">u32</span>, <span class="ident">u32</span>) <span class="op">=</span> <span class="ident">winit_window</span>.<span class="ident">inner_size</span>().<span class="ident">into</span>();
@@ -747,6 +770,7 @@
             <span class="ident">initialized</span>: <span class="bool-val">false</span>,
             <span class="ident">logger</span>: <span class="ident">log</span>.<span class="ident">new</span>(<span class="macro">o!</span>(<span class="string">&quot;smithay_winit_component&quot;</span> =&gt; <span class="string">&quot;event_loop&quot;</span>)),
             <span class="ident">size</span>,
+            <span class="ident">is_x11</span>,
         },
     ))
 }
@@ -855,6 +879,7 @@
             <span class="kw">let</span> <span class="ident">resize_notification</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">resize_notification</span>;
             <span class="kw">let</span> <span class="ident">logger</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">logger</span>;
             <span class="kw">let</span> <span class="ident">window_size</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">size</span>;
+            <span class="kw">let</span> <span class="ident">is_x11</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">is_x11</span>;
 
             <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">initialized</span> {
                 <span class="ident">callback</span>(<span class="ident">Input</span>(<span class="ident">InputEvent::DeviceAdded</span> {
@@ -945,7 +970,12 @@
                             }
                             <span class="ident">WindowEvent::MouseInput</span> { <span class="ident">state</span>, <span class="ident">button</span>, .. } =&gt; {
                                 <span class="ident">callback</span>(<span class="ident">Input</span>(<span class="ident">InputEvent::PointerButton</span> {
-                                    <span class="ident">event</span>: <span class="ident">WinitMouseInputEvent</span> { <span class="ident">time</span>, <span class="ident">button</span>, <span class="ident">state</span> },
+                                    <span class="ident">event</span>: <span class="ident">WinitMouseInputEvent</span> {
+                                        <span class="ident">time</span>,
+                                        <span class="ident">button</span>,
+                                        <span class="ident">state</span>,
+                                        <span class="ident">is_x11</span>,
+                                    },
                                 }));
                             }
 

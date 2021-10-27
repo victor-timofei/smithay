@@ -389,6 +389,7 @@
 <span id="389">389</span>
 <span id="390">390</span>
 <span id="391">391</span>
+<span id="392">392</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cell::RefCell</span>, <span class="ident">path::PathBuf</span>, <span class="ident">rc::Rc</span>};
 
 <span class="kw">use</span> <span class="ident">winit</span>::{
@@ -397,9 +398,9 @@
 };
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::backend::input</span>::{
-    <span class="ident">Axis</span>, <span class="ident">AxisSource</span>, <span class="ident">ButtonState</span>, <span class="ident">Device</span>, <span class="ident">DeviceCapability</span>, <span class="ident">Event</span>, <span class="ident">InputBackend</span>, <span class="ident">InputEvent</span>, <span class="ident">KeyState</span>,
-    <span class="ident">KeyboardKeyEvent</span>, <span class="ident">MouseButton</span>, <span class="ident">PointerAxisEvent</span>, <span class="ident">PointerButtonEvent</span>, <span class="ident">PointerMotionAbsoluteEvent</span>,
-    <span class="ident">TouchCancelEvent</span>, <span class="ident">TouchDownEvent</span>, <span class="ident">TouchMotionEvent</span>, <span class="ident">TouchSlot</span>, <span class="ident">TouchUpEvent</span>, <span class="ident">UnusedEvent</span>,
+    <span class="self">self</span>, <span class="ident">Axis</span>, <span class="ident">AxisSource</span>, <span class="ident">ButtonState</span>, <span class="ident">Device</span>, <span class="ident">DeviceCapability</span>, <span class="ident">Event</span>, <span class="ident">InputBackend</span>, <span class="ident">InputEvent</span>, <span class="ident">KeyState</span>,
+    <span class="ident">KeyboardKeyEvent</span>, <span class="ident">PointerAxisEvent</span>, <span class="ident">PointerButtonEvent</span>, <span class="ident">PointerMotionAbsoluteEvent</span>, <span class="ident">TouchCancelEvent</span>,
+    <span class="ident">TouchDownEvent</span>, <span class="ident">TouchMotionEvent</span>, <span class="ident">TouchSlot</span>, <span class="ident">TouchUpEvent</span>, <span class="ident">UnusedEvent</span>,
 };
 
 <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">WindowSize</span>, <span class="ident">WinitError</span>};
@@ -561,6 +562,7 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">time</span>: <span class="ident">u32</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">button</span>: <span class="ident">WinitMouseButton</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">state</span>: <span class="ident">ElementState</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">is_x11</span>: <span class="ident">bool</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Event</span><span class="op">&lt;</span><span class="ident">WinitInput</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">WinitMouseInputEvent</span> {
@@ -574,8 +576,19 @@
 }
 
 <span class="kw">impl</span> <span class="ident">PointerButtonEvent</span><span class="op">&lt;</span><span class="ident">WinitInput</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">WinitMouseInputEvent</span> {
-    <span class="kw">fn</span> <span class="ident">button</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MouseButton</span> {
-        <span class="self">self</span>.<span class="ident">button</span>.<span class="ident">into</span>()
+    <span class="kw">fn</span> <span class="ident">button_code</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u32</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">button</span> {
+            <span class="ident">WinitMouseButton::Left</span> =&gt; <span class="number">0x110</span>,
+            <span class="ident">WinitMouseButton::Right</span> =&gt; <span class="number">0x111</span>,
+            <span class="ident">WinitMouseButton::Middle</span> =&gt; <span class="number">0x112</span>,
+            <span class="ident">WinitMouseButton::Other</span>(<span class="ident">b</span>) =&gt; {
+                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">is_x11</span> {
+                    <span class="ident">input::xorg_mouse_to_libinput</span>(<span class="ident">b</span> <span class="kw">as</span> <span class="ident">u32</span>)
+                } <span class="kw">else</span> {
+                    <span class="ident">b</span> <span class="kw">as</span> <span class="ident">u32</span>
+                }
+            }
+        }
     }
 
     <span class="kw">fn</span> <span class="ident">state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ButtonState</span> {
@@ -720,17 +733,6 @@
 <span class="kw">impl</span> <span class="ident">TouchCancelEvent</span><span class="op">&lt;</span><span class="ident">WinitInput</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">WinitTouchCancelledEvent</span> {
     <span class="kw">fn</span> <span class="ident">slot</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TouchSlot</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="ident">TouchSlot::new</span>(<span class="self">self</span>.<span class="ident">id</span>))
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">WinitMouseButton</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">MouseButton</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">button</span>: <span class="ident">WinitMouseButton</span>) -&gt; <span class="ident">MouseButton</span> {
-        <span class="kw">match</span> <span class="ident">button</span> {
-            <span class="ident">WinitMouseButton::Left</span> =&gt; <span class="ident">MouseButton::Left</span>,
-            <span class="ident">WinitMouseButton::Right</span> =&gt; <span class="ident">MouseButton::Right</span>,
-            <span class="ident">WinitMouseButton::Middle</span> =&gt; <span class="ident">MouseButton::Middle</span>,
-            <span class="ident">WinitMouseButton::Other</span>(<span class="ident">num</span>) =&gt; <span class="ident">MouseButton::Other</span>(<span class="ident">num</span> <span class="kw">as</span> <span class="ident">u8</span>),
-        }
     }
 }
 
