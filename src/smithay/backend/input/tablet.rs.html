@@ -366,6 +366,8 @@
 <span id="366">366</span>
 <span id="367">367</span>
 <span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">ButtonState</span>, <span class="ident">Event</span>, <span class="ident">InputBackend</span>, <span class="ident">UnusedEvent</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils</span>::{<span class="ident">Logical</span>, <span class="ident">Point</span>, <span class="ident">Raw</span>, <span class="ident">Size</span>};
 <span class="kw">use</span> <span class="ident">bitflags::bitflags</span>;
@@ -403,6 +405,8 @@
     <span class="ident">Lens</span>,
     <span class="doccomment">/// A rotary device with positional and rotation data.  </span>
     <span class="ident">Totem</span>,
+    <span class="doccomment">/// Type of the device is not known or does not match any known ones</span>
+    <span class="ident">Unknown</span>,
 }
 
 <span class="macro">bitflags!</span> {

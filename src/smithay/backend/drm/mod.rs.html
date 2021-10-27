@@ -160,9 +160,18 @@
 <span id="160">160</span>
 <span id="161">161</span>
 <span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
 </pre><pre class="rust"><code><span class="doccomment">//! This module represents abstraction on top the linux direct rendering manager api (drm).</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! ## DrmDevice</span>
+<span class="doccomment">//! ## [`DrmDevice`]</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! A device exposes certain properties, which are directly derived</span>
 <span class="doccomment">//! from the *device* as perceived by the direct rendering manager api (drm). These resources consists</span>
@@ -201,7 +210,7 @@
 <span class="doccomment">//! smithay does not make sure that `connectors` are not already in use by another `Surface`. Overlapping `connector`-Sets may</span>
 <span class="doccomment">//! be an error or result in undefined rendering behavior depending on the `Surface` implementation.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! ## DrmSurface</span>
+<span class="doccomment">//! ## [`DrmSurface`]</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! A surface is a part of a `Device` that may output a picture to a number of connectors. It pumps pictures of buffers to outputs.</span>
 <span class="doccomment">//!</span>
@@ -223,15 +232,24 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Buffer management and details about the various types can be found in the [`allocator`-Module](crate::backend::allocator) and</span>
 <span class="doccomment">//! rendering abstractions, which can target these buffers can be found in the [`renderer`-Module](crate::backend::renderer).</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ## [`DrmNode`]</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! A drm node refers to a drm device and the capabilities that may be performed using the node.</span>
+<span class="doccomment">//! Generally [`DrmNode`] is primarily used by clients (such as the output backends) which need</span>
+<span class="doccomment">//! to allocate buffers for use in X11 or Wayland. If you need to do mode setting, you should use</span>
+<span class="doccomment">//! [`DrmDevice`] instead.</span>
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod</span> <span class="ident">device</span>;
 <span class="kw">pub</span>(<span class="self">self</span>) <span class="kw">mod</span> <span class="ident">error</span>;
+<span class="kw">pub</span>(<span class="self">self</span>) <span class="kw">mod</span> <span class="ident">node</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_session&quot;</span>)]</span>
 <span class="kw">pub</span>(<span class="self">self</span>) <span class="kw">mod</span> <span class="ident">session</span>;
 <span class="kw">pub</span>(<span class="self">self</span>) <span class="kw">mod</span> <span class="ident">surface</span>;
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">device</span>::{<span class="ident">DevPath</span>, <span class="ident">DrmDevice</span>, <span class="ident">DrmEvent</span>};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">error::Error</span> <span class="kw">as</span> <span class="ident">DrmError</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">node</span>::{<span class="ident">ConvertErrorKind</span>, <span class="ident">ConvertNodeError</span>, <span class="ident">CreateDrmNodeError</span>, <span class="ident">DrmNode</span>, <span class="ident">NodeType</span>};
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_gbm&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">surface::gbm</span>::{<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">GbmBufferedSurfaceError</span>, <span class="ident">GbmBufferedSurface</span>};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">surface::DrmSurface</span>;

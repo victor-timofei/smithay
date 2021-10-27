@@ -578,6 +578,21 @@
 <span id="578">578</span>
 <span id="579">579</span>
 <span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+<span id="593">593</span>
+<span id="594">594</span>
+<span id="595">595</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Implementation of input backend trait for types provided by `libinput`</span>
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::backend::input</span>::{<span class="self">self</span> <span class="kw">as</span> <span class="ident">backend</span>, <span class="ident">Axis</span>, <span class="ident">InputBackend</span>, <span class="ident">InputEvent</span>};
@@ -599,7 +614,7 @@
 
 <span class="kw">use</span> <span class="ident">calloop</span>::{<span class="ident">EventSource</span>, <span class="ident">Interest</span>, <span class="ident">Mode</span>, <span class="ident">Poll</span>, <span class="ident">PostAction</span>, <span class="ident">Readiness</span>, <span class="ident">Token</span>, <span class="ident">TokenFactory</span>};
 
-<span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">info</span>, <span class="ident">o</span>};
+<span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">info</span>, <span class="ident">o</span>, <span class="ident">trace</span>};
 
 <span class="kw">mod</span> <span class="ident">tablet</span>;
 
@@ -983,6 +998,9 @@
 
                         <span class="ident">callback</span>(<span class="ident">InputEvent::DeviceRemoved</span> { <span class="ident">device</span>: <span class="ident">removed</span> });
                     }
+                    <span class="kw">_</span> =&gt; {
+                        <span class="macro">trace!</span>(<span class="self">self</span>.<span class="ident">logger</span>, <span class="string">&quot;Unknown libinput device event&quot;</span>);
+                    }
                 },
                 <span class="ident">libinput::Event::Touch</span>(<span class="ident">touch_event</span>) =&gt; <span class="kw">match</span> <span class="ident">touch_event</span> {
                     <span class="ident">event::TouchEvent::Down</span>(<span class="ident">down_event</span>) =&gt; {
@@ -1000,10 +1018,16 @@
                     <span class="ident">event::TouchEvent::Frame</span>(<span class="ident">frame_event</span>) =&gt; {
                         <span class="ident">callback</span>(<span class="ident">InputEvent::TouchFrame</span> { <span class="ident">event</span>: <span class="ident">frame_event</span> });
                     }
+                    <span class="kw">_</span> =&gt; {
+                        <span class="macro">trace!</span>(<span class="self">self</span>.<span class="ident">logger</span>, <span class="string">&quot;Unknown libinput touch event&quot;</span>);
+                    }
                 },
                 <span class="ident">libinput::Event::Keyboard</span>(<span class="ident">keyboard_event</span>) =&gt; <span class="kw">match</span> <span class="ident">keyboard_event</span> {
                     <span class="ident">event::KeyboardEvent::Key</span>(<span class="ident">key_event</span>) =&gt; {
                         <span class="ident">callback</span>(<span class="ident">InputEvent::Keyboard</span> { <span class="ident">event</span>: <span class="ident">key_event</span> });
+                    }
+                    <span class="kw">_</span> =&gt; {
+                        <span class="macro">trace!</span>(<span class="self">self</span>.<span class="ident">logger</span>, <span class="string">&quot;Unknown libinput keyboard event&quot;</span>);
                     }
                 },
                 <span class="ident">libinput::Event::Pointer</span>(<span class="ident">pointer_event</span>) =&gt; <span class="kw">match</span> <span class="ident">pointer_event</span> {
@@ -1021,6 +1045,9 @@
                     <span class="ident">event::PointerEvent::Button</span>(<span class="ident">button_event</span>) =&gt; {
                         <span class="ident">callback</span>(<span class="ident">InputEvent::PointerButton</span> { <span class="ident">event</span>: <span class="ident">button_event</span> });
                     }
+                    <span class="kw">_</span> =&gt; {
+                        <span class="macro">trace!</span>(<span class="self">self</span>.<span class="ident">logger</span>, <span class="string">&quot;Unknown libinput pointer event&quot;</span>);
+                    }
                 },
                 <span class="ident">libinput::Event::Tablet</span>(<span class="ident">tablet_event</span>) =&gt; <span class="kw">match</span> <span class="ident">tablet_event</span> {
                     <span class="ident">event::TabletToolEvent::Axis</span>(<span class="ident">event</span>) =&gt; {
@@ -1034,6 +1061,9 @@
                     }
                     <span class="ident">event::TabletToolEvent::Button</span>(<span class="ident">event</span>) =&gt; {
                         <span class="ident">callback</span>(<span class="ident">InputEvent::TabletToolButton</span> { <span class="ident">event</span> });
+                    }
+                    <span class="kw">_</span> =&gt; {
+                        <span class="macro">trace!</span>(<span class="self">self</span>.<span class="ident">logger</span>, <span class="string">&quot;Unknown libinput tablet event&quot;</span>);
                     }
                 },
                 <span class="kw">_</span> =&gt; {} <span class="comment">//FIXME: What to do with the rest.</span>

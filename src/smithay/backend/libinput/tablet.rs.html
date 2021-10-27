@@ -186,6 +186,7 @@
 <span id="186">186</span>
 <span id="187">187</span>
 <span id="188">188</span>
+<span id="189">189</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::backend::input</span>::{
     <span class="self">self</span> <span class="kw">as</span> <span class="ident">backend</span>, <span class="ident">TabletToolCapabilitys</span>, <span class="ident">TabletToolDescriptor</span>, <span class="ident">TabletToolTipState</span>, <span class="ident">TabletToolType</span>,
 };
@@ -245,14 +246,15 @@
         <span class="kw">let</span> <span class="ident">tool</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">tool</span>();
 
         <span class="kw">let</span> <span class="ident">tool_type</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">tool</span>.<span class="ident">tool_type</span>() {
-            <span class="ident">tablet_tool::TabletToolType::Pen</span> =&gt; <span class="ident">TabletToolType::Pen</span>,
-            <span class="ident">tablet_tool::TabletToolType::Eraser</span> =&gt; <span class="ident">TabletToolType::Eraser</span>,
-            <span class="ident">tablet_tool::TabletToolType::Brush</span> =&gt; <span class="ident">TabletToolType::Brush</span>,
-            <span class="ident">tablet_tool::TabletToolType::Pencil</span> =&gt; <span class="ident">TabletToolType::Pencil</span>,
-            <span class="ident">tablet_tool::TabletToolType::Airbrush</span> =&gt; <span class="ident">TabletToolType::Airbrush</span>,
-            <span class="ident">tablet_tool::TabletToolType::Mouse</span> =&gt; <span class="ident">TabletToolType::Mouse</span>,
-            <span class="ident">tablet_tool::TabletToolType::Lens</span> =&gt; <span class="ident">TabletToolType::Lens</span>,
-            <span class="ident">tablet_tool::TabletToolType::Totem</span> =&gt; <span class="ident">TabletToolType::Totem</span>,
+            <span class="prelude-val">Some</span>(<span class="ident">tablet_tool::TabletToolType::Pen</span>) =&gt; <span class="ident">TabletToolType::Pen</span>,
+            <span class="prelude-val">Some</span>(<span class="ident">tablet_tool::TabletToolType::Eraser</span>) =&gt; <span class="ident">TabletToolType::Eraser</span>,
+            <span class="prelude-val">Some</span>(<span class="ident">tablet_tool::TabletToolType::Brush</span>) =&gt; <span class="ident">TabletToolType::Brush</span>,
+            <span class="prelude-val">Some</span>(<span class="ident">tablet_tool::TabletToolType::Pencil</span>) =&gt; <span class="ident">TabletToolType::Pencil</span>,
+            <span class="prelude-val">Some</span>(<span class="ident">tablet_tool::TabletToolType::Airbrush</span>) =&gt; <span class="ident">TabletToolType::Airbrush</span>,
+            <span class="prelude-val">Some</span>(<span class="ident">tablet_tool::TabletToolType::Mouse</span>) =&gt; <span class="ident">TabletToolType::Mouse</span>,
+            <span class="prelude-val">Some</span>(<span class="ident">tablet_tool::TabletToolType::Lens</span>) =&gt; <span class="ident">TabletToolType::Lens</span>,
+            <span class="prelude-val">Some</span>(<span class="ident">tablet_tool::TabletToolType::Totem</span>) =&gt; <span class="ident">TabletToolType::Totem</span>,
+            <span class="kw">_</span> =&gt; <span class="ident">TabletToolType::Unknown</span>,
         };
 
         <span class="kw">let</span> <span class="ident">hardware_serial</span> <span class="op">=</span> <span class="ident">tool</span>.<span class="ident">serial</span>();

@@ -112,6 +112,22 @@
 <span id="112">112</span>
 <span id="113">113</span>
 <span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Backend (rendering/input) helpers</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! This module provides helpers for interaction with the operating system.</span>
@@ -169,13 +185,26 @@
 <span class="doccomment">//! moment, even clients using dma-buf still require that the `wl_drm` infrastructure is</span>
 <span class="doccomment">//! initialized to have hardware-acceleration.</span>
 <span class="doccomment">//!</span>
+<span class="doccomment">//! ## X11 backend</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Alongside this infrastructure, Smithay also provides an alternative backend based on</span>
+<span class="doccomment">//! [x11rb](https://crates.io/crates/x11rb), which makes it possible to run your compositor as</span>
+<span class="doccomment">//! an X11 client. This is generally quite helpful for development and debugging.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The X11 backend does not concern itself with what renderer is in use, allowing presentation to</span>
+<span class="doccomment">//! the window assuming you can provide it with a [`Dmabuf`](crate::backend::allocator::dmabuf::Dmabuf).</span>
+<span class="doccomment">//! The X11 backend is also an input provider, and is accessible in the [`x11`] module, gated by</span>
+<span class="doccomment">//! the `backend_x11` cargo feature.</span>
+<span class="doccomment">//!</span>
 <span class="doccomment">//! ## Winit backend</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Alongside this infrastructure, Smithay also provides an alternative backend based on</span>
 <span class="doccomment">//! [winit](https://crates.io/crates/winit), which makes it possible to run your compositor as</span>
-<span class="doccomment">//! a Wayland or X11 client. This is generally quite helpful for development and debugging.</span>
-<span class="doccomment">//! That backend is both a renderer and an input provider, and is accessible in the [`winit`]</span>
-<span class="doccomment">//! module, gated by the `backend_winit` cargo feature.</span>
+<span class="doccomment">//! a Wayland or X11 client. You are encouraged to use the X11 backend where possible since winit</span>
+<span class="doccomment">//! does not integrate into calloop too well. This backend is generally quite helpful for</span>
+<span class="doccomment">//! development and debugging. That backend is both a renderer and an input provider, and is</span>
+<span class="doccomment">//! accessible in the [`winit`] module, gated by the `backend_winit` cargo feature.</span>
+<span class="doccomment">//!</span>
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">allocator</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">input</span>;
@@ -194,6 +223,9 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_winit&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">winit</span>;
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_x11&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">x11</span>;
 
 <span class="doccomment">/// Error that can happen when swapping buffers.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">thiserror::Error</span>)]</span>

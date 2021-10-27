@@ -208,6 +208,8 @@
 <span id="208">208</span>
 <span id="209">209</span>
 <span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
 </pre><pre class="rust"><code><span class="comment">// The caching logic is used to process surface synchronization. It creates</span>
 <span class="comment">// an effective decoupling between the moment the client sends wl_surface.commit</span>
 <span class="comment">// and the moment where the state that was commited is actually applied by the</span>
@@ -386,7 +388,9 @@
 
     <span class="doccomment">/// Check if the container currently contains values for type `T`</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Cacheable</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">caches</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">as_any</span>().<span class="ident">is</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>())
+        <span class="self">self</span>.<span class="ident">caches</span>
+            .<span class="ident">iter</span>()
+            .<span class="ident">any</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> (<span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">c</span>).<span class="ident">as_any</span>().<span class="ident">is</span>::<span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">CachedState</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>())
     }
 
     <span class="doccomment">/// Commits the pending state, invoking Cacheable::commit()</span>

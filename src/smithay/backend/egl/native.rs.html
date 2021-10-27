@@ -275,6 +275,30 @@
 <span id="275">275</span>
 <span id="276">276</span>
 <span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Type safe native types for safe context/surface creation</span>
 
 <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">display::EGLDisplayHandle</span>, <span class="ident">ffi</span>, <span class="ident">wrap_egl_call</span>, <span class="ident">SwapBuffersError</span>};
@@ -292,6 +316,9 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_gbm&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">gbm</span>::{<span class="ident">AsRaw</span>, <span class="ident">Device</span> <span class="kw">as</span> <span class="ident">GbmDevice</span>};
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_x11&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::backend::x11::X11Surface</span>;
 
 <span class="doccomment">/// Create a `EGLPlatform&lt;&#39;a&gt;` for the provided platform.</span>
 <span class="doccomment">///</span>
@@ -321,7 +348,7 @@
             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">native_display</span>,
             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">required_extensions</span>,
             <span class="macro">vec!</span>[<span class="ident">ffi::egl::NONE</span> <span class="kw">as</span> <span class="ident">ffi::EGLint</span>]
-        );
+        )
     };
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">platform</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">native_display</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">required_extensions</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">attrib_list</span>:<span class="ident">expr</span>) =&gt; {
         <span class="ident">EGLPlatform::new</span>(
@@ -439,6 +466,27 @@
         } <span class="kw">else</span> {
             <span class="macro">unreachable!</span>(<span class="string">&quot;No backends for winit other then Wayland and X11 are supported&quot;</span>)
         }
+    }
+}
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_x11&quot;</span>)]</span>
+<span class="kw">impl</span> <span class="ident">EGLNativeDisplay</span> <span class="kw">for</span> <span class="ident">X11Surface</span> {
+    <span class="kw">fn</span> <span class="ident">supported_platforms</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EGLPlatform</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="macro">vec!</span>[
+            <span class="comment">// todo: https://www.khronos.org/registry/EGL/extensions/EXT/EGL_EXT_platform_device.txt</span>
+            <span class="comment">// see: https://www.khronos.org/registry/EGL/extensions/KHR/EGL_KHR_platform_gbm.txt</span>
+            <span class="macro">egl_platform!</span>(
+                <span class="ident">PLATFORM_GBM_KHR</span>,
+                <span class="self">self</span>.<span class="ident">device</span>().<span class="ident">as_raw</span>(),
+                <span class="kw-2">&amp;</span>[<span class="string">&quot;EGL_KHR_platform_gbm&quot;</span>]
+            ),
+            <span class="comment">// see: https://www.khronos.org/registry/EGL/extensions/MESA/EGL_MESA_platform_gbm.txt</span>
+            <span class="macro">egl_platform!</span>(
+                <span class="ident">PLATFORM_GBM_MESA</span>,
+                <span class="self">self</span>.<span class="ident">device</span>().<span class="ident">as_raw</span>(),
+                <span class="kw-2">&amp;</span>[<span class="string">&quot;EGL_MESA_platform_gbm&quot;</span>]
+            ),
+        ]
     }
 }
 
