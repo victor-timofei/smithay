@@ -816,12 +816,17 @@
 <span id="816">816</span>
 <span id="817">817</span>
 <span id="818">818</span>
+<span id="819">819</span>
+<span id="820">820</span>
+<span id="821">821</span>
+<span id="822">822</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::sync::atomic</span>::{<span class="ident">AtomicBool</span>, <span class="ident">Ordering</span>};
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cell::RefCell</span>, <span class="ident">ops::Deref</span> <span class="kw">as</span> <span class="kw">_</span>, <span class="ident">sync::Mutex</span>};
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::wayland::compositor</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::wayland::shell::xdg</span>::{<span class="ident">PopupState</span>, <span class="ident">XDG_POPUP_ROLE</span>, <span class="ident">XDG_TOPLEVEL_ROLE</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::wayland::Serial</span>;
+<span class="kw">use</span> <span class="ident">wayland_protocols::unstable::xdg_decoration::v1::server::zxdg_toplevel_decoration_v1</span>;
 <span class="kw">use</span> <span class="ident">wayland_protocols::xdg_shell::server</span>::{
     <span class="ident">xdg_popup</span>, <span class="ident">xdg_positioner</span>, <span class="ident">xdg_surface</span>, <span class="ident">xdg_toplevel</span>, <span class="ident">xdg_wm_base</span>,
 };
@@ -1077,6 +1082,7 @@
                 <span class="ident">wl_surface</span>: <span class="ident">data</span>.<span class="ident">wl_surface</span>.<span class="ident">clone</span>(),
                 <span class="ident">xdg_surface</span>: <span class="ident">xdg_surface</span>.<span class="ident">clone</span>(),
                 <span class="ident">wm_base</span>: <span class="ident">data</span>.<span class="ident">wm_base</span>.<span class="ident">clone</span>(),
+                <span class="ident">decoration</span>: <span class="ident">Default::default</span>(),
             });
 
             <span class="ident">data</span>.<span class="ident">shell_data</span>
@@ -1152,6 +1158,7 @@
                 <span class="ident">wl_surface</span>: <span class="ident">data</span>.<span class="ident">wl_surface</span>.<span class="ident">clone</span>(),
                 <span class="ident">xdg_surface</span>: <span class="ident">xdg_surface</span>.<span class="ident">clone</span>(),
                 <span class="ident">wm_base</span>: <span class="ident">data</span>.<span class="ident">wm_base</span>.<span class="ident">clone</span>(),
+                <span class="ident">decoration</span>: <span class="ident">Default::default</span>(),
             });
 
             <span class="ident">data</span>.<span class="ident">shell_data</span>
@@ -1289,6 +1296,7 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">wl_surface</span>: <span class="ident">wl_surface::WlSurface</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">wm_base</span>: <span class="ident">xdg_wm_base::XdgWmBase</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">xdg_surface</span>: <span class="ident">xdg_surface::XdgSurface</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">decoration</span>: <span class="ident">RefCell</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">zxdg_toplevel_decoration_v1::ZxdgToplevelDecorationV1</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="comment">// Utility functions allowing to factor out a lot of the upcoming logic</span>

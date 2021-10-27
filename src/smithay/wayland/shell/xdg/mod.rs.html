@@ -1658,6 +1658,46 @@
 <span id="1658">1658</span>
 <span id="1659">1659</span>
 <span id="1660">1660</span>
+<span id="1661">1661</span>
+<span id="1662">1662</span>
+<span id="1663">1663</span>
+<span id="1664">1664</span>
+<span id="1665">1665</span>
+<span id="1666">1666</span>
+<span id="1667">1667</span>
+<span id="1668">1668</span>
+<span id="1669">1669</span>
+<span id="1670">1670</span>
+<span id="1671">1671</span>
+<span id="1672">1672</span>
+<span id="1673">1673</span>
+<span id="1674">1674</span>
+<span id="1675">1675</span>
+<span id="1676">1676</span>
+<span id="1677">1677</span>
+<span id="1678">1678</span>
+<span id="1679">1679</span>
+<span id="1680">1680</span>
+<span id="1681">1681</span>
+<span id="1682">1682</span>
+<span id="1683">1683</span>
+<span id="1684">1684</span>
+<span id="1685">1685</span>
+<span id="1686">1686</span>
+<span id="1687">1687</span>
+<span id="1688">1688</span>
+<span id="1689">1689</span>
+<span id="1690">1690</span>
+<span id="1691">1691</span>
+<span id="1692">1692</span>
+<span id="1693">1693</span>
+<span id="1694">1694</span>
+<span id="1695">1695</span>
+<span id="1696">1696</span>
+<span id="1697">1697</span>
+<span id="1698">1698</span>
+<span id="1699">1699</span>
+<span id="1700">1700</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Utilities for handling shell surfaces with the `xdg_shell` protocol</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! This module provides automatic handling of shell surfaces objects, by being registered</span>
@@ -1734,6 +1774,8 @@
     <span class="ident">sync</span>::{<span class="ident">Arc</span>, <span class="ident">Mutex</span>},
 };
 
+<span class="kw">use</span> <span class="ident">wayland_protocols::unstable::xdg_decoration</span>;
+<span class="kw">use</span> <span class="ident">wayland_protocols::unstable::xdg_decoration::v1::server::zxdg_toplevel_decoration_v1</span>;
 <span class="kw">use</span> <span class="ident">wayland_protocols::xdg_shell::server::xdg_surface</span>;
 <span class="kw">use</span> <span class="ident">wayland_protocols::xdg_shell::server</span>::{<span class="ident">xdg_popup</span>, <span class="ident">xdg_positioner</span>, <span class="ident">xdg_toplevel</span>, <span class="ident">xdg_wm_base</span>};
 <span class="kw">use</span> <span class="ident">wayland_server::DispatchData</span>;
@@ -1742,7 +1784,11 @@
     <span class="ident">Display</span>, <span class="ident">Filter</span>, <span class="ident">Global</span>, <span class="ident">UserDataMap</span>,
 };
 
+<span class="kw">use</span> <span class="ident"><span class="self">self</span>::xdg_handlers::ShellSurfaceUserData</span>;
+
 <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::PingError</span>;
+
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">decoration</span>;
 
 <span class="comment">// handlers for the xdg_shell protocol</span>
 <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">mod</span> <span class="ident">xdg_handlers</span>;
@@ -2209,6 +2255,9 @@
 
     <span class="doccomment">/// The output for a fullscreen display</span>
     <span class="kw">pub</span> <span class="ident">fullscreen_output</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">wl_output::WlOutput</span><span class="op">&gt;</span>,
+
+    <span class="doccomment">/// The xdg decoration mode of the surface</span>
+    <span class="kw">pub</span> <span class="ident">decoration_mode</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">zxdg_toplevel_decoration_v1::Mode</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">ToplevelState</span> {
@@ -2217,6 +2266,7 @@
             <span class="ident">fullscreen_output</span>: <span class="prelude-val">None</span>,
             <span class="ident">states</span>: <span class="ident">Default::default</span>(),
             <span class="ident">size</span>: <span class="prelude-val">None</span>,
+            <span class="ident">decoration_mode</span>: <span class="prelude-val">None</span>,
         }
     }
 }
@@ -2227,6 +2277,7 @@
             <span class="ident">fullscreen_output</span>: <span class="self">self</span>.<span class="ident">fullscreen_output</span>.<span class="ident">clone</span>(),
             <span class="ident">states</span>: <span class="self">self</span>.<span class="ident">states</span>.<span class="ident">clone</span>(),
             <span class="ident">size</span>: <span class="self">self</span>.<span class="ident">size</span>,
+            <span class="ident">decoration_mode</span>: <span class="self">self</span>.<span class="ident">decoration_mode</span>,
         }
     }
 }
@@ -2640,6 +2691,35 @@
             })
             .<span class="ident">unwrap_or</span>(<span class="prelude-val">None</span>);
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">configure</span>) <span class="op">=</span> <span class="ident">configure</span> {
+                <span class="kw">let</span> <span class="ident">decoration_mode</span> <span class="op">=</span> <span class="ident">compositor::with_states</span>(<span class="ident">surface</span>, <span class="op">|</span><span class="ident">states</span><span class="op">|</span> {
+                    <span class="kw">let</span> <span class="ident">attributes</span> <span class="op">=</span> <span class="ident">states</span>
+                        .<span class="ident">data_map</span>
+                        .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">XdgToplevelSurfaceRoleAttributes</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+                        .<span class="ident">unwrap</span>()
+                        .<span class="ident">lock</span>()
+                        .<span class="ident">unwrap</span>();
+                    <span class="ident">attributes</span>.<span class="ident">current</span>.<span class="ident">decoration_mode</span>
+                })
+                .<span class="ident">unwrap_or</span>(<span class="prelude-val">None</span>);
+
+                <span class="kw">if</span> <span class="ident">configure</span>.<span class="ident">state</span>.<span class="ident">decoration_mode</span> <span class="op">!</span><span class="op">=</span> <span class="ident">decoration_mode</span> {
+                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">data</span>) <span class="op">=</span> <span class="self">self</span>
+                        .<span class="ident">shell_surface</span>
+                        .<span class="ident">as_ref</span>()
+                        .<span class="ident">user_data</span>()
+                        .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ShellSurfaceUserData</span><span class="op">&gt;</span>()
+                    {
+                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">decoration</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">data</span>.<span class="ident">decoration</span>.<span class="ident">borrow</span>() {
+                            <span class="ident"><span class="self">self</span>::decoration::send_decoration_configure</span>(
+                                <span class="ident">decoration</span>,
+                                <span class="ident">configure</span>.<span class="ident">state</span>.<span class="ident">decoration_mode</span>.<span class="ident">unwrap_or</span>(
+                                    <span class="ident">xdg_decoration::v1::server::zxdg_toplevel_decoration_v1::Mode::ClientSide</span>,
+                                ),
+                            );
+                        }
+                    }
+                }
+
                 <span class="ident"><span class="self">self</span>::xdg_handlers::send_toplevel_configure</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">shell_surface</span>, <span class="ident">configure</span>)
             }
         }
