@@ -23,7 +23,7 @@ couples you support. You can typically receive a list of supported formats for o
     <span class="comment">/* ... */</span>
 ];
 <span class="kw">let</span> <span class="ident">dmabuf_global</span> <span class="op">=</span> <span class="ident">init_dmabuf_global</span>(
-    <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">display</span>,
+    <span class="kw-2">&amp;mut</span> <span class="ident">display</span>,
     <span class="ident">formats</span>,
     <span class="op">|</span><span class="ident">buffer</span>, <span class="ident">dispatch_data</span><span class="op">|</span> {
         <span class="comment">/* validate the dmabuf and import it into your renderer state */</span>

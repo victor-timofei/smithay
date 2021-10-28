@@ -336,7 +336,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">arg::AppendAll</span> <span class="kw">for</span> <span class="ident">PropertiesPropertiesChanged</span> {
-    <span class="kw">fn</span> <span class="ident">append</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">i</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">arg::IterAppend</span>) {
+    <span class="kw">fn</span> <span class="ident">append</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">i</span>: <span class="kw-2">&amp;mut</span> <span class="ident">arg::IterAppend</span>) {
         <span class="ident">arg::RefArg::append</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">interface_name</span>, <span class="ident">i</span>);
         <span class="ident">arg::RefArg::append</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">changed_properties</span>, <span class="ident">i</span>);
         <span class="ident">arg::RefArg::append</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">invalidated_properties</span> ,<span class="ident">i</span>);
@@ -344,7 +344,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">arg::ReadAll</span> <span class="kw">for</span> <span class="ident">PropertiesPropertiesChanged</span> {
-    <span class="kw">fn</span> <span class="ident">read</span>(<span class="ident">i</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">arg::Iter</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">arg::TypeMismatchError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">read</span>(<span class="ident">i</span>: <span class="kw-2">&amp;mut</span> <span class="ident">arg::Iter</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">arg::TypeMismatchError</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">PropertiesPropertiesChanged</span> {
             <span class="ident">interface_name</span>: <span class="ident">i</span>.<span class="ident">read</span>()<span class="question-mark">?</span>,
             <span class="ident">changed_properties</span>: <span class="ident">i</span>.<span class="ident">read</span>()<span class="question-mark">?</span>,
@@ -386,14 +386,14 @@
 }
 
 <span class="kw">impl</span> <span class="ident">arg::AppendAll</span> <span class="kw">for</span> <span class="ident">ObjectManagerInterfacesAdded</span> {
-    <span class="kw">fn</span> <span class="ident">append</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">i</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">arg::IterAppend</span>) {
+    <span class="kw">fn</span> <span class="ident">append</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">i</span>: <span class="kw-2">&amp;mut</span> <span class="ident">arg::IterAppend</span>) {
         <span class="ident">arg::RefArg::append</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">object</span>, <span class="ident">i</span>);
         <span class="ident">arg::RefArg::append</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">interfaces</span>, <span class="ident">i</span>);
     }
 }
 
 <span class="kw">impl</span> <span class="ident">arg::ReadAll</span> <span class="kw">for</span> <span class="ident">ObjectManagerInterfacesAdded</span> {
-    <span class="kw">fn</span> <span class="ident">read</span>(<span class="ident">i</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">arg::Iter</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">arg::TypeMismatchError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">read</span>(<span class="ident">i</span>: <span class="kw-2">&amp;mut</span> <span class="ident">arg::Iter</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">arg::TypeMismatchError</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">ObjectManagerInterfacesAdded</span> {
             <span class="ident">object</span>: <span class="ident">i</span>.<span class="ident">read</span>()<span class="question-mark">?</span>,
             <span class="ident">interfaces</span>: <span class="ident">i</span>.<span class="ident">read</span>()<span class="question-mark">?</span>,
@@ -415,14 +415,14 @@
 }
 
 <span class="kw">impl</span> <span class="ident">arg::AppendAll</span> <span class="kw">for</span> <span class="ident">ObjectManagerInterfacesRemoved</span> {
-    <span class="kw">fn</span> <span class="ident">append</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">i</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">arg::IterAppend</span>) {
+    <span class="kw">fn</span> <span class="ident">append</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">i</span>: <span class="kw-2">&amp;mut</span> <span class="ident">arg::IterAppend</span>) {
         <span class="ident">arg::RefArg::append</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">object</span>, <span class="ident">i</span>);
         <span class="ident">arg::RefArg::append</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">interfaces</span>, <span class="ident">i</span>);
     }
 }
 
 <span class="kw">impl</span> <span class="ident">arg::ReadAll</span> <span class="kw">for</span> <span class="ident">ObjectManagerInterfacesRemoved</span> {
-    <span class="kw">fn</span> <span class="ident">read</span>(<span class="ident">i</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">arg::Iter</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">arg::TypeMismatchError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">read</span>(<span class="ident">i</span>: <span class="kw-2">&amp;mut</span> <span class="ident">arg::Iter</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">arg::TypeMismatchError</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">ObjectManagerInterfacesRemoved</span> {
             <span class="ident">object</span>: <span class="ident">i</span>.<span class="ident">read</span>()<span class="question-mark">?</span>,
             <span class="ident">interfaces</span>: <span class="ident">i</span>.<span class="ident">read</span>()<span class="question-mark">?</span>,

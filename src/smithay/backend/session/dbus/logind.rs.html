@@ -693,7 +693,7 @@
 
 <span class="comment">// DBusConnection does not implement debug, so we have to impl Debug manually</span>
 <span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">LogindSessionImpl</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;LogindSessionImpl&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;session_id&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">session_id</span>)
             .<span class="ident">field</span>(<span class="string">&quot;conn&quot;</span>, <span class="kw-2">&amp;</span><span class="string">&quot;...&quot;</span>)
@@ -965,7 +965,7 @@
                 .<span class="ident">get3</span>::<span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Dict</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">String</span>, <span class="ident">Variant</span><span class="op">&lt;</span><span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Array</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">String</span>, <span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>();
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">changed</span> <span class="op">=</span> <span class="ident">changed</span>.<span class="ident">ok_or</span>(<span class="ident">Error::UnexpectedMethodReturn</span>)<span class="question-mark">?</span>;
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="kw">_</span>, <span class="kw-2">mut</span> <span class="ident">value</span>)) <span class="op">=</span> <span class="ident">changed</span>.<span class="ident">find</span>(<span class="op">|</span><span class="kw-2">&amp;</span>(<span class="kw-2">ref</span> <span class="ident">key</span>, <span class="kw">_</span>)<span class="op">|</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">key</span> <span class="op">==</span> <span class="string">&quot;Active&quot;</span>) {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">active</span>) <span class="op">=</span> <span class="ident">Get::get</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">value</span>.<span class="number">0</span>) {
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">active</span>) <span class="op">=</span> <span class="ident">Get::get</span>(<span class="kw-2">&amp;mut</span> <span class="ident">value</span>.<span class="number">0</span>) {
                     <span class="self">self</span>.<span class="ident">active</span>.<span class="ident">store</span>(<span class="ident">active</span>, <span class="ident">Ordering::SeqCst</span>);
                 }
             }
@@ -986,7 +986,7 @@
 <span class="kw">impl</span> <span class="ident">Session</span> <span class="kw">for</span> <span class="ident">LogindSession</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">Error</span>;
 
-    <span class="kw">fn</span> <span class="ident">open</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>, <span class="ident">_flags</span>: <span class="ident">OFlag</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RawFd</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">open</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>, <span class="ident">_flags</span>: <span class="ident">OFlag</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RawFd</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">session</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">upgrade</span>() {
             <span class="kw">let</span> <span class="ident">stat</span> <span class="op">=</span> <span class="ident">stat</span>(<span class="ident">path</span>).<span class="ident">map_err</span>(<span class="ident">Error::FailedToStatDevice</span>)<span class="question-mark">?</span>;
             <span class="comment">// TODO handle paused</span>
@@ -1009,7 +1009,7 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">close</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">fd</span>: <span class="ident">RawFd</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">close</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">fd</span>: <span class="ident">RawFd</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">session</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">upgrade</span>() {
             <span class="kw">let</span> <span class="ident">stat</span> <span class="op">=</span> <span class="ident">fstat</span>(<span class="ident">fd</span>).<span class="ident">map_err</span>(<span class="ident">Error::FailedToStatDevice</span>)<span class="question-mark">?</span>;
             <span class="ident">LogindSessionImpl::blocking_call</span>(
@@ -1041,7 +1041,7 @@
         <span class="self">self</span>.<span class="ident">seat</span>.<span class="ident">clone</span>()
     }
 
-    <span class="kw">fn</span> <span class="ident">change_vt</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">vt_num</span>: <span class="ident">i32</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">change_vt</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">vt_num</span>: <span class="ident">i32</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">session</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">upgrade</span>() {
             <span class="ident">LogindSessionImpl::blocking_call</span>(
                 <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">session</span>.<span class="ident">conn</span>.<span class="ident">borrow_mut</span>(),
@@ -1059,7 +1059,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">LogindSessionNotifier</span> {
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="macro">info!</span>(<span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">logger</span>, <span class="string">&quot;Closing logind session&quot;</span>);
         <span class="comment">// Release control again and drop everything closing the connection</span>
         <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">LogindSessionImpl::blocking_call</span>(
@@ -1078,9 +1078,9 @@
     <span class="kw">type</span> <span class="ident">Metadata</span> <span class="op">=</span> ();
     <span class="kw">type</span> <span class="ident">Ret</span> <span class="op">=</span> ();
 
-    <span class="kw">fn</span> <span class="ident">process_events</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">readiness</span>: <span class="ident">Readiness</span>, <span class="ident">token</span>: <span class="ident">Token</span>, <span class="kw">_</span>: <span class="ident">F</span>) -&gt; <span class="ident">std::io::Result</span><span class="op">&lt;</span><span class="ident">PostAction</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">process_events</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">readiness</span>: <span class="ident">Readiness</span>, <span class="ident">token</span>: <span class="ident">Token</span>, <span class="kw">_</span>: <span class="ident">F</span>) -&gt; <span class="ident">std::io::Result</span><span class="op">&lt;</span><span class="ident">PostAction</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">FnMut</span>((), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> ()),
+        <span class="ident">F</span>: <span class="ident">FnMut</span>((), <span class="kw-2">&amp;mut</span> ()),
     {
         <span class="comment">// Accumulate the messages, and then process them, as we can&#39;t keep the borrow on the `DBusConnection`</span>
         <span class="comment">// while processing the messages</span>
@@ -1099,15 +1099,15 @@
         <span class="prelude-val">Ok</span>(<span class="ident">PostAction::Continue</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">register</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">factory</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">TokenFactory</span>) -&gt; <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">register</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Poll</span>, <span class="ident">factory</span>: <span class="kw-2">&amp;mut</span> <span class="ident">TokenFactory</span>) -&gt; <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">conn</span>.<span class="ident">borrow_mut</span>().<span class="ident">register</span>(<span class="ident">poll</span>, <span class="ident">factory</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">reregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">factory</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">TokenFactory</span>) -&gt; <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">reregister</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Poll</span>, <span class="ident">factory</span>: <span class="kw-2">&amp;mut</span> <span class="ident">TokenFactory</span>) -&gt; <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">conn</span>.<span class="ident">borrow_mut</span>().<span class="ident">reregister</span>(<span class="ident">poll</span>, <span class="ident">factory</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">unregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>) -&gt; <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">unregister</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Poll</span>) -&gt; <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">conn</span>.<span class="ident">borrow_mut</span>().<span class="ident">unregister</span>(<span class="ident">poll</span>)
     }
 }
@@ -1190,8 +1190,8 @@
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_login_state</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">String</span>, <span class="ident">String</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>), <span class="ident"><span class="kw">super</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">session_name</span> <span class="op">=</span> <span class="kw">unsafe</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">session_name</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span> <span class="op">=</span> <span class="ident">std::ptr::null_mut</span>();
-            <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">sd_pid_get_session</span>(<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">session_name</span>);
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">session_name</span>: <span class="kw-2">*mut</span> <span class="ident">c_char</span> <span class="op">=</span> <span class="ident">std::ptr::null_mut</span>();
+            <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">sd_pid_get_session</span>(<span class="number">0</span>, <span class="kw-2">&amp;mut</span> <span class="ident">session_name</span>);
             <span class="kw">if</span> <span class="ident">ret</span> <span class="op">&lt;</span> <span class="number">0</span> {
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident"><span class="kw">super</span>::Error::FailedToGetSession</span>(
                     <span class="ident">std::io::Error::from_raw_os_error</span>(<span class="op">-</span><span class="ident">ret</span>),
@@ -1201,8 +1201,8 @@
         };
 
         <span class="kw">let</span> <span class="ident">seat_name</span> <span class="op">=</span> <span class="kw">unsafe</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">seat_name</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span> <span class="op">=</span> <span class="ident">std::ptr::null_mut</span>();
-            <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">sd_session_get_seat</span>(<span class="ident">session_name</span>.<span class="ident">as_ptr</span>(), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">seat_name</span>);
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">seat_name</span>: <span class="kw-2">*mut</span> <span class="ident">c_char</span> <span class="op">=</span> <span class="ident">std::ptr::null_mut</span>();
+            <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">sd_session_get_seat</span>(<span class="ident">session_name</span>.<span class="ident">as_ptr</span>(), <span class="kw-2">&amp;mut</span> <span class="ident">seat_name</span>);
             <span class="kw">if</span> <span class="ident">ret</span> <span class="op">&lt;</span> <span class="number">0</span> {
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident"><span class="kw">super</span>::Error::FailedToGetSeat</span>(<span class="ident">std::io::Error::from_raw_os_error</span>(
                     <span class="op">-</span><span class="ident">ret</span>,
@@ -1213,7 +1213,7 @@
 
         <span class="kw">let</span> <span class="ident">vt_num</span> <span class="op">=</span> <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">vt_num</span> <span class="op">=</span> <span class="number">0</span>;
-            <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">sd_session_get_vt</span>(<span class="ident">session_name</span>.<span class="ident">as_ptr</span>(), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">vt_num</span>);
+            <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">sd_session_get_vt</span>(<span class="ident">session_name</span>.<span class="ident">as_ptr</span>(), <span class="kw-2">&amp;mut</span> <span class="ident">vt_num</span>);
             <span class="kw">if</span> <span class="ident">ret</span> <span class="op">&lt;</span> <span class="number">0</span> {
                 <span class="prelude-val">None</span>
             } <span class="kw">else</span> {
@@ -1229,9 +1229,9 @@
     }
 
     <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> {
-        <span class="kw">fn</span> <span class="ident">sd_pid_get_session</span>(<span class="ident">pid</span>: <span class="ident">pid_t</span>, <span class="ident">out_session</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>) -&gt; <span class="ident">c_int</span>;
-        <span class="kw">fn</span> <span class="ident">sd_session_get_seat</span>(<span class="ident">session</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>, <span class="ident">out_seat</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>) -&gt; <span class="ident">c_int</span>;
-        <span class="kw">fn</span> <span class="ident">sd_session_get_vt</span>(<span class="ident">session</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>, <span class="ident">out_vt</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_uint</span>) -&gt; <span class="ident">c_int</span>;
+        <span class="kw">fn</span> <span class="ident">sd_pid_get_session</span>(<span class="ident">pid</span>: <span class="ident">pid_t</span>, <span class="ident">out_session</span>: <span class="kw-2">*mut</span> <span class="kw-2">*mut</span> <span class="ident">c_char</span>) -&gt; <span class="ident">c_int</span>;
+        <span class="kw">fn</span> <span class="ident">sd_session_get_seat</span>(<span class="ident">session</span>: <span class="kw-2">*const</span> <span class="ident">c_char</span>, <span class="ident">out_seat</span>: <span class="kw-2">*mut</span> <span class="kw-2">*mut</span> <span class="ident">c_char</span>) -&gt; <span class="ident">c_int</span>;
+        <span class="kw">fn</span> <span class="ident">sd_session_get_vt</span>(<span class="ident">session</span>: <span class="kw-2">*const</span> <span class="ident">c_char</span>, <span class="ident">out_vt</span>: <span class="kw-2">*mut</span> <span class="ident">c_uint</span>) -&gt; <span class="ident">c_int</span>;
     }
 }
 </code></pre></div>

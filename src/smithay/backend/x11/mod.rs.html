@@ -1262,7 +1262,7 @@ Present protocol documentation: https://gitlab.freedesktop.org/xorg/proto/xorgpr
     <span class="doccomment">/// Returns an RAII scoped object which provides the next buffer.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// When the object is dropped, the contents of the buffer are swapped and then presented.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">present</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Present</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">AllocateBuffersError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">present</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Present</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">AllocateBuffersError</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">new_size</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">resize</span>.<span class="ident">try_iter</span>().<span class="ident">last</span>() {
             <span class="self">self</span>.<span class="ident">resize</span>(<span class="ident">new_size</span>)<span class="question-mark">?</span>;
         }
@@ -1270,7 +1270,7 @@ Present protocol documentation: https://gitlab.freedesktop.org/xorg/proto/xorgpr
         <span class="prelude-val">Ok</span>(<span class="ident">Present</span> { <span class="ident">surface</span>: <span class="self">self</span> })
     }
 
-    <span class="kw">fn</span> <span class="ident">resize</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">size</span>: <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">u16</span>, <span class="ident">Logical</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">AllocateBuffersError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">resize</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">size</span>: <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">u16</span>, <span class="ident">Logical</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">AllocateBuffersError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="self">self</span>
             .<span class="ident">device</span>
             .<span class="ident">create_buffer_object</span>::<span class="op">&lt;</span>()<span class="op">&gt;</span>(
@@ -1335,12 +1335,12 @@ Present protocol documentation: https://gitlab.freedesktop.org/xorg/proto/xorgpr
 }
 
 <span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">Present</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
-        <span class="kw">let</span> <span class="ident">surface</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">surface</span>;
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
+        <span class="kw">let</span> <span class="ident">surface</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">surface</span>;
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">connection</span>) <span class="op">=</span> <span class="ident">surface</span>.<span class="ident">connection</span>.<span class="ident">upgrade</span>() {
             <span class="comment">// Swap the buffers</span>
-            <span class="ident">mem::swap</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">surface</span>.<span class="ident">next</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">surface</span>.<span class="ident">current</span>);
+            <span class="ident">mem::swap</span>(<span class="kw-2">&amp;mut</span> <span class="ident">surface</span>.<span class="ident">next</span>, <span class="kw-2">&amp;mut</span> <span class="ident">surface</span>.<span class="ident">current</span>);
 
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">pixmap</span>) <span class="op">=</span> <span class="ident">PixmapWrapper::with_dmabuf</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">connection</span>, <span class="kw-2">&amp;</span><span class="ident">surface</span>.<span class="ident">window</span>, <span class="kw-2">&amp;</span><span class="ident">surface</span>.<span class="ident">current</span>) {
                 <span class="comment">// Now present the current buffer</span>
@@ -1432,13 +1432,13 @@ Present protocol documentation: https://gitlab.freedesktop.org/xorg/proto/xorgpr
     <span class="kw">type</span> <span class="ident">Ret</span> <span class="op">=</span> ();
 
     <span class="kw">fn</span> <span class="ident">process_events</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">readiness</span>: <span class="ident">Readiness</span>,
         <span class="ident">token</span>: <span class="ident">Token</span>,
         <span class="kw-2">mut</span> <span class="ident">callback</span>: <span class="ident">F</span>,
     ) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">PostAction</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident"><span class="self">Self</span>::Event</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident"><span class="self">Self</span>::Metadata</span>) -&gt; <span class="ident"><span class="self">Self</span>::Ret</span>,
+        <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident"><span class="self">Self</span>::Event</span>, <span class="kw-2">&amp;mut</span> <span class="ident"><span class="self">Self</span>::Metadata</span>) -&gt; <span class="ident"><span class="self">Self</span>::Ret</span>,
     {
         <span class="kw">use</span> <span class="ident"><span class="self">self</span>::X11Event::Input</span>;
 
@@ -1497,7 +1497,7 @@ Present protocol documentation: https://gitlab.freedesktop.org/xorg/proto/xorgpr
                                         },
                                     },
                                 }),
-                                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">event_window</span>,
+                                <span class="kw-2">&amp;mut</span> <span class="ident">event_window</span>,
                             )
                         } <span class="kw">else</span> {
                             <span class="ident">callback</span>(
@@ -1508,7 +1508,7 @@ Present protocol documentation: https://gitlab.freedesktop.org/xorg/proto/xorgpr
                                         <span class="ident">state</span>: <span class="ident">ButtonState::Pressed</span>,
                                     },
                                 }),
-                                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">event_window</span>,
+                                <span class="kw-2">&amp;mut</span> <span class="ident">event_window</span>,
                             )
                         }
                     }
@@ -1531,7 +1531,7 @@ Present protocol documentation: https://gitlab.freedesktop.org/xorg/proto/xorgpr
                                     <span class="ident">state</span>: <span class="ident">ButtonState::Released</span>,
                                 },
                             }),
-                            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">event_window</span>,
+                            <span class="kw-2">&amp;mut</span> <span class="ident">event_window</span>,
                         );
                     }
                 }
@@ -1552,7 +1552,7 @@ Present protocol documentation: https://gitlab.freedesktop.org/xorg/proto/xorgpr
                                     <span class="ident">state</span>: <span class="ident">KeyState::Pressed</span>,
                                 },
                             }),
-                            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">event_window</span>,
+                            <span class="kw-2">&amp;mut</span> <span class="ident">event_window</span>,
                         )
                     }
                 }
@@ -1578,7 +1578,7 @@ Present protocol documentation: https://gitlab.freedesktop.org/xorg/proto/xorgpr
                                     <span class="ident">state</span>: <span class="ident">KeyState::Released</span>,
                                 },
                             }),
-                            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">event_window</span>,
+                            <span class="kw-2">&amp;mut</span> <span class="ident">event_window</span>,
                         );
                     }
                 }
@@ -1598,7 +1598,7 @@ Present protocol documentation: https://gitlab.freedesktop.org/xorg/proto/xorgpr
                                     <span class="ident">size</span>: <span class="ident">window</span>.<span class="ident">size</span>(),
                                 },
                             }),
-                            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">event_window</span>,
+                            <span class="kw-2">&amp;mut</span> <span class="ident">event_window</span>,
                         )
                     }
                 }
@@ -1619,7 +1619,7 @@ Present protocol documentation: https://gitlab.freedesktop.org/xorg/proto/xorgpr
                                 <span class="kw-2">*</span><span class="ident">window</span>.<span class="ident">size</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>() <span class="op">=</span> <span class="ident">configure_notify_size</span>;
                             }
 
-                            (<span class="ident">callback</span>)(<span class="ident">X11Event::Resized</span>(<span class="ident">configure_notify_size</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">event_window</span>);
+                            (<span class="ident">callback</span>)(<span class="ident">X11Event::Resized</span>(<span class="ident">configure_notify_size</span>), <span class="kw-2">&amp;mut</span> <span class="ident">event_window</span>);
                             <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">resize</span>.<span class="ident">send</span>(<span class="ident">configure_notify_size</span>);
                         }
                     }
@@ -1642,13 +1642,13 @@ Present protocol documentation: https://gitlab.freedesktop.org/xorg/proto/xorgpr
                             <span class="op">&amp;&amp;</span> <span class="ident">client_message</span>.<span class="ident">window</span> <span class="op">==</span> <span class="ident">window</span>.<span class="ident">id</span>
                     <span class="comment">// Same window</span>
                     {
-                        (<span class="ident">callback</span>)(<span class="ident">X11Event::CloseRequested</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">event_window</span>);
+                        (<span class="ident">callback</span>)(<span class="ident">X11Event::CloseRequested</span>, <span class="kw-2">&amp;mut</span> <span class="ident">event_window</span>);
                     }
                 }
 
                 <span class="ident">x11::Event::Expose</span>(<span class="ident">expose</span>) =&gt; {
                     <span class="kw">if</span> <span class="ident">expose</span>.<span class="ident">window</span> <span class="op">==</span> <span class="ident">window</span>.<span class="ident">id</span> <span class="op">&amp;&amp;</span> <span class="ident">expose</span>.<span class="ident">count</span> <span class="op">==</span> <span class="number">0</span> {
-                        (<span class="ident">callback</span>)(<span class="ident">X11Event::Refresh</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">event_window</span>);
+                        (<span class="ident">callback</span>)(<span class="ident">X11Event::Refresh</span>, <span class="kw-2">&amp;mut</span> <span class="ident">event_window</span>);
                     }
                 }
 
@@ -1656,7 +1656,7 @@ Present protocol documentation: https://gitlab.freedesktop.org/xorg/proto/xorgpr
                     <span class="kw">if</span> <span class="ident">complete_notify</span>.<span class="ident">window</span> <span class="op">==</span> <span class="ident">window</span>.<span class="ident">id</span> {
                         <span class="ident">window</span>.<span class="ident">last_msc</span>.<span class="ident">store</span>(<span class="ident">complete_notify</span>.<span class="ident">msc</span>, <span class="ident">Ordering::SeqCst</span>);
 
-                        (<span class="ident">callback</span>)(<span class="ident">X11Event::PresentCompleted</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">event_window</span>);
+                        (<span class="ident">callback</span>)(<span class="ident">X11Event::PresentCompleted</span>, <span class="kw-2">&amp;mut</span> <span class="ident">event_window</span>);
                     }
                 }
 
@@ -1676,15 +1676,15 @@ Present protocol documentation: https://gitlab.freedesktop.org/xorg/proto/xorgpr
         })
     }
 
-    <span class="kw">fn</span> <span class="ident">register</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token_factory</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">TokenFactory</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">register</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Poll</span>, <span class="ident">token_factory</span>: <span class="kw-2">&amp;mut</span> <span class="ident">TokenFactory</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">source</span>.<span class="ident">register</span>(<span class="ident">poll</span>, <span class="ident">token_factory</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">reregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>, <span class="ident">token_factory</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">TokenFactory</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">reregister</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Poll</span>, <span class="ident">token_factory</span>: <span class="kw-2">&amp;mut</span> <span class="ident">TokenFactory</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">source</span>.<span class="ident">reregister</span>(<span class="ident">poll</span>, <span class="ident">token_factory</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">unregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Poll</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">unregister</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">poll</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Poll</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">source</span>.<span class="ident">unregister</span>(<span class="ident">poll</span>)
     }
 }

@@ -545,9 +545,9 @@
                 <span class="ident">root</span>,
                 <span class="number">0</span>,
                 <span class="number">0</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">coords</span>.<span class="ident">x_rel_root</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">coords</span>.<span class="ident">y_rel_root</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">coords</span>.<span class="ident">child</span>,
+                <span class="kw-2">&amp;mut</span> <span class="ident">coords</span>.<span class="ident">x_rel_root</span>,
+                <span class="kw-2">&amp;mut</span> <span class="ident">coords</span>.<span class="ident">y_rel_root</span>,
+                <span class="kw-2">&amp;mut</span> <span class="ident">coords</span>.<span class="ident">child</span>,
             );
         }
 
@@ -563,13 +563,13 @@
             (<span class="self">self</span>.<span class="ident">xlib</span>.<span class="ident">XGetGeometry</span>)(
                 <span class="self">self</span>.<span class="ident">display</span>,
                 <span class="ident">window</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">geometry</span>.<span class="ident">root</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">geometry</span>.<span class="ident">x_rel_parent</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">geometry</span>.<span class="ident">y_rel_parent</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">geometry</span>.<span class="ident">width</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">geometry</span>.<span class="ident">height</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">geometry</span>.<span class="ident">border</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">geometry</span>.<span class="ident">depth</span>,
+                <span class="kw-2">&amp;mut</span> <span class="ident">geometry</span>.<span class="ident">root</span>,
+                <span class="kw-2">&amp;mut</span> <span class="ident">geometry</span>.<span class="ident">x_rel_parent</span>,
+                <span class="kw-2">&amp;mut</span> <span class="ident">geometry</span>.<span class="ident">y_rel_parent</span>,
+                <span class="kw-2">&amp;mut</span> <span class="ident">geometry</span>.<span class="ident">width</span>,
+                <span class="kw-2">&amp;mut</span> <span class="ident">geometry</span>.<span class="ident">height</span>,
+                <span class="kw-2">&amp;mut</span> <span class="ident">geometry</span>.<span class="ident">border</span>,
+                <span class="kw-2">&amp;mut</span> <span class="ident">geometry</span>.<span class="ident">depth</span>,
             )
         };
 
@@ -623,22 +623,22 @@
         <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">root</span> <span class="op">=</span> <span class="number">0</span>;
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parent</span> <span class="op">=</span> <span class="number">0</span>;
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">children</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::Window</span> <span class="op">=</span> <span class="ident">ptr::null_mut</span>();
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">children</span>: <span class="kw-2">*mut</span> <span class="ident">ffi::Window</span> <span class="op">=</span> <span class="ident">ptr::null_mut</span>();
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">nchildren</span> <span class="op">=</span> <span class="number">0</span>;
 
             <span class="comment">// What&#39;s filled into `parent` if `window` is the root window?</span>
             <span class="kw">let</span> <span class="ident">_status</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">xlib</span>.<span class="ident">XQueryTree</span>)(
                 <span class="self">self</span>.<span class="ident">display</span>,
                 <span class="ident">window</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">root</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">parent</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">children</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">nchildren</span>,
+                <span class="kw-2">&amp;mut</span> <span class="ident">root</span>,
+                <span class="kw-2">&amp;mut</span> <span class="ident">parent</span>,
+                <span class="kw-2">&amp;mut</span> <span class="ident">children</span>,
+                <span class="kw-2">&amp;mut</span> <span class="ident">nchildren</span>,
             );
 
             <span class="comment">// The list of children isn&#39;t used</span>
             <span class="kw">if</span> <span class="ident">children</span> <span class="op">!</span><span class="op">=</span> <span class="ident">ptr::null_mut</span>() {
-                (<span class="self">self</span>.<span class="ident">xlib</span>.<span class="ident">XFree</span>)(<span class="ident">children</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>);
+                (<span class="self">self</span>.<span class="ident">xlib</span>.<span class="ident">XFree</span>)(<span class="ident">children</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="kw">_</span>);
             }
 
             <span class="ident">parent</span>

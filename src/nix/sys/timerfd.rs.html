@@ -509,7 +509,7 @@
     <span class="doccomment">/// Get the parameters for the alarm currently set, if any.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Expiration</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">timerspec</span> <span class="op">=</span> <span class="ident">TimerSpec::none</span>();
-        <span class="kw">let</span> <span class="ident">timerspec_ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">libc::itimerspec</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">timerspec</span>.<span class="number">0</span>;
+        <span class="kw">let</span> <span class="ident">timerspec_ptr</span>: <span class="kw-2">*mut</span> <span class="ident">libc::itimerspec</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">timerspec</span>.<span class="number">0</span>;
 
         <span class="ident">Errno::result</span>(<span class="kw">unsafe</span> { <span class="ident">libc::timerfd_gettime</span>(<span class="self">self</span>.<span class="ident">fd</span>, <span class="ident">timerspec_ptr</span>) }).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
             <span class="kw">if</span> <span class="ident">timerspec</span>.<span class="number">0</span>.<span class="ident">it_interval</span>.<span class="ident">tv_sec</span> <span class="op">==</span> <span class="number">0</span>
@@ -542,7 +542,7 @@
     <span class="doccomment">/// Note: If the alarm is unset, then you will wait forever.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">loop</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span> <span class="ident">read</span>(<span class="self">self</span>.<span class="ident">fd</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="number">0u8</span>; <span class="number">8</span>]) {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span> <span class="ident">read</span>(<span class="self">self</span>.<span class="ident">fd</span>, <span class="kw-2">&amp;mut</span> [<span class="number">0u8</span>; <span class="number">8</span>]) {
                 <span class="kw">match</span> <span class="ident">e</span> {
                     <span class="ident">Errno::EINTR</span> =&gt; <span class="kw">continue</span>,
                     <span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">e</span>),
@@ -557,7 +557,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">TimerFd</span> {
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="kw">if</span> <span class="op">!</span><span class="ident">std::thread::panicking</span>() {
             <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">Errno::result</span>(<span class="kw">unsafe</span> {
                 <span class="ident">libc::close</span>(<span class="self">self</span>.<span class="ident">fd</span>)

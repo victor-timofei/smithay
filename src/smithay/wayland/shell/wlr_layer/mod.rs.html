@@ -552,7 +552,7 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">ack_configure</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">serial</span>: <span class="ident">Serial</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">LayerSurfaceConfigure</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">ack_configure</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">serial</span>: <span class="ident">Serial</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">LayerSurfaceConfigure</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">configure</span> <span class="op">=</span> <span class="self">self</span>
             .<span class="ident">pending_configures</span>
             .<span class="ident">iter</span>()
@@ -593,10 +593,10 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Cacheable</span> <span class="kw">for</span> <span class="ident">LayerSurfaceCachedState</span> {
-    <span class="kw">fn</span> <span class="ident">commit</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">commit</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="self">Self</span> {
         <span class="kw-2">*</span><span class="self">self</span>
     }
-    <span class="kw">fn</span> <span class="ident">merge_into</span>(<span class="self">self</span>, <span class="ident">into</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span>) {
+    <span class="kw">fn</span> <span class="ident">merge_into</span>(<span class="self">self</span>, <span class="ident">into</span>: <span class="kw-2">&amp;mut</span> <span class="self">Self</span>) {
         <span class="kw-2">*</span><span class="ident">into</span> <span class="op">=</span> <span class="self">self</span>;
     }
 }
@@ -626,7 +626,7 @@
 
 <span class="doccomment">/// Create a new `wlr_layer_shell` globals</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wlr_layer_shell_init</span><span class="op">&lt;</span><span class="ident">L</span>, <span class="ident">Impl</span><span class="op">&gt;</span>(
-    <span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Display</span>,
+    <span class="ident">display</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Display</span>,
     <span class="ident">implementation</span>: <span class="ident">Impl</span>,
     <span class="ident">logger</span>: <span class="ident">L</span>,
 ) -&gt; (
@@ -692,7 +692,7 @@
     <span class="doccomment">/// Returns `None` if either no `server_pending` or the pending</span>
     <span class="doccomment">/// has already been sent to the client or the pending is equal</span>
     <span class="doccomment">/// to the `last_acked`</span>
-    <span class="kw">fn</span> <span class="ident">get_pending_state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">attributes</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">LayerSurfaceAttributes</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">LayerSurfaceState</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">get_pending_state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">attributes</span>: <span class="kw-2">&amp;mut</span> <span class="ident">LayerSurfaceAttributes</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">LayerSurfaceState</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="op">!</span><span class="ident">attributes</span>.<span class="ident">initial_configure_sent</span> {
             <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">attributes</span>.<span class="ident">server_pending</span>.<span class="ident">take</span>().<span class="ident">unwrap_or_default</span>());
         }
@@ -734,7 +734,7 @@
                     .<span class="ident">unwrap</span>()
                     .<span class="ident">lock</span>()
                     .<span class="ident">unwrap</span>();
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pending</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_pending_state</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">attributes</span>) {
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pending</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_pending_state</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">attributes</span>) {
                     <span class="kw">let</span> <span class="ident">configure</span> <span class="op">=</span> <span class="ident">LayerSurfaceConfigure</span> {
                         <span class="ident">serial</span>: <span class="ident">SERIAL_COUNTER</span>.<span class="ident">next_serial</span>(),
                         <span class="ident">state</span>: <span class="ident">pending</span>,
@@ -813,7 +813,7 @@
     <span class="doccomment">/// The state will be sent to the client when calling [`send_configure`](#method.send_configure).</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_pending_state</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">DeadResource</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">LayerSurfaceState</span>) -&gt; <span class="ident">T</span>,
+        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;mut</span> <span class="ident">LayerSurfaceState</span>) -&gt; <span class="ident">T</span>,
     {
         <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">alive</span>() {
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeadResource</span>);

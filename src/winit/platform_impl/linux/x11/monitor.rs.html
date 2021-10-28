@@ -415,7 +415,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">std::hash::Hash</span> <span class="kw">for</span> <span class="ident">MonitorHandle</span> {
-    <span class="kw">fn</span> <span class="ident">hash</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">std::hash::Hasher</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">H</span>) {
+    <span class="kw">fn</span> <span class="ident">hash</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">std::hash::Hasher</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">H</span>) {
         <span class="self">self</span>.<span class="ident">id</span>.<span class="ident">hash</span>(<span class="ident">state</span>);
     }
 }
@@ -423,9 +423,9 @@
 <span class="kw">impl</span> <span class="ident">MonitorHandle</span> {
     <span class="kw">fn</span> <span class="ident">new</span>(
         <span class="ident">xconn</span>: <span class="kw-2">&amp;</span><span class="ident">XConnection</span>,
-        <span class="ident">resources</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">XRRScreenResources</span>,
+        <span class="ident">resources</span>: <span class="kw-2">*mut</span> <span class="ident">XRRScreenResources</span>,
         <span class="ident">id</span>: <span class="ident">RRCrtc</span>,
-        <span class="ident">crtc</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">XRRCrtcInfo</span>,
+        <span class="ident">crtc</span>: <span class="kw-2">*mut</span> <span class="ident">XRRCrtcInfo</span>,
         <span class="ident">primary</span>: <span class="ident">bool</span>,
     ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">name</span>, <span class="ident">scale_factor</span>, <span class="ident">video_modes</span>) <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">xconn</span>.<span class="ident">get_output_info</span>(<span class="ident">resources</span>, <span class="ident">crtc</span>)<span class="question-mark">?</span> };
@@ -529,7 +529,7 @@
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">major</span> <span class="op">=</span> <span class="number">0</span>;
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">minor</span> <span class="op">=</span> <span class="number">0</span>;
-            (<span class="self">self</span>.<span class="ident">xrandr</span>.<span class="ident">XRRQueryVersion</span>)(<span class="self">self</span>.<span class="ident">display</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">major</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">minor</span>);
+            (<span class="self">self</span>.<span class="ident">xrandr</span>.<span class="ident">XRRQueryVersion</span>)(<span class="self">self</span>.<span class="ident">display</span>, <span class="kw-2">&amp;mut</span> <span class="ident">major</span>, <span class="kw-2">&amp;mut</span> <span class="ident">minor</span>);
 
             <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">xlib</span>.<span class="ident">XDefaultRootWindow</span>)(<span class="self">self</span>.<span class="ident">display</span>);
             <span class="kw">let</span> <span class="ident">resources</span> <span class="op">=</span> <span class="kw">if</span> (<span class="ident">major</span> <span class="op">==</span> <span class="number">1</span> <span class="op">&amp;&amp;</span> <span class="ident">minor</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">3</span>) <span class="op">|</span><span class="op">|</span> <span class="ident">major</span> <span class="op">&gt;</span> <span class="number">1</span> {
@@ -602,7 +602,7 @@
         <span class="kw">let</span> <span class="ident">has_xrandr</span> <span class="op">=</span> <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">major</span> <span class="op">=</span> <span class="number">0</span>;
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">minor</span> <span class="op">=</span> <span class="number">0</span>;
-            (<span class="self">self</span>.<span class="ident">xrandr</span>.<span class="ident">XRRQueryVersion</span>)(<span class="self">self</span>.<span class="ident">display</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">major</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">minor</span>)
+            (<span class="self">self</span>.<span class="ident">xrandr</span>.<span class="ident">XRRQueryVersion</span>)(<span class="self">self</span>.<span class="ident">display</span>, <span class="kw-2">&amp;mut</span> <span class="ident">major</span>, <span class="kw-2">&amp;mut</span> <span class="ident">minor</span>)
         };
         <span class="macro">assert!</span>(
             <span class="ident">has_xrandr</span> <span class="op">==</span> <span class="ident">True</span>,
@@ -612,7 +612,7 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">event_offset</span> <span class="op">=</span> <span class="number">0</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">error_offset</span> <span class="op">=</span> <span class="number">0</span>;
         <span class="kw">let</span> <span class="ident">status</span> <span class="op">=</span> <span class="kw">unsafe</span> {
-            (<span class="self">self</span>.<span class="ident">xrandr</span>.<span class="ident">XRRQueryExtension</span>)(<span class="self">self</span>.<span class="ident">display</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">event_offset</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">error_offset</span>)
+            (<span class="self">self</span>.<span class="ident">xrandr</span>.<span class="ident">XRRQueryExtension</span>)(<span class="self">self</span>.<span class="ident">display</span>, <span class="kw-2">&amp;mut</span> <span class="ident">event_offset</span>, <span class="kw-2">&amp;mut</span> <span class="ident">error_offset</span>)
         };
 
         <span class="kw">if</span> <span class="ident">status</span> <span class="op">!</span><span class="op">=</span> <span class="ident">True</span> {

@@ -403,8 +403,8 @@
     <span class="ident">C</span>: <span class="ident">FnMut</span>(<span class="ident">ServerDndEvent</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">fn</span> <span class="ident">motion</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">_handle</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
+        <span class="ident">_handle</span>: <span class="kw-2">&amp;mut</span> <span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
         <span class="ident">location</span>: <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">f64</span>, <span class="ident">Logical</span><span class="op">&gt;</span>,
         <span class="ident">focus</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">wl_surface::WlSurface</span>, <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
         <span class="ident">serial</span>: <span class="ident">Serial</span>,
@@ -494,8 +494,8 @@
     }
 
     <span class="kw">fn</span> <span class="ident">button</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">handle</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
+        <span class="ident">handle</span>: <span class="kw-2">&amp;mut</span> <span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
         <span class="ident">_button</span>: <span class="ident">u32</span>,
         <span class="ident">_state</span>: <span class="ident">wl_pointer::ButtonState</span>,
         <span class="ident">serial</span>: <span class="ident">Serial</span>,
@@ -535,9 +535,9 @@
                 }
             }
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">callback</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">callback</span>.<span class="ident">borrow_mut</span>();
-            (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">callback</span>)(<span class="ident">ServerDndEvent::Dropped</span>);
+            (<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">callback</span>)(<span class="ident">ServerDndEvent::Dropped</span>);
             <span class="kw">if</span> <span class="op">!</span><span class="ident">validated</span> {
-                (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">callback</span>)(<span class="ident">ServerDndEvent::Cancelled</span>);
+                (<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">callback</span>)(<span class="ident">ServerDndEvent::Cancelled</span>);
             }
             <span class="comment">// in all cases abandon the drop</span>
             <span class="comment">// no more buttons are pressed, release the grab</span>
@@ -545,7 +545,7 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">axis</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">handle</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">details</span>: <span class="ident">AxisFrame</span>) {
+    <span class="kw">fn</span> <span class="ident">axis</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">handle</span>: <span class="kw-2">&amp;mut</span> <span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">details</span>: <span class="ident">AxisFrame</span>) {
         <span class="comment">// we just forward the axis events as is</span>
         <span class="ident">handle</span>.<span class="ident">axis</span>(<span class="ident">details</span>);
     }
@@ -586,7 +586,7 @@
             <span class="ident">Request::Receive</span> { <span class="ident">mime_type</span>, <span class="ident">fd</span> } =&gt; {
                 <span class="comment">// check if the source and associated mime type is still valid</span>
                 <span class="kw">if</span> <span class="ident">metadata</span>.<span class="ident">mime_types</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">mime_type</span>) <span class="op">&amp;&amp;</span> <span class="ident">data</span>.<span class="ident">active</span> {
-                    (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">callback</span>.<span class="ident">borrow_mut</span>())(<span class="ident">ServerDndEvent::Send</span> { <span class="ident">mime_type</span>, <span class="ident">fd</span> });
+                    (<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">callback</span>.<span class="ident">borrow_mut</span>())(<span class="ident">ServerDndEvent::Send</span> { <span class="ident">mime_type</span>, <span class="ident">fd</span> });
                 }
             }
             <span class="ident">Request::Destroy</span> =&gt; {}
@@ -619,7 +619,7 @@
                     );
                     <span class="kw">return</span>;
                 }
-                (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">callback</span>.<span class="ident">borrow_mut</span>())(<span class="ident">ServerDndEvent::Finished</span>);
+                (<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">callback</span>.<span class="ident">borrow_mut</span>())(<span class="ident">ServerDndEvent::Finished</span>);
                 <span class="ident">data</span>.<span class="ident">active</span> <span class="op">=</span> <span class="bool-val">false</span>;
             }
             <span class="ident">Request::SetActions</span> {
@@ -639,14 +639,14 @@
                     <span class="kw">return</span>;
                 }
                 <span class="kw">let</span> <span class="ident">possible_actions</span> <span class="op">=</span> <span class="ident">metadata</span>.<span class="ident">dnd_action</span> <span class="op">&amp;</span> <span class="ident">dnd_actions</span>;
-                <span class="ident">data</span>.<span class="ident">chosen_action</span> <span class="op">=</span> (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">action_choice</span>.<span class="ident">borrow_mut</span>())(<span class="ident">possible_actions</span>, <span class="ident">preferred_action</span>);
+                <span class="ident">data</span>.<span class="ident">chosen_action</span> <span class="op">=</span> (<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">action_choice</span>.<span class="ident">borrow_mut</span>())(<span class="ident">possible_actions</span>, <span class="ident">preferred_action</span>);
                 <span class="comment">// check that the user provided callback respects that one precise action should be chosen</span>
                 <span class="macro">debug_assert!</span>(
                     [<span class="ident">DndAction::None</span>, <span class="ident">DndAction::Move</span>, <span class="ident">DndAction::Copy</span>, <span class="ident">DndAction::Ask</span>]
                         .<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">chosen_action</span>)
                 );
                 <span class="ident">offer</span>.<span class="ident">action</span>(<span class="ident">data</span>.<span class="ident">chosen_action</span>);
-                (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">callback</span>.<span class="ident">borrow_mut</span>())(<span class="ident">ServerDndEvent::Action</span>(<span class="ident">data</span>.<span class="ident">chosen_action</span>));
+                (<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">callback</span>.<span class="ident">borrow_mut</span>())(<span class="ident">ServerDndEvent::Action</span>(<span class="ident">data</span>.<span class="ident">chosen_action</span>));
             }
             <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
         }

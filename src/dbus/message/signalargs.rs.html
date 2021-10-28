@@ -140,7 +140,7 @@
     <span class="doccomment">/// Returns a message that emits the signal.</span>
     <span class="kw">fn</span> <span class="ident">to_emit_message</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) -&gt; <span class="ident">Message</span> <span class="kw">where</span> <span class="self">Self</span>: <span class="ident">arg::AppendAll</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">Message::signal</span>(<span class="ident">path</span>, <span class="kw-2">&amp;</span><span class="ident">Interface::from</span>(<span class="ident"><span class="self">Self</span>::INTERFACE</span>), <span class="kw-2">&amp;</span><span class="ident">Member::from</span>(<span class="ident"><span class="self">Self</span>::NAME</span>));
-        <span class="ident">arg::AppendAll::append</span>(<span class="self">self</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">arg::IterAppend::new</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">m</span>));
+        <span class="ident">arg::AppendAll::append</span>(<span class="self">self</span>, <span class="kw-2">&amp;mut</span> <span class="ident">arg::IterAppend::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">m</span>));
         <span class="ident">m</span>
     }
 
@@ -153,7 +153,7 @@
         <span class="kw">else</span> <span class="kw">if</span> <span class="ident">m</span>.<span class="ident">interface</span>().<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">x</span>) <span class="op">!</span><span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident"><span class="self">Self</span>::INTERFACE</span>) { <span class="prelude-val">None</span> }
         <span class="kw">else</span> <span class="kw">if</span> <span class="ident">m</span>.<span class="ident">member</span>().<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">x</span>) <span class="op">!</span><span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident"><span class="self">Self</span>::NAME</span>) { <span class="prelude-val">None</span> }
         <span class="kw">else</span> {
-            <span class="ident">arg::ReadAll::read</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">m</span>.<span class="ident">iter_init</span>()).<span class="ident">ok</span>()
+            <span class="ident">arg::ReadAll::read</span>(<span class="kw-2">&amp;mut</span> <span class="ident">m</span>.<span class="ident">iter_init</span>()).<span class="ident">ok</span>()
         }
     }
 

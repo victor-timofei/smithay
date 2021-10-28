@@ -631,7 +631,7 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">unix</span>)]</span>
 <span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">OwnedFd</span> {
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="kw">unsafe</span> { <span class="ident">libc::close</span>(<span class="self">self</span>.<span class="ident">fd</span>); }
     }
 }
@@ -677,21 +677,21 @@
     <span class="doccomment">/// Creates a new IterAppend struct.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">m</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Message</span>) -&gt; <span class="ident">IterAppend</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="ident">ffi_iter</span>();
-        <span class="kw">unsafe</span> { <span class="ident">ffi::dbus_message_iter_init_append</span>(<span class="ident">m</span>.<span class="ident">ptr</span>(), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">i</span>) };
+        <span class="kw">unsafe</span> { <span class="ident">ffi::dbus_message_iter_init_append</span>(<span class="ident">m</span>.<span class="ident">ptr</span>(), <span class="kw-2">&amp;mut</span> <span class="ident">i</span>) };
         <span class="ident">IterAppend</span>(<span class="ident">i</span>, <span class="ident">m</span>)
     }
 
     <span class="doccomment">/// Appends the argument.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">append</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Append</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">a</span>: <span class="ident">T</span>) { <span class="ident">a</span>.<span class="ident">append</span>(<span class="self">self</span>) }
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">append</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Append</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">a</span>: <span class="ident">T</span>) { <span class="ident">a</span>.<span class="ident">append</span>(<span class="self">self</span>) }
 
-    <span class="kw">fn</span> <span class="ident">append_container</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">IterAppend</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>)<span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">arg_type</span>: <span class="ident">ArgType</span>, <span class="ident">sig</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">CStr</span><span class="op">&gt;</span>, <span class="ident">f</span>: <span class="ident">F</span>) {
+    <span class="kw">fn</span> <span class="ident">append_container</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;mut</span> <span class="ident">IterAppend</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>)<span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">arg_type</span>: <span class="ident">ArgType</span>, <span class="ident">sig</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">CStr</span><span class="op">&gt;</span>, <span class="ident">f</span>: <span class="ident">F</span>) {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">IterAppend</span>(<span class="ident">ffi_iter</span>(), <span class="self">self</span>.<span class="number">1</span>);
         <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">sig</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">as_ptr</span>()).<span class="ident">unwrap_or</span>(<span class="ident">ptr::null</span>());
         <span class="ident">check</span>(<span class="string">&quot;dbus_message_iter_open_container&quot;</span>,
-            <span class="kw">unsafe</span> { <span class="ident">ffi::dbus_message_iter_open_container</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="number">0</span>, <span class="ident">arg_type</span> <span class="kw">as</span> <span class="ident">c_int</span>, <span class="ident">p</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">s</span>.<span class="number">0</span>) });
-        <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">s</span>);
+            <span class="kw">unsafe</span> { <span class="ident">ffi::dbus_message_iter_open_container</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="number">0</span>, <span class="ident">arg_type</span> <span class="kw">as</span> <span class="ident">c_int</span>, <span class="ident">p</span>, <span class="kw-2">&amp;mut</span> <span class="ident">s</span>.<span class="number">0</span>) });
+        <span class="ident">f</span>(<span class="kw-2">&amp;mut</span> <span class="ident">s</span>);
         <span class="ident">check</span>(<span class="string">&quot;dbus_message_iter_close_container&quot;</span>,
-            <span class="kw">unsafe</span> { <span class="ident">ffi::dbus_message_iter_close_container</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">s</span>.<span class="number">0</span>) });
+            <span class="kw">unsafe</span> { <span class="ident">ffi::dbus_message_iter_close_container</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;mut</span> <span class="ident">s</span>.<span class="number">0</span>) });
     }
 
     <span class="doccomment">/// Low-level function to append a variant.</span>
@@ -702,7 +702,7 @@
     <span class="doccomment">/// In order not to get D-Bus errors: during the call to &quot;f&quot; you need to call &quot;append&quot; on</span>
     <span class="doccomment">/// the supplied `IterAppend` exactly once,</span>
     <span class="doccomment">/// and with a value which has the same signature as inner_sig.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">append_variant</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">IterAppend</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>)<span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">inner_sig</span>: <span class="kw-2">&amp;</span><span class="ident">Signature</span>, <span class="ident">f</span>: <span class="ident">F</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">append_variant</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;mut</span> <span class="ident">IterAppend</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>)<span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">inner_sig</span>: <span class="kw-2">&amp;</span><span class="ident">Signature</span>, <span class="ident">f</span>: <span class="ident">F</span>) {
         <span class="self">self</span>.<span class="ident">append_container</span>(<span class="ident">ArgType::Variant</span>, <span class="prelude-val">Some</span>(<span class="ident">inner_sig</span>.<span class="ident">as_cstr</span>()), <span class="ident">f</span>)
     }
 
@@ -713,7 +713,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// In order not to get D-Bus errors: during the call to &quot;f&quot;, you should only call &quot;append&quot; on</span>
     <span class="doccomment">/// the supplied `IterAppend` with values which has the same signature as inner_sig.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">append_array</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">IterAppend</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>)<span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">inner_sig</span>: <span class="kw-2">&amp;</span><span class="ident">Signature</span>, <span class="ident">f</span>: <span class="ident">F</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">append_array</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;mut</span> <span class="ident">IterAppend</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>)<span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">inner_sig</span>: <span class="kw-2">&amp;</span><span class="ident">Signature</span>, <span class="ident">f</span>: <span class="ident">F</span>) {
         <span class="self">self</span>.<span class="ident">append_container</span>(<span class="ident">ArgType::Array</span>, <span class="prelude-val">Some</span>(<span class="ident">inner_sig</span>.<span class="ident">as_cstr</span>()), <span class="ident">f</span>)
     }
 
@@ -721,7 +721,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Use in case tuples are not flexible enough -</span>
     <span class="doccomment">/// the easier way is to just call e g &quot;append1&quot; on a message and supply a tuple parameter.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">append_struct</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">IterAppend</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>)<span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">append_struct</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;mut</span> <span class="ident">IterAppend</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>)<span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) {
         <span class="self">self</span>.<span class="ident">append_container</span>(<span class="ident">ArgType::Struct</span>, <span class="prelude-val">None</span>, <span class="ident">f</span>)
     }
 
@@ -733,7 +733,7 @@
     <span class="doccomment">/// In order not to get D-Bus errors: during the call to &quot;f&quot;, you should call &quot;append&quot; once</span>
     <span class="doccomment">/// for the key, then once for the value. You should only call this function for a subiterator</span>
     <span class="doccomment">/// you got from calling &quot;append_dict&quot;, and signatures need to match what you specified in &quot;append_dict&quot;.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">append_dict_entry</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">IterAppend</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>)<span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">append_dict_entry</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;mut</span> <span class="ident">IterAppend</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>)<span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) {
         <span class="self">self</span>.<span class="ident">append_container</span>(<span class="ident">ArgType::DictEntry</span>, <span class="prelude-val">None</span>, <span class="ident">f</span>)
     }
 
@@ -744,7 +744,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// In order not to get D-Bus errors: during the call to &quot;f&quot;, you should only call &quot;append_dict_entry&quot;</span>
     <span class="doccomment">/// for the subiterator - do this as many times as the number of dict entries.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">append_dict</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">IterAppend</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>)<span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">key_sig</span>: <span class="kw-2">&amp;</span><span class="ident">Signature</span>, <span class="ident">value_sig</span>: <span class="kw-2">&amp;</span><span class="ident">Signature</span>, <span class="ident">f</span>: <span class="ident">F</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">append_dict</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;mut</span> <span class="ident">IterAppend</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>)<span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">key_sig</span>: <span class="kw-2">&amp;</span><span class="ident">Signature</span>, <span class="ident">value_sig</span>: <span class="kw-2">&amp;</span><span class="ident">Signature</span>, <span class="ident">f</span>: <span class="ident">F</span>) {
         <span class="kw">let</span> <span class="ident">sig</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;{{{}{}}}&quot;</span>, <span class="ident">key_sig</span>, <span class="ident">value_sig</span>);
         <span class="self">self</span>.<span class="ident">append_container</span>(<span class="ident">Array</span>::<span class="op">&lt;</span><span class="ident">bool</span>,()<span class="op">&gt;</span><span class="ident">::ARG_TYPE</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">CString::new</span>(<span class="ident">sig</span>).<span class="ident">unwrap</span>()), <span class="ident">f</span>);
     }
@@ -760,12 +760,12 @@
     <span class="doccomment">/// Creates a new struct for iterating over the arguments of a message, starting with the first argument.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">m</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Message</span>) -&gt; <span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="ident">ffi_iter</span>();
-        <span class="kw">unsafe</span> { <span class="ident">ffi::dbus_message_iter_init</span>(<span class="ident">m</span>.<span class="ident">ptr</span>(), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">i</span>) };
+        <span class="kw">unsafe</span> { <span class="ident">ffi::dbus_message_iter_init</span>(<span class="ident">m</span>.<span class="ident">ptr</span>(), <span class="kw-2">&amp;mut</span> <span class="ident">i</span>) };
         <span class="ident">Iter</span>(<span class="ident">i</span>, <span class="ident">m</span>, <span class="number">0</span>)
     }
 
     <span class="doccomment">/// Returns the current argument, if T is the argument type. Otherwise returns None.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Get</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Get</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
         <span class="ident">T::get</span>(<span class="self">self</span>)
     }
 
@@ -777,7 +777,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// The rest are unlikely to change - Variants are `Variant&lt;Box&lt;dyn RefArg&gt;&gt;`, strings are `String`,</span>
     <span class="doccomment">/// paths are `Path&lt;&#39;static&gt;`, signatures are `Signature&lt;&#39;static&gt;`, Int32 are `i32s` and so on.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_refarg</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">RefArg</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_refarg</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">RefArg</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="kw">match</span> <span class="self">self</span>.<span class="ident">arg_type</span>() {
             <span class="ident">ArgType::Array</span> =&gt; <span class="ident">array_impl::get_array_refarg</span>(<span class="self">self</span>),
             <span class="ident">ArgType::Variant</span> =&gt; <span class="ident">Box::new</span>(<span class="ident">Variant::new_refarg</span>(<span class="self">self</span>).<span class="ident">unwrap</span>()),
@@ -801,13 +801,13 @@
     }
 
     <span class="doccomment">/// Returns the type signature for the current argument.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">signature</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">Signature</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">signature</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">Signature</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
-            <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">ffi::dbus_message_iter_get_signature</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="number">0</span>);
+            <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">ffi::dbus_message_iter_get_signature</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="number">0</span>);
             <span class="macro">assert!</span>(<span class="ident">c</span> <span class="op">!</span><span class="op">=</span> <span class="ident">ptr::null_mut</span>());
             <span class="kw">let</span> <span class="ident">cc</span> <span class="op">=</span> <span class="ident">CStr::from_ptr</span>(<span class="ident">c</span>);
             <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">Signature::new</span>(<span class="ident">std::str::from_utf8</span>(<span class="ident">cc</span>.<span class="ident">to_bytes</span>()).<span class="ident">unwrap</span>());
-            <span class="ident">ffi::dbus_free</span>(<span class="ident">c</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>);
+            <span class="ident">ffi::dbus_free</span>(<span class="ident">c</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">c_void</span>);
             <span class="ident">r</span>.<span class="ident">unwrap</span>()
         }
     }
@@ -817,15 +817,15 @@
     <span class="doccomment">/// Unlike Arg::arg_type, this requires access to self and is not a static method.</span>
     <span class="doccomment">/// You can match this against Arg::arg_type for different types to understand what type the current item is.</span>
     <span class="doccomment">/// In case you&#39;re past the last argument, this function will return 0.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">arg_type</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">ArgType</span> {
-        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi::dbus_message_iter_get_arg_type</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="number">0</span>) };
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">arg_type</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">ArgType</span> {
+        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi::dbus_message_iter_get_arg_type</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="number">0</span>) };
         <span class="ident">ArgType::from_i32</span>(<span class="ident">s</span> <span class="kw">as</span> <span class="ident">i32</span>).<span class="ident">unwrap</span>()
     }
 
     <span class="doccomment">/// Returns false if there are no more items.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="number">2</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-        <span class="kw">unsafe</span> { <span class="ident">ffi::dbus_message_iter_next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="number">0</span>) <span class="op">!</span><span class="op">=</span> <span class="number">0</span> }
+        <span class="kw">unsafe</span> { <span class="ident">ffi::dbus_message_iter_next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="number">0</span>) <span class="op">!</span><span class="op">=</span> <span class="number">0</span> }
     }
 
     <span class="doccomment">/// Wrapper around `get` and `next`. Calls `get`, and then `next` if `get` succeeded.</span>
@@ -855,7 +855,7 @@
     <span class="doccomment">///     })</span>
     <span class="doccomment">/// }</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Arg</span> <span class="op">+</span> <span class="ident">Get</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">TypeMismatchError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Arg</span> <span class="op">+</span> <span class="ident">Get</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">TypeMismatchError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get</span>().<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span>
              <span class="ident">TypeMismatchError</span> { <span class="ident">expected</span>: <span class="ident">T::ARG_TYPE</span>, <span class="ident">found</span>: <span class="self">self</span>.<span class="ident">arg_type</span>(), <span class="ident">position</span>: <span class="self">self</span>.<span class="number">2</span> })<span class="question-mark">?</span>;
         <span class="self">self</span>.<span class="ident">next</span>();
@@ -867,21 +867,21 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Primarily for internal use (the &quot;get&quot; function is more ergonomic), but could be</span>
     <span class="doccomment">/// useful for recursing into containers with unknown types.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">recurse</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">arg_type</span>: <span class="ident">ArgType</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">recurse</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">arg_type</span>: <span class="ident">ArgType</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">containers</span> <span class="op">=</span> [<span class="ident">ArgType::Array</span>, <span class="ident">ArgType::DictEntry</span>, <span class="ident">ArgType::Struct</span>, <span class="ident">ArgType::Variant</span>];
         <span class="kw">if</span> <span class="op">!</span><span class="ident">containers</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">t</span><span class="op">|</span> <span class="ident">t</span> <span class="op">==</span> <span class="ident">arg_type</span>) { <span class="kw">return</span> <span class="prelude-val">None</span>; }
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">subiter</span> <span class="op">=</span> <span class="ident">ffi_iter</span>();
         <span class="kw">unsafe</span> {
-            <span class="kw">if</span> <span class="ident">ffi::dbus_message_iter_get_arg_type</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="number">0</span>) <span class="op">!</span><span class="op">=</span> <span class="ident">arg_type</span> <span class="kw">as</span> <span class="ident">c_int</span> { <span class="kw">return</span> <span class="prelude-val">None</span> };
-            <span class="ident">ffi::dbus_message_iter_recurse</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">subiter</span>)
+            <span class="kw">if</span> <span class="ident">ffi::dbus_message_iter_get_arg_type</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="number">0</span>) <span class="op">!</span><span class="op">=</span> <span class="ident">arg_type</span> <span class="kw">as</span> <span class="ident">c_int</span> { <span class="kw">return</span> <span class="prelude-val">None</span> };
+            <span class="ident">ffi::dbus_message_iter_recurse</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;mut</span> <span class="ident">subiter</span>)
         }
         <span class="prelude-val">Some</span>(<span class="ident">Iter</span>(<span class="ident">subiter</span>, <span class="self">self</span>.<span class="number">1</span>, <span class="number">0</span>))
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">z</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">clone</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">f</span>.<span class="ident">debug_tuple</span>(<span class="string">&quot;Iter&quot;</span>);
         <span class="kw">loop</span> {
@@ -894,7 +894,7 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">RefArg</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>;
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_refarg</span>();
         <span class="kw">if</span> <span class="ident">r</span>.<span class="ident">is_some</span>() { <span class="self">self</span>.<span class="ident">next</span>(); }
         <span class="ident">r</span>
@@ -1015,7 +1015,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">TypeMismatchError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;D-Bus argument type mismatch at position {}: expected {}, found {}&quot;</span>,
             <span class="self">self</span>.<span class="ident">position</span>, <span class="self">self</span>.<span class="ident">expected</span>.<span class="ident">as_str</span>(),
             <span class="kw">if</span> <span class="self">self</span>.<span class="ident">expected</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">found</span> { <span class="string">&quot;same but still different somehow&quot;</span> } <span class="kw">else</span> { <span class="self">self</span>.<span class="ident">found</span>.<span class="ident">as_str</span>() }
@@ -1027,7 +1027,7 @@
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
 <span class="kw">fn</span> <span class="ident">test_compile</span>() {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">Message::new_signal</span>(<span class="string">&quot;/&quot;</span>, <span class="string">&quot;a.b&quot;</span>, <span class="string">&quot;C&quot;</span>).<span class="ident">unwrap</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">q</span> <span class="op">=</span> <span class="ident">IterAppend::new</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">msg</span>);
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">q</span> <span class="op">=</span> <span class="ident">IterAppend::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">msg</span>);
 
     <span class="ident">q</span>.<span class="ident">append</span>(<span class="number">5u8</span>);
     <span class="ident">q</span>.<span class="ident">append</span>(<span class="ident">Array::new</span>(<span class="kw-2">&amp;</span>[<span class="number">5u8</span>, <span class="number">6</span>, <span class="number">7</span>]));

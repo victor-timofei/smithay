@@ -1731,7 +1731,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">InetAddr</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="ident">InetAddr::V4</span>(<span class="kw">_</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{}:{}&quot;</span>, <span class="self">self</span>.<span class="ident">ip</span>(), <span class="self">self</span>.<span class="ident">port</span>()),
             <span class="ident">InetAddr::V6</span>(<span class="kw">_</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;[{}]:{}&quot;</span>, <span class="self">self</span>.<span class="ident">ip</span>(), <span class="self">self</span>.<span class="ident">port</span>()),
@@ -1783,7 +1783,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">IpAddr</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="ident">IpAddr::V4</span>(<span class="kw-2">ref</span> <span class="ident">v4</span>) =&gt; <span class="ident">v4</span>.<span class="ident">fmt</span>(<span class="ident">f</span>),
             <span class="ident">IpAddr::V6</span>(<span class="kw-2">ref</span> <span class="ident">v6</span>) =&gt; <span class="ident">v6</span>.<span class="ident">fmt</span>(<span class="ident">f</span>)
@@ -1834,7 +1834,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">Ipv4Addr</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="kw">let</span> <span class="ident">octets</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">octets</span>();
         <span class="macro">write!</span>(<span class="ident">fmt</span>, <span class="string">&quot;{}.{}.{}.{}&quot;</span>, <span class="ident">octets</span>[<span class="number">0</span>], <span class="ident">octets</span>[<span class="number">1</span>], <span class="ident">octets</span>[<span class="number">2</span>], <span class="ident">octets</span>[<span class="number">3</span>])
     }
@@ -1889,7 +1889,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">Ipv6Addr</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="self">self</span>.<span class="ident">to_std</span>().<span class="ident">fmt</span>(<span class="ident">fmt</span>)
     }
 }
@@ -1922,7 +1922,7 @@
                 }
 
                 <span class="ident">ptr::copy_nonoverlapping</span>(<span class="ident">bytes</span>.<span class="ident">as_ptr</span>(),
-                                         <span class="ident">ret</span>.<span class="ident">sun_path</span>.<span class="ident">as_mut_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u8</span>,
+                                         <span class="ident">ret</span>.<span class="ident">sun_path</span>.<span class="ident">as_mut_ptr</span>() <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">u8</span>,
                                          <span class="ident">bytes</span>.<span class="ident">len</span>());
 
                 <span class="prelude-val">Ok</span>(<span class="ident">UnixAddr</span>(<span class="ident">ret</span>, <span class="ident">bytes</span>.<span class="ident">len</span>()))
@@ -1951,7 +1951,7 @@
             <span class="comment">// Abstract addresses are represented by sun_path[0] ==</span>
             <span class="comment">// b&#39;\0&#39;, so copy starting one byte in.</span>
             <span class="ident">ptr::copy_nonoverlapping</span>(<span class="ident">path</span>.<span class="ident">as_ptr</span>(),
-                                     <span class="ident">ret</span>.<span class="ident">sun_path</span>.<span class="ident">as_mut_ptr</span>().<span class="ident">offset</span>(<span class="number">1</span>) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u8</span>,
+                                     <span class="ident">ret</span>.<span class="ident">sun_path</span>.<span class="ident">as_mut_ptr</span>().<span class="ident">offset</span>(<span class="number">1</span>) <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">u8</span>,
                                      <span class="ident">path</span>.<span class="ident">len</span>());
 
             <span class="prelude-val">Ok</span>(<span class="ident">UnixAddr</span>(<span class="ident">ret</span>, <span class="ident">path</span>.<span class="ident">len</span>() <span class="op">+</span> <span class="number">1</span>))
@@ -1959,7 +1959,7 @@
     }
 
     <span class="kw">fn</span> <span class="ident">sun_path</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] {
-        <span class="kw">unsafe</span> { <span class="ident">slice::from_raw_parts</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">sun_path</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">u8</span>, <span class="self">self</span>.<span class="number">1</span>) }
+        <span class="kw">unsafe</span> { <span class="ident">slice::from_raw_parts</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">sun_path</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">u8</span>, <span class="self">self</span>.<span class="number">1</span>) }
     }
 
     <span class="doccomment">/// If this address represents a filesystem path, return that path.</span>
@@ -1973,7 +1973,7 @@
             <span class="comment">// contain the pathname, and it need not be null-terminated.  So we</span>
             <span class="comment">// need to create a string that is the shorter of the</span>
             <span class="comment">// null-terminated length or the full length.</span>
-            <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>.<span class="ident">sun_path</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::c_char</span>;
+            <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>.<span class="ident">sun_path</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::c_char</span>;
             <span class="kw">let</span> <span class="ident">reallen</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">libc::strnlen</span>(<span class="ident">ptr</span>, <span class="ident">p</span>.<span class="ident">len</span>()) };
             <span class="prelude-val">Some</span>(<span class="ident">Path::new</span>(<span class="op">&lt;</span><span class="ident">OsStr</span> <span class="kw">as</span> <span class="ident">OsStrExt</span><span class="op">&gt;</span><span class="ident">::from_bytes</span>(<span class="kw-2">&amp;</span><span class="ident">p</span>[..<span class="ident">reallen</span>])))
         }
@@ -1995,7 +1995,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">UnixAddr</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="kw">if</span> <span class="self">self</span>.<span class="number">1</span> <span class="op">==</span> <span class="number">0</span> {
             <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;&lt;unbound UNIX socket&gt;&quot;</span>)
         } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">path</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">path</span>() {
@@ -2016,7 +2016,7 @@
 <span class="kw">impl</span> <span class="ident">Eq</span> <span class="kw">for</span> <span class="ident">UnixAddr</span> {}
 
 <span class="kw">impl</span> <span class="ident">Hash</span> <span class="kw">for</span> <span class="ident">UnixAddr</span> {
-    <span class="kw">fn</span> <span class="ident">hash</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">Hasher</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">H</span>) {
+    <span class="kw">fn</span> <span class="ident">hash</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">Hasher</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">H</span>) {
         ( <span class="self">self</span>.<span class="number">0</span>.<span class="ident">sun_family</span>, <span class="self">self</span>.<span class="ident">sun_path</span>() ).<span class="ident">hash</span>(<span class="ident">s</span>)
     }
 }
@@ -2116,25 +2116,25 @@
     <span class="doccomment">/// unsafe because it takes a raw pointer as argument.  The caller must</span>
     <span class="doccomment">/// ensure that the pointer is valid.</span>
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;fuchsia&quot;</span>))]</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_libc_sockaddr</span>(<span class="ident">addr</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SockAddr</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_libc_sockaddr</span>(<span class="ident">addr</span>: <span class="kw-2">*const</span> <span class="ident">libc::sockaddr</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SockAddr</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="ident">addr</span>.<span class="ident">is_null</span>() {
             <span class="prelude-val">None</span>
         } <span class="kw">else</span> {
             <span class="kw">match</span> <span class="ident">AddressFamily::from_i32</span>(<span class="ident">i32::from</span>((<span class="kw-2">*</span><span class="ident">addr</span>).<span class="ident">sa_family</span>)) {
                 <span class="prelude-val">Some</span>(<span class="ident">AddressFamily::Unix</span>) =&gt; <span class="prelude-val">None</span>,
                 <span class="prelude-val">Some</span>(<span class="ident">AddressFamily::Inet</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">SockAddr::Inet</span>(
-                    <span class="ident">InetAddr::V4</span>(<span class="kw-2">*</span>(<span class="ident">addr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr_in</span>)))),
+                    <span class="ident">InetAddr::V4</span>(<span class="kw-2">*</span>(<span class="ident">addr</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::sockaddr_in</span>)))),
                 <span class="prelude-val">Some</span>(<span class="ident">AddressFamily::Inet6</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">SockAddr::Inet</span>(
-                    <span class="ident">InetAddr::V6</span>(<span class="kw-2">*</span>(<span class="ident">addr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr_in6</span>)))),
+                    <span class="ident">InetAddr::V6</span>(<span class="kw-2">*</span>(<span class="ident">addr</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::sockaddr_in6</span>)))),
                 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;android&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>))]</span>
                 <span class="prelude-val">Some</span>(<span class="ident">AddressFamily::Netlink</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">SockAddr::Netlink</span>(
-                    <span class="ident">NetlinkAddr</span>(<span class="kw-2">*</span>(<span class="ident">addr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr_nl</span>)))),
+                    <span class="ident">NetlinkAddr</span>(<span class="kw-2">*</span>(<span class="ident">addr</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::sockaddr_nl</span>)))),
                 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;ios&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>))]</span>
                 <span class="prelude-val">Some</span>(<span class="ident">AddressFamily::System</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">SockAddr::SysControl</span>(
-                    <span class="ident">SysControlAddr</span>(<span class="kw-2">*</span>(<span class="ident">addr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr_ctl</span>)))),
+                    <span class="ident">SysControlAddr</span>(<span class="kw-2">*</span>(<span class="ident">addr</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::sockaddr_ctl</span>)))),
                 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;android&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>))]</span>
                 <span class="prelude-val">Some</span>(<span class="ident">AddressFamily::Packet</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">SockAddr::Link</span>(
-                    <span class="ident">LinkAddr</span>(<span class="kw-2">*</span>(<span class="ident">addr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr_ll</span>)))),
+                    <span class="ident">LinkAddr</span>(<span class="kw-2">*</span>(<span class="ident">addr</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::sockaddr_ll</span>)))),
                 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;dragonfly&quot;</span>,
                           <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;freebsd&quot;</span>,
                           <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;ios&quot;</span>,
@@ -2143,7 +2143,7 @@
                           <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;illumos&quot;</span>,
                           <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;openbsd&quot;</span>))]</span>
                 <span class="prelude-val">Some</span>(<span class="ident">AddressFamily::Link</span>) =&gt; {
-                    <span class="kw">let</span> <span class="ident">ether_addr</span> <span class="op">=</span> <span class="ident">LinkAddr</span>(<span class="kw-2">*</span>(<span class="ident">addr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr_dl</span>));
+                    <span class="kw">let</span> <span class="ident">ether_addr</span> <span class="op">=</span> <span class="ident">LinkAddr</span>(<span class="kw-2">*</span>(<span class="ident">addr</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::sockaddr_dl</span>));
                     <span class="kw">if</span> <span class="ident">ether_addr</span>.<span class="ident">is_empty</span>() {
                         <span class="prelude-val">None</span>
                     } <span class="kw">else</span> {
@@ -2152,7 +2152,7 @@
                 },
                 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;android&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>))]</span>
                 <span class="prelude-val">Some</span>(<span class="ident">AddressFamily::Vsock</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">SockAddr::Vsock</span>(
-                    <span class="ident">VsockAddr</span>(<span class="kw-2">*</span>(<span class="ident">addr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr_vm</span>)))),
+                    <span class="ident">VsockAddr</span>(<span class="kw-2">*</span>(<span class="ident">addr</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::sockaddr_vm</span>)))),
                 <span class="comment">// Other address families are currently not supported and simply yield a None</span>
                 <span class="comment">// entry instead of a proper conversion to a `SockAddr`.</span>
                 <span class="prelude-val">Some</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="prelude-val">None</span> =&gt; <span class="prelude-val">None</span>,
@@ -2172,21 +2172,21 @@
             <span class="ident">SockAddr::Inet</span>(<span class="ident">InetAddr::V4</span>(<span class="kw-2">ref</span> <span class="ident">addr</span>)) =&gt; (
                 <span class="comment">// This cast is always allowed in C</span>
                 <span class="kw">unsafe</span> {
-                    <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">addr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr_in</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr</span>)
+                    <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">addr</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::sockaddr_in</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::sockaddr</span>)
                 },
                 <span class="ident">mem::size_of_val</span>(<span class="ident">addr</span>) <span class="kw">as</span> <span class="ident">libc::socklen_t</span>
             ),
             <span class="ident">SockAddr::Inet</span>(<span class="ident">InetAddr::V6</span>(<span class="kw-2">ref</span> <span class="ident">addr</span>)) =&gt; (
                 <span class="comment">// This cast is always allowed in C</span>
                 <span class="kw">unsafe</span> {
-                    <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">addr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr_in6</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr</span>)
+                    <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">addr</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::sockaddr_in6</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::sockaddr</span>)
                 },
                 <span class="ident">mem::size_of_val</span>(<span class="ident">addr</span>) <span class="kw">as</span> <span class="ident">libc::socklen_t</span>
             ),
             <span class="ident">SockAddr::Unix</span>(<span class="ident">UnixAddr</span>(<span class="kw-2">ref</span> <span class="ident">addr</span>, <span class="ident">len</span>)) =&gt; (
                 <span class="comment">// This cast is always allowed in C</span>
                 <span class="kw">unsafe</span> {
-                    <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">addr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr_un</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr</span>)
+                    <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">addr</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::sockaddr_un</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::sockaddr</span>)
                 },
                 (<span class="ident">len</span> <span class="op">+</span> <span class="macro">offset_of!</span>(<span class="ident">libc::sockaddr_un</span>, <span class="ident">sun_path</span>)) <span class="kw">as</span> <span class="ident">libc::socklen_t</span>
             ),
@@ -2194,7 +2194,7 @@
             <span class="ident">SockAddr::Netlink</span>(<span class="ident">NetlinkAddr</span>(<span class="kw-2">ref</span> <span class="ident">sa</span>)) =&gt; (
                 <span class="comment">// This cast is always allowed in C</span>
                 <span class="kw">unsafe</span> {
-                    <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">sa</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr_nl</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr</span>)
+                    <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">sa</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::sockaddr_nl</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::sockaddr</span>)
                 },
                 <span class="ident">mem::size_of_val</span>(<span class="ident">sa</span>) <span class="kw">as</span> <span class="ident">libc::socklen_t</span>
             ),
@@ -2202,7 +2202,7 @@
             <span class="ident">SockAddr::Alg</span>(<span class="ident">AlgAddr</span>(<span class="kw-2">ref</span> <span class="ident">sa</span>)) =&gt; (
                 <span class="comment">// This cast is always allowed in C</span>
                 <span class="kw">unsafe</span> {
-                    <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">sa</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr_alg</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr</span>)
+                    <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">sa</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::sockaddr_alg</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::sockaddr</span>)
                 },
                 <span class="ident">mem::size_of_val</span>(<span class="ident">sa</span>) <span class="kw">as</span> <span class="ident">libc::socklen_t</span>
             ),
@@ -2210,7 +2210,7 @@
             <span class="ident">SockAddr::SysControl</span>(<span class="ident">SysControlAddr</span>(<span class="kw-2">ref</span> <span class="ident">sa</span>)) =&gt; (
                 <span class="comment">// This cast is always allowed in C</span>
                 <span class="kw">unsafe</span> {
-                    <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">sa</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr_ctl</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr</span>)
+                    <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">sa</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::sockaddr_ctl</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::sockaddr</span>)
                 },
                 <span class="ident">mem::size_of_val</span>(<span class="ident">sa</span>) <span class="kw">as</span> <span class="ident">libc::socklen_t</span>
 
@@ -2219,7 +2219,7 @@
             <span class="ident">SockAddr::Link</span>(<span class="ident">LinkAddr</span>(<span class="kw-2">ref</span> <span class="ident">addr</span>)) =&gt; (
                 <span class="comment">// This cast is always allowed in C</span>
                 <span class="kw">unsafe</span> {
-                    <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">addr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr_ll</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr</span>)
+                    <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">addr</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::sockaddr_ll</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::sockaddr</span>)
                 },
                 <span class="ident">mem::size_of_val</span>(<span class="ident">addr</span>) <span class="kw">as</span> <span class="ident">libc::socklen_t</span>
             ),
@@ -2233,7 +2233,7 @@
             <span class="ident">SockAddr::Link</span>(<span class="ident">LinkAddr</span>(<span class="kw-2">ref</span> <span class="ident">addr</span>)) =&gt; (
                 <span class="comment">// This cast is always allowed in C</span>
                 <span class="kw">unsafe</span> {
-                    <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">addr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr_dl</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr</span>)
+                    <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">addr</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::sockaddr_dl</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::sockaddr</span>)
                 },
                 <span class="ident">mem::size_of_val</span>(<span class="ident">addr</span>) <span class="kw">as</span> <span class="ident">libc::socklen_t</span>
             ),
@@ -2241,7 +2241,7 @@
             <span class="ident">SockAddr::Vsock</span>(<span class="ident">VsockAddr</span>(<span class="kw-2">ref</span> <span class="ident">sa</span>)) =&gt; (
                 <span class="comment">// This cast is always allowed in C</span>
                 <span class="kw">unsafe</span> {
-                    <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">sa</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr_vm</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr</span>)
+                    <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">sa</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::sockaddr_vm</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::sockaddr</span>)
                 },
                 <span class="ident">mem::size_of_val</span>(<span class="ident">sa</span>) <span class="kw">as</span> <span class="ident">libc::socklen_t</span>
             ),
@@ -2250,7 +2250,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">SockAddr</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="ident">SockAddr::Inet</span>(<span class="kw-2">ref</span> <span class="ident">inet</span>) =&gt; <span class="ident">inet</span>.<span class="ident">fmt</span>(<span class="ident">f</span>),
             <span class="ident">SockAddr::Unix</span>(<span class="kw-2">ref</span> <span class="ident">unix</span>) =&gt; <span class="ident">unix</span>.<span class="ident">fmt</span>(<span class="ident">f</span>),
@@ -2305,7 +2305,7 @@
     }
 
     <span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">NetlinkAddr</span> {
-        <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
+        <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
             <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;pid: {} groups: {}&quot;</span>, <span class="self">self</span>.<span class="ident">pid</span>(), <span class="self">self</span>.<span class="ident">groups</span>())
         }
     }
@@ -2333,7 +2333,7 @@
     <span class="kw">impl</span> <span class="ident">Eq</span> <span class="kw">for</span> <span class="ident">AlgAddr</span> {}
 
     <span class="kw">impl</span> <span class="ident">Hash</span> <span class="kw">for</span> <span class="ident">AlgAddr</span> {
-        <span class="kw">fn</span> <span class="ident">hash</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">Hasher</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">H</span>) {
+        <span class="kw">fn</span> <span class="ident">hash</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">Hasher</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">H</span>) {
             <span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>;
             (<span class="ident">inner</span>.<span class="ident">salg_family</span>, <span class="kw-2">&amp;</span><span class="ident">inner</span>.<span class="ident">salg_type</span>[..], <span class="ident">inner</span>.<span class="ident">salg_feat</span>, <span class="ident">inner</span>.<span class="ident">salg_mask</span>, <span class="kw-2">&amp;</span><span class="ident">inner</span>.<span class="ident">salg_name</span>[..]).<span class="ident">hash</span>(<span class="ident">s</span>);
         }
@@ -2351,16 +2351,16 @@
 
 
         <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">alg_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">CStr</span> {
-            <span class="kw">unsafe</span> { <span class="ident">CStr::from_ptr</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">salg_type</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>) }
+            <span class="kw">unsafe</span> { <span class="ident">CStr::from_ptr</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">salg_type</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">c_char</span>) }
         }
 
         <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">alg_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">CStr</span> {
-            <span class="kw">unsafe</span> { <span class="ident">CStr::from_ptr</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">salg_name</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>) }
+            <span class="kw">unsafe</span> { <span class="ident">CStr::from_ptr</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">salg_name</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">c_char</span>) }
         }
     }
 
     <span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">AlgAddr</span> {
-        <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
+        <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
             <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;type: {} alg: {}&quot;</span>,
                    <span class="self">self</span>.<span class="ident">alg_name</span>().<span class="ident">to_string_lossy</span>(),
                    <span class="self">self</span>.<span class="ident">alg_type</span>().<span class="ident">to_string_lossy</span>())
@@ -2368,7 +2368,7 @@
     }
 
     <span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">AlgAddr</span> {
-        <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
+        <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
             <span class="ident">fmt::Display::fmt</span>(<span class="self">self</span>, <span class="ident">f</span>)
         }
     }
@@ -2424,7 +2424,7 @@
             <span class="ident">ctl_name</span>[..<span class="ident">name</span>.<span class="ident">len</span>()].<span class="ident">clone_from_slice</span>(<span class="ident">name</span>.<span class="ident">as_bytes</span>());
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">info</span> <span class="op">=</span> <span class="ident">ctl_ioc_info</span> { <span class="ident">ctl_id</span>: <span class="number">0</span>, <span class="ident">ctl_name</span> };
 
-            <span class="kw">unsafe</span> { <span class="ident">ctl_info</span>(<span class="ident">sockfd</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">info</span>)<span class="question-mark">?</span>; }
+            <span class="kw">unsafe</span> { <span class="ident">ctl_info</span>(<span class="ident">sockfd</span>, <span class="kw-2">&amp;mut</span> <span class="ident">info</span>)<span class="question-mark">?</span>; }
 
             <span class="prelude-val">Ok</span>(<span class="ident">SysControlAddr::new</span>(<span class="ident">info</span>.<span class="ident">ctl_id</span>, <span class="ident">unit</span>))
         }
@@ -2439,7 +2439,7 @@
     }
 
     <span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">SysControlAddr</span> {
-        <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
+        <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
             <span class="ident">fmt::Debug::fmt</span>(<span class="self">self</span>, <span class="ident">f</span>)
         }
     }
@@ -2500,7 +2500,7 @@
     }
 
     <span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">LinkAddr</span> {
-        <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
+        <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
             <span class="kw">let</span> <span class="ident">addr</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">addr</span>();
             <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}&quot;</span>,
                 <span class="ident">addr</span>[<span class="number">0</span>],
@@ -2594,7 +2594,7 @@
     }
 
     <span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">LinkAddr</span> {
-        <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
+        <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
             <span class="kw">let</span> <span class="ident">addr</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">addr</span>();
             <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}&quot;</span>,
                 <span class="ident">addr</span>[<span class="number">0</span>],
@@ -2628,7 +2628,7 @@
     <span class="kw">impl</span> <span class="ident">Eq</span> <span class="kw">for</span> <span class="ident">VsockAddr</span> {}
 
     <span class="kw">impl</span> <span class="ident">Hash</span> <span class="kw">for</span> <span class="ident">VsockAddr</span> {
-        <span class="kw">fn</span> <span class="ident">hash</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">Hasher</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">H</span>) {
+        <span class="kw">fn</span> <span class="ident">hash</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">Hasher</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">H</span>) {
             <span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>;
             (<span class="ident">inner</span>.<span class="ident">svm_family</span>, <span class="ident">inner</span>.<span class="ident">svm_cid</span>, <span class="ident">inner</span>.<span class="ident">svm_port</span>).<span class="ident">hash</span>(<span class="ident">s</span>);
         }
@@ -2660,13 +2660,13 @@
     }
 
     <span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">VsockAddr</span> {
-        <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
+        <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
             <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;cid: {} port: {}&quot;</span>, <span class="self">self</span>.<span class="ident">cid</span>(), <span class="self">self</span>.<span class="ident">port</span>())
         }
     }
 
     <span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">VsockAddr</span> {
-        <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
+        <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
             <span class="ident">fmt::Display::fmt</span>(<span class="self">self</span>, <span class="ident">f</span>)
         }
     }
@@ -2694,7 +2694,7 @@
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_macos_loopback_datalink_addr</span>() {
         <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> [<span class="number">20i8</span>, <span class="number">18</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">24</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">108</span>, <span class="number">111</span>, <span class="number">48</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>];
-        <span class="kw">let</span> <span class="ident">sa</span> <span class="op">=</span> <span class="ident">bytes</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr</span>;
+        <span class="kw">let</span> <span class="ident">sa</span> <span class="op">=</span> <span class="ident">bytes</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::sockaddr</span>;
         <span class="kw">let</span> <span class="ident">_sock_addr</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">SockAddr::from_libc_sockaddr</span>(<span class="ident">sa</span>) };
         <span class="macro">assert!</span>(<span class="ident">_sock_addr</span>.<span class="ident">is_none</span>());
     }
@@ -2709,7 +2709,7 @@
     <span class="kw">fn</span> <span class="ident">test_macos_tap_datalink_addr</span>() {
         <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> [<span class="number">20i8</span>, <span class="number">18</span>, <span class="number">7</span>, <span class="number">0</span>, <span class="number">6</span>, <span class="number">3</span>, <span class="number">6</span>, <span class="number">0</span>, <span class="number">101</span>, <span class="number">110</span>, <span class="number">48</span>, <span class="number">24</span>, <span class="number">101</span>, <span class="op">-</span><span class="number">112</span>, <span class="op">-</span><span class="number">35</span>, <span class="number">76</span>, <span class="op">-</span><span class="number">80</span>];
         <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">bytes</span>.<span class="ident">as_ptr</span>();
-        <span class="kw">let</span> <span class="ident">sa</span> <span class="op">=</span> <span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr</span>;
+        <span class="kw">let</span> <span class="ident">sa</span> <span class="op">=</span> <span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::sockaddr</span>;
         <span class="kw">let</span> <span class="ident">_sock_addr</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">SockAddr::from_libc_sockaddr</span>(<span class="ident">sa</span>) };
 
         <span class="macro">assert!</span>(<span class="ident">_sock_addr</span>.<span class="ident">is_some</span>());
@@ -2731,7 +2731,7 @@
     <span class="kw">fn</span> <span class="ident">test_illumos_tap_datalink_addr</span>() {
         <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> [<span class="number">25u8</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">6</span>, <span class="number">0</span>, <span class="number">6</span>, <span class="number">0</span>, <span class="number">24</span>, <span class="number">101</span>, <span class="number">144</span>, <span class="number">221</span>, <span class="number">76</span>, <span class="number">176</span>];
         <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">bytes</span>.<span class="ident">as_ptr</span>();
-        <span class="kw">let</span> <span class="ident">sa</span> <span class="op">=</span> <span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::sockaddr</span>;
+        <span class="kw">let</span> <span class="ident">sa</span> <span class="op">=</span> <span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::sockaddr</span>;
         <span class="kw">let</span> <span class="ident">_sock_addr</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">SockAddr::from_libc_sockaddr</span>(<span class="ident">sa</span>) };
 
         <span class="macro">assert!</span>(<span class="ident">_sock_addr</span>.<span class="ident">is_some</span>());

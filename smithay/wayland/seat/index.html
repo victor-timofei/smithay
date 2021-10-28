@@ -6,7 +6,7 @@ and the associated input Wayland objects.</p>
 
 <span class="comment">// insert the seat:</span>
 <span class="kw">let</span> (<span class="ident">seat</span>, <span class="ident">seat_global</span>) <span class="op">=</span> <span class="ident">Seat::new</span>(
-    <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">display</span>,             <span class="comment">// the display</span>
+    <span class="kw-2">&amp;mut</span> <span class="ident">display</span>,             <span class="comment">// the display</span>
     <span class="string">&quot;seat-0&quot;</span>.<span class="ident">into</span>(),          <span class="comment">// the name of the seat, will be advertized to clients</span>
     <span class="prelude-val">None</span>                      <span class="comment">// insert a logger here</span>
 );</code></pre></div>

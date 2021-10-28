@@ -238,7 +238,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">PointerState</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">buttons</span>.<span class="ident">mask</span>.<span class="ident">is_null</span>() {
             <span class="kw">unsafe</span> {
                 <span class="comment">// This is why you need to read the docs carefully...</span>
@@ -257,14 +257,14 @@
     ) -&gt; <span class="ident">Flusher</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">event_mask</span> <span class="op">=</span> <span class="ident">ffi::XIEventMask</span> {
             <span class="ident">deviceid</span>: <span class="ident">device_id</span>,
-            <span class="ident">mask</span>: <span class="kw-2">&amp;</span><span class="ident">mask</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_uchar</span>,
+            <span class="ident">mask</span>: <span class="kw-2">&amp;</span><span class="ident">mask</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">c_uchar</span>,
             <span class="ident">mask_len</span>: <span class="ident">mem::size_of_val</span>(<span class="kw-2">&amp;</span><span class="ident">mask</span>) <span class="kw">as</span> <span class="ident">c_int</span>,
         };
         <span class="kw">unsafe</span> {
             (<span class="self">self</span>.<span class="ident">xinput2</span>.<span class="ident">XISelectEvents</span>)(
                 <span class="self">self</span>.<span class="ident">display</span>,
                 <span class="ident">window</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">event_mask</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::XIEventMask</span>,
+                <span class="kw-2">&amp;mut</span> <span class="ident">event_mask</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">ffi::XIEventMask</span>,
                 <span class="number">1</span>, <span class="comment">// number of masks to read from pointer above</span>
             );
         }
@@ -301,15 +301,15 @@
                 <span class="self">self</span>.<span class="ident">display</span>,
                 <span class="ident">device_id</span>,
                 <span class="ident">window</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">root</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">child</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">root_x</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">root_y</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">win_x</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">win_y</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">buttons</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">modifiers</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">group</span>,
+                <span class="kw-2">&amp;mut</span> <span class="ident">root</span>,
+                <span class="kw-2">&amp;mut</span> <span class="ident">child</span>,
+                <span class="kw-2">&amp;mut</span> <span class="ident">root_x</span>,
+                <span class="kw-2">&amp;mut</span> <span class="ident">root_y</span>,
+                <span class="kw-2">&amp;mut</span> <span class="ident">win_x</span>,
+                <span class="kw-2">&amp;mut</span> <span class="ident">win_y</span>,
+                <span class="kw-2">&amp;mut</span> <span class="ident">buttons</span>,
+                <span class="kw-2">&amp;mut</span> <span class="ident">modifiers</span>,
+                <span class="kw-2">&amp;mut</span> <span class="ident">group</span>,
             ) <span class="op">==</span> <span class="ident">ffi::True</span>;
 
             <span class="self">self</span>.<span class="ident">check_errors</span>()<span class="question-mark">?</span>;
@@ -333,8 +333,8 @@
     <span class="kw">fn</span> <span class="ident">lookup_utf8_inner</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">ic</span>: <span class="ident">ffi::XIC</span>,
-        <span class="ident">key_event</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ffi::XKeyEvent</span>,
-        <span class="ident">buffer</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u8</span>,
+        <span class="ident">key_event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ffi::XKeyEvent</span>,
+        <span class="ident">buffer</span>: <span class="kw-2">*mut</span> <span class="ident">u8</span>,
         <span class="ident">size</span>: <span class="ident">usize</span>,
     ) -&gt; (<span class="ident">ffi::KeySym</span>, <span class="ident">ffi::Status</span>, <span class="ident">c_int</span>) {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">keysym</span>: <span class="ident">ffi::KeySym</span> <span class="op">=</span> <span class="number">0</span>;
@@ -343,16 +343,16 @@
             (<span class="self">self</span>.<span class="ident">xlib</span>.<span class="ident">Xutf8LookupString</span>)(
                 <span class="ident">ic</span>,
                 <span class="ident">key_event</span>,
-                <span class="ident">buffer</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>,
+                <span class="ident">buffer</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">c_char</span>,
                 <span class="ident">size</span> <span class="kw">as</span> <span class="ident">c_int</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">keysym</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">status</span>,
+                <span class="kw-2">&amp;mut</span> <span class="ident">keysym</span>,
+                <span class="kw-2">&amp;mut</span> <span class="ident">status</span>,
             )
         };
         (<span class="ident">keysym</span>, <span class="ident">status</span>, <span class="ident">count</span>)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">lookup_utf8</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">ic</span>: <span class="ident">ffi::XIC</span>, <span class="ident">key_event</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ffi::XKeyEvent</span>) -&gt; <span class="ident">String</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">lookup_utf8</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">ic</span>: <span class="ident">ffi::XIC</span>, <span class="ident">key_event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ffi::XKeyEvent</span>) -&gt; <span class="ident">String</span> {
         <span class="comment">// `assume_init` is safe here because the array consists of `MaybeUninit` values,</span>
         <span class="comment">// which do not require initialization.</span>
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffer</span>: [<span class="ident">MaybeUninit</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>; <span class="ident">TEXT_BUFFER_SIZE</span>] <span class="op">=</span>
@@ -361,7 +361,7 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">vec</span>;
 
         <span class="kw">let</span> (<span class="kw">_</span>, <span class="ident">status</span>, <span class="ident">count</span>) <span class="op">=</span>
-            <span class="self">self</span>.<span class="ident">lookup_utf8_inner</span>(<span class="ident">ic</span>, <span class="ident">key_event</span>, <span class="ident">buffer</span>.<span class="ident">as_mut_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u8</span>, <span class="ident">buffer</span>.<span class="ident">len</span>());
+            <span class="self">self</span>.<span class="ident">lookup_utf8_inner</span>(<span class="ident">ic</span>, <span class="ident">key_event</span>, <span class="ident">buffer</span>.<span class="ident">as_mut_ptr</span>() <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">u8</span>, <span class="ident">buffer</span>.<span class="ident">len</span>());
 
         <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">status</span> <span class="op">==</span> <span class="ident">ffi::XBufferOverflow</span> {
             <span class="ident">vec</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">count</span> <span class="kw">as</span> <span class="ident">usize</span>);
@@ -372,7 +372,7 @@
             <span class="kw">unsafe</span> { <span class="ident">vec</span>.<span class="ident">set_len</span>(<span class="ident">count</span> <span class="kw">as</span> <span class="ident">usize</span>) };
             <span class="kw-2">&amp;</span><span class="ident">vec</span>[..<span class="ident">count</span> <span class="kw">as</span> <span class="ident">usize</span>]
         } <span class="kw">else</span> {
-            <span class="kw">unsafe</span> { <span class="ident">slice::from_raw_parts</span>(<span class="ident">buffer</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">u8</span>, <span class="ident">count</span> <span class="kw">as</span> <span class="ident">usize</span>) }
+            <span class="kw">unsafe</span> { <span class="ident">slice::from_raw_parts</span>(<span class="ident">buffer</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">u8</span>, <span class="ident">count</span> <span class="kw">as</span> <span class="ident">usize</span>) }
         };
 
         <span class="ident">str::from_utf8</span>(<span class="ident">bytes</span>).<span class="ident">unwrap_or</span>(<span class="string">&quot;&quot;</span>).<span class="ident">to_string</span>()

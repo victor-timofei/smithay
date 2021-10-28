@@ -82,9 +82,9 @@ correctly.</p>
 <span class="ident">input</span>.<span class="ident">udev_assign_seat</span>(<span class="string">&quot;seat0&quot;</span>).<span class="ident">unwrap</span>();
 
 <span class="kw">let</span> <span class="ident">pollfd</span> <span class="op">=</span> <span class="ident">PollFd::new</span>(<span class="ident">input</span>.<span class="ident">as_raw_fd</span>(), <span class="ident">PollFlags::POLLIN</span>);
-<span class="kw">while</span> <span class="ident">poll</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">pollfd</span>], <span class="op">-</span><span class="number">1</span>).<span class="ident">is_ok</span>() {
+<span class="kw">while</span> <span class="ident">poll</span>(<span class="kw-2">&amp;mut</span> [<span class="ident">pollfd</span>], <span class="op">-</span><span class="number">1</span>).<span class="ident">is_ok</span>() {
     <span class="ident">input</span>.<span class="ident">dispatch</span>().<span class="ident">unwrap</span>();
-    <span class="kw">for</span> <span class="ident">event</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">input</span> {
+    <span class="kw">for</span> <span class="ident">event</span> <span class="kw">in</span> <span class="kw-2">&amp;mut</span> <span class="ident">input</span> {
         <span class="comment">// do some processing...</span>
     }
 }</code></pre></div>

@@ -8,22 +8,22 @@ approximate the basic ordering loop of <a href="../event_loop/struct.EventLoop.h
 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">start_cause</span> <span class="op">=</span> <span class="ident">StartCause::Init</span>;
 
 <span class="kw">while</span> <span class="ident">control_flow</span> <span class="op">!</span><span class="op">=</span> <span class="ident">ControlFlow::Exit</span> {
-    <span class="ident">event_handler</span>(<span class="ident">NewEvents</span>(<span class="ident">start_cause</span>), ..., <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">control_flow</span>);
+    <span class="ident">event_handler</span>(<span class="ident">NewEvents</span>(<span class="ident">start_cause</span>), ..., <span class="kw-2">&amp;mut</span> <span class="ident">control_flow</span>);
 
     <span class="kw">for</span> <span class="ident">e</span> <span class="kw">in</span> (<span class="ident">window</span> <span class="ident">events</span>, <span class="ident">user</span> <span class="ident">events</span>, <span class="ident">device</span> <span class="ident">events</span>) {
-        <span class="ident">event_handler</span>(<span class="ident">e</span>, ..., <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">control_flow</span>);
+        <span class="ident">event_handler</span>(<span class="ident">e</span>, ..., <span class="kw-2">&amp;mut</span> <span class="ident">control_flow</span>);
     }
-    <span class="ident">event_handler</span>(<span class="ident">MainEventsCleared</span>, ..., <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">control_flow</span>);
+    <span class="ident">event_handler</span>(<span class="ident">MainEventsCleared</span>, ..., <span class="kw-2">&amp;mut</span> <span class="ident">control_flow</span>);
 
     <span class="kw">for</span> <span class="ident">w</span> <span class="kw">in</span> (<span class="ident">redraw</span> <span class="ident">windows</span>) {
-        <span class="ident">event_handler</span>(<span class="ident">RedrawRequested</span>(<span class="ident">w</span>), ..., <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">control_flow</span>);
+        <span class="ident">event_handler</span>(<span class="ident">RedrawRequested</span>(<span class="ident">w</span>), ..., <span class="kw-2">&amp;mut</span> <span class="ident">control_flow</span>);
     }
-    <span class="ident">event_handler</span>(<span class="ident">RedrawEventsCleared</span>, ..., <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">control_flow</span>);
+    <span class="ident">event_handler</span>(<span class="ident">RedrawEventsCleared</span>, ..., <span class="kw-2">&amp;mut</span> <span class="ident">control_flow</span>);
 
     <span class="ident">start_cause</span> <span class="op">=</span> <span class="ident">wait_if_necessary</span>(<span class="ident">control_flow</span>);
 }
 
-<span class="ident">event_handler</span>(<span class="ident">LoopDestroyed</span>, ..., <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">control_flow</span>);</code></pre></div>
+<span class="ident">event_handler</span>(<span class="ident">LoopDestroyed</span>, ..., <span class="kw-2">&amp;mut</span> <span class="ident">control_flow</span>);</code></pre></div>
 <p>This leaves out timing details like <code>ControlFlow::WaitUntil</code> but hopefully
 describes what happens in what order.</p>
 </div></details><h2 id="structs" class="section-header"><a href="#structs">Structs</a></h2>

@@ -367,11 +367,11 @@
 <span class="doccomment">/// A structure that provides access to sysfs/kernel devices.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Device</span> {
     <span class="ident">udev</span>: <span class="ident">Udev</span>,
-    <span class="ident">device</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::udev_device</span>,
+    <span class="ident">device</span>: <span class="kw-2">*mut</span> <span class="ident">ffi::udev_device</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">std::fmt::Debug</span> <span class="kw">for</span> <span class="ident">Device</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Device&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;initialized&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">is_initialized</span>())
             .<span class="ident">field</span>(<span class="string">&quot;device_major_minor_number&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">devnum</span>())
@@ -399,7 +399,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">Device</span> {
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="kw">unsafe</span> {
             <span class="ident">ffi::udev_device_unref</span>(<span class="self">self</span>.<span class="ident">device</span>);
         }
@@ -451,7 +451,7 @@
     <span class="doccomment">/// corresponding `Udev` instance from which the device was created.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This guarantees that the `Udev` will live longer than the corresponding `Device`</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">udev</span>: <span class="ident">Udev</span>, <span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::udev_device</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">udev</span>: <span class="ident">Udev</span>, <span class="ident">ptr</span>: <span class="kw-2">*mut</span> <span class="ident">ffi::udev_device</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> { <span class="ident">udev</span>, <span class="ident">device</span>: <span class="ident">ptr</span> }
     }
 
@@ -635,7 +635,7 @@
 
     <span class="doccomment">/// Sets the value of a device attribute.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_attribute_value</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">OsStr</span><span class="op">&gt;</span>, <span class="ident">U</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">OsStr</span><span class="op">&gt;</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">attribute</span>: <span class="ident">T</span>,
         <span class="ident">value</span>: <span class="ident">U</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
@@ -646,7 +646,7 @@
             <span class="ident">ffi::udev_device_set_sysattr_value</span>(
                 <span class="self">self</span>.<span class="ident">device</span>,
                 <span class="ident">attribute</span>.<span class="ident">as_ptr</span>(),
-                <span class="ident">value</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>,
+                <span class="ident">value</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">c_char</span>,
             )
         })
     }

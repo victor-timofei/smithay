@@ -584,7 +584,7 @@ A link to the ICCCM Section 4: https://tronche.com/gui/x/icccm/sec-4.html
 }
 
 <span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">WindowInner</span> {
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">connection</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">connection</span>.<span class="ident">upgrade</span>() {
             <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">connection</span>.<span class="ident">destroy_window</span>(<span class="self">self</span>.<span class="ident">id</span>);
         }

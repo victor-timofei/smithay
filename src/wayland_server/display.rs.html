@@ -276,7 +276,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">std::fmt::Debug</span> <span class="kw">for</span> <span class="ident">Display</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;Display { ... }&quot;</span>)
     }
 }
@@ -305,7 +305,7 @@
     <span class="doccomment">/// The version specified is the **highest supported version**, you must</span>
     <span class="doccomment">/// be able to handle clients that choose to instantiate this global with</span>
     <span class="doccomment">/// a lower version number.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_global</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">E</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">version</span>: <span class="ident">u32</span>, <span class="ident">filter</span>: <span class="ident">Filter</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span>) -&gt; <span class="ident">Global</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_global</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">E</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">version</span>: <span class="ident">u32</span>, <span class="ident">filter</span>: <span class="ident">Filter</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span>) -&gt; <span class="ident">Global</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">I</span>: <span class="ident">Interface</span> <span class="op">+</span> <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Resource</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Resource</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">E</span>: <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Main</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">u32</span>)<span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
@@ -339,7 +339,7 @@
     <span class="doccomment">/// be able to handle clients that choose to instantiate this global with</span>
     <span class="doccomment">/// a lower version number.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_global_with_filter</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">E</span>, <span class="ident">F</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">version</span>: <span class="ident">u32</span>,
         <span class="ident">filter</span>: <span class="ident">Filter</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span>,
         <span class="kw-2">mut</span> <span class="ident">client_filter</span>: <span class="ident">F</span>,
@@ -371,7 +371,7 @@
     <span class="doccomment">/// The provided `data` will be mutably accessible from all the callbacks that may be called</span>
     <span class="doccomment">/// during this (destructors notably) via the [`DispatchData`](struct.DispatchData.html) mechanism.</span>
     <span class="doccomment">/// If you don&#39;t need global data, you can just provide a `&amp;mut ()` there.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">flush_clients</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">std::any::Any</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">T</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">flush_clients</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">std::any::Any</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">data</span>: <span class="kw-2">&amp;mut</span> <span class="ident">T</span>) {
         <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::DispatchData::wrap</span>(<span class="ident">data</span>);
         <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">flush_clients</span>(<span class="ident">data</span>)
     }
@@ -395,9 +395,9 @@
     <span class="doccomment">/// monitoring the file descriptor retrieved by the `get_poll_fd()` method, and only calling this method</span>
     <span class="doccomment">/// when messages are available, with a timeout of `0`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">std::any::Any</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">timeout</span>: <span class="ident">std::time::Duration</span>,
-        <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">T</span>,
+        <span class="ident">data</span>: <span class="kw-2">&amp;mut</span> <span class="ident">T</span>,
     ) -&gt; <span class="ident">IoResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::DispatchData::wrap</span>(<span class="ident">data</span>);
         <span class="kw">let</span> <span class="ident">ms</span> <span class="op">=</span> <span class="ident">timeout</span>.<span class="ident">as_millis</span>();
@@ -431,7 +431,7 @@
     <span class="doccomment">/// Errors if `name` contains an interior null, or if `XDG_RUNTIME_DIR` is not set,</span>
     <span class="doccomment">/// or if specified could not be bound (either it is already used or the compositor</span>
     <span class="doccomment">/// does not have the rights to create it).</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_socket</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>) -&gt; <span class="ident">IoResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_socket</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>) -&gt; <span class="ident">IoResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">S</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">OsStr</span><span class="op">&gt;</span>,
     {
@@ -447,7 +447,7 @@
     <span class="doccomment">/// `0 &lt;= $d &lt; 32` and the first available one is used.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Errors if `XDG_RUNTIME_DIR` is not set, or all 32 names are already in use.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_socket_auto</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">IoResult</span><span class="op">&lt;</span><span class="ident">OsString</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_socket_auto</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">IoResult</span><span class="op">&lt;</span><span class="ident">OsString</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">add_socket_auto</span>()
     }
 
@@ -459,7 +459,7 @@
     <span class="doccomment">/// The fd must be properly set to CLOEXEC and bound to a socket file</span>
     <span class="doccomment">/// with both bind() and listen() already called. An error is returned</span>
     <span class="doccomment">/// otherwise.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_socket_from</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">socket</span>: <span class="ident">T</span>) -&gt; <span class="ident">IoResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_socket_from</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">socket</span>: <span class="ident">T</span>) -&gt; <span class="ident">IoResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">T</span>: <span class="ident">IntoRawFd</span>,
     {
@@ -479,7 +479,7 @@
     <span class="doccomment">/// The fd must be properly set to CLOEXEC and bound to a socket file</span>
     <span class="doccomment">/// with both bind() and listen() already called. An error is returned</span>
     <span class="doccomment">/// otherwise.</span>
-    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">add_socket_fd</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">fd</span>: <span class="ident">RawFd</span>) -&gt; <span class="ident">IoResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">add_socket_fd</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">fd</span>: <span class="ident">RawFd</span>) -&gt; <span class="ident">IoResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">add_socket_fd</span>(<span class="ident">fd</span>)
     }
 
@@ -488,7 +488,7 @@
     <span class="doccomment">/// # Safety</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The provided file descriptor must be associated to a valid client connection.</span>
-    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">create_client</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">std::any::Any</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">fd</span>: <span class="ident">RawFd</span>, <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">T</span>) -&gt; <span class="ident">Client</span> {
+    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">create_client</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">std::any::Any</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">fd</span>: <span class="ident">RawFd</span>, <span class="ident">data</span>: <span class="kw-2">&amp;mut</span> <span class="ident">T</span>) -&gt; <span class="ident">Client</span> {
         <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::DispatchData::wrap</span>(<span class="ident">data</span>);
         <span class="ident">Client::make</span>(<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">create_client</span>(<span class="ident">fd</span>, <span class="ident">data</span>))
     }
@@ -497,7 +497,7 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_system_lib&quot;</span>)]</span>
 <span class="kw">impl</span> <span class="ident">Display</span> {
     <span class="doccomment">/// Retrieve a pointer from the C lib to this `wl_display`</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">c_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wl_display</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">c_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">wl_display</span> {
         <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">ptr</span>()
     }
 }

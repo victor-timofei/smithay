@@ -3,7 +3,7 @@
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">smithay::wayland::xdg_activation</span>::{<span class="ident">init_xdg_activation_global</span>, <span class="ident">XdgActivationEvent</span>};
 
 <span class="kw">let</span> (<span class="ident">state</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">init_xdg_activation_global</span>(
-    <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">display</span>,
+    <span class="kw-2">&amp;mut</span> <span class="ident">display</span>,
     <span class="comment">// your implementation</span>
     <span class="op">|</span><span class="ident">state</span>, <span class="ident">req</span>, <span class="ident">dispatch_data</span><span class="op">|</span> {
         <span class="kw">match</span> <span class="ident">req</span>{

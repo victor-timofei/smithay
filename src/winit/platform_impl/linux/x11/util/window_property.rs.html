@@ -190,7 +190,7 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">actual_format</span> <span class="op">=</span> <span class="number">0</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">quantity_returned</span> <span class="op">=</span> <span class="number">0</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bytes_after</span> <span class="op">=</span> <span class="number">0</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_uchar</span> <span class="op">=</span> <span class="ident">ptr::null_mut</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span>: <span class="kw-2">*mut</span> <span class="ident">c_uchar</span> <span class="op">=</span> <span class="ident">ptr::null_mut</span>();
 
         <span class="kw">while</span> <span class="op">!</span><span class="ident">done</span> {
             <span class="kw">unsafe</span> {
@@ -204,13 +204,13 @@
                     <span class="ident">PROPERTY_BUFFER_SIZE</span>,
                     <span class="ident">ffi::False</span>,
                     <span class="ident">property_type</span>,
-                    <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">actual_type</span>,
-                    <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">actual_format</span>,
+                    <span class="kw-2">&amp;mut</span> <span class="ident">actual_type</span>,
+                    <span class="kw-2">&amp;mut</span> <span class="ident">actual_format</span>,
                     <span class="comment">// This is the quantity of items we retrieved in our format, NOT of 32-bit chunks!</span>
-                    <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">quantity_returned</span>,
+                    <span class="kw-2">&amp;mut</span> <span class="ident">quantity_returned</span>,
                     <span class="comment">// ...and this is a quantity of bytes. So, this function deals in 3 different units.</span>
-                    <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">bytes_after</span>,
-                    <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">buf</span>,
+                    <span class="kw-2">&amp;mut</span> <span class="ident">bytes_after</span>,
+                    <span class="kw-2">&amp;mut</span> <span class="ident">buf</span>,
                 );
 
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">check_errors</span>() {
@@ -229,7 +229,7 @@
                 <span class="kw">if</span> <span class="op">!</span><span class="ident">buf</span>.<span class="ident">is_null</span>() {
                     <span class="ident">offset</span> <span class="op">+</span><span class="op">=</span> <span class="ident">PROPERTY_BUFFER_SIZE</span>;
                     <span class="kw">let</span> <span class="ident">new_data</span> <span class="op">=</span>
-                        <span class="ident">std::slice::from_raw_parts</span>(<span class="ident">buf</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">T</span>, <span class="ident">quantity_returned</span> <span class="kw">as</span> <span class="ident">usize</span>);
+                        <span class="ident">std::slice::from_raw_parts</span>(<span class="ident">buf</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">T</span>, <span class="ident">quantity_returned</span> <span class="kw">as</span> <span class="ident">usize</span>);
                     <span class="comment">/*println!(
                         &quot;XGetWindowProperty prop:{:?} fmt:{:02} len:{:02} off:{:02} out:{:02}, buf:{:?}&quot;,
                         property,
@@ -270,7 +270,7 @@
                 <span class="ident">property_type</span>,
                 <span class="ident">T::FORMAT</span> <span class="kw">as</span> <span class="ident">c_int</span>,
                 <span class="ident">mode</span> <span class="kw">as</span> <span class="ident">c_int</span>,
-                <span class="ident">new_value</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_uchar</span>,
+                <span class="ident">new_value</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">c_uchar</span>,
                 <span class="ident">new_value</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">c_int</span>,
             );
         }

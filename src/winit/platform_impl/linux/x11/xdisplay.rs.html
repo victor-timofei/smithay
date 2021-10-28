@@ -183,7 +183,7 @@
     <span class="kw">pub</span> <span class="ident">xinput2</span>: <span class="ident">ffi::XInput2</span>,
     <span class="kw">pub</span> <span class="ident">xlib_xcb</span>: <span class="ident">ffi::Xlib_xcb</span>,
     <span class="kw">pub</span> <span class="ident">xrender</span>: <span class="ident">ffi::Xrender</span>,
-    <span class="kw">pub</span> <span class="ident">display</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::Display</span>,
+    <span class="kw">pub</span> <span class="ident">display</span>: <span class="kw-2">*mut</span> <span class="ident">ffi::Display</span>,
     <span class="kw">pub</span> <span class="ident">x11_fd</span>: <span class="ident">c_int</span>,
     <span class="kw">pub</span> <span class="ident">latest_error</span>: <span class="ident">Mutex</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">XError</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">cursor_cache</span>: <span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CursorIcon</span><span class="op">&gt;</span>, <span class="ident">ffi::Cursor</span><span class="op">&gt;</span><span class="op">&gt;</span>,
@@ -193,7 +193,7 @@
 <span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Sync</span> <span class="kw">for</span> <span class="ident">XConnection</span> {}
 
 <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">XErrorHandler</span> <span class="op">=</span>
-    <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span>(<span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::Display</span>, <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::XErrorEvent</span>) -&gt; <span class="ident">libc::c_int</span><span class="op">&gt;</span>;
+    <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span>(<span class="kw-2">*mut</span> <span class="ident">ffi::Display</span>, <span class="kw-2">*mut</span> <span class="ident">ffi::XErrorEvent</span>) -&gt; <span class="ident">libc::c_int</span><span class="op">&gt;</span>;
 
 <span class="kw">impl</span> <span class="ident">XConnection</span> {
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">error_handler</span>: <span class="ident">XErrorHandler</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">XConnection</span>, <span class="ident">XNotSupported</span><span class="op">&gt;</span> {
@@ -255,14 +255,14 @@
 }
 
 <span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">XConnection</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="self">self</span>.<span class="ident">display</span>.<span class="ident">fmt</span>(<span class="ident">f</span>)
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">XConnection</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="kw">unsafe</span> { (<span class="self">self</span>.<span class="ident">xlib</span>.<span class="ident">XCloseDisplay</span>)(<span class="self">self</span>.<span class="ident">display</span>) };
     }
 }
@@ -279,7 +279,7 @@
 <span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">XError</span> {}
 
 <span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">XError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">formatter</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">fmt::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">formatter</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">fmt::Error</span><span class="op">&gt;</span> {
         <span class="macro">write!</span>(
             <span class="ident">formatter</span>,
             <span class="string">&quot;X error: {} (code: {}, request code: {}, minor code: {})&quot;</span>,
@@ -324,7 +324,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">XNotSupported</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">formatter</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">fmt::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">formatter</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">fmt::Error</span><span class="op">&gt;</span> {
         <span class="ident">formatter</span>.<span class="ident">write_str</span>(<span class="self">self</span>.<span class="ident">description</span>())
     }
 }

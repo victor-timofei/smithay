@@ -6,11 +6,11 @@ details.</p>
 SIGSEGVs.</p>
 
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">const</span> <span class="ident">ONE_K</span>: <span class="ident">size_t</span> <span class="op">=</span> <span class="number">1024</span>;
-<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">slice</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="kw">unsafe</span> {
+<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">slice</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="kw">unsafe</span> {
     <span class="kw">let</span> <span class="ident">mem</span> <span class="op">=</span> <span class="ident">mmap</span>(<span class="ident">ptr::null_mut</span>(), <span class="ident">ONE_K</span>, <span class="ident">ProtFlags::PROT_NONE</span>,
                    <span class="ident">MapFlags::MAP_ANON</span> <span class="op">|</span> <span class="ident">MapFlags::MAP_PRIVATE</span>, <span class="op">-</span><span class="number">1</span>, <span class="number">0</span>).<span class="ident">unwrap</span>();
     <span class="ident">mprotect</span>(<span class="ident">mem</span>, <span class="ident">ONE_K</span>, <span class="ident">ProtFlags::PROT_READ</span> <span class="op">|</span> <span class="ident">ProtFlags::PROT_WRITE</span>).<span class="ident">unwrap</span>();
-    <span class="ident">std::slice::from_raw_parts_mut</span>(<span class="ident">mem</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u8</span>, <span class="ident">ONE_K</span>)
+    <span class="ident">std::slice::from_raw_parts_mut</span>(<span class="ident">mem</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">u8</span>, <span class="ident">ONE_K</span>)
 };
 <span class="macro">assert_eq!</span>(<span class="ident">slice</span>[<span class="number">0</span>], <span class="number">0x00</span>);
 <span class="ident">slice</span>[<span class="number">0</span>] <span class="op">=</span> <span class="number">0xFF</span>;

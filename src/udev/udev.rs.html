@@ -92,7 +92,7 @@
 <span class="doccomment">/// `udef_unref` respectively.  This Rust wrapper takes advantage of that ref counting to implement</span>
 <span class="doccomment">/// `Clone` and `Drop`, so callers need not worry about any C-specific resource management.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Udev</span> {
-    <span class="ident">udev</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::udev</span>,
+    <span class="ident">udev</span>: <span class="kw-2">*mut</span> <span class="ident">ffi::udev</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Udev</span> {
@@ -102,7 +102,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">Udev</span> {
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="kw">unsafe</span> { <span class="ident">ffi::udev_unref</span>(<span class="self">self</span>.<span class="ident">udev</span>) };
     }
 }

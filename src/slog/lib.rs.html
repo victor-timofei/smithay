@@ -5029,7 +5029,7 @@
 <span class="kw">where</span>
     <span class="ident">D</span>: <span class="ident">SendSyncUnwindSafeDrain</span><span class="op">&lt;</span><span class="prelude-val">Ok</span> <span class="op">=</span> (), <span class="prelude-val">Err</span> <span class="op">=</span> <span class="ident">Never</span><span class="op">&gt;</span>,
 {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="macro">try!</span>(<span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;Logger{:?}&quot;</span>, <span class="self">self</span>.<span class="ident">list</span>));
         <span class="prelude-val">Ok</span>(())
     }
@@ -5753,7 +5753,7 @@
     <span class="ident">D</span>: <span class="ident">Drain</span>,
     <span class="ident">D::Err</span>: <span class="ident">fmt::Debug</span>,
 {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">result::Result</span><span class="op">&lt;</span>(), <span class="ident">fmt::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">result::Result</span><span class="op">&lt;</span>(), <span class="ident">fmt::Error</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="ident">MutexDrainError::Mutex</span> =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;MutexDrainError::Mutex&quot;</span>),
             <span class="ident">MutexDrainError::Drain</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) =&gt; <span class="ident">e</span>.<span class="ident">fmt</span>(<span class="ident">f</span>),
@@ -5797,7 +5797,7 @@
 <span class="kw">where</span>
     <span class="ident">D::Err</span>: <span class="ident">fmt::Display</span>,
 {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">result::Result</span><span class="op">&lt;</span>(), <span class="ident">fmt::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">result::Result</span><span class="op">&lt;</span>(), <span class="ident">fmt::Error</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="ident">MutexDrainError::Mutex</span> =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;MutexError&quot;</span>),
             <span class="ident">MutexDrainError::Drain</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">e</span>),
@@ -6012,13 +6012,13 @@
 }
 
 <span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">Level</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.<span class="ident">as_short_str</span>())
     }
 }
 
 <span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">FilterLevel</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.<span class="ident">as_short_str</span>())
     }
 }
@@ -6318,7 +6318,7 @@
     };
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>:<span class="ident">ty</span> =&gt; <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>) =&gt; {
         <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">missing_docs</span>)]</span>
-        <span class="kw">fn</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">key</span> : <span class="ident">Key</span>, <span class="ident">val</span> : <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>)
+        <span class="kw">fn</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">key</span> : <span class="ident">Key</span>, <span class="ident">val</span> : <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>)
             -&gt; <span class="prelude-ty">Result</span> {
                 <span class="self">self</span>.<span class="ident">emit_arguments</span>(<span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="macro">format_args!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">val</span>))
             }
@@ -6329,7 +6329,7 @@
 <span class="macro">macro_rules!</span> <span class="ident">impl_default_as_fmt</span>{
     ($(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">m</span>:<span class="ident">meta</span>]</span>)<span class="op">*</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>:<span class="ident">ty</span> =&gt; <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>) =&gt; {
         $(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">m</span>]</span>)<span class="op">*</span>
-        <span class="kw">fn</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">key</span> : <span class="ident">Key</span>, <span class="ident">val</span> : <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>)
+        <span class="kw">fn</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">key</span> : <span class="ident">Key</span>, <span class="ident">val</span> : <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>)
             -&gt; <span class="prelude-ty">Result</span> {
                 <span class="self">self</span>.<span class="ident">emit_arguments</span>(<span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="macro">format_args!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">val</span>))
             }
@@ -6345,12 +6345,12 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;nested-values&quot;</span>)]</span>
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">Serializer</span> <span class="op">+</span> <span class="lifetime">&#39;a</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> <span class="ident">Serializer</span> <span class="kw">for</span> <span class="ident">SerializerForward</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">emit_arguments</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="ident">Key</span>, <span class="ident">val</span>: <span class="kw-2">&amp;</span><span class="ident">fmt::Arguments</span>) -&gt; <span class="prelude-ty">Result</span> {
+    <span class="kw">fn</span> <span class="ident">emit_arguments</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="ident">Key</span>, <span class="ident">val</span>: <span class="kw-2">&amp;</span><span class="ident">fmt::Arguments</span>) -&gt; <span class="prelude-ty">Result</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">emit_arguments</span>(<span class="ident">key</span>, <span class="ident">val</span>)
     }
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;nested-values&quot;</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">emit_serde</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">_key</span>: <span class="ident">Key</span>, <span class="ident">_value</span>: <span class="kw-2">&amp;</span><span class="ident">SerdeValue</span>) -&gt; <span class="prelude-ty">Result</span> {
+    <span class="kw">fn</span> <span class="ident">emit_serde</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">_key</span>: <span class="ident">Key</span>, <span class="ident">_value</span>: <span class="kw-2">&amp;</span><span class="ident">SerdeValue</span>) -&gt; <span class="prelude-ty">Result</span> {
         <span class="macro">panic!</span>();
     }
 }
@@ -6432,12 +6432,12 @@
     }
 
     <span class="doccomment">/// Emit `()`</span>
-    <span class="kw">fn</span> <span class="ident">emit_unit</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="ident">Key</span>) -&gt; <span class="prelude-ty">Result</span> {
+    <span class="kw">fn</span> <span class="ident">emit_unit</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="ident">Key</span>) -&gt; <span class="prelude-ty">Result</span> {
         <span class="self">self</span>.<span class="ident">emit_arguments</span>(<span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="macro">format_args!</span>(<span class="string">&quot;()&quot;</span>))
     }
 
     <span class="doccomment">/// Emit `None`</span>
-    <span class="kw">fn</span> <span class="ident">emit_none</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="ident">Key</span>) -&gt; <span class="prelude-ty">Result</span> {
+    <span class="kw">fn</span> <span class="ident">emit_none</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="ident">Key</span>) -&gt; <span class="prelude-ty">Result</span> {
         <span class="self">self</span>.<span class="ident">emit_arguments</span>(<span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="macro">format_args!</span>(<span class="string">&quot;&quot;</span>))
     }
 
@@ -6446,7 +6446,7 @@
     <span class="doccomment">/// This is the only method that has to implemented, but for performance and</span>
     <span class="doccomment">/// to retain type information most serious `Serializer`s will want to</span>
     <span class="doccomment">/// implement all other methods as well.</span>
-    <span class="kw">fn</span> <span class="ident">emit_arguments</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="ident">Key</span>, <span class="ident">val</span>: <span class="kw-2">&amp;</span><span class="ident">fmt::Arguments</span>) -&gt; <span class="prelude-ty">Result</span>;
+    <span class="kw">fn</span> <span class="ident">emit_arguments</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="ident">Key</span>, <span class="ident">val</span>: <span class="kw-2">&amp;</span><span class="ident">fmt::Arguments</span>) -&gt; <span class="prelude-ty">Result</span>;
 
     <span class="doccomment">/// Emit a value implementing</span>
     <span class="doccomment">/// [`serde::Serialize`](https://docs.rs/serde/1/serde/trait.Serialize.html)</span>
@@ -6458,8 +6458,8 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// The value needs to implement `SerdeValue`.</span>
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;nested-values&quot;</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">emit_serde</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="ident">Key</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">SerdeValue</span>) -&gt; <span class="prelude-ty">Result</span> {
-        <span class="ident">value</span>.<span class="ident">serialize_fallback</span>(<span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">SerializerForward</span>(<span class="self">self</span>))
+    <span class="kw">fn</span> <span class="ident">emit_serde</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="ident">Key</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">SerdeValue</span>) -&gt; <span class="prelude-ty">Result</span> {
+        <span class="ident">value</span>.<span class="ident">serialize_fallback</span>(<span class="ident">key</span>, <span class="kw-2">&amp;mut</span> <span class="ident">SerializerForward</span>(<span class="self">self</span>))
     }
 
     <span class="doccomment">/// Emit a type implementing `std::error::Error`</span>
@@ -6475,7 +6475,7 @@
     <span class="doccomment">/// This method is only available in `std` because the `Error` trait is not available</span>
     <span class="doccomment">/// without `std`.</span>
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">emit_error</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="ident">Key</span>, <span class="ident">error</span>: <span class="kw-2">&amp;</span>(<span class="ident">std::error::Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)) -&gt; <span class="prelude-ty">Result</span> {
+    <span class="kw">fn</span> <span class="ident">emit_error</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="ident">Key</span>, <span class="ident">error</span>: <span class="kw-2">&amp;</span>(<span class="ident">std::error::Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)) -&gt; <span class="prelude-ty">Result</span> {
         <span class="self">self</span>.<span class="ident">emit_arguments</span>(<span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="macro">format_args!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">ErrorAsFmt</span>(<span class="ident">error</span>)))
     }
 }
@@ -6491,7 +6491,7 @@
 <span class="kw">where</span>
     <span class="ident">F</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">FnMut</span>(<span class="ident">Key</span>, <span class="ident">fmt::Arguments</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span>,
 {
-    <span class="kw">fn</span> <span class="ident">emit_arguments</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="ident">Key</span>, <span class="ident">val</span>: <span class="kw-2">&amp;</span><span class="ident">fmt::Arguments</span>) -&gt; <span class="prelude-ty">Result</span> {
+    <span class="kw">fn</span> <span class="ident">emit_arguments</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="ident">Key</span>, <span class="ident">val</span>: <span class="kw-2">&amp;</span><span class="ident">fmt::Arguments</span>) -&gt; <span class="prelude-ty">Result</span> {
         (<span class="self">self</span>.<span class="number">0</span>)(<span class="ident">key</span>, <span class="kw-2">*</span><span class="ident">val</span>)
     }
 }
@@ -6505,7 +6505,7 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>)]</span>
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">ErrorAsFmt</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="comment">// For backwards compatibility</span>
         <span class="comment">// This is fine because we don&#39;t need downcasting</span>
         <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
@@ -6539,7 +6539,7 @@
     <span class="kw">fn</span> <span class="ident">serialize_fallback</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_key</span>: <span class="ident">Key</span>,
-        <span class="ident">_serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">_serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="prelude-val">Err</span>(<span class="ident">Error::Other</span>)
     }
@@ -6588,7 +6588,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>,
         <span class="ident">key</span>: <span class="ident">Key</span>,
-        <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span>;
 }
 
@@ -6600,7 +6600,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>,
         <span class="ident">key</span>: <span class="ident">Key</span>,
-        <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span> {
         (<span class="kw-2">*</span><span class="self">self</span>).<span class="ident">serialize</span>(<span class="ident">record</span>, <span class="ident">key</span>, <span class="ident">serializer</span>)
     }
@@ -6612,7 +6612,7 @@
             <span class="kw">fn</span> <span class="ident">serialize</span>(<span class="kw-2">&amp;</span><span class="self">self</span>,
                          <span class="ident">_record</span> : <span class="kw-2">&amp;</span><span class="ident">Record</span>,
                          <span class="ident">key</span> : <span class="ident">Key</span>,
-                         <span class="ident">serializer</span> : <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>
+                         <span class="ident">serializer</span> : <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>
                          ) -&gt; <span class="prelude-ty">Result</span> {
                 <span class="ident">serializer</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>(<span class="ident">key</span>, <span class="kw-2">*</span><span class="self">self</span>)
             }
@@ -6644,7 +6644,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>,
         <span class="ident">key</span>: <span class="ident">Key</span>,
-        <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span> {
         <span class="ident">serializer</span>.<span class="ident">emit_unit</span>(<span class="ident">key</span>)
     }
@@ -6655,7 +6655,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>,
         <span class="ident">key</span>: <span class="ident">Key</span>,
-        <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span> {
         <span class="ident">serializer</span>.<span class="ident">emit_str</span>(<span class="ident">key</span>, <span class="self">self</span>)
     }
@@ -6666,7 +6666,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>,
         <span class="ident">key</span>: <span class="ident">Key</span>,
-        <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span> {
         <span class="ident">serializer</span>.<span class="ident">emit_arguments</span>(<span class="ident">key</span>, <span class="self">self</span>)
     }
@@ -6677,7 +6677,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>,
         <span class="ident">key</span>: <span class="ident">Key</span>,
-        <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span> {
         <span class="ident">serializer</span>.<span class="ident">emit_str</span>(<span class="ident">key</span>, <span class="self">self</span>.<span class="ident">as_str</span>())
     }
@@ -6688,7 +6688,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>,
         <span class="ident">key</span>: <span class="ident">Key</span>,
-        <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">s</span>) =&gt; <span class="ident">s</span>.<span class="ident">serialize</span>(<span class="ident">record</span>, <span class="ident">key</span>, <span class="ident">serializer</span>),
@@ -6705,7 +6705,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>,
         <span class="ident">key</span>: <span class="ident">Key</span>,
-        <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span> {
         (<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">serialize</span>(<span class="ident">record</span>, <span class="ident">key</span>, <span class="ident">serializer</span>)
     }
@@ -6718,7 +6718,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>,
         <span class="ident">key</span>: <span class="ident">Key</span>,
-        <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span> {
         (<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">serialize</span>(<span class="ident">record</span>, <span class="ident">key</span>, <span class="ident">serializer</span>)
     }
@@ -6732,7 +6732,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>,
         <span class="ident">key</span>: <span class="ident">Key</span>,
-        <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span> {
         (<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">serialize</span>(<span class="ident">record</span>, <span class="ident">key</span>, <span class="ident">serializer</span>)
     }
@@ -6746,7 +6746,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>,
         <span class="ident">key</span>: <span class="ident">Key</span>,
-        <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">serialize</span>(<span class="ident">record</span>, <span class="ident">key</span>, <span class="ident">serializer</span>)
     }
@@ -6758,7 +6758,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>,
         <span class="ident">key</span>: <span class="ident">Key</span>,
-        <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span> {
         <span class="ident">serializer</span>.<span class="ident">emit_arguments</span>(<span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="macro">format_args!</span>(<span class="string">&quot;{}&quot;</span>, <span class="kw-2">*</span><span class="self">self</span>))
     }
@@ -6770,7 +6770,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>,
         <span class="ident">key</span>: <span class="ident">Key</span>,
-        <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span> {
         <span class="ident">serializer</span>.<span class="ident">emit_arguments</span>(<span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="macro">format_args!</span>(<span class="string">&quot;{}&quot;</span>, <span class="self">self</span>))
     }
@@ -6782,7 +6782,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>,
         <span class="ident">key</span>: <span class="ident">Key</span>,
-        <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span> {
         <span class="ident">serializer</span>.<span class="ident">emit_error</span>(<span class="ident">key</span>, <span class="self">self</span>)
     }
@@ -6801,7 +6801,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>,
         <span class="ident">key</span>: <span class="ident">Key</span>,
-        <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span> {
         (<span class="self">self</span>.<span class="number">0</span>)(<span class="ident">record</span>).<span class="ident">serialize</span>(<span class="ident">record</span>, <span class="ident">key</span>, <span class="ident">serializer</span>)
     }
@@ -6839,7 +6839,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">PushFnValueSerializer</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">done</span> {
             <span class="comment">// unfortunately this gives no change to return serialization errors</span>
             <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">serializer</span>.<span class="ident">emit_unit</span>(<span class="self">self</span>.<span class="ident">key</span>.<span class="ident">clone</span>());
@@ -6896,7 +6896,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>,
         <span class="ident">key</span>: <span class="ident">Key</span>,
-        <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span> {
         <span class="kw">let</span> <span class="ident">ser</span> <span class="op">=</span> <span class="ident">PushFnValueSerializer</span> {
             <span class="ident">record</span>: <span class="ident">record</span>,
@@ -6928,7 +6928,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>,
         <span class="ident">key</span>: <span class="ident">Key</span>,
-        <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span> {
         <span class="ident">serializer</span>.<span class="ident">emit_error</span>(<span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>)
     }
@@ -6992,7 +6992,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// `KV` should call respective `Serializer` methods</span>
     <span class="doccomment">/// for each key-value pair it contains.</span>
-    <span class="kw">fn</span> <span class="ident">serialize</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>, <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>)
+    <span class="kw">fn</span> <span class="ident">serialize</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>, <span class="ident">serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>)
         -&gt; <span class="prelude-ty">Result</span>;
 }
 
@@ -7003,7 +7003,7 @@
     <span class="kw">fn</span> <span class="ident">serialize</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>,
-        <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span> {
         (<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">serialize</span>(<span class="ident">record</span>, <span class="ident">serializer</span>)
     }
@@ -7063,7 +7063,7 @@
     <span class="kw">fn</span> <span class="ident">serialize</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>,
-        <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span> {
         <span class="self">self</span>.<span class="number">1</span>.<span class="ident">serialize</span>(<span class="ident">record</span>, <span class="self">self</span>.<span class="number">0</span>.<span class="ident">clone</span>(), <span class="ident">serializer</span>)
     }
@@ -7073,7 +7073,7 @@
     <span class="kw">fn</span> <span class="ident">serialize</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>,
-        <span class="ident">_serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">_serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span> {
         <span class="prelude-val">Ok</span>(())
     }
@@ -7083,7 +7083,7 @@
     <span class="kw">fn</span> <span class="ident">serialize</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>,
-        <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span> {
         <span class="macro">try!</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">serialize</span>(<span class="ident">record</span>, <span class="ident">serializer</span>));
         <span class="self">self</span>.<span class="number">1</span>.<span class="ident">serialize</span>(<span class="ident">record</span>, <span class="ident">serializer</span>)
@@ -7097,7 +7097,7 @@
     <span class="kw">fn</span> <span class="ident">serialize</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>,
-        <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span> {
         (<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">serialize</span>(<span class="ident">record</span>, <span class="ident">serializer</span>)
     }
@@ -7110,7 +7110,7 @@
     <span class="kw">fn</span> <span class="ident">serialize</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>,
-        <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span> {
         (<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">serialize</span>(<span class="ident">record</span>, <span class="ident">serializer</span>)
     }
@@ -7123,7 +7123,7 @@
     <span class="kw">fn</span> <span class="ident">serialize</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>,
-        <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">serialize</span>(<span class="ident">record</span>, <span class="ident">serializer</span>)
     }
@@ -7133,7 +7133,7 @@
     <span class="kw">fn</span> <span class="ident">serialize</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>,
-        <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">serialize</span>(<span class="ident">record</span>, <span class="ident">serializer</span>)
     }
@@ -7207,7 +7207,7 @@
     <span class="kw">fn</span> <span class="ident">serialize</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>,
-        <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span> {
         <span class="macro">try!</span>(<span class="self">self</span>.<span class="ident">kv</span>.<span class="ident">serialize</span>(<span class="ident">record</span>, <span class="ident">serializer</span>));
         <span class="macro">try!</span>(<span class="self">self</span>.<span class="ident">next_node</span>.<span class="ident">serialize</span>(<span class="ident">record</span>, <span class="ident">serializer</span>));
@@ -7220,7 +7220,7 @@
     <span class="kw">fn</span> <span class="ident">serialize</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>,
-        <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span> {
         <span class="macro">try!</span>(<span class="self">self</span>.<span class="ident">next_node</span>.<span class="ident">serialize</span>(<span class="ident">record</span>, <span class="ident">serializer</span>));
         <span class="macro">try!</span>(<span class="self">self</span>.<span class="ident">node</span>.<span class="ident">serialize</span>(<span class="ident">record</span>, <span class="ident">serializer</span>));
@@ -7233,7 +7233,7 @@
     <span class="kw">fn</span> <span class="ident">serialize</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">record</span>: <span class="kw-2">&amp;</span><span class="ident">Record</span>,
-        <span class="ident">serializer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Serializer</span>,
+        <span class="ident">serializer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Serializer</span>,
     ) -&gt; <span class="prelude-ty">Result</span> {
         <span class="macro">try!</span>(<span class="self">self</span>.<span class="ident">node</span>.<span class="ident">serialize</span>(<span class="ident">record</span>, <span class="ident">serializer</span>));
 
@@ -7242,7 +7242,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">OwnedKVList</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="macro">try!</span>(<span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;(&quot;</span>));
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="number">0</span>;
 
@@ -7266,7 +7266,7 @@
                             <span class="kw-2">&amp;</span><span class="macro">format_args!</span>(<span class="string">&quot;&quot;</span>),
                             <span class="ident">BorrowedKV</span>(<span class="kw-2">&amp;</span><span class="ident">STATIC_TERMINATOR_UNIT</span>)
                         ),
-                        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">as_str_ser</span>
+                        <span class="kw-2">&amp;mut</span> <span class="ident">as_str_ser</span>
                     )
                     .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">fmt::Error</span>)
             );
@@ -7394,7 +7394,7 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>)]</span>
 <span class="kw">impl</span> <span class="ident">core::fmt::Display</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">core::fmt::Formatter</span>) -&gt; <span class="ident">std::fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;mut</span> <span class="ident">core::fmt::Formatter</span>) -&gt; <span class="ident">std::fmt::Result</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="ident">Error::Io</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) =&gt; <span class="ident">e</span>.<span class="ident">fmt</span>(<span class="ident">fmt</span>),
             <span class="ident">Error::Fmt</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) =&gt; <span class="ident">e</span>.<span class="ident">fmt</span>(<span class="ident">fmt</span>),

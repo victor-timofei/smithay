@@ -79,7 +79,7 @@ loop. For example, here’s a runnable program that exits after five seconds:</p
     <span class="ident">event_loop</span>
         .<span class="ident">run</span>(
             <span class="ident">std::time::Duration::from_millis</span>(<span class="number">20</span>),
-            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">shared_data</span>,
+            <span class="kw-2">&amp;mut</span> <span class="ident">shared_data</span>,
             <span class="op">|</span><span class="ident">_shared_data</span><span class="op">|</span> {
                 <span class="comment">// Finally, this is where you can insert the processing you need</span>
                 <span class="comment">// to do do between each waiting event eg. drawing logic if</span>

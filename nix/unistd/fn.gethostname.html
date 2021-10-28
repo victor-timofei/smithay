@@ -12,7 +12,7 @@ buffer is null terminated in this case.</p>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">nix::unistd</span>;
 
 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> [<span class="number">0u8</span>; <span class="number">64</span>];
-<span class="kw">let</span> <span class="ident">hostname_cstr</span> <span class="op">=</span> <span class="ident">unistd::gethostname</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">buf</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed getting hostname&quot;</span>);
+<span class="kw">let</span> <span class="ident">hostname_cstr</span> <span class="op">=</span> <span class="ident">unistd::gethostname</span>(<span class="kw-2">&amp;mut</span> <span class="ident">buf</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed getting hostname&quot;</span>);
 <span class="kw">let</span> <span class="ident">hostname</span> <span class="op">=</span> <span class="ident">hostname_cstr</span>.<span class="ident">to_str</span>().<span class="ident">expect</span>(<span class="string">&quot;Hostname wasn&#39;t valid UTF-8&quot;</span>);
 <span class="macro">println!</span>(<span class="string">&quot;Hostname: {}&quot;</span>, <span class="ident">hostname</span>);</code></pre></div>
 </div></details></section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="nix" data-search-index-js="../../search-index.js" data-search-js="../../search.js"></div>

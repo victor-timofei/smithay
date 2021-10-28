@@ -139,7 +139,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">TabletHandle</span> {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">new_instance</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">seat</span>: <span class="kw-2">&amp;</span><span class="ident">ZwpTabletSeatV2</span>, <span class="ident">tablet</span>: <span class="kw-2">&amp;</span><span class="ident">TabletDescriptor</span>) {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">new_instance</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">seat</span>: <span class="kw-2">&amp;</span><span class="ident">ZwpTabletSeatV2</span>, <span class="ident">tablet</span>: <span class="kw-2">&amp;</span><span class="ident">TabletDescriptor</span>) {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">client</span>) <span class="op">=</span> <span class="ident">seat</span>.<span class="ident">as_ref</span>().<span class="ident">client</span>() {
             <span class="kw">let</span> <span class="ident">wl_tablet</span> <span class="op">=</span> <span class="ident">client</span>
                 .<span class="ident">create_resource</span>::<span class="op">&lt;</span><span class="ident">ZwpTabletV2</span><span class="op">&gt;</span>(<span class="ident">seat</span>.<span class="ident">as_ref</span>().<span class="ident">version</span>())

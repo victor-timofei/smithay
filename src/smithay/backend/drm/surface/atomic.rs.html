@@ -1288,8 +1288,8 @@
         <span class="kw">if</span> <span class="ident">info</span>.<span class="ident">modes</span>().<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">pending</span>.<span class="ident">mode</span>) {
             <span class="comment">// check if config is supported</span>
             <span class="kw">let</span> <span class="ident">req</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">build_request</span>(
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">conn</span>].<span class="ident">iter</span>(),
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [].<span class="ident">iter</span>(),
+                <span class="kw-2">&amp;mut</span> [<span class="ident">conn</span>].<span class="ident">iter</span>(),
+                <span class="kw-2">&amp;mut</span> [].<span class="ident">iter</span>(),
                 <span class="self">self</span>.<span class="ident">plane</span>,
                 <span class="kw-2">&amp;</span>[],
                 <span class="prelude-val">Some</span>([(<span class="self">self</span>.<span class="ident">create_test_buffer</span>(<span class="ident">pending</span>.<span class="ident">mode</span>.<span class="ident">size</span>())<span class="question-mark">?</span>, <span class="self">self</span>.<span class="ident">plane</span>)].<span class="ident">iter</span>()),
@@ -1326,8 +1326,8 @@
 
         <span class="comment">// check if new config is supported (should be)</span>
         <span class="kw">let</span> <span class="ident">req</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">build_request</span>(
-            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [].<span class="ident">iter</span>(),
-            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">conn</span>].<span class="ident">iter</span>(),
+            <span class="kw-2">&amp;mut</span> [].<span class="ident">iter</span>(),
+            <span class="kw-2">&amp;mut</span> [<span class="ident">conn</span>].<span class="ident">iter</span>(),
             <span class="self">self</span>.<span class="ident">plane</span>,
             <span class="kw-2">&amp;</span>[],
             <span class="prelude-val">Some</span>([(<span class="self">self</span>.<span class="ident">create_test_buffer</span>(<span class="ident">pending</span>.<span class="ident">mode</span>.<span class="ident">size</span>())<span class="question-mark">?</span>, <span class="self">self</span>.<span class="ident">plane</span>)].<span class="ident">iter</span>()),
@@ -1365,8 +1365,8 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">removed</span> <span class="op">=</span> <span class="ident">current</span>.<span class="ident">connectors</span>.<span class="ident">difference</span>(<span class="kw-2">&amp;</span><span class="ident">conns</span>);
 
         <span class="kw">let</span> <span class="ident">req</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">build_request</span>(
-            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">added</span>,
-            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">removed</span>,
+            <span class="kw-2">&amp;mut</span> <span class="ident">added</span>,
+            <span class="kw-2">&amp;mut</span> <span class="ident">removed</span>,
             <span class="self">self</span>.<span class="ident">plane</span>,
             <span class="kw-2">&amp;</span>[],
             <span class="prelude-val">Some</span>([(<span class="self">self</span>.<span class="ident">create_test_buffer</span>(<span class="ident">pending</span>.<span class="ident">mode</span>.<span class="ident">size</span>())<span class="question-mark">?</span>, <span class="self">self</span>.<span class="ident">plane</span>)].<span class="ident">iter</span>()),
@@ -1405,8 +1405,8 @@
 
         <span class="kw">let</span> <span class="ident">test_fb</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">create_test_buffer</span>(<span class="ident">pending</span>.<span class="ident">mode</span>.<span class="ident">size</span>())<span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">req</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">build_request</span>(
-            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">pending</span>.<span class="ident">connectors</span>.<span class="ident">iter</span>(),
-            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [].<span class="ident">iter</span>(),
+            <span class="kw-2">&amp;mut</span> <span class="ident">pending</span>.<span class="ident">connectors</span>.<span class="ident">iter</span>(),
+            <span class="kw-2">&amp;mut</span> [].<span class="ident">iter</span>(),
             <span class="self">self</span>.<span class="ident">plane</span>,
             <span class="kw-2">&amp;</span>[],
             <span class="prelude-val">Some</span>([(<span class="ident">test_fb</span>, <span class="self">self</span>.<span class="ident">plane</span>)].<span class="ident">iter</span>()),
@@ -1452,8 +1452,8 @@
 
         <span class="kw">let</span> <span class="ident">pending</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">pending</span>.<span class="ident">write</span>().<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="ident">req</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">build_request</span>(
-            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">pending</span>.<span class="ident">connectors</span>.<span class="ident">iter</span>(),
-            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [].<span class="ident">iter</span>(),
+            <span class="kw-2">&amp;mut</span> <span class="ident">pending</span>.<span class="ident">connectors</span>.<span class="ident">iter</span>(),
+            <span class="kw-2">&amp;mut</span> [].<span class="ident">iter</span>(),
             <span class="self">self</span>.<span class="ident">plane</span>,
             <span class="kw-2">&amp;</span><span class="ident">new_planes</span>,
             <span class="prelude-val">Some</span>(
@@ -1539,8 +1539,8 @@
         <span class="comment">// test the new config and return the request if it would be accepted by the driver.</span>
         <span class="kw">let</span> <span class="ident">req</span> <span class="op">=</span> {
             <span class="kw">let</span> <span class="ident">req</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">build_request</span>(
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">added</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">removed</span>,
+                <span class="kw-2">&amp;mut</span> <span class="ident">added</span>,
+                <span class="kw-2">&amp;mut</span> <span class="ident">removed</span>,
                 <span class="self">self</span>.<span class="ident">plane</span>,
                 <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">additional_planes</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>(),
                 <span class="prelude-val">Some</span>(<span class="ident">framebuffers</span>),
@@ -1621,8 +1621,8 @@
 
         <span class="comment">// page flips work just like commits with fewer parameters..</span>
         <span class="kw">let</span> <span class="ident">req</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">build_request</span>(
-            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [].<span class="ident">iter</span>(),
-            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [].<span class="ident">iter</span>(),
+            <span class="kw-2">&amp;mut</span> [].<span class="ident">iter</span>(),
+            <span class="kw-2">&amp;mut</span> [].<span class="ident">iter</span>(),
             <span class="self">self</span>.<span class="ident">plane</span>,
             <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">additional_planes</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>(),
             <span class="prelude-val">Some</span>(<span class="ident">framebuffers</span>),
@@ -1675,8 +1675,8 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">added</span> <span class="op">=</span> <span class="ident">pending_conns</span>.<span class="ident">difference</span>(<span class="kw-2">&amp;</span><span class="ident">current_conns</span>);
 
         <span class="kw">let</span> <span class="ident">req</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">build_request</span>(
-            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">added</span>,
-            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">removed</span>,
+            <span class="kw-2">&amp;mut</span> <span class="ident">added</span>,
+            <span class="kw-2">&amp;mut</span> <span class="ident">removed</span>,
             <span class="self">self</span>.<span class="ident">plane</span>,
             <span class="kw-2">&amp;</span>[],
             <span class="prelude-val">Some</span>([(<span class="ident">fb</span>, <span class="self">self</span>.<span class="ident">plane</span>)].<span class="ident">iter</span>()),
@@ -1707,8 +1707,8 @@
 
         <span class="kw">let</span> <span class="ident">pending</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">pending</span>.<span class="ident">read</span>().<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="ident">req</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">build_request</span>(
-            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">pending</span>.<span class="ident">connectors</span>.<span class="ident">iter</span>(),
-            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [].<span class="ident">iter</span>(),
+            <span class="kw-2">&amp;mut</span> <span class="ident">pending</span>.<span class="ident">connectors</span>.<span class="ident">iter</span>(),
+            <span class="kw-2">&amp;mut</span> [].<span class="ident">iter</span>(),
             <span class="self">self</span>.<span class="ident">plane</span>,
             <span class="kw-2">&amp;</span>[<span class="ident">PlaneInfo</span> {
                 <span class="ident">handle</span>: <span class="ident">plane</span>,
@@ -1805,8 +1805,8 @@
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_arguments</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build_request</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">new_connectors</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">connector::Handle</span><span class="op">&gt;</span>,
-        <span class="ident">removed_connectors</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">connector::Handle</span><span class="op">&gt;</span>,
+        <span class="ident">new_connectors</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">connector::Handle</span><span class="op">&gt;</span>,
+        <span class="ident">removed_connectors</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">connector::Handle</span><span class="op">&gt;</span>,
         <span class="ident">primary</span>: <span class="ident">plane::Handle</span>,
         <span class="ident">planes</span>: <span class="kw-2">&amp;</span>[<span class="ident">PlaneInfo</span>],
         <span class="ident">framebuffers</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> (<span class="ident">framebuffer::Handle</span>, <span class="ident">plane::Handle</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
@@ -2017,7 +2017,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">AtomicDrmSurface</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">db</span>, <span class="ident">fb</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">test_buffer</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>().<span class="ident">take</span>() {
             <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">fd</span>.<span class="ident">destroy_framebuffer</span>(<span class="ident">fb</span>);
             <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">fd</span>.<span class="ident">destroy_dumb_buffer</span>(<span class="ident">db</span>);

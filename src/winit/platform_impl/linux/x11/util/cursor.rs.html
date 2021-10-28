@@ -175,7 +175,7 @@
 
     <span class="kw">fn</span> <span class="ident">load_cursor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">ffi::Cursor</span> {
         <span class="kw">unsafe</span> {
-            (<span class="self">self</span>.<span class="ident">xcursor</span>.<span class="ident">XcursorLibraryLoadCursor</span>)(<span class="self">self</span>.<span class="ident">display</span>, <span class="ident">name</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>)
+            (<span class="self">self</span>.<span class="ident">xcursor</span>.<span class="ident">XcursorLibraryLoadCursor</span>)(<span class="self">self</span>.<span class="ident">display</span>, <span class="ident">name</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">c_char</span>)
         }
     }
 

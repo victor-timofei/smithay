@@ -1312,7 +1312,7 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">AioCb::common_init</span>(<span class="ident">fd</span>, <span class="ident">prio</span>, <span class="ident">sigev_notify</span>);
         <span class="ident">a</span>.<span class="number">0</span>.<span class="ident">aio_offset</span> <span class="op">=</span> <span class="ident">offs</span>;
         <span class="ident">a</span>.<span class="number">0</span>.<span class="ident">aio_nbytes</span> <span class="op">=</span> <span class="ident">buf</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">size_t</span>;
-        <span class="ident">a</span>.<span class="number">0</span>.<span class="ident">aio_buf</span> <span class="op">=</span> <span class="ident">buf</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>;
+        <span class="ident">a</span>.<span class="number">0</span>.<span class="ident">aio_buf</span> <span class="op">=</span> <span class="ident">buf</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">c_void</span>;
         <span class="ident">a</span>.<span class="number">0</span>.<span class="ident">aio_lio_opcode</span> <span class="op">=</span> <span class="ident">opcode</span> <span class="kw">as</span> <span class="ident">libc::c_int</span>;
 
         <span class="ident">AioCb</span> {
@@ -1386,7 +1386,7 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">AioCb::common_init</span>(<span class="ident">fd</span>, <span class="ident">prio</span>, <span class="ident">sigev_notify</span>);
         <span class="ident">a</span>.<span class="number">0</span>.<span class="ident">aio_offset</span> <span class="op">=</span> <span class="ident">offs</span>;
         <span class="ident">a</span>.<span class="number">0</span>.<span class="ident">aio_nbytes</span> <span class="op">=</span> <span class="ident">buf</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">size_t</span>;
-        <span class="ident">a</span>.<span class="number">0</span>.<span class="ident">aio_buf</span> <span class="op">=</span> <span class="ident">buf</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>;
+        <span class="ident">a</span>.<span class="number">0</span>.<span class="ident">aio_buf</span> <span class="op">=</span> <span class="ident">buf</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">c_void</span>;
         <span class="ident">a</span>.<span class="number">0</span>.<span class="ident">aio_lio_opcode</span> <span class="op">=</span> <span class="ident">opcode</span> <span class="kw">as</span> <span class="ident">libc::c_int</span>;
 
         <span class="ident">Box::pin</span>(<span class="ident">AioCb</span> {
@@ -1425,7 +1425,7 @@
     <span class="doccomment">/// The caller must ensure that the storage pointed to by `buf` outlives the</span>
     <span class="doccomment">/// `AioCb`.  The lifetime checker can&#39;t help here.</span>
     <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_mut_ptr</span>(<span class="ident">fd</span>: <span class="ident">RawFd</span>, <span class="ident">offs</span>: <span class="ident">off_t</span>,
-                           <span class="ident">buf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>, <span class="ident">len</span>: <span class="ident">usize</span>,
+                           <span class="ident">buf</span>: <span class="kw-2">*mut</span> <span class="ident">c_void</span>, <span class="ident">len</span>: <span class="ident">usize</span>,
                            <span class="ident">prio</span>: <span class="ident">libc::c_int</span>, <span class="ident">sigev_notify</span>: <span class="ident">SigevNotify</span>,
                            <span class="ident">opcode</span>: <span class="ident">LioOpcode</span>) -&gt; <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">AioCb</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">AioCb::common_init</span>(<span class="ident">fd</span>, <span class="ident">prio</span>, <span class="ident">sigev_notify</span>);
@@ -1469,7 +1469,7 @@
     <span class="doccomment">/// The caller must ensure that the storage pointed to by `buf` outlives the</span>
     <span class="doccomment">/// `AioCb`.  The lifetime checker can&#39;t help here.</span>
     <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_ptr</span>(<span class="ident">fd</span>: <span class="ident">RawFd</span>, <span class="ident">offs</span>: <span class="ident">off_t</span>,
-                           <span class="ident">buf</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_void</span>, <span class="ident">len</span>: <span class="ident">usize</span>,
+                           <span class="ident">buf</span>: <span class="kw-2">*const</span> <span class="ident">c_void</span>, <span class="ident">len</span>: <span class="ident">usize</span>,
                            <span class="ident">prio</span>: <span class="ident">libc::c_int</span>, <span class="ident">sigev_notify</span>: <span class="ident">SigevNotify</span>,
                            <span class="ident">opcode</span>: <span class="ident">LioOpcode</span>) -&gt; <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">AioCb</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">AioCb::common_init</span>(<span class="ident">fd</span>, <span class="ident">prio</span>, <span class="ident">sigev_notify</span>);
@@ -1477,7 +1477,7 @@
         <span class="ident">a</span>.<span class="number">0</span>.<span class="ident">aio_nbytes</span> <span class="op">=</span> <span class="ident">len</span>;
         <span class="comment">// casting a const ptr to a mutable ptr here is ok, because we set the</span>
         <span class="comment">// AioCb&#39;s mutable field to false</span>
-        <span class="ident">a</span>.<span class="number">0</span>.<span class="ident">aio_buf</span> <span class="op">=</span> <span class="ident">buf</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>;
+        <span class="ident">a</span>.<span class="number">0</span>.<span class="ident">aio_buf</span> <span class="op">=</span> <span class="ident">buf</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">c_void</span>;
         <span class="ident">a</span>.<span class="number">0</span>.<span class="ident">aio_lio_opcode</span> <span class="op">=</span> <span class="ident">opcode</span> <span class="kw">as</span> <span class="ident">libc::c_int</span>;
 
         <span class="ident">Box::pin</span>(<span class="ident">AioCb</span> {
@@ -1500,7 +1500,7 @@
         <span class="comment">// casting an immutable buffer to a mutable pointer looks unsafe,</span>
         <span class="comment">// but technically its only unsafe to dereference it, not to create</span>
         <span class="comment">// it.</span>
-        <span class="ident">a</span>.<span class="number">0</span>.<span class="ident">aio_buf</span> <span class="op">=</span> <span class="ident">buf</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>;
+        <span class="ident">a</span>.<span class="number">0</span>.<span class="ident">aio_buf</span> <span class="op">=</span> <span class="ident">buf</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">c_void</span>;
         <span class="macro">assert!</span>(<span class="ident">opcode</span> <span class="op">!</span><span class="op">=</span> <span class="ident">LioOpcode::LIO_READ</span>, <span class="string">&quot;Can&#39;t read into an immutable buffer&quot;</span>);
         <span class="ident">a</span>.<span class="number">0</span>.<span class="ident">aio_lio_opcode</span> <span class="op">=</span> <span class="ident">opcode</span> <span class="kw">as</span> <span class="ident">libc::c_int</span>;
 
@@ -1576,7 +1576,7 @@
     }
 
     <span class="doccomment">/// Update the notification settings for an existing `aiocb`</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_sigev_notify</span>(<span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_sigev_notify</span>(<span class="self">self</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>,
                             <span class="ident">sigev_notify</span>: <span class="ident">SigevNotify</span>)
     {
         <span class="comment">// Safe because we don&#39;t move any of the data</span>
@@ -1633,10 +1633,10 @@
     <span class="doccomment">/// # References</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [aio_cancel](https://pubs.opengroup.org/onlinepubs/9699919799/functions/aio_cancel.html)</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cancel</span>(<span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">AioCancelStat</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cancel</span>(<span class="self">self</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">AioCancelStat</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">selfp</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">as_mut</span>().<span class="ident">get_unchecked_mut</span>();
-            <span class="ident">libc::aio_cancel</span>(<span class="ident">selfp</span>.<span class="ident">aiocb</span>.<span class="number">0</span>.<span class="ident">aio_fildes</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">selfp</span>.<span class="ident">aiocb</span>.<span class="number">0</span>)
+            <span class="ident">libc::aio_cancel</span>(<span class="ident">selfp</span>.<span class="ident">aiocb</span>.<span class="number">0</span>.<span class="ident">aio_fildes</span>, <span class="kw-2">&amp;mut</span> <span class="ident">selfp</span>.<span class="ident">aiocb</span>.<span class="number">0</span>)
         };
         <span class="kw">match</span> <span class="ident">r</span> {
             <span class="ident">libc::AIO_CANCELED</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">AioCancelStat::AioCanceled</span>),
@@ -1647,9 +1647,9 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">error_unpinned</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">error_unpinned</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="kw">unsafe</span> {
-            <span class="ident">libc::aio_error</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">aiocb</span>.<span class="number">0</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">libc::aiocb</span>)
+            <span class="ident">libc::aio_error</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">aiocb</span>.<span class="number">0</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">libc::aiocb</span>)
         };
         <span class="kw">match</span> <span class="ident">r</span> {
             <span class="number">0</span> =&gt; <span class="prelude-val">Ok</span>(()),
@@ -1697,7 +1697,7 @@
     <span class="doccomment">/// # References</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [aio_error](https://pubs.opengroup.org/onlinepubs/9699919799/functions/aio_error.html)</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">error</span>(<span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">error</span>(<span class="self">self</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="comment">// Safe because error_unpinned doesn&#39;t move the data</span>
         <span class="kw">let</span> <span class="ident">selfp</span> <span class="op">=</span> <span class="kw">unsafe</span> {
             <span class="self">self</span>.<span class="ident">as_mut</span>().<span class="ident">get_unchecked_mut</span>()
@@ -1710,12 +1710,12 @@
     <span class="doccomment">/// # References</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [aio_fsync](https://pubs.opengroup.org/onlinepubs/9699919799/functions/aio_fsync.html)</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">fsync</span>(<span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">mode</span>: <span class="ident">AioFsyncMode</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">fsync</span>(<span class="self">self</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">mode</span>: <span class="ident">AioFsyncMode</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="comment">// Safe because we don&#39;t move the libc::aiocb</span>
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">selfp</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">as_mut</span>().<span class="ident">get_unchecked_mut</span>();
             <span class="ident">Errno::result</span>({
-                <span class="kw">let</span> <span class="ident">p</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">libc::aiocb</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">selfp</span>.<span class="ident">aiocb</span>.<span class="number">0</span>;
+                <span class="kw">let</span> <span class="ident">p</span>: <span class="kw-2">*mut</span> <span class="ident">libc::aiocb</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">selfp</span>.<span class="ident">aiocb</span>.<span class="number">0</span>;
                 <span class="ident">libc::aio_fsync</span>(<span class="ident">mode</span> <span class="kw">as</span> <span class="ident">libc::c_int</span>, <span class="ident">p</span>)
             }).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
                 <span class="ident">selfp</span>.<span class="ident">in_progress</span> <span class="op">=</span> <span class="bool-val">true</span>;
@@ -1760,14 +1760,14 @@
     <span class="doccomment">/// # References</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [aio_read](https://pubs.opengroup.org/onlinepubs/9699919799/functions/aio_read.html)</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read</span>(<span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read</span>(<span class="self">self</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="macro">assert!</span>(<span class="self">self</span>.<span class="ident">mutable</span>, <span class="string">&quot;Can&#39;t read into an immutable buffer&quot;</span>);
         <span class="comment">// Safe because we don&#39;t move anything</span>
         <span class="kw">let</span> <span class="ident">selfp</span> <span class="op">=</span> <span class="kw">unsafe</span> {
             <span class="self">self</span>.<span class="ident">as_mut</span>().<span class="ident">get_unchecked_mut</span>()
         };
         <span class="ident">Errno::result</span>({
-            <span class="kw">let</span> <span class="ident">p</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">libc::aiocb</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">selfp</span>.<span class="ident">aiocb</span>.<span class="number">0</span>;
+            <span class="kw">let</span> <span class="ident">p</span>: <span class="kw-2">*mut</span> <span class="ident">libc::aiocb</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">selfp</span>.<span class="ident">aiocb</span>.<span class="number">0</span>;
             <span class="kw">unsafe</span> { <span class="ident">libc::aio_read</span>(<span class="ident">p</span>) }
         }).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
             <span class="ident">selfp</span>.<span class="ident">in_progress</span> <span class="op">=</span> <span class="bool-val">true</span>;
@@ -1779,9 +1779,9 @@
         <span class="ident">SigEvent::from</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">aiocb</span>.<span class="number">0</span>.<span class="ident">aio_sigevent</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">aio_return_unpinned</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">isize</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">aio_return_unpinned</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">isize</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
-            <span class="kw">let</span> <span class="ident">p</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">libc::aiocb</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">aiocb</span>.<span class="number">0</span>;
+            <span class="kw">let</span> <span class="ident">p</span>: <span class="kw-2">*mut</span> <span class="ident">libc::aiocb</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">aiocb</span>.<span class="number">0</span>;
             <span class="self">self</span>.<span class="ident">in_progress</span> <span class="op">=</span> <span class="bool-val">false</span>;
             <span class="ident">Errno::result</span>(<span class="ident">libc::aio_return</span>(<span class="ident">p</span>))
         }
@@ -1797,7 +1797,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [aio_return](https://pubs.opengroup.org/onlinepubs/9699919799/functions/aio_return.html)</span>
     <span class="comment">// Note: this should be just `return`, but that&#39;s a reserved word</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">aio_return</span>(<span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">isize</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">aio_return</span>(<span class="self">self</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">isize</span><span class="op">&gt;</span> {
         <span class="comment">// Safe because aio_return_unpinned does not move the data</span>
         <span class="kw">let</span> <span class="ident">selfp</span> <span class="op">=</span> <span class="kw">unsafe</span> {
             <span class="self">self</span>.<span class="ident">as_mut</span>().<span class="ident">get_unchecked_mut</span>()
@@ -1810,13 +1810,13 @@
     <span class="doccomment">/// # References</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [aio_write](https://pubs.opengroup.org/onlinepubs/9699919799/functions/aio_write.html)</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">write</span>(<span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">write</span>(<span class="self">self</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="comment">// Safe because we don&#39;t move anything</span>
         <span class="kw">let</span> <span class="ident">selfp</span> <span class="op">=</span> <span class="kw">unsafe</span> {
             <span class="self">self</span>.<span class="ident">as_mut</span>().<span class="ident">get_unchecked_mut</span>()
         };
         <span class="ident">Errno::result</span>({
-            <span class="kw">let</span> <span class="ident">p</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">libc::aiocb</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">selfp</span>.<span class="ident">aiocb</span>.<span class="number">0</span>;
+            <span class="kw">let</span> <span class="ident">p</span>: <span class="kw-2">*mut</span> <span class="ident">libc::aiocb</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">selfp</span>.<span class="ident">aiocb</span>.<span class="number">0</span>;
             <span class="kw">unsafe</span>{ <span class="ident">libc::aio_write</span>(<span class="ident">p</span>) }
         }).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
             <span class="ident">selfp</span>.<span class="ident">in_progress</span> <span class="op">=</span> <span class="bool-val">true</span>;
@@ -1906,11 +1906,11 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// [`aio_suspend`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/aio_suspend.html)</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">aio_suspend</span>(<span class="ident">list</span>: <span class="kw-2">&amp;</span>[<span class="ident">Pin</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">AioCb</span><span class="op">&gt;</span>], <span class="ident">timeout</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TimeSpec</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">plist</span> <span class="op">=</span> <span class="ident">list</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> [<span class="ident">Pin</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">AioCb</span><span class="op">&gt;</span>] <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> [<span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::aiocb</span>];
-    <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">plist</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::aiocb</span>;
+    <span class="kw">let</span> <span class="ident">plist</span> <span class="op">=</span> <span class="ident">list</span> <span class="kw">as</span> <span class="kw-2">*const</span> [<span class="ident">Pin</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">AioCb</span><span class="op">&gt;</span>] <span class="kw">as</span> <span class="kw-2">*const</span> [<span class="kw-2">*const</span> <span class="ident">libc::aiocb</span>];
+    <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">plist</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw-2">*const</span> <span class="ident">libc::aiocb</span>;
     <span class="kw">let</span> <span class="ident">timep</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">timeout</span> {
         <span class="prelude-val">None</span>    =&gt; <span class="ident">null</span>::<span class="op">&lt;</span><span class="ident">libc::timespec</span><span class="op">&gt;</span>(),
-        <span class="prelude-val">Some</span>(<span class="ident">x</span>) =&gt; <span class="ident">x</span>.<span class="ident">as_ref</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::timespec</span>
+        <span class="prelude-val">Some</span>(<span class="ident">x</span>) =&gt; <span class="ident">x</span>.<span class="ident">as_ref</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::timespec</span>
     };
     <span class="ident">Errno::result</span>(<span class="kw">unsafe</span> {
         <span class="ident">libc::aio_suspend</span>(<span class="ident">p</span>, <span class="ident">list</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">i32</span>, <span class="ident">timep</span>)
@@ -1918,7 +1918,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">AioCb</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="ident">fmt</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;AioCb&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;aiocb&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">aiocb</span>.<span class="number">0</span>)
             .<span class="ident">field</span>(<span class="string">&quot;mutable&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">mutable</span>)
@@ -1930,7 +1930,7 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">AioCb</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="doccomment">/// If the `AioCb` has no remaining state in the kernel, just drop it.</span>
     <span class="doccomment">/// Otherwise, dropping constitutes a resource leak, which is an error</span>
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="macro">assert!</span>(<span class="ident">thread::panicking</span>() <span class="op">|</span><span class="op">|</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">in_progress</span>,
                 <span class="string">&quot;Dropped an in-progress AioCb&quot;</span>);
     }
@@ -1955,7 +1955,7 @@
     <span class="doccomment">/// It must live for as long as any of the operations are still being</span>
     <span class="doccomment">/// processesed, because the aio subsystem uses its address as a unique</span>
     <span class="doccomment">/// identifier.</span>
-    <span class="ident">list</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">libc::aiocb</span><span class="op">&gt;</span>,
+    <span class="ident">list</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">*mut</span> <span class="ident">libc::aiocb</span><span class="op">&gt;</span>,
 
     <span class="doccomment">/// A partial set of results.  This field will get populated by</span>
     <span class="doccomment">/// `listio_resubmit` when an `LioCb` is resubmitted after an error</span>
@@ -2028,15 +2028,15 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`aio_suspend`]: fn.aio_suspend.html</span>
     <span class="doccomment">/// [`AioCb::error`]: struct.AioCb.html#method.error</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">listio</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">mode</span>: <span class="ident">LioMode</span>,
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">listio</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">mode</span>: <span class="ident">LioMode</span>,
                   <span class="ident">sigev_notify</span>: <span class="ident">SigevNotify</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">sigev</span> <span class="op">=</span> <span class="ident">SigEvent::new</span>(<span class="ident">sigev_notify</span>);
-        <span class="kw">let</span> <span class="ident">sigevp</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">sigev</span>.<span class="ident">sigevent</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">libc::sigevent</span>;
+        <span class="kw">let</span> <span class="ident">sigevp</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">sigev</span>.<span class="ident">sigevent</span>() <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">libc::sigevent</span>;
         <span class="self">self</span>.<span class="ident">list</span>.<span class="ident">clear</span>();
-        <span class="kw">for</span> <span class="ident">a</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">aiocbs</span>.<span class="ident">iter_mut</span>() {
+        <span class="kw">for</span> <span class="ident">a</span> <span class="kw">in</span> <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">aiocbs</span>.<span class="ident">iter_mut</span>() {
             <span class="ident">a</span>.<span class="ident">in_progress</span> <span class="op">=</span> <span class="bool-val">true</span>;
-            <span class="self">self</span>.<span class="ident">list</span>.<span class="ident">push</span>(<span class="ident">a</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">AioCb</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>
-                             <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">libc::aiocb</span>);
+            <span class="self">self</span>.<span class="ident">list</span>.<span class="ident">push</span>(<span class="ident">a</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">AioCb</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>
+                             <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">libc::aiocb</span>);
         }
         <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">list</span>.<span class="ident">as_ptr</span>();
         <span class="ident">Errno::result</span>(<span class="kw">unsafe</span> {
@@ -2097,10 +2097,10 @@
     <span class="comment">// being stable.</span>
     <span class="comment">// Note: aiocbs that are Ok(()) must be finalized by aio_return, or else the</span>
     <span class="comment">// sigev_notify will immediately refire.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">listio_resubmit</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">mode</span>:<span class="ident">LioMode</span>,
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">listio_resubmit</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">mode</span>:<span class="ident">LioMode</span>,
                            <span class="ident">sigev_notify</span>: <span class="ident">SigevNotify</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">sigev</span> <span class="op">=</span> <span class="ident">SigEvent::new</span>(<span class="ident">sigev_notify</span>);
-        <span class="kw">let</span> <span class="ident">sigevp</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">sigev</span>.<span class="ident">sigevent</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">libc::sigevent</span>;
+        <span class="kw">let</span> <span class="ident">sigevp</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">sigev</span>.<span class="ident">sigevent</span>() <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">libc::sigevent</span>;
         <span class="self">self</span>.<span class="ident">list</span>.<span class="ident">clear</span>();
 
         <span class="kw">while</span> <span class="self">self</span>.<span class="ident">results</span>.<span class="ident">len</span>() <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">aiocbs</span>.<span class="ident">len</span>() {
@@ -2118,7 +2118,7 @@
                     <span class="self">self</span>.<span class="ident">results</span>[<span class="ident">i</span>] <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">a</span>.<span class="ident">aio_return_unpinned</span>());
                 },
                 <span class="prelude-val">Err</span>(<span class="ident">Errno::EAGAIN</span>) =&gt; {
-                    <span class="self">self</span>.<span class="ident">list</span>.<span class="ident">push</span>(<span class="ident">a</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">AioCb</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">libc::aiocb</span>);
+                    <span class="self">self</span>.<span class="ident">list</span>.<span class="ident">push</span>(<span class="ident">a</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">AioCb</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">libc::aiocb</span>);
                 },
                 <span class="prelude-val">Err</span>(<span class="ident">Errno::EINPROGRESS</span>) =&gt; {
                     <span class="comment">// aiocb is was successfully queued; no need to do anything</span>
@@ -2142,7 +2142,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`AioCb::aio_return`]: struct.AioCb.html#method.aio_return</span>
     <span class="doccomment">/// [`LioCb::listio_resubmit`]: #method.listio_resubmit</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">aio_return</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">i</span>: <span class="ident">usize</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">isize</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">aio_return</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">i</span>: <span class="ident">usize</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">isize</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="ident">i</span> <span class="op">&gt;</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">results</span>.<span class="ident">len</span>() <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">results</span>[<span class="ident">i</span>].<span class="ident">is_none</span>() {
             <span class="self">self</span>.<span class="ident">aiocbs</span>[<span class="ident">i</span>].<span class="ident">aio_return_unpinned</span>()
         } <span class="kw">else</span> {
@@ -2158,7 +2158,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`AioCb::error`]: struct.AioCb.html#method.error</span>
     <span class="doccomment">/// [`LioCb::listio_resubmit`]: #method.listio_resubmit</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">error</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">i</span>: <span class="ident">usize</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">error</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">i</span>: <span class="ident">usize</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="ident">i</span> <span class="op">&gt;</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">results</span>.<span class="ident">len</span>() <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">results</span>[<span class="ident">i</span>].<span class="ident">is_none</span>() {
             <span class="self">self</span>.<span class="ident">aiocbs</span>[<span class="ident">i</span>].<span class="ident">error_unpinned</span>()
         } <span class="kw">else</span> {
@@ -2169,7 +2169,7 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;ios&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>)))]</span>
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">LioCb</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="ident">fmt</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;LioCb&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;aiocbs&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">aiocbs</span>)
             .<span class="ident">finish</span>()

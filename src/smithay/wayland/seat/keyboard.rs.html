@@ -598,7 +598,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ModifiersState</span> {
-    <span class="kw">fn</span> <span class="ident">update_with</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="ident">xkb::State</span>) {
+    <span class="kw">fn</span> <span class="ident">update_with</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="ident">xkb::State</span>) {
         <span class="self">self</span>.<span class="ident">ctrl</span> <span class="op">=</span> <span class="ident">state</span>.<span class="ident">mod_name_is_active</span>(<span class="kw-2">&amp;</span><span class="ident">xkb::MOD_NAME_CTRL</span>, <span class="ident">xkb::STATE_MODS_EFFECTIVE</span>);
         <span class="self">self</span>.<span class="ident">alt</span> <span class="op">=</span> <span class="ident">state</span>.<span class="ident">mod_name_is_active</span>(<span class="kw-2">&amp;</span><span class="ident">xkb::MOD_NAME_ALT</span>, <span class="ident">xkb::STATE_MODS_EFFECTIVE</span>);
         <span class="self">self</span>.<span class="ident">shift</span> <span class="op">=</span> <span class="ident">state</span>.<span class="ident">mod_name_is_active</span>(<span class="kw-2">&amp;</span><span class="ident">xkb::MOD_NAME_SHIFT</span>, <span class="ident">xkb::STATE_MODS_EFFECTIVE</span>);
@@ -663,7 +663,7 @@
 
 <span class="comment">// focus_hook does not implement debug, so we have to impl Debug manually</span>
 <span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">KbdInternal</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;KbdInternal&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;known_kbds&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">known_kbds</span>)
             .<span class="ident">field</span>(<span class="string">&quot;focus&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">focus</span>)
@@ -721,7 +721,7 @@
     }
 
     <span class="comment">// return true if modifier state has changed</span>
-    <span class="kw">fn</span> <span class="ident">key_input</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">keycode</span>: <span class="ident">u32</span>, <span class="ident">state</span>: <span class="ident">KeyState</span>) -&gt; <span class="ident">bool</span> {
+    <span class="kw">fn</span> <span class="ident">key_input</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">keycode</span>: <span class="ident">u32</span>, <span class="ident">state</span>: <span class="ident">KeyState</span>) -&gt; <span class="ident">bool</span> {
         <span class="comment">// track pressed keys as xkbcommon does not seem to expose it :(</span>
         <span class="kw">let</span> <span class="ident">direction</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">state</span> {
             <span class="ident">KeyState::Pressed</span> =&gt; {
@@ -759,7 +759,7 @@
     <span class="kw">fn</span> <span class="ident">serialize_pressed_keys</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">serialized</span> <span class="op">=</span> <span class="kw">unsafe</span> {
             <span class="ident">::std::slice::from_raw_parts</span>(
-                <span class="self">self</span>.<span class="ident">pressed_keys</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">u8</span>,
+                <span class="self">self</span>.<span class="ident">pressed_keys</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">u8</span>,
                 <span class="self">self</span>.<span class="ident">pressed_keys</span>.<span class="ident">len</span>() <span class="op">*</span> <span class="number">4</span>,
             )
         };
@@ -841,7 +841,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">KeysymHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.<span class="ident">keycode</span>)
     }
 }

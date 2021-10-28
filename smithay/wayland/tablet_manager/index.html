@@ -7,13 +7,13 @@
 
 <span class="comment">// First we nee a reguler seat</span>
 <span class="kw">let</span> (<span class="ident">seat</span>, <span class="ident">seat_global</span>) <span class="op">=</span> <span class="ident">Seat::new</span>(
-    <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">display</span>,
+    <span class="kw-2">&amp;mut</span> <span class="ident">display</span>,
     <span class="string">&quot;seat-0&quot;</span>.<span class="ident">into</span>(),
     <span class="prelude-val">None</span>
 );
 
 <span class="comment">// Insert the manager global into your event loop</span>
-<span class="ident">init_tablet_manager_global</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">display</span>);
+<span class="ident">init_tablet_manager_global</span>(<span class="kw-2">&amp;mut</span> <span class="ident">display</span>);
 
 <span class="ident">seat</span>
    .<span class="ident">tablet_seat</span>()                     <span class="comment">// Get TabletSeat asosiated with this seat</span>

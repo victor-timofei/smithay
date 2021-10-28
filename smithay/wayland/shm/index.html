@@ -21,7 +21,7 @@ as specified by the wayland protocol).</p>
 <span class="comment">// Here, we specify that Yuyv and C8 format are supported</span>
 <span class="comment">// additionally to the standard Argb8888 and Xrgb8888.</span>
 <span class="ident">init_shm_global</span>(
-    <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">display</span>,
+    <span class="kw-2">&amp;mut</span> <span class="ident">display</span>,
     <span class="macro">vec!</span>[<span class="ident">Format::Yuyv</span>, <span class="ident">Format::C8</span>],
     <span class="prelude-val">None</span> <span class="comment">// we don&#39;t provide a logger here</span>
 );</code></pre></div>

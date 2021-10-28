@@ -497,7 +497,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">DrmNode</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{}{}&quot;</span>, <span class="self">self</span>.<span class="ident">ty</span>.<span class="ident">minor_name_prefix</span>(), <span class="ident">minor</span>(<span class="self">self</span>.<span class="ident">dev_id</span>()))
     }
 }
@@ -515,7 +515,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">DrmNode</span> {
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">fd</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">fd</span> {
             <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">close</span>(<span class="ident">fd</span>);
         }
@@ -555,7 +555,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">NodeType</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="macro">write!</span>(
             <span class="ident">f</span>,
             <span class="string">&quot;{}&quot;</span>,
@@ -643,7 +643,7 @@
 
     <span class="kw">let</span> <span class="ident">dev_name</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="op">&lt;</span><span class="ident">c_char</span><span class="op">&gt;</span><span class="ident">::with_capacity</span>(<span class="number">255</span>); <span class="comment">// Matching value of SPECNAMELEN in FreeBSD 13+</span>
 
-    <span class="kw">let</span> <span class="ident">buf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span> <span class="op">=</span> <span class="kw">unsafe</span> {
+    <span class="kw">let</span> <span class="ident">buf</span>: <span class="kw-2">*mut</span> <span class="ident">c_char</span> <span class="op">=</span> <span class="kw">unsafe</span> {
         <span class="ident">libc::devname_r</span>(
             <span class="ident">makedev</span>(<span class="ident">major</span>, <span class="ident">minor</span>),
             <span class="ident">SFlag::S_IFCHR</span>.<span class="ident">bits</span>(), <span class="comment">// Must be S_IFCHR or S_IFBLK</span>

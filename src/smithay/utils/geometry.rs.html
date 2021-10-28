@@ -1196,7 +1196,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">N</span>: <span class="ident">fmt::Debug</span><span class="op">&gt;</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">Logical</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Point&lt;Logical&gt;&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;x&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">x</span>)
             .<span class="ident">field</span>(<span class="string">&quot;y&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">y</span>)
@@ -1205,7 +1205,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">N</span>: <span class="ident">fmt::Debug</span><span class="op">&gt;</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">Physical</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Point&lt;Physical&gt;&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;x&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">x</span>)
             .<span class="ident">field</span>(<span class="string">&quot;y&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">y</span>)
@@ -1214,7 +1214,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">N</span>: <span class="ident">fmt::Debug</span><span class="op">&gt;</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">Raw</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Point&lt;Raw&gt;&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;x&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">x</span>)
             .<span class="ident">field</span>(<span class="string">&quot;y&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">y</span>)
@@ -1223,7 +1223,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">N</span>: <span class="ident">fmt::Debug</span><span class="op">&gt;</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">Buffer</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Point&lt;Buffer&gt;&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;x&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">x</span>)
             .<span class="ident">field</span>(<span class="string">&quot;y&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">y</span>)
@@ -1309,7 +1309,7 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">N</span>: <span class="ident">AddAssign</span>, <span class="ident">Kind</span><span class="op">&gt;</span> <span class="ident">AddAssign</span> <span class="kw">for</span> <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">Kind</span><span class="op">&gt;</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">add_assign</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">rhs</span>: <span class="self">Self</span>) {
+    <span class="kw">fn</span> <span class="ident">add_assign</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">rhs</span>: <span class="self">Self</span>) {
         <span class="self">self</span>.<span class="ident">x</span> <span class="op">+</span><span class="op">=</span> <span class="ident">rhs</span>.<span class="ident">x</span>;
         <span class="self">self</span>.<span class="ident">y</span> <span class="op">+</span><span class="op">=</span> <span class="ident">rhs</span>.<span class="ident">y</span>
     }
@@ -1317,7 +1317,7 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">N</span>: <span class="ident">SubAssign</span>, <span class="ident">Kind</span><span class="op">&gt;</span> <span class="ident">SubAssign</span> <span class="kw">for</span> <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">Kind</span><span class="op">&gt;</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">sub_assign</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">rhs</span>: <span class="self">Self</span>) {
+    <span class="kw">fn</span> <span class="ident">sub_assign</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">rhs</span>: <span class="self">Self</span>) {
         <span class="self">self</span>.<span class="ident">x</span> <span class="op">-</span><span class="op">=</span> <span class="ident">rhs</span>.<span class="ident">x</span>;
         <span class="self">self</span>.<span class="ident">y</span> <span class="op">-</span><span class="op">=</span> <span class="ident">rhs</span>.<span class="ident">y</span>
     }
@@ -1440,7 +1440,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">N</span>: <span class="ident">fmt::Debug</span><span class="op">&gt;</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">Logical</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Size&lt;Logical&gt;&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;w&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">w</span>)
             .<span class="ident">field</span>(<span class="string">&quot;h&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">h</span>)
@@ -1449,7 +1449,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">N</span>: <span class="ident">fmt::Debug</span><span class="op">&gt;</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">Physical</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Size&lt;Physical&gt;&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;w&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">w</span>)
             .<span class="ident">field</span>(<span class="string">&quot;h&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">h</span>)
@@ -1458,7 +1458,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">N</span>: <span class="ident">fmt::Debug</span><span class="op">&gt;</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">Raw</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Size&lt;Raw&gt;&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;w&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">w</span>)
             .<span class="ident">field</span>(<span class="string">&quot;h&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">h</span>)
@@ -1467,7 +1467,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">N</span>: <span class="ident">fmt::Debug</span><span class="op">&gt;</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">Buffer</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Size&lt;Buffer&gt;&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;w&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">w</span>)
             .<span class="ident">field</span>(<span class="string">&quot;h&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">h</span>)
@@ -1558,7 +1558,7 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">N</span>: <span class="ident">AddAssign</span>, <span class="ident">Kind</span><span class="op">&gt;</span> <span class="ident">AddAssign</span> <span class="kw">for</span> <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">Kind</span><span class="op">&gt;</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">add_assign</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">rhs</span>: <span class="self">Self</span>) {
+    <span class="kw">fn</span> <span class="ident">add_assign</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">rhs</span>: <span class="self">Self</span>) {
         <span class="self">self</span>.<span class="ident">w</span> <span class="op">+</span><span class="op">=</span> <span class="ident">rhs</span>.<span class="ident">w</span>;
         <span class="self">self</span>.<span class="ident">h</span> <span class="op">+</span><span class="op">=</span> <span class="ident">rhs</span>.<span class="ident">h</span>
     }
@@ -1781,7 +1781,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">N</span>: <span class="ident">fmt::Debug</span><span class="op">&gt;</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">Logical</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Rectangle&lt;Logical&gt;&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;x&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">loc</span>.<span class="ident">x</span>)
             .<span class="ident">field</span>(<span class="string">&quot;y&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">loc</span>.<span class="ident">y</span>)
@@ -1792,7 +1792,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">N</span>: <span class="ident">fmt::Debug</span><span class="op">&gt;</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">Physical</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Rectangle&lt;Physical&gt;&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;x&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">loc</span>.<span class="ident">x</span>)
             .<span class="ident">field</span>(<span class="string">&quot;y&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">loc</span>.<span class="ident">y</span>)
@@ -1803,7 +1803,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">N</span>: <span class="ident">fmt::Debug</span><span class="op">&gt;</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">Raw</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Rectangle&lt;Raw&gt;&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;x&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">loc</span>.<span class="ident">x</span>)
             .<span class="ident">field</span>(<span class="string">&quot;y&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">loc</span>.<span class="ident">y</span>)
@@ -1814,7 +1814,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">N</span>: <span class="ident">fmt::Debug</span><span class="op">&gt;</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">Buffer</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Rectangle&lt;Buffer&gt;&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;x&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">loc</span>.<span class="ident">x</span>)
             .<span class="ident">field</span>(<span class="string">&quot;y&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">loc</span>.<span class="ident">y</span>)

@@ -883,7 +883,7 @@
         <span class="comment">// need to sync with server so it&#39;ll be done automatically for us.</span>
         <span class="ident">event_loop_handle</span>.<span class="ident">with_source</span>(<span class="kw-2">&amp;</span><span class="ident">wayland_source</span>, <span class="op">|</span><span class="ident">event_queue</span><span class="op">|</span> {
             <span class="kw">let</span> <span class="ident">event_queue</span> <span class="op">=</span> <span class="ident">event_queue</span>.<span class="ident">queue</span>();
-            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">event_queue</span>.<span class="ident">sync_roundtrip</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">winit_state</span>, <span class="op">|</span><span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> <span class="macro">unreachable!</span>());
+            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">event_queue</span>.<span class="ident">sync_roundtrip</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">winit_state</span>, <span class="op">|</span><span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> <span class="macro">unreachable!</span>());
         });
 
         <span class="comment">// We all praise GNOME for these 3 lines of pure magic. If we don&#39;t do that,</span>
@@ -1306,8 +1306,8 @@
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">raw_window_handle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WaylandHandle</span> {
-        <span class="kw">let</span> <span class="ident">display</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">display</span>.<span class="ident">get_display_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>;
-        <span class="kw">let</span> <span class="ident">surface</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">surface</span>.<span class="ident">as_ref</span>().<span class="ident">c_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>;
+        <span class="kw">let</span> <span class="ident">display</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">display</span>.<span class="ident">get_display_ptr</span>() <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="kw">_</span>;
+        <span class="kw">let</span> <span class="ident">surface</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">surface</span>.<span class="ident">as_ref</span>().<span class="ident">c_ptr</span>() <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="kw">_</span>;
 
         <span class="ident">WaylandHandle</span> {
             <span class="ident">display</span>,
@@ -1328,7 +1328,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">Window</span> {
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="kw">let</span> <span class="ident">close_request</span> <span class="op">=</span> <span class="ident">WindowRequest::Close</span>;
         <span class="self">self</span>.<span class="ident">window_requests</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>().<span class="ident">push</span>(<span class="ident">close_request</span>);
         <span class="self">self</span>.<span class="ident">event_loop_awakener</span>.<span class="ident">ping</span>();

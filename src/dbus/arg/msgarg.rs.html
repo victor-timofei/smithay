@@ -622,28 +622,28 @@
 <span class="doccomment">/// Types that can be appended to a message as arguments implement this trait.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Append</span> {
     <span class="doccomment">/// Performs the append operation by consuming self.</span>
-    <span class="kw">fn</span> <span class="ident">append</span>(<span class="self">self</span>, <span class="ident">ia</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">IterAppend</span>) <span class="kw">where</span> <span class="self">Self</span>: <span class="ident">Sized</span> { <span class="self">self</span>.<span class="ident">append_by_ref</span>(<span class="ident">ia</span>) }
+    <span class="kw">fn</span> <span class="ident">append</span>(<span class="self">self</span>, <span class="ident">ia</span>: <span class="kw-2">&amp;mut</span> <span class="ident">IterAppend</span>) <span class="kw">where</span> <span class="self">Self</span>: <span class="ident">Sized</span> { <span class="self">self</span>.<span class="ident">append_by_ref</span>(<span class="ident">ia</span>) }
 
     <span class="doccomment">/// Performs the append operation by borrowing self.</span>
-    <span class="kw">fn</span> <span class="ident">append_by_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">IterAppend</span>);
+    <span class="kw">fn</span> <span class="ident">append_by_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;mut</span> <span class="ident">IterAppend</span>);
 }
 
 <span class="doccomment">/// Helper trait to append many arguments to a message.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">AppendAll</span> {
     <span class="doccomment">/// Performs the append operation by borrowing self.</span>
-    <span class="kw">fn</span> <span class="ident">append</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">IterAppend</span>);
+    <span class="kw">fn</span> <span class="ident">append</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;mut</span> <span class="ident">IterAppend</span>);
 }
 
 <span class="doccomment">/// Types that can be retrieved from a message as arguments implement this trait.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Get</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>: <span class="ident">Sized</span> {
     <span class="doccomment">/// Performs the get operation.</span>
-    <span class="kw">fn</span> <span class="ident">get</span>(<span class="ident">i</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">get</span>(<span class="ident">i</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>;
 }
 
 <span class="doccomment">/// Helper trait to read all arguments from a message.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">ReadAll</span>: <span class="ident">Sized</span> {
     <span class="doccomment">/// Performs the read operation.</span>
-    <span class="kw">fn</span> <span class="ident">read</span>(<span class="ident">i</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Iter</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">TypeMismatchError</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">read</span>(<span class="ident">i</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Iter</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">TypeMismatchError</span><span class="op">&gt;</span>;
 }
 
 
@@ -654,7 +654,7 @@
     <span class="doccomment">/// The corresponding D-Bus type signature for this type.</span>
     <span class="kw">fn</span> <span class="ident">signature</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Signature</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>;
     <span class="doccomment">/// Performs the append operation.</span>
-    <span class="kw">fn</span> <span class="ident">append</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">IterAppend</span>);
+    <span class="kw">fn</span> <span class="ident">append</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;mut</span> <span class="ident">IterAppend</span>);
     <span class="doccomment">/// Transforms this argument to Any (which can be downcasted to read the current value).</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// If the type is an array, and the element type is byte, numeric, boolean, or string, then the</span>
@@ -676,7 +676,7 @@
     <span class="doccomment">/// # Panic</span>
     <span class="doccomment">/// Will panic if the interior cannot be made mutable, e g, if encapsulated</span>
     <span class="doccomment">/// inside a Rc with a reference count &gt; 1.</span>
-    <span class="kw">fn</span> <span class="ident">as_any_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">any::Any</span> <span class="kw">where</span> <span class="self">Self</span>: <span class="lifetime">&#39;static</span>;
+    <span class="kw">fn</span> <span class="ident">as_any_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">any::Any</span> <span class="kw">where</span> <span class="self">Self</span>: <span class="lifetime">&#39;static</span>;
     <span class="doccomment">/// Try to read the argument as an i64.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Works for: Boolean, Byte, Int16, UInt16, Int32, UInt32, Int64, UnixFd.</span>
@@ -724,7 +724,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Get</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">RefArg</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">get</span>(<span class="ident">i</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> { <span class="ident">i</span>.<span class="ident">get_refarg</span>() }
+    <span class="kw">fn</span> <span class="ident">get</span>(<span class="ident">i</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> { <span class="ident">i</span>.<span class="ident">get_refarg</span>() }
 }
 
 <span class="doccomment">/// Cast a RefArg as a specific type (shortcut for any + downcast)</span>
@@ -767,7 +767,7 @@
     <span class="kw">fn</span> <span class="ident">signature</span>() -&gt; <span class="ident">Signature</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> { <span class="ident">T::signature</span>() }
 }
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">Append</span><span class="op">&gt;</span> <span class="ident">Append</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">T</span> {
-    <span class="kw">fn</span> <span class="ident">append_by_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">i</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">IterAppend</span>) { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">append_by_ref</span>(<span class="ident">i</span>) }
+    <span class="kw">fn</span> <span class="ident">append_by_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">i</span>: <span class="kw-2">&amp;mut</span> <span class="ident">IterAppend</span>) { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">append_by_ref</span>(<span class="ident">i</span>) }
 }
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">DictKey</span><span class="op">&gt;</span> <span class="ident">DictKey</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">T</span> {}
 
@@ -777,11 +777,11 @@
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">signature</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Signature</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">signature</span>() }
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">append</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">i</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">IterAppend</span>) { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">append</span>(<span class="ident">i</span>) }
+    <span class="kw">fn</span> <span class="ident">append</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">i</span>: <span class="kw-2">&amp;mut</span> <span class="ident">IterAppend</span>) { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">append</span>(<span class="ident">i</span>) }
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">as_any</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">any::Any</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="lifetime">&#39;static</span> { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">as_any</span>() }
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">as_any_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">any::Any</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="lifetime">&#39;static</span> { <span class="macro">unreachable!</span>() }
+    <span class="kw">fn</span> <span class="ident">as_any_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">any::Any</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="lifetime">&#39;static</span> { <span class="macro">unreachable!</span>() }
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">as_i64</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i64</span><span class="op">&gt;</span> { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">as_i64</span>() }
     <span class="attribute">#[<span class="ident">inline</span>]</span>
@@ -809,11 +809,11 @@
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">signature</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Signature</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">signature</span>() }
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">append</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">i</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">IterAppend</span>) { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">append</span>(<span class="ident">i</span>) }
+    <span class="kw">fn</span> <span class="ident">append</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">i</span>: <span class="kw-2">&amp;mut</span> <span class="ident">IterAppend</span>) { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">append</span>(<span class="ident">i</span>) }
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">as_any</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">any::Any</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="lifetime">&#39;static</span> { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">as_any</span>() }
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">as_any_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ss</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">any::Any</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="lifetime">&#39;static</span> { <span class="macro-nonterminal">$</span><span class="macro-nonterminal">make_mut</span>.<span class="ident">as_any_mut</span>() }
+    <span class="kw">fn</span> <span class="ident">as_any_mut</span>(<span class="kw-2">&amp;mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ss</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">any::Any</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="lifetime">&#39;static</span> { <span class="macro-nonterminal">$</span><span class="macro-nonterminal">make_mut</span>.<span class="ident">as_any_mut</span>() }
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">as_i64</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i64</span><span class="op">&gt;</span> { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">as_i64</span>() }
     <span class="attribute">#[<span class="ident">inline</span>]</span>
@@ -836,17 +836,17 @@
     <span class="kw">fn</span> <span class="ident">signature</span>() -&gt; <span class="ident">Signature</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> { <span class="ident">T::signature</span>() }
 }
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">Get</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">Get</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">get</span>(<span class="ident">i</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> { <span class="ident">T::get</span>(<span class="ident">i</span>).<span class="ident">map</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">t::new</span>) }
+    <span class="kw">fn</span> <span class="ident">get</span>(<span class="ident">i</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> { <span class="ident">T::get</span>(<span class="ident">i</span>).<span class="ident">map</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">t::new</span>) }
 }
 
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Append</span><span class="op">&gt;</span> <span class="ident">Append</span> <span class="kw">for</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">append_by_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">i</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">IterAppend</span>) { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">append_by_ref</span>(<span class="ident">i</span>) }
+    <span class="kw">fn</span> <span class="ident">append_by_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">i</span>: <span class="kw-2">&amp;mut</span> <span class="ident">IterAppend</span>) { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">append_by_ref</span>(<span class="ident">i</span>) }
 }
 
-<span class="macro">deref_impl!</span>(<span class="ident">Box</span>, <span class="self">self</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span> );
+<span class="macro">deref_impl!</span>(<span class="ident">Box</span>, <span class="self">self</span>, <span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span> );
 <span class="comment">// deref_impl!(Rc, self, Rc::get_mut(self).unwrap());</span>
 <span class="macro">deref_impl!</span>(<span class="ident">Arc</span>, <span class="self">self</span>, <span class="ident">Arc::get_mut</span>(<span class="self">self</span>).<span class="ident">unwrap</span>());
 
@@ -862,14 +862,14 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span>$(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>: <span class="ident">Append</span>),<span class="kw-2">*</span><span class="op">&gt;</span> <span class="ident">AppendAll</span> <span class="kw">for</span> ($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>,)<span class="kw-2">*</span>) {
-    <span class="kw">fn</span> <span class="ident">append</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">ia</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">IterAppend</span>) {
+    <span class="kw">fn</span> <span class="ident">append</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">ia</span>: <span class="kw-2">&amp;mut</span> <span class="ident">IterAppend</span>) {
         <span class="kw">let</span> ( $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">n</span>,)<span class="kw-2">*</span>) <span class="op">=</span> <span class="self">self</span>;
         $( <span class="ident">ia</span>.<span class="ident">append</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">n</span>); )<span class="op">*</span>
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span>$(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>: <span class="ident">Arg</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;z</span><span class="op">&gt;</span> <span class="ident">Get</span><span class="op">&lt;</span><span class="lifetime">&#39;z</span><span class="op">&gt;</span>),<span class="kw-2">*</span><span class="op">&gt;</span> <span class="ident">ReadAll</span> <span class="kw">for</span> ($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>,)<span class="kw-2">*</span>) {
-    <span class="kw">fn</span> <span class="ident">read</span>(<span class="ident">ii</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Iter</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">TypeMismatchError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">read</span>(<span class="ident">ii</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Iter</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">TypeMismatchError</span><span class="op">&gt;</span> {
         $( <span class="kw">let</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">n</span> <span class="op">=</span> <span class="ident">ii</span>.<span class="ident">read</span>()<span class="question-mark">?</span>; )<span class="op">*</span>
         <span class="prelude-val">Ok</span>(($( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">n</span>, )<span class="op">*</span> ))
     }
@@ -885,11 +885,11 @@
 }
 
 <span class="kw">impl</span> <span class="ident">AppendAll</span> <span class="kw">for</span> () {
-    <span class="kw">fn</span> <span class="ident">append</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">IterAppend</span>) {}
+    <span class="kw">fn</span> <span class="ident">append</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;mut</span> <span class="ident">IterAppend</span>) {}
 }
 
 <span class="kw">impl</span> <span class="ident">ReadAll</span> <span class="kw">for</span> () {
-    <span class="kw">fn</span> <span class="ident">read</span>(<span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Iter</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">TypeMismatchError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">read</span>(<span class="kw">_</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Iter</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">TypeMismatchError</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(())
     }
 }

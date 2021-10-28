@@ -403,7 +403,7 @@
                 <span class="kw">unsafe</span> {
                     <span class="comment">// TODO: Replace with bytes::copy_memory. rust-lang/rust#24028</span>
                     <span class="ident">ptr::copy_nonoverlapping</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>(), <span class="ident">buf</span>.<span class="ident">as_mut_ptr</span>(), <span class="self">self</span>.<span class="ident">len</span>());
-                    <span class="prelude-val">Ok</span>(<span class="ident">f</span>(<span class="ident">CStr::from_ptr</span>(<span class="ident">buf</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>)))
+                    <span class="prelude-val">Ok</span>(<span class="ident">f</span>(<span class="ident">CStr::from_ptr</span>(<span class="ident">buf</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">c_char</span>)))
                 }
 
             }

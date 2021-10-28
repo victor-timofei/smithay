@@ -325,11 +325,11 @@
 <span class="doccomment">/// Trait for types that allow to optain the underlying raw libinput pointer.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">AsRaw</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Receive a raw pointer representing this type.</span>
-    <span class="kw">fn</span> <span class="ident">as_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">T</span>;
+    <span class="kw">fn</span> <span class="ident">as_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*const</span> <span class="ident">T</span>;
 
     <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">as_raw_mut</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">T</span> {
-        <span class="self">self</span>.<span class="ident">as_raw</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>
+    <span class="kw">fn</span> <span class="ident">as_raw_mut</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">T</span> {
+        <span class="self">self</span>.<span class="ident">as_raw</span>() <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="kw">_</span>
     }
 }
 
@@ -342,7 +342,7 @@
 <span class="doccomment">/// Trait for types that allow to be initialized from a raw pointer</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">FromRaw</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">try_from_raw</span>(<span class="ident">ffi</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">T</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">context::Libinput</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">try_from_raw</span>(<span class="ident">ffi</span>: <span class="kw-2">*mut</span> <span class="ident">T</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">context::Libinput</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>;
 
@@ -361,7 +361,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// If the pointer is pointing to a different struct, invalid memory or `NULL` the returned</span>
     <span class="doccomment">/// struct may panic on use or cause other undefined behavior.</span>
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">ffi</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">T</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">context::Libinput</span>) -&gt; <span class="self">Self</span>;
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">ffi</span>: <span class="kw-2">*mut</span> <span class="ident">T</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">context::Libinput</span>) -&gt; <span class="self">Self</span>;
 }
 
 <span class="macro">macro_rules!</span> <span class="ident">ffi_ref_struct</span> {
@@ -370,22 +370,22 @@
         $(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">attr</span>]</span>)<span class="op">*</span>
         <span class="kw">pub</span> <span class="kw">struct</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span>
         {
-            <span class="ident">ffi</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ffi_name</span>,
+            <span class="ident">ffi</span>: <span class="kw-2">*mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ffi_name</span>,
             <span class="ident">context</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::context::Libinput</span>,
         }
 
         <span class="kw">impl</span> <span class="ident">::std::fmt::Debug</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span> {
-            <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">::std::fmt::Formatter</span>) -&gt; <span class="ident">::std::fmt::Result</span> {
+            <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">::std::fmt::Formatter</span>) -&gt; <span class="ident">::std::fmt::Result</span> {
                 <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;$struct_name @{:p}&quot;</span>, <span class="self">self</span>.<span class="ident">as_raw</span>())
             }
         }
 
         <span class="kw">impl</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::FromRaw</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">ffi_name</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span>
         {
-            <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">try_from_raw</span>(<span class="ident">ffi</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ffi_name</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::Libinput</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+            <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">try_from_raw</span>(<span class="ident">ffi</span>: <span class="kw-2">*mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ffi_name</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::Libinput</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
                 <span class="prelude-val">Some</span>(<span class="ident"><span class="self">Self</span>::from_raw</span>(<span class="ident">ffi</span>, <span class="ident">context</span>))
             }
-            <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">ffi</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ffi_name</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::Libinput</span>) -&gt; <span class="self">Self</span> {
+            <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw</span>(<span class="ident">ffi</span>: <span class="kw-2">*mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ffi_name</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::Libinput</span>) -&gt; <span class="self">Self</span> {
                 <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span> {
                     <span class="ident">ffi</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ref_fn</span>(<span class="ident">ffi</span>),
                     <span class="ident">context</span>: <span class="ident">context</span>.<span class="ident">clone</span>(),
@@ -395,8 +395,8 @@
 
         <span class="kw">impl</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::AsRaw</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">ffi_name</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span>
         {
-            <span class="kw">fn</span> <span class="ident">as_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw">const</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ffi_name</span> {
-                <span class="self">self</span>.<span class="ident">ffi</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>
+            <span class="kw">fn</span> <span class="ident">as_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*const</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ffi_name</span> {
+                <span class="self">self</span>.<span class="ident">ffi</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span>
             }
         }
 
@@ -415,7 +415,7 @@
 
         <span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span>
         {
-            <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+            <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
                 <span class="kw">unsafe</span> {
                     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unref_fn</span>(<span class="self">self</span>.<span class="ident">ffi</span>);
                 }
@@ -429,7 +429,7 @@
         }
 
         <span class="kw">impl</span> <span class="ident">::std::hash::Hash</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">struct_name</span> {
-            <span class="kw">fn</span> <span class="ident">hash</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">::std::hash::Hasher</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">H</span>) {
+            <span class="kw">fn</span> <span class="ident">hash</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">::std::hash::Hasher</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">H</span>) {
                 <span class="self">self</span>.<span class="ident">as_raw</span>().<span class="ident">hash</span>(<span class="ident">state</span>);
             }
         }

@@ -1079,7 +1079,7 @@
             <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">libc::setsockopt</span>(<span class="ident">fd</span>,
                                        <span class="ident">libc::SOL_ALG</span>,
                                        <span class="ident">libc::ALG_SET_KEY</span>,
-                                       <span class="ident">val</span>.<span class="ident">as_ref</span>().<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+                                       <span class="ident">val</span>.<span class="ident">as_ref</span>().<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span>,
                                        <span class="ident">val</span>.<span class="ident">as_ref</span>().<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">libc::socklen_t</span>);
             <span class="ident">Errno::result</span>(<span class="ident">res</span>).<span class="ident">map</span>(<span class="ident">drop</span>)
         }
@@ -1098,10 +1098,10 @@
     <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">uninit</span>() -&gt; <span class="self">Self</span>;
     <span class="doccomment">/// Returns a pointer to the stored value. This pointer will be passed to the system&#39;s</span>
     <span class="doccomment">/// `getsockopt` call (`man 3p getsockopt`, argument `option_value`).</span>
-    <span class="kw">fn</span> <span class="ident">ffi_ptr</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>;
+    <span class="kw">fn</span> <span class="ident">ffi_ptr</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">c_void</span>;
     <span class="doccomment">/// Returns length of the stored value. This pointer will be passed to the system&#39;s</span>
     <span class="doccomment">/// `getsockopt` call (`man 3p getsockopt`, argument `option_len`).</span>
-    <span class="kw">fn</span> <span class="ident">ffi_len</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">socklen_t</span>;
+    <span class="kw">fn</span> <span class="ident">ffi_len</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">socklen_t</span>;
     <span class="doccomment">/// Returns the hopefully initialized inner value.</span>
     <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">assume_init</span>(<span class="self">self</span>) -&gt; <span class="ident">T</span>;
 }
@@ -1112,7 +1112,7 @@
     <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">val</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">T</span>) -&gt; <span class="self">Self</span>;
     <span class="doccomment">/// Returns a pointer to the stored value. This pointer will be passed to the system&#39;s</span>
     <span class="doccomment">/// `setsockopt` call (`man 3p setsockopt`, argument `option_value`).</span>
-    <span class="kw">fn</span> <span class="ident">ffi_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_void</span>;
+    <span class="kw">fn</span> <span class="ident">ffi_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*const</span> <span class="ident">c_void</span>;
     <span class="doccomment">/// Returns length of the stored value. This pointer will be passed to the system&#39;s</span>
     <span class="doccomment">/// `setsockopt` call (`man 3p setsockopt`, argument `option_len`).</span>
     <span class="kw">fn</span> <span class="ident">ffi_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">socklen_t</span>;
@@ -1132,12 +1132,12 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">ffi_ptr</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span> {
-        <span class="self">self</span>.<span class="ident">val</span>.<span class="ident">as_mut_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>
+    <span class="kw">fn</span> <span class="ident">ffi_ptr</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">c_void</span> {
+        <span class="self">self</span>.<span class="ident">val</span>.<span class="ident">as_mut_ptr</span>() <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">c_void</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">ffi_len</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">socklen_t</span> {
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">len</span>
+    <span class="kw">fn</span> <span class="ident">ffi_len</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">socklen_t</span> {
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">len</span>
     }
 
     <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">assume_init</span>(<span class="self">self</span>) -&gt; <span class="ident">T</span> {
@@ -1156,8 +1156,8 @@
         <span class="ident">SetStruct</span> { <span class="ident">ptr</span> }
     }
 
-    <span class="kw">fn</span> <span class="ident">ffi_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_void</span> {
-        <span class="self">self</span>.<span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">T</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_void</span>
+    <span class="kw">fn</span> <span class="ident">ffi_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*const</span> <span class="ident">c_void</span> {
+        <span class="self">self</span>.<span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">T</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">c_void</span>
     }
 
     <span class="kw">fn</span> <span class="ident">ffi_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">socklen_t</span> {
@@ -1179,12 +1179,12 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">ffi_ptr</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span> {
-        <span class="self">self</span>.<span class="ident">val</span>.<span class="ident">as_mut_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>
+    <span class="kw">fn</span> <span class="ident">ffi_ptr</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">c_void</span> {
+        <span class="self">self</span>.<span class="ident">val</span>.<span class="ident">as_mut_ptr</span>() <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">c_void</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">ffi_len</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">socklen_t</span> {
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">len</span>
+    <span class="kw">fn</span> <span class="ident">ffi_len</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">socklen_t</span> {
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">len</span>
     }
 
     <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">assume_init</span>(<span class="self">self</span>) -&gt; <span class="ident">bool</span> {
@@ -1203,8 +1203,8 @@
         <span class="ident">SetBool</span> { <span class="ident">val</span>: <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">val</span> { <span class="number">1</span> } <span class="kw">else</span> { <span class="number">0</span> } }
     }
 
-    <span class="kw">fn</span> <span class="ident">ffi_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_void</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">val</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_int</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_void</span>
+    <span class="kw">fn</span> <span class="ident">ffi_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*const</span> <span class="ident">c_void</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">val</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">c_int</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">c_void</span>
     }
 
     <span class="kw">fn</span> <span class="ident">ffi_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">socklen_t</span> {
@@ -1226,12 +1226,12 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">ffi_ptr</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span> {
-        <span class="self">self</span>.<span class="ident">val</span>.<span class="ident">as_mut_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>
+    <span class="kw">fn</span> <span class="ident">ffi_ptr</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">c_void</span> {
+        <span class="self">self</span>.<span class="ident">val</span>.<span class="ident">as_mut_ptr</span>() <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">c_void</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">ffi_len</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">socklen_t</span> {
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">len</span>
+    <span class="kw">fn</span> <span class="ident">ffi_len</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">socklen_t</span> {
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">len</span>
     }
 
     <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">assume_init</span>(<span class="self">self</span>) -&gt; <span class="ident">u8</span> {
@@ -1250,8 +1250,8 @@
         <span class="ident">SetU8</span> { <span class="ident">val</span>: <span class="kw-2">*</span><span class="ident">val</span> <span class="kw">as</span> <span class="ident">u8</span> }
     }
 
-    <span class="kw">fn</span> <span class="ident">ffi_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_void</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">val</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">u8</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_void</span>
+    <span class="kw">fn</span> <span class="ident">ffi_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*const</span> <span class="ident">c_void</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">val</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">u8</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">c_void</span>
     }
 
     <span class="kw">fn</span> <span class="ident">ffi_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">socklen_t</span> {
@@ -1273,12 +1273,12 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">ffi_ptr</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span> {
-        <span class="self">self</span>.<span class="ident">val</span>.<span class="ident">as_mut_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>
+    <span class="kw">fn</span> <span class="ident">ffi_ptr</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">c_void</span> {
+        <span class="self">self</span>.<span class="ident">val</span>.<span class="ident">as_mut_ptr</span>() <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">c_void</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">ffi_len</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">socklen_t</span> {
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">len</span>
+    <span class="kw">fn</span> <span class="ident">ffi_len</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">socklen_t</span> {
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">len</span>
     }
 
     <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">assume_init</span>(<span class="self">self</span>) -&gt; <span class="ident">usize</span> {
@@ -1297,8 +1297,8 @@
         <span class="ident">SetUsize</span> { <span class="ident">val</span>: <span class="kw-2">*</span><span class="ident">val</span> <span class="kw">as</span> <span class="ident">c_int</span> }
     }
 
-    <span class="kw">fn</span> <span class="ident">ffi_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_void</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">val</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_int</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_void</span>
+    <span class="kw">fn</span> <span class="ident">ffi_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*const</span> <span class="ident">c_void</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">val</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">c_int</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">c_void</span>
     }
 
     <span class="kw">fn</span> <span class="ident">ffi_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">socklen_t</span> {
@@ -1320,12 +1320,12 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">ffi_ptr</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span> {
-        <span class="self">self</span>.<span class="ident">val</span>.<span class="ident">as_mut_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>
+    <span class="kw">fn</span> <span class="ident">ffi_ptr</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">c_void</span> {
+        <span class="self">self</span>.<span class="ident">val</span>.<span class="ident">as_mut_ptr</span>() <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">c_void</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">ffi_len</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">socklen_t</span> {
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">len</span>
+    <span class="kw">fn</span> <span class="ident">ffi_len</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">socklen_t</span> {
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">len</span>
     }
 
     <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">assume_init</span>(<span class="self">self</span>) -&gt; <span class="ident">OsString</span> {
@@ -1345,8 +1345,8 @@
         <span class="ident">SetOsString</span> { <span class="ident">val</span>: <span class="ident">val</span>.<span class="ident">as_os_str</span>() }
     }
 
-    <span class="kw">fn</span> <span class="ident">ffi_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_void</span> {
-        <span class="self">self</span>.<span class="ident">val</span>.<span class="ident">as_bytes</span>().<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_void</span>
+    <span class="kw">fn</span> <span class="ident">ffi_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*const</span> <span class="ident">c_void</span> {
+        <span class="self">self</span>.<span class="ident">val</span>.<span class="ident">as_bytes</span>().<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">c_void</span>
     }
 
     <span class="kw">fn</span> <span class="ident">ffi_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">socklen_t</span> {

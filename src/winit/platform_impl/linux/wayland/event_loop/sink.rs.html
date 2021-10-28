@@ -55,7 +55,7 @@
     }
 
     <span class="doccomment">/// Add new device event to a queue.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">push_device_event</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">event</span>: <span class="ident">DeviceEvent</span>, <span class="ident">device_id</span>: <span class="ident">DeviceId</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">push_device_event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">event</span>: <span class="ident">DeviceEvent</span>, <span class="ident">device_id</span>: <span class="ident">DeviceId</span>) {
         <span class="self">self</span>.<span class="ident">window_events</span>.<span class="ident">push</span>(<span class="ident">Event::DeviceEvent</span> {
             <span class="ident">event</span>,
             <span class="ident">device_id</span>: <span class="ident">RootDeviceId</span>(<span class="ident">PlatformDeviceId::Wayland</span>(<span class="ident">device_id</span>)),
@@ -63,7 +63,7 @@
     }
 
     <span class="doccomment">/// Add new window event to a queue.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">push_window_event</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">event</span>: <span class="ident">WindowEvent</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>, <span class="ident">window_id</span>: <span class="ident">WindowId</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">push_window_event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">event</span>: <span class="ident">WindowEvent</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>, <span class="ident">window_id</span>: <span class="ident">WindowId</span>) {
         <span class="self">self</span>.<span class="ident">window_events</span>.<span class="ident">push</span>(<span class="ident">Event::WindowEvent</span> {
             <span class="ident">event</span>,
             <span class="ident">window_id</span>: <span class="ident">RootWindowId</span>(<span class="ident">PlatformWindowId::Wayland</span>(<span class="ident">window_id</span>)),

@@ -211,7 +211,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">TabletSeat</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;TabletSeat&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;instances&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">instances</span>)
             .<span class="ident">field</span>(<span class="string">&quot;tablets&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">tablets</span>)
@@ -269,7 +269,7 @@
     }
 
     <span class="doccomment">/// Add a callback to SetCursor event</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">on_cursor_surface</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">cb</span>: <span class="ident">F</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">on_cursor_surface</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cb</span>: <span class="ident">F</span>)
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">TabletToolDescriptor</span>, <span class="ident">CursorImageStatus</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span>,
     {
@@ -283,9 +283,9 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Returns new [TabletHandle] if tablet was not know by this seat, if tablet was already know it returns existing handle.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_tablet</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">tablet_desc</span>: <span class="kw-2">&amp;</span><span class="ident">TabletDescriptor</span>) -&gt; <span class="ident">TabletHandle</span> {
-        <span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">borrow_mut</span>();
+        <span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">borrow_mut</span>();
 
-        <span class="kw">let</span> <span class="ident">tablets</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">inner</span>.<span class="ident">tablets</span>;
+        <span class="kw">let</span> <span class="ident">tablets</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">inner</span>.<span class="ident">tablets</span>;
         <span class="kw">let</span> <span class="ident">instances</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">inner</span>.<span class="ident">instances</span>;
 
         <span class="kw">let</span> <span class="ident">tablet</span> <span class="op">=</span> <span class="ident">tablets</span>.<span class="ident">entry</span>(<span class="ident">tablet_desc</span>.<span class="ident">clone</span>()).<span class="ident">or_insert_with</span>(<span class="op">|</span><span class="op">|</span> {
@@ -330,9 +330,9 @@
     <span class="doccomment">/// Returns new [TabletToolHandle] if tool was not know by this seat, if tool was already know it returns existing handle,</span>
     <span class="doccomment">/// it allows you to send tool input events to clients.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_tool</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">tool_desc</span>: <span class="kw-2">&amp;</span><span class="ident">TabletToolDescriptor</span>) -&gt; <span class="ident">TabletToolHandle</span> {
-        <span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">borrow_mut</span>();
+        <span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">borrow_mut</span>();
 
-        <span class="kw">let</span> <span class="ident">tools</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">inner</span>.<span class="ident">tools</span>;
+        <span class="kw">let</span> <span class="ident">tools</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">inner</span>.<span class="ident">tools</span>;
         <span class="kw">let</span> <span class="ident">instances</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">inner</span>.<span class="ident">instances</span>;
 
         <span class="kw">let</span> <span class="ident">tool</span> <span class="op">=</span> <span class="ident">tools</span>.<span class="ident">entry</span>(<span class="ident">tool_desc</span>.<span class="ident">clone</span>()).<span class="ident">or_insert_with</span>(<span class="op">|</span><span class="op">|</span> {

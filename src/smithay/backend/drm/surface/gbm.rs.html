@@ -495,7 +495,7 @@
 
 <span class="comment">// TODO: Replace with #[derive(Debug)] once gbm::BufferObject implements debug</span>
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">std::fmt::Debug</span> <span class="op">+</span> <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">std::fmt::Debug</span> <span class="kw">for</span> <span class="ident">GbmBufferedSurface</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;GbmBufferedSurface&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;buffers&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">buffers</span>)
             .<span class="ident">field</span>(<span class="string">&quot;drm&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">drm</span>)
@@ -639,8 +639,8 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// *Note*: This function can be called multiple times and</span>
     <span class="doccomment">/// will return the same buffer until it is queued (see [`GbmBufferedSurface::queue_buffer`]).</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">next_buffer</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Dmabuf</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">buffers</span>.<span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">swapchain</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">next_buffer</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Dmabuf</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">buffers</span>.<span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">swapchain</span>)
     }
 
     <span class="doccomment">/// Queues the current buffer for rendering.</span>
@@ -648,7 +648,7 @@
     <span class="doccomment">/// *Note*: This function needs to be followed up with [`GbmBufferedSurface::frame_submitted`]</span>
     <span class="doccomment">/// when a vblank event is received, that denotes successful scanout of the buffer.</span>
     <span class="doccomment">/// Otherwise the underlying swapchain will eventually run out of buffers.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">queue_buffer</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">queue_buffer</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">buffers</span>.<span class="ident">queue</span>()
     }
 
@@ -657,7 +657,7 @@
     <span class="doccomment">/// *Note*: Needs to be called, after the vblank event of the matching [`DrmDevice`](super::super::DrmDevice)</span>
     <span class="doccomment">/// was received after calling [`GbmBufferedSurface::queue_buffer`] on this surface.</span>
     <span class="doccomment">/// Otherwise the underlying swapchain will run out of buffers eventually.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">frame_submitted</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">frame_submitted</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">buffers</span>.<span class="ident">submitted</span>()
     }
 
@@ -744,7 +744,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">FbHandle</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">drm</span>.<span class="ident">destroy_framebuffer</span>(<span class="self">self</span>.<span class="ident">fb</span>);
     }
 }
@@ -761,7 +761,7 @@
 
 <span class="comment">// TODO: Replace with #[derive(Debug)] once gbm::BufferObject implements debug</span>
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">std::fmt::Debug</span> <span class="op">+</span> <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">std::fmt::Debug</span> <span class="kw">for</span> <span class="ident">Buffers</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Buffers&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;drm&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">drm</span>)
             .<span class="ident">finish_non_exhaustive</span>()
@@ -783,8 +783,8 @@
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">next</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">swapchain</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Swapchain</span><span class="op">&lt;</span><span class="ident">GbmDevice</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>, <span class="ident">BufferObject</span><span class="op">&lt;</span>()<span class="op">&gt;</span>, (<span class="ident">Dmabuf</span>, <span class="ident">FbHandle</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
+        <span class="ident">swapchain</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Swapchain</span><span class="op">&lt;</span><span class="ident">GbmDevice</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>, <span class="ident">BufferObject</span><span class="op">&lt;</span>()<span class="op">&gt;</span>, (<span class="ident">Dmabuf</span>, <span class="ident">FbHandle</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Dmabuf</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">slot</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">next_fb</span>.<span class="ident">as_ref</span>() {
             <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">slot</span>.<span class="ident">userdata</span>().<span class="ident">as_ref</span>().<span class="ident">unwrap</span>().<span class="number">0</span>.<span class="ident">clone</span>());
@@ -808,7 +808,7 @@
         <span class="prelude-val">Ok</span>(<span class="ident">dmabuf</span>)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">queue</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">queue</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">queued_fb</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">next_fb</span>.<span class="ident">take</span>();
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">pending_fb</span>.<span class="ident">is_none</span>() <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">queued_fb</span>.<span class="ident">is_some</span>() {
             <span class="self">self</span>.<span class="ident">submit</span>()
@@ -817,7 +817,7 @@
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">submitted</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">submitted</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">pending_fb</span>.<span class="ident">is_none</span>() {
             <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
         }
@@ -829,7 +829,7 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">submit</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">submit</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="comment">// yes it does not look like it, but both of these lines should be safe in all cases.</span>
         <span class="kw">let</span> <span class="ident">slot</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">queued_fb</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="ident">fb</span> <span class="op">=</span> <span class="ident">slot</span>.<span class="ident">userdata</span>().<span class="ident">as_ref</span>().<span class="ident">unwrap</span>().<span class="number">1</span>.<span class="ident">fb</span>;

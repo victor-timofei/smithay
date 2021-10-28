@@ -306,7 +306,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">Plane</span> {
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">fd</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">fd</span>.<span class="ident">take</span>() {
             <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">nix::unistd::close</span>(<span class="ident">fd</span>);
         }
@@ -348,12 +348,12 @@
 <span class="kw">impl</span> <span class="ident">Eq</span> <span class="kw">for</span> <span class="ident">WeakDmabuf</span> {}
 
 <span class="kw">impl</span> <span class="ident">Hash</span> <span class="kw">for</span> <span class="ident">Dmabuf</span> {
-    <span class="kw">fn</span> <span class="ident">hash</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">Hasher</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">H</span>) {
+    <span class="kw">fn</span> <span class="ident">hash</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">Hasher</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">H</span>) {
         <span class="ident">Arc::as_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>).<span class="ident">hash</span>(<span class="ident">state</span>)
     }
 }
 <span class="kw">impl</span> <span class="ident">Hash</span> <span class="kw">for</span> <span class="ident">WeakDmabuf</span> {
-    <span class="kw">fn</span> <span class="ident">hash</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">Hasher</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">H</span>) {
+    <span class="kw">fn</span> <span class="ident">hash</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">Hasher</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">H</span>) {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">as_ptr</span>().<span class="ident">hash</span>(<span class="ident">state</span>)
     }
 }
@@ -382,7 +382,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// *Note*: Each Dmabuf needs at least one plane.</span>
     <span class="doccomment">/// MAX_PLANES notes the maximum amount of planes any format may use with this implementation.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_plane</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">fd</span>: <span class="ident">RawFd</span>, <span class="ident">idx</span>: <span class="ident">u32</span>, <span class="ident">offset</span>: <span class="ident">u32</span>, <span class="ident">stride</span>: <span class="ident">u32</span>, <span class="ident">modifier</span>: <span class="ident">Modifier</span>) -&gt; <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_plane</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">fd</span>: <span class="ident">RawFd</span>, <span class="ident">idx</span>: <span class="ident">u32</span>, <span class="ident">offset</span>: <span class="ident">u32</span>, <span class="ident">stride</span>: <span class="ident">u32</span>, <span class="ident">modifier</span>: <span class="ident">Modifier</span>) -&gt; <span class="ident">bool</span> {
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">planes</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="ident">MAX_PLANES</span> {
             <span class="kw">return</span> <span class="bool-val">false</span>;
         }

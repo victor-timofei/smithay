@@ -150,7 +150,7 @@
 }
 
 <span class="doccomment">/// Initialize a tablet manager global.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">init_tablet_manager_global</span>(<span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Display</span>) -&gt; <span class="ident">Global</span><span class="op">&lt;</span><span class="ident">ZwpTabletManagerV2</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">init_tablet_manager_global</span>(<span class="ident">display</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Display</span>) -&gt; <span class="ident">Global</span><span class="op">&lt;</span><span class="ident">ZwpTabletManagerV2</span><span class="op">&gt;</span> {
     <span class="ident">display</span>.<span class="ident">create_global</span>::<span class="op">&lt;</span><span class="ident">ZwpTabletManagerV2</span>, <span class="kw">_</span><span class="op">&gt;</span>(
         <span class="ident">MANAGER_VERSION</span>,
         <span class="ident">Filter::new</span>(

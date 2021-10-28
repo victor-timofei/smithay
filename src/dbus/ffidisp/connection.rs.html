@@ -646,7 +646,7 @@
    we need to make sure the connection pointer does not move around.
    Hence this extra indirection. */</span>
 <span class="kw">struct</span> <span class="ident">IConnection</span> {
-    <span class="ident">conn</span>: <span class="ident">Cell</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::DBusConnection</span><span class="op">&gt;</span>,
+    <span class="ident">conn</span>: <span class="ident">Cell</span><span class="op">&lt;</span><span class="kw-2">*mut</span> <span class="ident">ffi::DBusConnection</span><span class="op">&gt;</span>,
     <span class="ident">pending_items</span>: <span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">watches</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">WatchList</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">handlers</span>: <span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident"><span class="kw">super</span>::MsgHandlerList</span><span class="op">&gt;</span>,
@@ -660,12 +660,12 @@
     <span class="ident">i</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">IConnection</span><span class="op">&gt;</span>,
 }
 
-<span class="kw">pub</span> (<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">conn_handle</span>(<span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">Connection</span>) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::DBusConnection</span> {
+<span class="kw">pub</span> (<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">conn_handle</span>(<span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">Connection</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">ffi::DBusConnection</span> {
     <span class="ident">c</span>.<span class="ident">i</span>.<span class="ident">conn</span>.<span class="ident">get</span>()
 }
 
-<span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">filter_message_cb</span>(<span class="ident">conn</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::DBusConnection</span>, <span class="ident">msg</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::DBusMessage</span>,
-    <span class="ident">user_data</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>) -&gt; <span class="ident">ffi::DBusHandlerResult</span> {
+<span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">filter_message_cb</span>(<span class="ident">conn</span>: <span class="kw-2">*mut</span> <span class="ident">ffi::DBusConnection</span>, <span class="ident">msg</span>: <span class="kw-2">*mut</span> <span class="ident">ffi::DBusMessage</span>,
+    <span class="ident">user_data</span>: <span class="kw-2">*mut</span> <span class="ident">c_void</span>) -&gt; <span class="ident">ffi::DBusHandlerResult</span> {
 
     <span class="kw">let</span> <span class="ident">i</span>: <span class="kw-2">&amp;</span><span class="ident">IConnection</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">mem::transmute</span>(<span class="ident">user_data</span>) };
     <span class="kw">let</span> <span class="ident">connref</span>: <span class="ident">panic::AssertUnwindSafe</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Connection</span><span class="op">&gt;</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">mem::transmute</span>(<span class="kw-2">&amp;</span><span class="ident">i</span>) };
@@ -705,8 +705,8 @@
     <span class="ident">b</span>
 }
 
-<span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">object_path_message_cb</span>(<span class="ident">_conn</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::DBusConnection</span>, <span class="ident">_msg</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::DBusMessage</span>,
-    <span class="ident">_user_data</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>) -&gt; <span class="ident">ffi::DBusHandlerResult</span> {
+<span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">object_path_message_cb</span>(<span class="ident">_conn</span>: <span class="kw-2">*mut</span> <span class="ident">ffi::DBusConnection</span>, <span class="ident">_msg</span>: <span class="kw-2">*mut</span> <span class="ident">ffi::DBusMessage</span>,
+    <span class="ident">_user_data</span>: <span class="kw-2">*mut</span> <span class="ident">c_void</span>) -&gt; <span class="ident">ffi::DBusHandlerResult</span> {
     <span class="comment">/* Already pushed in filter_message_cb, so we just set the handled flag here to disable the
        &quot;default&quot; handler. */</span>
     <span class="ident">ffi::DBusHandlerResult::Handled</span>
@@ -714,11 +714,11 @@
 
 <span class="kw">impl</span> <span class="ident">Connection</span> {
     <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">conn</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::DBusConnection</span> {
+    <span class="kw">fn</span> <span class="ident">conn</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">ffi::DBusConnection</span> {
         <span class="self">self</span>.<span class="ident">i</span>.<span class="ident">conn</span>.<span class="ident">get</span>()
     }
 
-    <span class="kw">fn</span> <span class="ident">conn_from_ptr</span>(<span class="ident">conn</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::DBusConnection</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Connection</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">conn_from_ptr</span>(<span class="ident">conn</span>: <span class="kw-2">*mut</span> <span class="ident">ffi::DBusConnection</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Connection</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Connection</span> { <span class="ident">i</span>: <span class="ident">Box::new</span>(<span class="ident">IConnection</span> {
             <span class="ident">conn</span>: <span class="ident">Cell::new</span>(<span class="ident">conn</span>),
             <span class="ident">pending_items</span>: <span class="ident">RefCell::new</span>(<span class="ident">VecDeque::new</span>()),
@@ -804,7 +804,7 @@
     <span class="doccomment">/// Sends a message over the D-Bus without waiting. Useful for sending signals and method call replies.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">msg</span>: <span class="ident">Message</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u32</span>,()<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">serial</span> <span class="op">=</span> <span class="number">0u32</span>;
-        <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi::dbus_connection_send</span>(<span class="self">self</span>.<span class="ident">conn</span>(), <span class="ident">msg</span>.<span class="ident">ptr</span>(), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">serial</span>) };
+        <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi::dbus_connection_send</span>(<span class="self">self</span>.<span class="ident">conn</span>(), <span class="ident">msg</span>.<span class="ident">ptr</span>(), <span class="kw-2">&amp;mut</span> <span class="ident">serial</span>) };
         <span class="kw">if</span> <span class="ident">r</span> <span class="op">==</span> <span class="number">0</span> { <span class="kw">return</span> <span class="prelude-val">Err</span>(()); }
         <span class="kw">unsafe</span> { <span class="ident">ffi::dbus_connection_flush</span>(<span class="self">self</span>.<span class="ident">conn</span>()) };
         <span class="prelude-val">Ok</span>(<span class="ident">serial</span>)
@@ -888,7 +888,7 @@
             <span class="ident">dbus_internal_pad4</span>: <span class="prelude-val">None</span>,
         };
         <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="kw">unsafe</span> {
-            <span class="kw">let</span> <span class="ident">user_data</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span> <span class="op">=</span> <span class="ident">mem::transmute</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">i</span>);
+            <span class="kw">let</span> <span class="ident">user_data</span>: <span class="kw-2">*mut</span> <span class="ident">c_void</span> <span class="op">=</span> <span class="ident">mem::transmute</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">i</span>);
             <span class="ident">ffi::dbus_connection_try_register_object_path</span>(<span class="self">self</span>.<span class="ident">conn</span>(), <span class="ident">p</span>.<span class="ident">as_ptr</span>(), <span class="kw-2">&amp;</span><span class="ident">vtable</span>, <span class="ident">user_data</span>, <span class="ident">e</span>.<span class="ident">get_mut</span>())
         };
         <span class="kw">if</span> <span class="ident">r</span> <span class="op">==</span> <span class="number">0</span> { <span class="prelude-val">Err</span>(<span class="ident">e</span>) } <span class="kw">else</span> { <span class="prelude-val">Ok</span>(()) }
@@ -904,8 +904,8 @@
     <span class="doccomment">/// List registered object paths.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">list_registered_object_paths</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">to_c_str</span>(<span class="ident">path</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">clist</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span> <span class="op">=</span> <span class="ident">ptr::null_mut</span>();
-        <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi::dbus_connection_list_registered</span>(<span class="self">self</span>.<span class="ident">conn</span>(), <span class="ident">p</span>.<span class="ident">as_ptr</span>(), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">clist</span>) };
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">clist</span>: <span class="kw-2">*mut</span> <span class="kw-2">*mut</span> <span class="ident">c_char</span> <span class="op">=</span> <span class="ident">ptr::null_mut</span>();
+        <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi::dbus_connection_list_registered</span>(<span class="self">self</span>.<span class="ident">conn</span>(), <span class="ident">p</span>.<span class="ident">as_ptr</span>(), <span class="kw-2">&amp;mut</span> <span class="ident">clist</span>) };
         <span class="kw">if</span> <span class="ident">r</span> <span class="op">==</span> <span class="number">0</span> { <span class="macro">panic!</span>(<span class="string">&quot;Out of memory&quot;</span>); }
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="number">0</span>;
@@ -1049,7 +1049,7 @@
     <span class="doccomment">/// # }</span>
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">replace_message_callback</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">MessageCallback</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">MessageCallback</span><span class="op">&gt;</span> {
-        <span class="ident">mem::replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">i</span>.<span class="ident">filter_cb</span>.<span class="ident">borrow_mut</span>(), <span class="ident">f</span>)
+        <span class="ident">mem::replace</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">i</span>.<span class="ident">filter_cb</span>.<span class="ident">borrow_mut</span>(), <span class="ident">f</span>)
     }
 
     <span class="doccomment">/// Sets a callback to be called if a file descriptor status changes.</span>
@@ -1067,16 +1067,16 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_watch_callback</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="ident">Watch</span>) <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>) { <span class="self">self</span>.<span class="ident">i</span>.<span class="ident">watches</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>().<span class="ident">set_on_update</span>(<span class="ident">f</span>); }
 
     <span class="kw">fn</span> <span class="ident">check_panic</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">mem::replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">i</span>.<span class="ident">filter_cb_panic</span>.<span class="ident">borrow_mut</span>(), <span class="prelude-val">Ok</span>(()));
+        <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">mem::replace</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">i</span>.<span class="ident">filter_cb_panic</span>.<span class="ident">borrow_mut</span>(), <span class="prelude-val">Ok</span>(()));
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">perr</span>) <span class="op">=</span> <span class="ident">p</span> { <span class="ident">panic::resume_unwind</span>(<span class="ident">perr</span>); }
     }
 
     <span class="kw">fn</span> <span class="ident">next_msg</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span> {
         <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">msg</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">i</span>.<span class="ident">pending_items</span>.<span class="ident">borrow_mut</span>().<span class="ident">pop_front</span>() {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span>: <span class="ident">MsgHandlerList</span> <span class="op">=</span> <span class="ident">mem::replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">i</span>.<span class="ident">handlers</span>.<span class="ident">borrow_mut</span>(), <span class="macro">vec!</span>());
-            <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">msghandler_process</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">v</span>, <span class="kw-2">&amp;</span><span class="ident">msg</span>, <span class="self">self</span>);
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span>: <span class="ident">MsgHandlerList</span> <span class="op">=</span> <span class="ident">mem::replace</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">i</span>.<span class="ident">handlers</span>.<span class="ident">borrow_mut</span>(), <span class="macro">vec!</span>());
+            <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">msghandler_process</span>(<span class="kw-2">&amp;mut</span> <span class="ident">v</span>, <span class="kw-2">&amp;</span><span class="ident">msg</span>, <span class="self">self</span>);
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v2</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">i</span>.<span class="ident">handlers</span>.<span class="ident">borrow_mut</span>();
-            <span class="ident">v</span>.<span class="ident">append</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">v2</span>);
+            <span class="ident">v</span>.<span class="ident">append</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">v2</span>);
             <span class="kw-2">*</span><span class="ident">v2</span> <span class="op">=</span> <span class="ident">v</span>;
             <span class="kw">if</span> <span class="op">!</span><span class="ident">b</span> { <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">msg</span>) };
         };
@@ -1086,7 +1086,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">Connection</span> {
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="kw">unsafe</span> {
             <span class="ident">ffi::dbus_connection_close</span>(<span class="self">self</span>.<span class="ident">conn</span>());
             <span class="ident">ffi::dbus_connection_unref</span>(<span class="self">self</span>.<span class="ident">conn</span>());
@@ -1095,7 +1095,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">Connection</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">fmt::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">fmt::Error</span><span class="op">&gt;</span> {
         <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;D-Bus Connection({})&quot;</span>, <span class="self">self</span>.<span class="ident">unique_name</span>())
     }
 }
@@ -1111,7 +1111,7 @@
 }
 
 
-<span class="kw">fn</span> <span class="ident">msghandler_process</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">MsgHandlerList</span>, <span class="ident">m</span>: <span class="kw-2">&amp;</span><span class="ident">Message</span>, <span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">Connection</span>) -&gt; <span class="ident">bool</span> {
+<span class="kw">fn</span> <span class="ident">msghandler_process</span>(<span class="ident">v</span>: <span class="kw-2">&amp;mut</span> <span class="ident">MsgHandlerList</span>, <span class="ident">m</span>: <span class="kw-2">&amp;</span><span class="ident">Message</span>, <span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">Connection</span>) -&gt; <span class="ident">bool</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ii</span>: <span class="ident">isize</span> <span class="op">=</span> <span class="op">-</span><span class="number">1</span>;
     <span class="kw">loop</span> {
         <span class="ident">ii</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
@@ -1144,7 +1144,7 @@
     }
 
     <span class="comment">// Returns true if processed, false if not</span>
-    <span class="kw">fn</span> <span class="ident">process_handlers</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">ci</span>: <span class="kw-2">&amp;</span><span class="ident">ConnectionItem</span>) -&gt; <span class="ident">bool</span> {
+    <span class="kw">fn</span> <span class="ident">process_handlers</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">ci</span>: <span class="kw-2">&amp;</span><span class="ident">ConnectionItem</span>) -&gt; <span class="ident">bool</span> {
         <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">ci</span> {
             <span class="ident">ConnectionItem::MethodReturn</span>(<span class="kw-2">ref</span> <span class="ident">msg</span>) =&gt; <span class="ident">msg</span>,
             <span class="ident">ConnectionItem::Signal</span>(<span class="kw-2">ref</span> <span class="ident">msg</span>) =&gt; <span class="ident">msg</span>,
@@ -1152,13 +1152,13 @@
             <span class="ident">ConnectionItem::Nothing</span> =&gt; <span class="kw">return</span> <span class="bool-val">false</span>,
         };
 
-        <span class="ident">msghandler_process</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">handlers</span>, <span class="ident">m</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">c</span>)
+        <span class="ident">msghandler_process</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">handlers</span>, <span class="ident">m</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">c</span>)
     }
 
     <span class="doccomment">/// Access and modify message handlers</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Note: Likely to changed/refactored/removed in next release</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">msg_handlers</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">MsgHandler</span><span class="op">&gt;</span><span class="op">&gt;</span> { <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">handlers</span> }
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">msg_handlers</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">MsgHandler</span><span class="op">&gt;</span><span class="op">&gt;</span> { <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">handlers</span> }
 
     <span class="doccomment">/// Creates a new ConnectionItems iterator</span>
     <span class="doccomment">///</span>
@@ -1180,7 +1180,7 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">ConnectionItems</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">ConnectionItem</span>;
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ConnectionItem</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ConnectionItem</span><span class="op">&gt;</span> {
         <span class="kw">loop</span> {
             <span class="kw">if</span> <span class="self">self</span>.<span class="ident">c</span>.<span class="ident">i</span>.<span class="ident">filter_cb</span>.<span class="ident">borrow</span>().<span class="ident">is_none</span>() { <span class="macro">panic!</span>(<span class="string">&quot;ConnectionItems::next called recursively or with a MessageCallback set to None&quot;</span>); }
             <span class="kw">let</span> <span class="ident">i</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ConnectionItem</span><span class="op">&gt;</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">c</span>.<span class="ident">next_msg</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">into</span>());
@@ -1220,7 +1220,7 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">ops::Deref</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">Connection</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">ConnMsgs</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">Message</span>;
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
 
         <span class="kw">loop</span> {
             <span class="kw">let</span> <span class="ident">iconn</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">conn</span>.<span class="ident">i</span>;

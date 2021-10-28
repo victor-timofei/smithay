@@ -229,12 +229,12 @@
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Interface</span>, <span class="ident">Main</span>, <span class="ident">Resource</span>};
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">DisplayInner</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wl_display</span>,
-    <span class="ident">rust_globals</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wl_global</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">ptr</span>: <span class="kw-2">*mut</span> <span class="ident">wl_display</span>,
+    <span class="ident">rust_globals</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">*mut</span> <span class="ident">wl_global</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">DisplayInner</span> {
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         {
             <span class="kw">let</span> <span class="ident">_c_safety_guard</span> <span class="op">=</span> <span class="ident"><span class="kw">super</span>::C_SAFETY</span>.<span class="ident">lock</span>();
             <span class="kw">unsafe</span> {
@@ -265,19 +265,19 @@
                 <span class="ident">wl_display_set_global_filter</span>,
                 <span class="ident">ptr</span>,
                 <span class="ident"><span class="kw">super</span>::globals::global_filter</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">rust_globals</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wl_global</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>
+                <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">rust_globals</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">*mut</span> <span class="ident">wl_global</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="kw">_</span>
             );
 
             <span class="ident">DisplayInner</span> { <span class="ident">ptr</span>, <span class="ident">rust_globals</span> }
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wl_display</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">wl_display</span> {
         <span class="self">self</span>.<span class="ident">ptr</span>
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">create_global</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">F1</span>, <span class="ident">F2</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">version</span>: <span class="ident">u32</span>,
         <span class="ident">implementation</span>: <span class="ident">F1</span>,
         <span class="ident">filter</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">F2</span><span class="op">&gt;</span>,
@@ -296,7 +296,7 @@
                 <span class="self">self</span>.<span class="ident">ptr</span>,
                 <span class="ident">I::c_interface</span>(),
                 <span class="ident">version</span> <span class="kw">as</span> <span class="ident">i32</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">GlobalData</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+                <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">GlobalData</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="kw">_</span>,
                 <span class="ident"><span class="kw">super</span>::globals::global_bind</span>::<span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>
             );
 
@@ -306,7 +306,7 @@
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">flush_clients</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">data</span>: <span class="ident"><span class="kw">crate</span>::DispatchData</span>) {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">flush_clients</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">data</span>: <span class="ident"><span class="kw">crate</span>::DispatchData</span>) {
         <span class="ident"><span class="kw">super</span>::with_dispatch_data</span>(<span class="ident">data</span>, <span class="op">|</span><span class="op">|</span> {
             <span class="kw">let</span> <span class="ident">_c_safety_guard</span> <span class="op">=</span> <span class="ident"><span class="kw">super</span>::C_SAFETY</span>.<span class="ident">lock</span>();
             <span class="kw">unsafe</span> { <span class="macro">ffi_dispatch!</span>(<span class="ident">WAYLAND_SERVER_HANDLE</span>, <span class="ident">wl_display_flush_clients</span>, <span class="self">self</span>.<span class="ident">ptr</span>) };
@@ -314,7 +314,7 @@
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">dispatch</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">timeout</span>: <span class="ident">i32</span>,
         <span class="ident">data</span>: <span class="ident"><span class="kw">crate</span>::DispatchData</span>,
     ) -&gt; <span class="ident">std::io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
@@ -341,7 +341,7 @@
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">add_socket</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>) -&gt; <span class="ident">IoResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">add_socket</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>) -&gt; <span class="ident">IoResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">S</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">OsStr</span><span class="op">&gt;</span>,
     {
@@ -380,7 +380,7 @@
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">add_socket_auto</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">IoResult</span><span class="op">&lt;</span><span class="ident">OsString</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">add_socket_auto</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">IoResult</span><span class="op">&lt;</span><span class="ident">OsString</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">_c_safety_guard</span> <span class="op">=</span> <span class="ident"><span class="kw">super</span>::C_SAFETY</span>.<span class="ident">lock</span>();
         <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span>
             <span class="kw">unsafe</span> { <span class="macro">ffi_dispatch!</span>(<span class="ident">WAYLAND_SERVER_HANDLE</span>, <span class="ident">wl_display_add_socket_auto</span>, <span class="self">self</span>.<span class="ident">ptr</span>) };
@@ -397,7 +397,7 @@
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">add_socket_fd</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">fd</span>: <span class="ident">RawFd</span>) -&gt; <span class="ident">IoResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">add_socket_fd</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">fd</span>: <span class="ident">RawFd</span>) -&gt; <span class="ident">IoResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">_c_safety_guard</span> <span class="op">=</span> <span class="ident"><span class="kw">super</span>::C_SAFETY</span>.<span class="ident">lock</span>();
         <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="macro">ffi_dispatch!</span>(<span class="ident">WAYLAND_SERVER_HANDLE</span>, <span class="ident">wl_display_add_socket_fd</span>, <span class="self">self</span>.<span class="ident">ptr</span>, <span class="ident">fd</span>);
         <span class="kw">if</span> <span class="ident">ret</span> <span class="op">==</span> <span class="number">0</span> {
@@ -408,7 +408,7 @@
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">create_client</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">fd</span>: <span class="ident">RawFd</span>,
         <span class="ident">data</span>: <span class="ident"><span class="kw">crate</span>::DispatchData</span>,
     ) -&gt; <span class="ident">ClientInner</span> {
@@ -420,9 +420,9 @@
     }
 }
 
-<span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">client_created</span>(<span class="ident">_listener</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wl_listener</span>, <span class="ident">data</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>) {
+<span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">client_created</span>(<span class="ident">_listener</span>: <span class="kw-2">*mut</span> <span class="ident">wl_listener</span>, <span class="ident">data</span>: <span class="kw-2">*mut</span> <span class="ident">c_void</span>) {
     <span class="comment">// init the client</span>
-    <span class="kw">let</span> <span class="ident">_client</span> <span class="op">=</span> <span class="ident">ClientInner::from_ptr</span>(<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wl_client</span>);
+    <span class="kw">let</span> <span class="ident">_client</span> <span class="op">=</span> <span class="ident">ClientInner::from_ptr</span>(<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">wl_client</span>);
 }
 </code></pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="wayland_server" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div>

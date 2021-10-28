@@ -306,7 +306,7 @@
             .<span class="ident">known_surfaces</span>
             .<span class="ident">push</span>(<span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>));
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">imp</span> <span class="op">=</span> <span class="ident">implementation</span>.<span class="ident">borrow_mut</span>();
-        (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">imp</span>)(
+        (<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">imp</span>)(
             <span class="ident">ShellRequest::NewShellSurface</span> {
                 <span class="ident">surface</span>: <span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>),
             },
@@ -368,7 +368,7 @@
                 })
                 .<span class="ident">unwrap</span>();
                 <span class="kw">if</span> <span class="ident">valid</span> {
-                    (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(
+                    (<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(
                         <span class="ident">ShellRequest::Pong</span> {
                             <span class="ident">surface</span>: <span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>),
                         },
@@ -378,7 +378,7 @@
             }
             <span class="ident">Request::Move</span> { <span class="ident">seat</span>, <span class="ident">serial</span> } =&gt; {
                 <span class="kw">let</span> <span class="ident">serial</span> <span class="op">=</span> <span class="ident">Serial::from</span>(<span class="ident">serial</span>);
-                (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(
+                (<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(
                     <span class="ident">ShellRequest::Move</span> {
                         <span class="ident">surface</span>: <span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>),
                         <span class="ident">serial</span>,
@@ -389,7 +389,7 @@
             }
             <span class="ident">Request::Resize</span> { <span class="ident">seat</span>, <span class="ident">serial</span>, <span class="ident">edges</span> } =&gt; {
                 <span class="kw">let</span> <span class="ident">serial</span> <span class="op">=</span> <span class="ident">Serial::from</span>(<span class="ident">serial</span>);
-                (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(
+                (<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(
                     <span class="ident">ShellRequest::Resize</span> {
                         <span class="ident">surface</span>: <span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>),
                         <span class="ident">serial</span>,
@@ -399,14 +399,14 @@
                     <span class="ident">dispatch_data</span>,
                 )
             }
-            <span class="ident">Request::SetToplevel</span> =&gt; (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(
+            <span class="ident">Request::SetToplevel</span> =&gt; (<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(
                 <span class="ident">ShellRequest::SetKind</span> {
                     <span class="ident">surface</span>: <span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>),
                     <span class="ident">kind</span>: <span class="ident">ShellSurfaceKind::Toplevel</span>,
                 },
                 <span class="ident">dispatch_data</span>,
             ),
-            <span class="ident">Request::SetTransient</span> { <span class="ident">parent</span>, <span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">flags</span> } =&gt; (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(
+            <span class="ident">Request::SetTransient</span> { <span class="ident">parent</span>, <span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">flags</span> } =&gt; (<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(
                 <span class="ident">ShellRequest::SetKind</span> {
                     <span class="ident">surface</span>: <span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>),
                     <span class="ident">kind</span>: <span class="ident">ShellSurfaceKind::Transient</span> {
@@ -421,7 +421,7 @@
                 <span class="ident">method</span>,
                 <span class="ident">framerate</span>,
                 <span class="ident">output</span>,
-            } =&gt; (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(
+            } =&gt; (<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(
                 <span class="ident">ShellRequest::SetKind</span> {
                     <span class="ident">surface</span>: <span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>),
                     <span class="ident">kind</span>: <span class="ident">ShellSurfaceKind::Fullscreen</span> {
@@ -441,7 +441,7 @@
                 <span class="ident">flags</span>,
             } =&gt; {
                 <span class="kw">let</span> <span class="ident">serial</span> <span class="op">=</span> <span class="ident">Serial::from</span>(<span class="ident">serial</span>);
-                (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(
+                (<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(
                     <span class="ident">ShellRequest::SetKind</span> {
                         <span class="ident">surface</span>: <span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>),
                         <span class="ident">kind</span>: <span class="ident">ShellSurfaceKind::Popup</span> {
@@ -455,7 +455,7 @@
                     <span class="ident">dispatch_data</span>,
                 )
             }
-            <span class="ident">Request::SetMaximized</span> { <span class="ident">output</span> } =&gt; (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(
+            <span class="ident">Request::SetMaximized</span> { <span class="ident">output</span> } =&gt; (<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">user_impl</span>)(
                 <span class="ident">ShellRequest::SetKind</span> {
                     <span class="ident">surface</span>: <span class="ident">make_handle</span>(<span class="kw-2">&amp;</span><span class="ident">shell_surface</span>),
                     <span class="ident">kind</span>: <span class="ident">ShellSurfaceKind::Maximized</span> { <span class="ident">output</span> },

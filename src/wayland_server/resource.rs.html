@@ -544,7 +544,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// NOTE: This method will panic if called while the `use_system_lib` feature is not</span>
     <span class="doccomment">/// activated</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">c_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wl_resource</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">c_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">wl_resource</span> {
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_system_lib&quot;</span>)]</span>
         {
             <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">c_ptr</span>()
@@ -584,7 +584,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// The provided pointer must be a valid pointer to a wayland object from</span>
     <span class="doccomment">/// `libwayland-client` associated to the correct interface.</span>
-    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_c_ptr</span>(<span class="ident">_ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wl_resource</span>) -&gt; <span class="self">Self</span>
+    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_c_ptr</span>(<span class="ident">_ptr</span>: <span class="kw-2">*mut</span> <span class="ident">wl_resource</span>) -&gt; <span class="self">Self</span>
     <span class="kw">where</span>
         <span class="ident">I</span>: <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Resource</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     {
@@ -626,7 +626,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="ident">Interface</span><span class="op">&gt;</span> <span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Resource</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{}@{}&quot;</span>, <span class="ident">I::NAME</span>, <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">id</span>())
     }
 }
@@ -635,7 +635,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Main</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="ident">Interface</span> <span class="op">+</span> <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Resource</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Resource</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="ident">inner</span>: <span class="ident">I</span>,
-    <span class="ident">_nonsend</span>: <span class="ident">std::marker::PhantomData</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw-2">mut</span> ()<span class="op">&gt;</span>,
+    <span class="ident">_nonsend</span>: <span class="ident">std::marker::PhantomData</span><span class="op">&lt;</span><span class="kw-2">*mut</span> ()<span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="ident">Interface</span><span class="op">&gt;</span> <span class="ident">Main</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>
@@ -714,7 +714,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// You must ensure that this object was newly created and have never been user nor</span>
     <span class="doccomment">/// had any listener associated.</span>
-    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">init_from_c_ptr</span>(<span class="ident">_ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wl_resource</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">init_from_c_ptr</span>(<span class="ident">_ptr</span>: <span class="kw-2">*mut</span> <span class="ident">wl_resource</span>) -&gt; <span class="self">Self</span> {
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_system_lib&quot;</span>)]</span>
         {
             <span class="ident">Main::wrap</span>(<span class="ident">ResourceInner::init_from_c_ptr</span>::<span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">_ptr</span>))
@@ -742,7 +742,7 @@
 <span class="kw">where</span>
     <span class="ident">I</span>: <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Resource</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Resource</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{:?}[MAIN]&quot;</span>, <span class="self">self</span>.<span class="ident">inner</span>)
     }
 }

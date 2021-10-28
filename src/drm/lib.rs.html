@@ -453,8 +453,8 @@
         <span class="kw">let</span> <span class="ident">buffer_len</span>;
 
         <span class="kw">let</span> <span class="ident">_busid</span> <span class="op">=</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">slice</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">buffer</span>[..];
-            <span class="kw">let</span> <span class="ident">busid</span> <span class="op">=</span> <span class="ident">drm_ffi::get_bus_id</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">slice</span>))<span class="question-mark">?</span>;
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">slice</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">buffer</span>[..];
+            <span class="kw">let</span> <span class="ident">busid</span> <span class="op">=</span> <span class="ident">drm_ffi::get_bus_id</span>(<span class="self">self</span>.<span class="ident">as_raw_fd</span>(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut</span> <span class="ident">slice</span>))<span class="question-mark">?</span>;
             <span class="ident">buffer_len</span> <span class="op">=</span> <span class="ident">slice</span>.<span class="ident">len</span>();
             <span class="ident">busid</span>
         };
@@ -490,15 +490,15 @@
         <span class="kw">let</span> <span class="ident">desc_len</span>;
 
         <span class="kw">let</span> <span class="ident">_version</span> <span class="op">=</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">name_slice</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">name</span>[..];
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">date_slice</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">date</span>[..];
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">desc_slice</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">desc</span>[..];
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">name_slice</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">name</span>[..];
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">date_slice</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">date</span>[..];
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">desc_slice</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">desc</span>[..];
 
             <span class="kw">let</span> <span class="ident">version</span> <span class="op">=</span> <span class="ident">drm_ffi::get_version</span>(
                 <span class="self">self</span>.<span class="ident">as_raw_fd</span>(),
-                <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">name_slice</span>),
-                <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">date_slice</span>),
-                <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">desc_slice</span>),
+                <span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut</span> <span class="ident">name_slice</span>),
+                <span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut</span> <span class="ident">date_slice</span>),
+                <span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut</span> <span class="ident">desc_slice</span>),
             )<span class="question-mark">?</span>;
 
             <span class="ident">name_len</span> <span class="op">=</span> <span class="ident">name_slice</span>.<span class="ident">len</span>();

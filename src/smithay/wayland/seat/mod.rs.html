@@ -440,7 +440,7 @@
 
 <span class="comment">// UserDataMap does not implement debug, so we have to impl Debug manually</span>
 <span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">SeatRc</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;SeatRc&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;inner&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">inner</span>)
             .<span class="ident">field</span>(<span class="string">&quot;user_data&quot;</span>, <span class="kw-2">&amp;</span><span class="string">&quot;...&quot;</span>)
@@ -494,7 +494,7 @@
     <span class="doccomment">/// You are provided with the state token to retrieve it (allowing</span>
     <span class="doccomment">/// you to add or remove capabilities from it), and the global handle,</span>
     <span class="doccomment">/// in case you want to remove it.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>(<span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Display</span>, <span class="ident">name</span>: <span class="ident">String</span>, <span class="ident">logger</span>: <span class="ident">L</span>) -&gt; (<span class="ident">Seat</span>, <span class="ident">Global</span><span class="op">&lt;</span><span class="ident">wl_seat::WlSeat</span><span class="op">&gt;</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>(<span class="ident">display</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Display</span>, <span class="ident">name</span>: <span class="ident">String</span>, <span class="ident">logger</span>: <span class="ident">L</span>) -&gt; (<span class="ident">Seat</span>, <span class="ident">Global</span><span class="op">&lt;</span><span class="ident">wl_seat::WlSeat</span><span class="op">&gt;</span>)
     <span class="kw">where</span>
         <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">::slog::Logger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     {
@@ -568,7 +568,7 @@
     <span class="doccomment">///     |new_status| { /* a closure handling requests from clients to change the cursor icon */ }</span>
     <span class="doccomment">/// );</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_pointer</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">cb</span>: <span class="ident">F</span>) -&gt; <span class="ident">PointerHandle</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_pointer</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cb</span>: <span class="ident">F</span>) -&gt; <span class="ident">PointerHandle</span>
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">CursorImageStatus</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span>,
     {
@@ -593,7 +593,7 @@
     <span class="doccomment">/// Remove the pointer capability from this seat</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Clients will be appropriately notified.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove_pointer</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove_pointer</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inner</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">arc</span>.<span class="ident">inner</span>.<span class="ident">borrow_mut</span>();
         <span class="kw">if</span> <span class="ident">inner</span>.<span class="ident">pointer</span>.<span class="ident">is_some</span>() {
             <span class="ident">inner</span>.<span class="ident">pointer</span> <span class="op">=</span> <span class="prelude-val">None</span>;
@@ -637,7 +637,7 @@
     <span class="doccomment">///     .expect(&quot;Failed to initialize the keyboard&quot;);</span>
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_keyboard</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">xkb_config</span>: <span class="ident">keyboard::XkbConfig</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
         <span class="ident">repeat_delay</span>: <span class="ident">i32</span>,
         <span class="ident">repeat_rate</span>: <span class="ident">i32</span>,
@@ -674,7 +674,7 @@
     <span class="doccomment">/// Remove the keyboard capability from this seat</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Clients will be appropriately notified.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove_keyboard</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove_keyboard</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inner</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">arc</span>.<span class="ident">inner</span>.<span class="ident">borrow_mut</span>();
         <span class="kw">if</span> <span class="ident">inner</span>.<span class="ident">keyboard</span>.<span class="ident">is_some</span>() {
             <span class="ident">inner</span>.<span class="ident">keyboard</span> <span class="op">=</span> <span class="prelude-val">None</span>;

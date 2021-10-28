@@ -469,7 +469,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">Pointers</span> {
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="comment">// Drop relative pointer.</span>
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">relative_pointer</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">relative_pointer</span>.<span class="ident">take</span>() {
             <span class="ident">relative_pointer</span>.<span class="ident">destroy</span>();

@@ -257,7 +257,7 @@
             <span class="ident">libc::mq_open</span>(<span class="ident">name</span>.<span class="ident">as_ptr</span>(),
                           <span class="ident">oflag</span>.<span class="ident">bits</span>(),
                           <span class="ident">mode</span>.<span class="ident">bits</span>() <span class="kw">as</span> <span class="ident">libc::c_int</span>,
-                          <span class="kw-2">&amp;</span><span class="ident">mq_attr</span>.<span class="ident">mq_attr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::mq_attr</span>)
+                          <span class="kw-2">&amp;</span><span class="ident">mq_attr</span>.<span class="ident">mq_attr</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::mq_attr</span>)
         },
         <span class="prelude-val">None</span> =&gt; <span class="kw">unsafe</span> { <span class="ident">libc::mq_open</span>(<span class="ident">name</span>.<span class="ident">as_ptr</span>(), <span class="ident">oflag</span>.<span class="ident">bits</span>()) },
     };
@@ -283,13 +283,13 @@
 <span class="doccomment">/// Receive a message from a message queue</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// See also [`mq_receive(2)`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_receive.html)</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mq_receive</span>(<span class="ident">mqdes</span>: <span class="ident">mqd_t</span>, <span class="ident">message</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>], <span class="ident">msg_prio</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">u32</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mq_receive</span>(<span class="ident">mqdes</span>: <span class="ident">mqd_t</span>, <span class="ident">message</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u8</span>], <span class="ident">msg_prio</span>: <span class="kw-2">&amp;mut</span> <span class="ident">u32</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">message</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">size_t</span>;
     <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="kw">unsafe</span> {
         <span class="ident">libc::mq_receive</span>(<span class="ident">mqdes</span>,
-                         <span class="ident">message</span>.<span class="ident">as_mut_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>,
+                         <span class="ident">message</span>.<span class="ident">as_mut_ptr</span>() <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">c_char</span>,
                          <span class="ident">len</span>,
-                         <span class="ident">msg_prio</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u32</span>)
+                         <span class="ident">msg_prio</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">u32</span>)
     };
     <span class="ident">Errno::result</span>(<span class="ident">res</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">r</span><span class="op">|</span> <span class="ident">r</span> <span class="kw">as</span> <span class="ident">usize</span>)
 }
@@ -300,7 +300,7 @@
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mq_send</span>(<span class="ident">mqdes</span>: <span class="ident">mqd_t</span>, <span class="ident">message</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">msq_prio</span>: <span class="ident">u32</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="kw">unsafe</span> {
         <span class="ident">libc::mq_send</span>(<span class="ident">mqdes</span>,
-                      <span class="ident">message</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>,
+                      <span class="ident">message</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">c_char</span>,
                       <span class="ident">message</span>.<span class="ident">len</span>(),
                       <span class="ident">msq_prio</span>)
     };
@@ -324,7 +324,7 @@
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mq_setattr</span>(<span class="ident">mqd</span>: <span class="ident">mqd_t</span>, <span class="ident">newattr</span>: <span class="kw-2">&amp;</span><span class="ident">MqAttr</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">MqAttr</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">attr</span> <span class="op">=</span> <span class="ident">mem::MaybeUninit</span>::<span class="op">&lt;</span><span class="ident">libc::mq_attr</span><span class="op">&gt;</span><span class="ident">::uninit</span>();
     <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="kw">unsafe</span> {
-        <span class="ident">libc::mq_setattr</span>(<span class="ident">mqd</span>, <span class="kw-2">&amp;</span><span class="ident">newattr</span>.<span class="ident">mq_attr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc::mq_attr</span>, <span class="ident">attr</span>.<span class="ident">as_mut_ptr</span>())
+        <span class="ident">libc::mq_setattr</span>(<span class="ident">mqd</span>, <span class="kw-2">&amp;</span><span class="ident">newattr</span>.<span class="ident">mq_attr</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">libc::mq_attr</span>, <span class="ident">attr</span>.<span class="ident">as_mut_ptr</span>())
     };
     <span class="ident">Errno::result</span>(<span class="ident">res</span>).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="kw">unsafe</span>{ <span class="ident">MqAttr</span> { <span class="ident">mq_attr</span>: <span class="ident">attr</span>.<span class="ident">assume_init</span>() }})
 }

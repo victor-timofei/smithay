@@ -42,14 +42,14 @@ conventions:</p>
 <p>The most common use case of specifying a baud rate using the enum will work the same across
 platforms:</p>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="ident">cfsetispeed</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">t</span>, <span class="ident">BaudRate::B9600</span>);
-<span class="ident">cfsetospeed</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">t</span>, <span class="ident">BaudRate::B9600</span>);
-<span class="ident">cfsetspeed</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">t</span>, <span class="ident">BaudRate::B9600</span>);</code></pre></div>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="ident">cfsetispeed</span>(<span class="kw-2">&amp;mut</span> <span class="ident">t</span>, <span class="ident">BaudRate::B9600</span>);
+<span class="ident">cfsetospeed</span>(<span class="kw-2">&amp;mut</span> <span class="ident">t</span>, <span class="ident">BaudRate::B9600</span>);
+<span class="ident">cfsetspeed</span>(<span class="kw-2">&amp;mut</span> <span class="ident">t</span>, <span class="ident">BaudRate::B9600</span>);</code></pre></div>
 <p>Additionally round-tripping baud rates is consistent across platforms:</p>
 
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let</span> <span class="ident">speed</span> <span class="op">=</span> <span class="ident">cfgetispeed</span>(<span class="kw-2">&amp;</span><span class="ident">t</span>);
 <span class="macro">assert_eq!</span>(<span class="ident">speed</span>, <span class="ident">cfgetospeed</span>(<span class="kw-2">&amp;</span><span class="ident">t</span>));
-<span class="ident">cfsetispeed</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">t</span>, <span class="ident">speed</span>);</code></pre></div>
+<span class="ident">cfsetispeed</span>(<span class="kw-2">&amp;mut</span> <span class="ident">t</span>, <span class="ident">speed</span>);</code></pre></div>
 <p>On non-BSDs, <code>cfgetispeed()</code> and <code>cfgetospeed()</code> both return a <code>BaudRate</code>:</p>
 
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="macro">assert_eq!</span>(<span class="ident">cfgetispeed</span>(<span class="kw-2">&amp;</span><span class="ident">t</span>), <span class="ident">BaudRate::B9600</span>);
@@ -65,9 +65,9 @@ platforms:</p>
 <p>And on BSDs you can specify arbitrary baud rates (<strong>note</strong> this depends on hardware support)
 by specifying baud rates directly using <code>u32</code>s:</p>
 
-<div class='information'><div class='tooltip ignore'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore"><code><span class="ident">cfsetispeed</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">t</span>, <span class="number">9600u32</span>);
-<span class="ident">cfsetospeed</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">t</span>, <span class="number">9600u32</span>);
-<span class="ident">cfsetspeed</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">t</span>, <span class="number">9600u32</span>);</code></pre></div>
+<div class='information'><div class='tooltip ignore'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore"><code><span class="ident">cfsetispeed</span>(<span class="kw-2">&amp;mut</span> <span class="ident">t</span>, <span class="number">9600u32</span>);
+<span class="ident">cfsetospeed</span>(<span class="kw-2">&amp;mut</span> <span class="ident">t</span>, <span class="number">9600u32</span>);
+<span class="ident">cfsetspeed</span>(<span class="kw-2">&amp;mut</span> <span class="ident">t</span>, <span class="number">9600u32</span>);</code></pre></div>
 </div></details><h2 id="structs" class="section-header"><a href="#structs">Structs</a></h2>
 <div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.ControlFlags.html" title="nix::sys::termios::ControlFlags struct">ControlFlags</a></div><div class="item-right docblock-short"><p>Flags for setting the control mode of a terminal</p>
 </div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.InputFlags.html" title="nix::sys::termios::InputFlags struct">InputFlags</a></div><div class="item-right docblock-short"><p>Flags for configuring the input mode of a terminal</p>

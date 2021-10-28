@@ -733,14 +733,14 @@
     <span class="doccomment">/// The `buffer` slice should be at least `MAX_BYTES_OUT` long and the `fds`</span>
     <span class="doccomment">/// slice `MAX_FDS_OUT` long, otherwise some data of the received message may</span>
     <span class="doccomment">/// be lost.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">rcv_msg</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>], <span class="ident">fds</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">RawFd</span>]) -&gt; <span class="ident">NixResult</span><span class="op">&lt;</span>(<span class="ident">usize</span>, <span class="ident">usize</span>)<span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">rcv_msg</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">buffer</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u8</span>], <span class="ident">fds</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">RawFd</span>]) -&gt; <span class="ident">NixResult</span><span class="op">&lt;</span>(<span class="ident">usize</span>, <span class="ident">usize</span>)<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cmsg</span> <span class="op">=</span> <span class="macro">cmsg_space!</span>([<span class="ident">RawFd</span>; <span class="ident">MAX_FDS_OUT</span>]);
         <span class="kw">let</span> <span class="ident">iov</span> <span class="op">=</span> [<span class="ident">uio::IoVec::from_mut_slice</span>(<span class="ident">buffer</span>)];
 
         <span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">socket::recvmsg</span>(
             <span class="self">self</span>.<span class="ident">fd</span>,
             <span class="kw-2">&amp;</span><span class="ident">iov</span>[..],
-            <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">cmsg</span>),
+            <span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut</span> <span class="ident">cmsg</span>),
             <span class="ident">socket::MsgFlags::MSG_DONTWAIT</span> <span class="op">|</span> <span class="ident">socket::MsgFlags::MSG_CMSG_CLOEXEC</span>,
         )<span class="question-mark">?</span>;
 
@@ -781,7 +781,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">Socket</span> {
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">::nix::unistd::close</span>(<span class="self">self</span>.<span class="ident">fd</span>);
     }
 }
@@ -814,8 +814,8 @@
     }
 
     <span class="doccomment">/// Get direct access to the underlying socket</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_socket</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Socket</span> {
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">socket</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_socket</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">Socket</span> {
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">socket</span>
     }
 
     <span class="doccomment">/// Retrieve ownership of the underlying Socket</span>
@@ -826,14 +826,14 @@
     }
 
     <span class="doccomment">/// Flush the contents of the outgoing buffer into the socket</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">flush</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">NixResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">flush</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">NixResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         {
             <span class="kw">let</span> <span class="ident">words</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">out_data</span>.<span class="ident">get_contents</span>();
             <span class="kw">if</span> <span class="ident">words</span>.<span class="ident">is_empty</span>() {
                 <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
             }
             <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="kw">unsafe</span> {
-                <span class="ident">::std::slice::from_raw_parts</span>(<span class="ident">words</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">u8</span>, <span class="ident">words</span>.<span class="ident">len</span>() <span class="op">*</span> <span class="number">4</span>)
+                <span class="ident">::std::slice::from_raw_parts</span>(<span class="ident">words</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">u8</span>, <span class="ident">words</span>.<span class="ident">len</span>() <span class="op">*</span> <span class="number">4</span>)
             };
             <span class="kw">let</span> <span class="ident">fds</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">out_fds</span>.<span class="ident">get_contents</span>();
             <span class="self">self</span>.<span class="ident">socket</span>.<span class="ident">send_msg</span>(<span class="ident">bytes</span>, <span class="ident">fds</span>)<span class="question-mark">?</span>;
@@ -854,7 +854,7 @@
     <span class="comment">//</span>
     <span class="comment">// if false is returned, it means there is not enough space</span>
     <span class="comment">// in the buffer</span>
-    <span class="kw">fn</span> <span class="ident">attempt_write_message</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">msg</span>: <span class="kw-2">&amp;</span><span class="ident">Message</span>) -&gt; <span class="ident">NixResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">attempt_write_message</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">msg</span>: <span class="kw-2">&amp;</span><span class="ident">Message</span>) -&gt; <span class="ident">NixResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="ident">msg</span>.<span class="ident">write_to_buffers</span>(
             <span class="self">self</span>.<span class="ident">out_data</span>.<span class="ident">get_writable_storage</span>(),
             <span class="self">self</span>.<span class="ident">out_fds</span>.<span class="ident">get_writable_storage</span>(),
@@ -875,7 +875,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// If the message is too big to fit in the buffer, the error `Error::Sys(E2BIG)`</span>
     <span class="doccomment">/// will be returned.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">write_message</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">msg</span>: <span class="kw-2">&amp;</span><span class="ident">Message</span>) -&gt; <span class="ident">NixResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">write_message</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">msg</span>: <span class="kw-2">&amp;</span><span class="ident">Message</span>) -&gt; <span class="ident">NixResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">attempt_write_message</span>(<span class="ident">msg</span>)<span class="question-mark">?</span> {
             <span class="comment">// the attempt failed, there is not enough space in the buffer</span>
             <span class="comment">// we need to flush it</span>
@@ -891,7 +891,7 @@
 
     <span class="doccomment">/// Try to fill the incoming buffers of this socket, to prepare</span>
     <span class="doccomment">/// a new round of parsing.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">fill_incoming_buffers</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">NixResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">fill_incoming_buffers</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">NixResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="comment">// clear the buffers if they have no content</span>
         <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">in_data</span>.<span class="ident">has_content</span>() {
             <span class="self">self</span>.<span class="ident">in_data</span>.<span class="ident">clear</span>();
@@ -903,7 +903,7 @@
         <span class="kw">let</span> (<span class="ident">in_bytes</span>, <span class="ident">in_fds</span>) <span class="op">=</span> {
             <span class="kw">let</span> <span class="ident">words</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">in_data</span>.<span class="ident">get_writable_storage</span>();
             <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="kw">unsafe</span> {
-                <span class="ident">::std::slice::from_raw_parts_mut</span>(<span class="ident">words</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u8</span>, <span class="ident">words</span>.<span class="ident">len</span>() <span class="op">*</span> <span class="number">4</span>)
+                <span class="ident">::std::slice::from_raw_parts_mut</span>(<span class="ident">words</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">u8</span>, <span class="ident">words</span>.<span class="ident">len</span>() <span class="op">*</span> <span class="number">4</span>)
             };
             <span class="kw">let</span> <span class="ident">fds</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">in_fds</span>.<span class="ident">get_writable_storage</span>();
             <span class="self">self</span>.<span class="ident">socket</span>.<span class="ident">rcv_msg</span>(<span class="ident">bytes</span>, <span class="ident">fds</span>)<span class="question-mark">?</span>
@@ -933,7 +933,7 @@
     <span class="doccomment">/// - `Err(e)`: an I/O error occurred reading from the socked, details are in `e`</span>
     <span class="doccomment">///   (this can be a &quot;wouldblock&quot; error, which just means that no message is available</span>
     <span class="doccomment">///   to read)</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read_one_message</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">signature</span>: <span class="ident">F</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Message</span>, <span class="ident">MessageParseError</span><span class="op">&gt;</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read_one_message</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">signature</span>: <span class="ident">F</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Message</span>, <span class="ident">MessageParseError</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">u32</span>, <span class="ident">u16</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">ArgumentType</span>]<span class="op">&gt;</span>,
     {
@@ -991,7 +991,7 @@
     <span class="doccomment">///   (this can be a &quot;wouldblock&quot; error, which just means that no message is available</span>
     <span class="doccomment">///   to read)</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read_messages</span><span class="op">&lt;</span><span class="ident">F1</span>, <span class="ident">F2</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="kw-2">mut</span> <span class="ident">signature</span>: <span class="ident">F1</span>,
         <span class="kw-2">mut</span> <span class="ident">callback</span>: <span class="ident">F2</span>,
     ) -&gt; <span class="ident">NixResult</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span>, <span class="ident">MessageParseError</span><span class="op">&gt;</span><span class="op">&gt;</span>
@@ -1006,7 +1006,7 @@
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">err</span> <span class="op">=</span> <span class="prelude-val">None</span>;
             <span class="comment">// first parse any leftover messages</span>
             <span class="kw">loop</span> {
-                <span class="kw">match</span> <span class="self">self</span>.<span class="ident">read_one_message</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">signature</span>) {
+                <span class="kw">match</span> <span class="self">self</span>.<span class="ident">read_one_message</span>(<span class="kw-2">&amp;mut</span> <span class="ident">signature</span>) {
                     <span class="prelude-val">Ok</span>(<span class="ident">msg</span>) =&gt; {
                         <span class="kw">let</span> <span class="ident">keep_going</span> <span class="op">=</span> <span class="ident">callback</span>(<span class="ident">msg</span>);
                         <span class="ident">dispatched</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
@@ -1077,12 +1077,12 @@
     }
 
     <span class="doccomment">/// Advance the internal counter of occupied space</span>
-    <span class="kw">fn</span> <span class="ident">advance</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">bytes</span>: <span class="ident">usize</span>) {
+    <span class="kw">fn</span> <span class="ident">advance</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">bytes</span>: <span class="ident">usize</span>) {
         <span class="self">self</span>.<span class="ident">occupied</span> <span class="op">+</span><span class="op">=</span> <span class="ident">bytes</span>;
     }
 
     <span class="doccomment">/// Advance the read offset of current occupied space</span>
-    <span class="kw">fn</span> <span class="ident">offset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">bytes</span>: <span class="ident">usize</span>) {
+    <span class="kw">fn</span> <span class="ident">offset</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">bytes</span>: <span class="ident">usize</span>) {
         <span class="self">self</span>.<span class="ident">offset</span> <span class="op">+</span><span class="op">=</span> <span class="ident">bytes</span>;
     }
 
@@ -1090,7 +1090,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This only sets the counter of occupied space back to zero,</span>
     <span class="doccomment">/// allowing previous content to be overwritten.</span>
-    <span class="kw">fn</span> <span class="ident">clear</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+    <span class="kw">fn</span> <span class="ident">clear</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="self">self</span>.<span class="ident">occupied</span> <span class="op">=</span> <span class="number">0</span>;
         <span class="self">self</span>.<span class="ident">offset</span> <span class="op">=</span> <span class="number">0</span>;
     }
@@ -1101,17 +1101,17 @@
     }
 
     <span class="doccomment">/// Get mutable access to the unoccupied space of the buffer</span>
-    <span class="kw">fn</span> <span class="ident">get_writable_storage</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">T</span>] {
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">storage</span>[(<span class="self">self</span>.<span class="ident">occupied</span>)..]
+    <span class="kw">fn</span> <span class="ident">get_writable_storage</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> [<span class="ident">T</span>] {
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">storage</span>[(<span class="self">self</span>.<span class="ident">occupied</span>)..]
     }
 
     <span class="doccomment">/// Move the unread contents of the buffer to the front, to ensure</span>
     <span class="doccomment">/// maximal write space availability</span>
-    <span class="kw">fn</span> <span class="ident">move_to_front</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+    <span class="kw">fn</span> <span class="ident">move_to_front</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="kw">unsafe</span> {
             <span class="ident">::std::ptr::copy</span>(
-                <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">storage</span>[<span class="self">self</span>.<span class="ident">offset</span>] <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">T</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">storage</span>[<span class="number">0</span>] <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">T</span>,
+                <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">storage</span>[<span class="self">self</span>.<span class="ident">offset</span>] <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">T</span>,
+                <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">storage</span>[<span class="number">0</span>] <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">T</span>,
                 <span class="self">self</span>.<span class="ident">occupied</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">offset</span>,
             );
         }

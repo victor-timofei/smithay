@@ -293,7 +293,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Meta</span>: <span class="ident">ObjectMetadata</span> <span class="op">+</span> <span class="ident">std::fmt::Debug</span><span class="op">&gt;</span> <span class="ident">std::fmt::Debug</span> <span class="kw">for</span> <span class="ident">Object</span><span class="op">&lt;</span><span class="ident">Meta</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Object&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;interface&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">interface</span>)
             .<span class="ident">field</span>(<span class="string">&quot;version&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">version</span>)
@@ -388,7 +388,7 @@
     <span class="doccomment">/// Remove an object from the store</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Does nothing if the object didn&#39;t previously exists</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">id</span>: <span class="ident">u32</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">id</span>: <span class="ident">u32</span>) {
         <span class="kw">if</span> <span class="ident">id</span> <span class="op">==</span> <span class="number">0</span> {
             <span class="comment">// nothing</span>
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">id</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">SERVER_ID_LIMIT</span> {
@@ -406,41 +406,41 @@
     <span class="doccomment">/// (In which case this is a protocol error)</span>
     <span class="comment">// -- The lint is allowed because fixing it would be a breaking change --</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::result_unit_err</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">insert_at</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">id</span>: <span class="ident">u32</span>, <span class="ident">object</span>: <span class="ident">Object</span><span class="op">&lt;</span><span class="ident">Meta</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), ()<span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">insert_at</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">id</span>: <span class="ident">u32</span>, <span class="ident">object</span>: <span class="ident">Object</span><span class="op">&lt;</span><span class="ident">Meta</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), ()<span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="ident">id</span> <span class="op">==</span> <span class="number">0</span> {
             <span class="prelude-val">Err</span>(())
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">id</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">SERVER_ID_LIMIT</span> {
-            <span class="ident">insert_in_at</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">server_objects</span>, (<span class="ident">id</span> <span class="op">-</span> <span class="ident">SERVER_ID_LIMIT</span>) <span class="kw">as</span> <span class="ident">usize</span>, <span class="ident">object</span>)
+            <span class="ident">insert_in_at</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">server_objects</span>, (<span class="ident">id</span> <span class="op">-</span> <span class="ident">SERVER_ID_LIMIT</span>) <span class="kw">as</span> <span class="ident">usize</span>, <span class="ident">object</span>)
         } <span class="kw">else</span> {
-            <span class="ident">insert_in_at</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">client_objects</span>, (<span class="ident">id</span> <span class="op">-</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">usize</span>, <span class="ident">object</span>)
+            <span class="ident">insert_in_at</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">client_objects</span>, (<span class="ident">id</span> <span class="op">-</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">usize</span>, <span class="ident">object</span>)
         }
     }
 
     <span class="doccomment">/// Allocate a new id for an object in the client namespace</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">client_insert_new</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">object</span>: <span class="ident">Object</span><span class="op">&lt;</span><span class="ident">Meta</span><span class="op">&gt;</span>) -&gt; <span class="ident">u32</span> {
-        <span class="ident">insert_in</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">client_objects</span>, <span class="ident">object</span>) <span class="op">+</span> <span class="number">1</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">client_insert_new</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">object</span>: <span class="ident">Object</span><span class="op">&lt;</span><span class="ident">Meta</span><span class="op">&gt;</span>) -&gt; <span class="ident">u32</span> {
+        <span class="ident">insert_in</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">client_objects</span>, <span class="ident">object</span>) <span class="op">+</span> <span class="number">1</span>
     }
 
     <span class="doccomment">/// Allocate a new id for an object in the server namespace</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">server_insert_new</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">object</span>: <span class="ident">Object</span><span class="op">&lt;</span><span class="ident">Meta</span><span class="op">&gt;</span>) -&gt; <span class="ident">u32</span> {
-        <span class="ident">insert_in</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">server_objects</span>, <span class="ident">object</span>) <span class="op">+</span> <span class="ident">SERVER_ID_LIMIT</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">server_insert_new</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">object</span>: <span class="ident">Object</span><span class="op">&lt;</span><span class="ident">Meta</span><span class="op">&gt;</span>) -&gt; <span class="ident">u32</span> {
+        <span class="ident">insert_in</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">server_objects</span>, <span class="ident">object</span>) <span class="op">+</span> <span class="ident">SERVER_ID_LIMIT</span>
     }
 
     <span class="doccomment">/// Mutably access an object of the map</span>
     <span class="comment">// -- The lint is allowed because fixing it would be a breaking change --</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::result_unit_err</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Object</span><span class="op">&lt;</span><span class="ident">Meta</span><span class="op">&gt;</span>) -&gt; <span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">id</span>: <span class="ident">u32</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, ()<span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Object</span><span class="op">&lt;</span><span class="ident">Meta</span><span class="op">&gt;</span>) -&gt; <span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">id</span>: <span class="ident">u32</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, ()<span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="ident">id</span> <span class="op">==</span> <span class="number">0</span> {
             <span class="prelude-val">Err</span>(())
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">id</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">SERVER_ID_LIMIT</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">obj</span>)) <span class="op">=</span>
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">obj</span>)) <span class="op">=</span>
                 <span class="self">self</span>.<span class="ident">server_objects</span>.<span class="ident">get_mut</span>((<span class="ident">id</span> <span class="op">-</span> <span class="ident">SERVER_ID_LIMIT</span>) <span class="kw">as</span> <span class="ident">usize</span>)
             {
                 <span class="prelude-val">Ok</span>(<span class="ident">f</span>(<span class="ident">obj</span>))
             } <span class="kw">else</span> {
                 <span class="prelude-val">Err</span>(())
             }
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">obj</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">client_objects</span>.<span class="ident">get_mut</span>((<span class="ident">id</span> <span class="op">-</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">usize</span>)
+        } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">obj</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">client_objects</span>.<span class="ident">get_mut</span>((<span class="ident">id</span> <span class="op">-</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">usize</span>)
         {
             <span class="prelude-val">Ok</span>(<span class="ident">f</span>(<span class="ident">obj</span>))
         } <span class="kw">else</span> {
@@ -449,7 +449,7 @@
     }
 
     <span class="doccomment">/// Mutably access all objects of the map in sequence</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_all</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">u32</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Object</span><span class="op">&lt;</span><span class="ident">Meta</span><span class="op">&gt;</span>)<span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">f</span>: <span class="ident">F</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_all</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">u32</span>, <span class="kw-2">&amp;mut</span> <span class="ident">Object</span><span class="op">&lt;</span><span class="ident">Meta</span><span class="op">&gt;</span>)<span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">f</span>: <span class="ident">F</span>) {
         <span class="kw">for</span> (<span class="ident">id</span>, <span class="ident">place</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">client_objects</span>.<span class="ident">iter_mut</span>().<span class="ident">enumerate</span>() {
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">obj</span>) <span class="op">=</span> <span class="kw-2">*</span><span class="ident">place</span> {
                 <span class="ident">f</span>(<span class="ident">id</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">+</span> <span class="number">1</span>, <span class="ident">obj</span>);
@@ -465,7 +465,7 @@
 
 <span class="comment">// insert a new object in a store at the first free place</span>
 <span class="kw">fn</span> <span class="ident">insert_in</span><span class="op">&lt;</span><span class="ident">Meta</span>: <span class="ident">ObjectMetadata</span><span class="op">&gt;</span>(
-    <span class="ident">store</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Object</span><span class="op">&lt;</span><span class="ident">Meta</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">store</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Object</span><span class="op">&lt;</span><span class="ident">Meta</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">object</span>: <span class="ident">Object</span><span class="op">&lt;</span><span class="ident">Meta</span><span class="op">&gt;</span>,
 ) -&gt; <span class="ident">u32</span> {
     <span class="kw">match</span> <span class="ident">store</span>.<span class="ident">iter</span>().<span class="ident">position</span>(<span class="ident">Option::is_none</span>) {
@@ -482,7 +482,7 @@
 
 <span class="comment">// insert an object at a given place in a store</span>
 <span class="kw">fn</span> <span class="ident">insert_in_at</span><span class="op">&lt;</span><span class="ident">Meta</span>: <span class="ident">ObjectMetadata</span><span class="op">&gt;</span>(
-    <span class="ident">store</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Object</span><span class="op">&lt;</span><span class="ident">Meta</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">store</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Object</span><span class="op">&lt;</span><span class="ident">Meta</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">id</span>: <span class="ident">usize</span>,
     <span class="ident">object</span>: <span class="ident">Object</span><span class="op">&lt;</span><span class="ident">Meta</span><span class="op">&gt;</span>,
 ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), ()<span class="op">&gt;</span> {
@@ -493,7 +493,7 @@
             <span class="prelude-val">Ok</span>(())
         }
         <span class="ident">Ordering::Less</span> =&gt; {
-            <span class="kw">let</span> <span class="ident">previous</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">store</span>[<span class="ident">id</span>];
+            <span class="kw">let</span> <span class="ident">previous</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">store</span>[<span class="ident">id</span>];
             <span class="kw">if</span> <span class="op">!</span><span class="ident">previous</span>.<span class="ident">is_none</span>() {
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(());
             }

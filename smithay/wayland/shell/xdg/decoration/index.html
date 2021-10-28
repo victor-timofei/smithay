@@ -7,7 +7,7 @@
 
 
 <span class="ident">init_xdg_decoration_manager</span>(
-    <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">display</span>,
+    <span class="kw-2">&amp;mut</span> <span class="ident">display</span>,
     <span class="op">|</span><span class="ident">req</span>, <span class="ident">_ddata</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">req</span> {
         <span class="ident">XdgDecorationRequest::NewToplevelDecoration</span> { <span class="ident">toplevel</span> } =&gt; {
             <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">toplevel</span>.<span class="ident">with_pending_state</span>(<span class="op">|</span><span class="ident">state</span><span class="op">|</span> {

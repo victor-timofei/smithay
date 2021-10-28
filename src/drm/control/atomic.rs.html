@@ -112,7 +112,7 @@
 
     <span class="doccomment">/// Add a property and value pair for a given raw resource to the request</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_raw_property</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">obj_id</span>: <span class="ident">control::RawResourceHandle</span>,
         <span class="ident">prop_id</span>: <span class="ident">control::property::Handle</span>,
         <span class="ident">value</span>: <span class="ident">control::property::RawValue</span>,
@@ -152,7 +152,7 @@
 
     <span class="doccomment">/// Add a property and value pair for a given handle to the request</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_property</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">handle</span>: <span class="ident">H</span>,
         <span class="ident">property</span>: <span class="ident">control::property::Handle</span>,
         <span class="ident">value</span>: <span class="ident">control::property::Value</span>,

@@ -270,10 +270,10 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;m</span><span class="op">&gt;</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span><span class="op">&lt;</span><span class="lifetime">&#39;m</span><span class="op">&gt;</span> {
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;no-string-validation&quot;</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">check_valid</span>(<span class="kw">_</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">String</span><span class="op">&gt;</span> { <span class="prelude-val">Ok</span>(()) }
+    <span class="kw">fn</span> <span class="ident">check_valid</span>(<span class="kw">_</span>: <span class="kw-2">*const</span> <span class="ident">c_char</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">String</span><span class="op">&gt;</span> { <span class="prelude-val">Ok</span>(()) }
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;no-string-validation&quot;</span>))]</span>
-    <span class="kw">fn</span> <span class="ident">check_valid</span>(<span class="ident">c</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">String</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">check_valid</span>(<span class="ident">c</span>: <span class="kw-2">*const</span> <span class="ident">c_char</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">String</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">e</span> <span class="op">=</span> <span class="ident">Error::empty</span>();
         <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">s</span>(<span class="ident">c</span>, <span class="ident">e</span>.<span class="ident">get_mut</span>()) };
         <span class="kw">if</span> <span class="ident">b</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> { <span class="prelude-val">Ok</span>(()) } <span class="kw">else</span> { <span class="prelude-val">Err</span>(<span class="ident">e</span>.<span class="ident">message</span>().<span class="ident">unwrap</span>().<span class="ident">into</span>()) }
@@ -286,7 +286,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">s</span>: <span class="ident">S</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span><span class="op">&lt;</span><span class="lifetime">&#39;m</span><span class="op">&gt;</span>, <span class="ident">String</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">s</span>.<span class="ident">into</span>();
         <span class="ident">s</span>.<span class="ident">push_str</span>(<span class="string">&quot;\0&quot;</span>);
-        <span class="kw">unsafe</span> { <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t::check_valid</span>(<span class="ident">CStr::from_bytes_with_nul_unchecked</span>(<span class="ident">s</span>.<span class="ident">as_bytes</span>()).<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>)<span class="question-mark">?</span>; }
+        <span class="kw">unsafe</span> { <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t::check_valid</span>(<span class="ident">CStr::from_bytes_with_nul_unchecked</span>(<span class="ident">s</span>.<span class="ident">as_bytes</span>()).<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">c_char</span>)<span class="question-mark">?</span>; }
         <span class="prelude-val">Ok</span>(<span class="self">Self</span>(<span class="ident">Cow::Owned</span>(<span class="ident">s</span>)))
     }
 
@@ -298,7 +298,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_slice</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;m</span> <span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span><span class="op">&lt;</span><span class="lifetime">&#39;m</span><span class="op">&gt;</span>, <span class="ident">String</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">ss</span> <span class="op">=</span> <span class="ident">s</span>.<span class="ident">as_bytes</span>();
         <span class="kw">if</span> <span class="ident">ss</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">0</span> <span class="op">|</span><span class="op">|</span> <span class="ident">ss</span>[<span class="ident">ss</span>.<span class="ident">len</span>()<span class="op">-</span><span class="number">1</span>] <span class="op">!</span><span class="op">=</span> <span class="number">0</span> { <span class="kw">return</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t::new</span>(<span class="ident">s</span>) };
-        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t::check_valid</span>(<span class="ident">s</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t::check_valid</span>(<span class="ident">s</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">c_char</span>).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
             <span class="kw">unsafe</span> { <span class="ident"><span class="self">Self</span>::from_slice_unchecked</span>(<span class="ident">s</span>) }
         })
     }
@@ -322,7 +322,7 @@
     }
 
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
-    <span class="kw">pub</span> (<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">as_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span> { <span class="self">self</span>.<span class="ident">as_cstr</span>().<span class="ident">as_ptr</span>() }
+    <span class="kw">pub</span> (<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">as_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*const</span> <span class="ident">c_char</span> { <span class="self">self</span>.<span class="ident">as_cstr</span>().<span class="ident">as_ptr</span>() }
 
     <span class="doccomment">/// Makes sure this string does not contain borrows.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_static</span>(<span class="self">self</span>) -&gt; <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
@@ -397,7 +397,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;m</span><span class="op">&gt;</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span><span class="op">&lt;</span><span class="lifetime">&#39;m</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="op">&lt;</span><span class="ident">str</span> <span class="kw">as</span> <span class="ident">fmt::Display</span><span class="op">&gt;</span><span class="ident">::fmt</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>, <span class="ident">f</span>)
     }
 }
@@ -410,7 +410,7 @@ impl&lt;&#39;m&gt; AsRef&lt;CStr&gt; for $t&lt;&#39;m&gt; {
 */</span>
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;m</span><span class="op">&gt;</span> <span class="ident">hash::Hash</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span><span class="op">&lt;</span><span class="lifetime">&#39;m</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">hash</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">hash::Hasher</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">H</span>) {
+    <span class="kw">fn</span> <span class="ident">hash</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">hash::Hasher</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">H</span>) {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">hash</span>(<span class="ident">state</span>);
     }
 }

@@ -466,7 +466,7 @@
     }
 
     <span class="doccomment">/// Produce a new unique token</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">token</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">Token</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">token</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">Token</span> {
         <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="ident">Token</span> {
             <span class="ident">id</span>: <span class="self">self</span>.<span class="ident">id</span>,
             <span class="ident">sub_id</span>: <span class="self">self</span>.<span class="ident">sub_id</span>,
@@ -570,7 +570,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">std::fmt::Debug</span> <span class="kw">for</span> <span class="ident">Poll</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;Poll { ... }&quot;</span>)
     }
 }
@@ -583,7 +583,7 @@
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">poll</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">timeout</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">std::time::Duration</span><span class="op">&gt;</span>,
     ) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PollEvent</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">poller</span>.<span class="ident">poll</span>(<span class="ident">timeout</span>)
@@ -596,7 +596,7 @@
     <span class="doccomment">/// bad file descriptor or if the provided file descriptor is already</span>
     <span class="doccomment">/// registered.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">register</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">fd</span>: <span class="ident">RawFd</span>,
         <span class="ident">interest</span>: <span class="ident">Interest</span>,
         <span class="ident">mode</span>: <span class="ident">Mode</span>,
@@ -616,7 +616,7 @@
     <span class="doccomment">/// This allows you to change the interest, mode or token of a file</span>
     <span class="doccomment">/// descriptor. Fails if the provided fd is not currently registered.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reregister</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">fd</span>: <span class="ident">RawFd</span>,
         <span class="ident">interest</span>: <span class="ident">Interest</span>,
         <span class="ident">mode</span>: <span class="ident">Mode</span>,
@@ -635,7 +635,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This file descriptor will no longer generate events. Fails if the</span>
     <span class="doccomment">/// provided file descriptor is not currently registered.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">fd</span>: <span class="ident">RawFd</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unregister</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">fd</span>: <span class="ident">RawFd</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">poller</span>.<span class="ident">unregister</span>(<span class="ident">fd</span>)
     }
 }

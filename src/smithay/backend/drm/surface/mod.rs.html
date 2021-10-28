@@ -773,19 +773,19 @@
                     <span class="comment">// be careful here, we have no idea about the alignment inside the blob, so always copy using `read_unaligned`,</span>
                     <span class="comment">// although slice::from_raw_parts would be so much nicer to iterate and to read.</span>
                     <span class="kw">unsafe</span> {
-                        <span class="kw">let</span> <span class="ident">fmt_mod_blob_ptr</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">drm_ffi::drm_format_modifier_blob</span>;
+                        <span class="kw">let</span> <span class="ident">fmt_mod_blob_ptr</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">drm_ffi::drm_format_modifier_blob</span>;
                         <span class="kw">let</span> <span class="ident">fmt_mod_blob</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">fmt_mod_blob_ptr</span>;
 
-                        <span class="kw">let</span> <span class="ident">formats_ptr</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">u32</span> <span class="op">=</span> <span class="ident">fmt_mod_blob_ptr</span>
+                        <span class="kw">let</span> <span class="ident">formats_ptr</span>: <span class="kw-2">*const</span> <span class="ident">u32</span> <span class="op">=</span> <span class="ident">fmt_mod_blob_ptr</span>
                             .<span class="ident">cast</span>::<span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>()
                             .<span class="ident">offset</span>(<span class="ident">fmt_mod_blob</span>.<span class="ident">formats_offset</span> <span class="kw">as</span> <span class="ident">isize</span>)
-                            <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>;
-                        <span class="kw">let</span> <span class="ident">modifiers_ptr</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">drm_ffi::drm_format_modifier</span> <span class="op">=</span> <span class="ident">fmt_mod_blob_ptr</span>
+                            <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span>;
+                        <span class="kw">let</span> <span class="ident">modifiers_ptr</span>: <span class="kw-2">*const</span> <span class="ident">drm_ffi::drm_format_modifier</span> <span class="op">=</span> <span class="ident">fmt_mod_blob_ptr</span>
                             .<span class="ident">cast</span>::<span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>()
                             .<span class="ident">offset</span>(<span class="ident">fmt_mod_blob</span>.<span class="ident">modifiers_offset</span> <span class="kw">as</span> <span class="ident">isize</span>)
-                            <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>;
-                        <span class="kw">let</span> <span class="ident">formats_ptr</span> <span class="op">=</span> <span class="ident">formats_ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">u32</span>;
-                        <span class="kw">let</span> <span class="ident">modifiers_ptr</span> <span class="op">=</span> <span class="ident">modifiers_ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">drm_ffi::drm_format_modifier</span>;
+                            <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span>;
+                        <span class="kw">let</span> <span class="ident">formats_ptr</span> <span class="op">=</span> <span class="ident">formats_ptr</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">u32</span>;
+                        <span class="kw">let</span> <span class="ident">modifiers_ptr</span> <span class="op">=</span> <span class="ident">modifiers_ptr</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">drm_ffi::drm_format_modifier</span>;
 
                         <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">fmt_mod_blob</span>.<span class="ident">count_modifiers</span> {
                             <span class="kw">let</span> <span class="ident">mod_info</span> <span class="op">=</span> <span class="ident">modifiers_ptr</span>.<span class="ident">offset</span>(<span class="ident">i</span> <span class="kw">as</span> <span class="ident">isize</span>).<span class="ident">read_unaligned</span>();

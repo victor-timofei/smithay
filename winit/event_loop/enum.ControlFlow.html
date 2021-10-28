@@ -13,7 +13,7 @@ are <strong>not</strong> persistent between multiple calls to <code>run_return</
 the control flow to <code>Poll</code>.</p>
 </div></details><h2 id="variants" class="variants small-section-header">Variants<a href="#variants" class="anchor"></a></h2><div id="variant.Poll" class="variant small-section-header"><a href="#variant.Poll" class="anchor field"></a><code>Poll</code></div><div class="docblock"><p>When the current loop iteration finishes, immediately begin a new iteration regardless of
 whether or not new events are available to process.</p>
-<h3 id="platform-specific" class="section-header"><a href="#platform-specific">Platform-specific</a></h3>
+<h4 id="platform-specific" class="section-header"><a href="#platform-specific">Platform-specific</a></h4>
 <ul>
 <li><strong>Web:</strong> Events are queued and usually sent when <code>requestAnimationFrame</code> fires but sometimes
 the events in the queue may be sent before the next <code>requestAnimationFrame</code> callback, for

@@ -1385,7 +1385,7 @@
         <span class="ident">result</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span>
     }
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">poll_one_event</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">event_ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::XEvent</span>) -&gt; <span class="ident">bool</span> {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">poll_one_event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">event_ptr</span>: <span class="kw-2">*mut</span> <span class="ident">ffi::XEvent</span>) -&gt; <span class="ident">bool</span> {
         <span class="kw">let</span> <span class="ident">wt</span> <span class="op">=</span> <span class="ident">get_xtarget</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">target</span>);
         <span class="comment">// This function is used to poll and remove a single event</span>
         <span class="comment">// from the Xlib event queue in a non-blocking, atomic way.</span>
@@ -1394,9 +1394,9 @@
         <span class="comment">// global Xlib mutex.</span>
         <span class="comment">// XPeekEvent does not remove events from the queue.</span>
         <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">predicate</span>(
-            <span class="ident">_display</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::Display</span>,
-            <span class="ident">_event</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::XEvent</span>,
-            <span class="ident">_arg</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>,
+            <span class="ident">_display</span>: <span class="kw-2">*mut</span> <span class="ident">ffi::Display</span>,
+            <span class="ident">_event</span>: <span class="kw-2">*mut</span> <span class="ident">ffi::XEvent</span>,
+            <span class="ident">_arg</span>: <span class="kw-2">*mut</span> <span class="ident">c_char</span>,
         ) -&gt; <span class="ident">c_int</span> {
             <span class="comment">// This predicate always returns &quot;true&quot; (1) to accept all events</span>
             <span class="number">1</span>
@@ -1412,7 +1412,7 @@
         <span class="ident">result</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span>
     }
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">process_event</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">xev</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ffi::XEvent</span>, <span class="kw-2">mut</span> <span class="ident">callback</span>: <span class="ident">F</span>)
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">process_event</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">xev</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ffi::XEvent</span>, <span class="kw-2">mut</span> <span class="ident">callback</span>: <span class="ident">F</span>)
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">Event</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">T</span><span class="op">&gt;</span>),
     {
@@ -1485,7 +1485,7 @@
                         <span class="ident">event</span>: <span class="ident">WindowEvent::CloseRequested</span>,
                     });
                 } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">client_msg</span>.<span class="ident">data</span>.<span class="ident">get_long</span>(<span class="number">0</span>) <span class="kw">as</span> <span class="ident">ffi::Atom</span> <span class="op">==</span> <span class="ident">wt</span>.<span class="ident">net_wm_ping</span> {
-                    <span class="kw">let</span> <span class="ident">response_msg</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ffi::XClientMessageEvent</span> <span class="op">=</span> <span class="ident">xev</span>.<span class="ident">as_mut</span>();
+                    <span class="kw">let</span> <span class="ident">response_msg</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ffi::XClientMessageEvent</span> <span class="op">=</span> <span class="ident">xev</span>.<span class="ident">as_mut</span>();
                     <span class="ident">response_msg</span>.<span class="ident">window</span> <span class="op">=</span> <span class="ident">wt</span>.<span class="ident">root</span>;
                     <span class="ident">wt</span>.<span class="ident">xconn</span>
                         .<span class="ident">send_event</span>(
@@ -1612,7 +1612,7 @@
 
                     <span class="comment">// This is where we receive data from drag and drop</span>
                     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">data</span>) <span class="op">=</span> <span class="kw">unsafe</span> { <span class="self">self</span>.<span class="ident">dnd</span>.<span class="ident">read_data</span>(<span class="ident">window</span>) } {
-                        <span class="kw">let</span> <span class="ident">parse_result</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">dnd</span>.<span class="ident">parse_data</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">data</span>);
+                        <span class="kw">let</span> <span class="ident">parse_result</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">dnd</span>.<span class="ident">parse_data</span>(<span class="kw-2">&amp;mut</span> <span class="ident">data</span>);
                         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="kw-2">ref</span> <span class="ident">path_list</span>) <span class="op">=</span> <span class="ident">parse_result</span> {
                             <span class="kw">for</span> <span class="ident">path</span> <span class="kw">in</span> <span class="ident">path_list</span> {
                                 <span class="ident">callback</span>(<span class="ident">Event::WindowEvent</span> {
@@ -1651,10 +1651,10 @@
 
                     <span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">resized</span>, <span class="ident">moved</span>) <span class="op">=</span> {
                         <span class="kw">let</span> <span class="ident">resized</span> <span class="op">=</span>
-                            <span class="ident">util::maybe_change</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">shared_state_lock</span>.<span class="ident">size</span>, <span class="ident">new_inner_size</span>);
+                            <span class="ident">util::maybe_change</span>(<span class="kw-2">&amp;mut</span> <span class="ident">shared_state_lock</span>.<span class="ident">size</span>, <span class="ident">new_inner_size</span>);
                         <span class="kw">let</span> <span class="ident">moved</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">is_synthetic</span> {
                             <span class="ident">util::maybe_change</span>(
-                                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">shared_state_lock</span>.<span class="ident">inner_position</span>,
+                                <span class="kw-2">&amp;mut</span> <span class="ident">shared_state_lock</span>.<span class="ident">inner_position</span>,
                                 <span class="ident">new_inner_position</span>,
                             )
                         } <span class="kw">else</span> {
@@ -1663,7 +1663,7 @@
                             <span class="comment">// parent window.</span>
                             <span class="kw">let</span> <span class="ident">rel_parent</span> <span class="op">=</span> <span class="ident">new_inner_position</span>;
                             <span class="kw">if</span> <span class="ident">util::maybe_change</span>(
-                                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">shared_state_lock</span>.<span class="ident">inner_position_rel_parent</span>,
+                                <span class="kw-2">&amp;mut</span> <span class="ident">shared_state_lock</span>.<span class="ident">inner_position_rel_parent</span>,
                                 <span class="ident">rel_parent</span>,
                             ) {
                                 <span class="comment">// This ensures we process the next `Moved`.</span>
@@ -1693,7 +1693,7 @@
                         <span class="ident">shared_state_lock</span>.<span class="ident">position</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">outer</span>);
                         <span class="kw">if</span> <span class="ident">moved</span> {
                             <span class="comment">// Temporarily unlock shared state to prevent deadlock</span>
-                            <span class="ident">MutexGuard::unlocked</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">shared_state_lock</span>, <span class="op">|</span><span class="op">|</span> {
+                            <span class="ident">MutexGuard::unlocked</span>(<span class="kw-2">&amp;mut</span> <span class="ident">shared_state_lock</span>, <span class="op">|</span><span class="op">|</span> {
                                 <span class="ident">callback</span>(<span class="ident">Event::WindowEvent</span> {
                                     <span class="ident">window_id</span>,
                                     <span class="ident">event</span>: <span class="ident">WindowEvent::Moved</span>(<span class="ident">outer</span>.<span class="ident">into</span>()),
@@ -1738,12 +1738,12 @@
                             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new_inner_size</span> <span class="op">=</span> <span class="ident">PhysicalSize::new</span>(<span class="ident">new_width</span>, <span class="ident">new_height</span>);
 
                             <span class="comment">// Temporarily unlock shared state to prevent deadlock</span>
-                            <span class="ident">MutexGuard::unlocked</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">shared_state_lock</span>, <span class="op">|</span><span class="op">|</span> {
+                            <span class="ident">MutexGuard::unlocked</span>(<span class="kw-2">&amp;mut</span> <span class="ident">shared_state_lock</span>, <span class="op">|</span><span class="op">|</span> {
                                 <span class="ident">callback</span>(<span class="ident">Event::WindowEvent</span> {
                                     <span class="ident">window_id</span>,
                                     <span class="ident">event</span>: <span class="ident">WindowEvent::ScaleFactorChanged</span> {
                                         <span class="ident">scale_factor</span>: <span class="ident">new_scale_factor</span>,
-                                        <span class="ident">new_inner_size</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">new_inner_size</span>,
+                                        <span class="ident">new_inner_size</span>: <span class="kw-2">&amp;mut</span> <span class="ident">new_inner_size</span>,
                                     },
                                 });
                             });
@@ -1854,7 +1854,7 @@
                     <span class="ident">Released</span>
                 };
 
-                <span class="kw">let</span> <span class="ident">xkev</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ffi::XKeyEvent</span> <span class="op">=</span> <span class="ident">xev</span>.<span class="ident">as_mut</span>();
+                <span class="kw">let</span> <span class="ident">xkev</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ffi::XKeyEvent</span> <span class="op">=</span> <span class="ident">xev</span>.<span class="ident">as_mut</span>();
 
                 <span class="kw">let</span> <span class="ident">window</span> <span class="op">=</span> <span class="ident">xkev</span>.<span class="ident">window</span>;
                 <span class="kw">let</span> <span class="ident">window_id</span> <span class="op">=</span> <span class="ident">mkwid</span>(<span class="ident">window</span>);
@@ -1936,7 +1936,7 @@
 
                 <span class="kw">match</span> <span class="ident">xev</span>.<span class="ident">evtype</span> {
                     <span class="ident">ffi::XI_ButtonPress</span> <span class="op">|</span> <span class="ident">ffi::XI_ButtonRelease</span> =&gt; {
-                        <span class="kw">let</span> <span class="ident">xev</span>: <span class="kw-2">&amp;</span><span class="ident">ffi::XIDeviceEvent</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">xev</span>.<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>) };
+                        <span class="kw">let</span> <span class="ident">xev</span>: <span class="kw-2">&amp;</span><span class="ident">ffi::XIDeviceEvent</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">xev</span>.<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span>) };
                         <span class="kw">let</span> <span class="ident">window_id</span> <span class="op">=</span> <span class="ident">mkwid</span>(<span class="ident">xev</span>.<span class="ident">event</span>);
                         <span class="kw">let</span> <span class="ident">device_id</span> <span class="op">=</span> <span class="ident">mkdid</span>(<span class="ident">xev</span>.<span class="ident">deviceid</span>);
                         <span class="kw">if</span> (<span class="ident">xev</span>.<span class="ident">flags</span> <span class="op">&amp;</span> <span class="ident">ffi::XIPointerEmulated</span>) <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
@@ -2016,7 +2016,7 @@
                         }
                     }
                     <span class="ident">ffi::XI_Motion</span> =&gt; {
-                        <span class="kw">let</span> <span class="ident">xev</span>: <span class="kw-2">&amp;</span><span class="ident">ffi::XIDeviceEvent</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">xev</span>.<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>) };
+                        <span class="kw">let</span> <span class="ident">xev</span>: <span class="kw-2">&amp;</span><span class="ident">ffi::XIDeviceEvent</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">xev</span>.<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span>) };
                         <span class="kw">let</span> <span class="ident">device_id</span> <span class="op">=</span> <span class="ident">mkdid</span>(<span class="ident">xev</span>.<span class="ident">deviceid</span>);
                         <span class="kw">let</span> <span class="ident">window_id</span> <span class="op">=</span> <span class="ident">mkwid</span>(<span class="ident">xev</span>.<span class="ident">event</span>);
                         <span class="kw">let</span> <span class="ident">new_cursor_pos</span> <span class="op">=</span> (<span class="ident">xev</span>.<span class="ident">event_x</span>, <span class="ident">xev</span>.<span class="ident">event_y</span>);
@@ -2026,7 +2026,7 @@
 
                         <span class="kw">let</span> <span class="ident">cursor_moved</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">with_window</span>(<span class="ident">xev</span>.<span class="ident">event</span>, <span class="op">|</span><span class="ident">window</span><span class="op">|</span> {
                             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">shared_state_lock</span> <span class="op">=</span> <span class="ident">window</span>.<span class="ident">shared_state</span>.<span class="ident">lock</span>();
-                            <span class="ident">util::maybe_change</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">shared_state_lock</span>.<span class="ident">cursor_pos</span>, <span class="ident">new_cursor_pos</span>)
+                            <span class="ident">util::maybe_change</span>(<span class="kw-2">&amp;mut</span> <span class="ident">shared_state_lock</span>.<span class="ident">cursor_pos</span>, <span class="ident">new_cursor_pos</span>)
                         });
                         <span class="kw">if</span> <span class="ident">cursor_moved</span> <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="bool-val">true</span>) {
                             <span class="kw">let</span> <span class="ident">position</span> <span class="op">=</span> <span class="ident">PhysicalPosition::new</span>(<span class="ident">xev</span>.<span class="ident">event_x</span>, <span class="ident">xev</span>.<span class="ident">event_y</span>);
@@ -2062,7 +2062,7 @@
                             <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">xev</span>.<span class="ident">valuators</span>.<span class="ident">mask_len</span> <span class="op">*</span> <span class="number">8</span> {
                                 <span class="kw">if</span> <span class="ident">ffi::XIMaskIsSet</span>(<span class="ident">mask</span>, <span class="ident">i</span>) {
                                     <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw-2">*</span><span class="ident">value</span> };
-                                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> (<span class="kw">_</span>, <span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">info</span>)) <span class="op">=</span> <span class="ident">physical_device</span>
+                                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut</span> (<span class="kw">_</span>, <span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">info</span>)) <span class="op">=</span> <span class="ident">physical_device</span>
                                         .<span class="ident">scroll_axes</span>
                                         .<span class="ident">iter_mut</span>()
                                         .<span class="ident">find</span>(<span class="op">|</span><span class="op">&amp;&amp;</span><span class="kw-2">mut</span> (<span class="ident">axis</span>, <span class="kw">_</span>)<span class="op">|</span> <span class="ident">axis</span> <span class="op">==</span> <span class="ident">i</span>)
@@ -2106,7 +2106,7 @@
                     }
 
                     <span class="ident">ffi::XI_Enter</span> =&gt; {
-                        <span class="kw">let</span> <span class="ident">xev</span>: <span class="kw-2">&amp;</span><span class="ident">ffi::XIEnterEvent</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">xev</span>.<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>) };
+                        <span class="kw">let</span> <span class="ident">xev</span>: <span class="kw-2">&amp;</span><span class="ident">ffi::XIEnterEvent</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">xev</span>.<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span>) };
 
                         <span class="kw">let</span> <span class="ident">window_id</span> <span class="op">=</span> <span class="ident">mkwid</span>(<span class="ident">xev</span>.<span class="ident">event</span>);
                         <span class="kw">let</span> <span class="ident">device_id</span> <span class="op">=</span> <span class="ident">mkdid</span>(<span class="ident">xev</span>.<span class="ident">deviceid</span>);
@@ -2161,7 +2161,7 @@
                         }
                     }
                     <span class="ident">ffi::XI_Leave</span> =&gt; {
-                        <span class="kw">let</span> <span class="ident">xev</span>: <span class="kw-2">&amp;</span><span class="ident">ffi::XILeaveEvent</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">xev</span>.<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>) };
+                        <span class="kw">let</span> <span class="ident">xev</span>: <span class="kw-2">&amp;</span><span class="ident">ffi::XILeaveEvent</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">xev</span>.<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span>) };
 
                         <span class="comment">// Leave, FocusIn, and FocusOut can be received by a window that&#39;s already</span>
                         <span class="comment">// been destroyed, which the user presumably doesn&#39;t want to deal with.</span>
@@ -2176,7 +2176,7 @@
                         }
                     }
                     <span class="ident">ffi::XI_FocusIn</span> =&gt; {
-                        <span class="kw">let</span> <span class="ident">xev</span>: <span class="kw-2">&amp;</span><span class="ident">ffi::XIFocusInEvent</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">xev</span>.<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>) };
+                        <span class="kw">let</span> <span class="ident">xev</span>: <span class="kw-2">&amp;</span><span class="ident">ffi::XIFocusInEvent</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">xev</span>.<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span>) };
 
                         <span class="ident">wt</span>.<span class="ident">ime</span>
                             .<span class="ident">borrow_mut</span>()
@@ -2229,13 +2229,13 @@
                                 <span class="ident">window_id</span>,
                                 <span class="ident">ElementState::Pressed</span>,
                                 <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">mod_keymap</span>,
-                                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">device_mod_state</span>,
-                                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">callback</span>,
+                                <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">device_mod_state</span>,
+                                <span class="kw-2">&amp;mut</span> <span class="ident">callback</span>,
                             );
                         }
                     }
                     <span class="ident">ffi::XI_FocusOut</span> =&gt; {
-                        <span class="kw">let</span> <span class="ident">xev</span>: <span class="kw-2">&amp;</span><span class="ident">ffi::XIFocusOutEvent</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">xev</span>.<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>) };
+                        <span class="kw">let</span> <span class="ident">xev</span>: <span class="kw-2">&amp;</span><span class="ident">ffi::XIFocusOutEvent</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">xev</span>.<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span>) };
                         <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">window_exists</span>(<span class="ident">xev</span>.<span class="ident">event</span>) {
                             <span class="kw">return</span>;
                         }
@@ -2253,8 +2253,8 @@
                                 <span class="ident">window_id</span>,
                                 <span class="ident">ElementState::Released</span>,
                                 <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">mod_keymap</span>,
-                                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">device_mod_state</span>,
-                                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">callback</span>,
+                                <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">device_mod_state</span>,
+                                <span class="kw-2">&amp;mut</span> <span class="ident">callback</span>,
                             );
 
                             <span class="ident">callback</span>(<span class="ident">Event::WindowEvent</span> {
@@ -2270,7 +2270,7 @@
                     }
 
                     <span class="ident">ffi::XI_TouchBegin</span> <span class="op">|</span> <span class="ident">ffi::XI_TouchUpdate</span> <span class="op">|</span> <span class="ident">ffi::XI_TouchEnd</span> =&gt; {
-                        <span class="kw">let</span> <span class="ident">xev</span>: <span class="kw-2">&amp;</span><span class="ident">ffi::XIDeviceEvent</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">xev</span>.<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>) };
+                        <span class="kw">let</span> <span class="ident">xev</span>: <span class="kw-2">&amp;</span><span class="ident">ffi::XIDeviceEvent</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">xev</span>.<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span>) };
                         <span class="kw">let</span> <span class="ident">window_id</span> <span class="op">=</span> <span class="ident">mkwid</span>(<span class="ident">xev</span>.<span class="ident">event</span>);
                         <span class="kw">let</span> <span class="ident">phase</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">xev</span>.<span class="ident">evtype</span> {
                             <span class="ident">ffi::XI_TouchBegin</span> =&gt; <span class="ident">TouchPhase::Started</span>,
@@ -2286,7 +2286,7 @@
 
                             <span class="comment">// Mouse cursor position changes when touch events are received.</span>
                             <span class="comment">// Only the first concurrently active touch ID moves the mouse cursor.</span>
-                            <span class="kw">if</span> <span class="ident">is_first_touch</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">first_touch</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">num_touch</span>, <span class="ident">id</span>, <span class="ident">phase</span>)
+                            <span class="kw">if</span> <span class="ident">is_first_touch</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">first_touch</span>, <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">num_touch</span>, <span class="ident">id</span>, <span class="ident">phase</span>)
                             {
                                 <span class="ident">callback</span>(<span class="ident">Event::WindowEvent</span> {
                                     <span class="ident">window_id</span>,
@@ -2312,7 +2312,7 @@
                     }
 
                     <span class="ident">ffi::XI_RawButtonPress</span> <span class="op">|</span> <span class="ident">ffi::XI_RawButtonRelease</span> =&gt; {
-                        <span class="kw">let</span> <span class="ident">xev</span>: <span class="kw-2">&amp;</span><span class="ident">ffi::XIRawEvent</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">xev</span>.<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>) };
+                        <span class="kw">let</span> <span class="ident">xev</span>: <span class="kw-2">&amp;</span><span class="ident">ffi::XIRawEvent</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">xev</span>.<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span>) };
                         <span class="kw">if</span> <span class="ident">xev</span>.<span class="ident">flags</span> <span class="op">&amp;</span> <span class="ident">ffi::XIPointerEmulated</span> <span class="op">==</span> <span class="number">0</span> {
                             <span class="ident">callback</span>(<span class="ident">Event::DeviceEvent</span> {
                                 <span class="ident">device_id</span>: <span class="ident">mkdid</span>(<span class="ident">xev</span>.<span class="ident">deviceid</span>),
@@ -2329,7 +2329,7 @@
                     }
 
                     <span class="ident">ffi::XI_RawMotion</span> =&gt; {
-                        <span class="kw">let</span> <span class="ident">xev</span>: <span class="kw-2">&amp;</span><span class="ident">ffi::XIRawEvent</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">xev</span>.<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>) };
+                        <span class="kw">let</span> <span class="ident">xev</span>: <span class="kw-2">&amp;</span><span class="ident">ffi::XIRawEvent</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">xev</span>.<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span>) };
                         <span class="kw">let</span> <span class="ident">did</span> <span class="op">=</span> <span class="ident">mkdid</span>(<span class="ident">xev</span>.<span class="ident">deviceid</span>);
 
                         <span class="kw">let</span> <span class="ident">mask</span> <span class="op">=</span> <span class="kw">unsafe</span> {
@@ -2380,7 +2380,7 @@
                     }
 
                     <span class="ident">ffi::XI_RawKeyPress</span> <span class="op">|</span> <span class="ident">ffi::XI_RawKeyRelease</span> =&gt; {
-                        <span class="kw">let</span> <span class="ident">xev</span>: <span class="kw-2">&amp;</span><span class="ident">ffi::XIRawEvent</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">xev</span>.<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>) };
+                        <span class="kw">let</span> <span class="ident">xev</span>: <span class="kw-2">&amp;</span><span class="ident">ffi::XIRawEvent</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">xev</span>.<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span>) };
 
                         <span class="kw">let</span> <span class="ident">state</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">xev</span>.<span class="ident">evtype</span> {
                             <span class="ident">ffi::XI_RawKeyPress</span> =&gt; <span class="ident">Pressed</span>,
@@ -2432,7 +2432,7 @@
                     }
 
                     <span class="ident">ffi::XI_HierarchyChanged</span> =&gt; {
-                        <span class="kw">let</span> <span class="ident">xev</span>: <span class="kw-2">&amp;</span><span class="ident">ffi::XIHierarchyEvent</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">xev</span>.<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>) };
+                        <span class="kw">let</span> <span class="ident">xev</span>: <span class="kw-2">&amp;</span><span class="ident">ffi::XIHierarchyEvent</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">xev</span>.<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span>) };
                         <span class="kw">for</span> <span class="ident">info</span> <span class="kw">in</span>
                             <span class="kw">unsafe</span> { <span class="ident">slice::from_raw_parts</span>(<span class="ident">xev</span>.<span class="ident">info</span>, <span class="ident">xev</span>.<span class="ident">num_info</span> <span class="kw">as</span> <span class="ident">usize</span>) }
                         {
@@ -2499,7 +2499,7 @@
                                                         <span class="ident">window_id</span>,
                                                         <span class="ident">event</span>: <span class="ident">WindowEvent::ScaleFactorChanged</span> {
                                                             <span class="ident">scale_factor</span>: <span class="ident">new_monitor</span>.<span class="ident">scale_factor</span>,
-                                                            <span class="ident">new_inner_size</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">new_inner_size</span>,
+                                                            <span class="ident">new_inner_size</span>: <span class="kw-2">&amp;mut</span> <span class="ident">new_inner_size</span>,
                                                         },
                                                     });
 
@@ -2534,8 +2534,8 @@
         <span class="ident">window_id</span>: <span class="ident"><span class="kw">crate</span>::window::WindowId</span>,
         <span class="ident">state</span>: <span class="ident">ElementState</span>,
         <span class="ident">mod_keymap</span>: <span class="kw-2">&amp;</span><span class="ident">ModifierKeymap</span>,
-        <span class="ident">device_mod_state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ModifierKeyState</span>,
-        <span class="ident">callback</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">F</span>,
+        <span class="ident">device_mod_state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ModifierKeyState</span>,
+        <span class="ident">callback</span>: <span class="kw-2">&amp;mut</span> <span class="ident">F</span>,
     ) <span class="kw">where</span>
         <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">Event</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">T</span><span class="op">&gt;</span>),
     {
@@ -2579,7 +2579,7 @@
     }
 }
 
-<span class="kw">fn</span> <span class="ident">is_first_touch</span>(<span class="ident">first</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">num</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">u32</span>, <span class="ident">id</span>: <span class="ident">u64</span>, <span class="ident">phase</span>: <span class="ident">TouchPhase</span>) -&gt; <span class="ident">bool</span> {
+<span class="kw">fn</span> <span class="ident">is_first_touch</span>(<span class="ident">first</span>: <span class="kw-2">&amp;mut</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">num</span>: <span class="kw-2">&amp;mut</span> <span class="ident">u32</span>, <span class="ident">id</span>: <span class="ident">u64</span>, <span class="ident">phase</span>: <span class="ident">TouchPhase</span>) -&gt; <span class="ident">bool</span> {
     <span class="kw">match</span> <span class="ident">phase</span> {
         <span class="ident">TouchPhase::Started</span> =&gt; {
             <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">num</span> <span class="op">==</span> <span class="number">0</span> {

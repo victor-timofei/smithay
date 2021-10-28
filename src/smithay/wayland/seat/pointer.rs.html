@@ -780,7 +780,7 @@
 
 <span class="comment">// PointerGrab is a trait, so we have to impl Debug manually</span>
 <span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">GrabStatus</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident">GrabStatus::None</span> =&gt; <span class="ident">f</span>.<span class="ident">debug_tuple</span>(<span class="string">&quot;GrabStatus::None&quot;</span>).<span class="ident">finish</span>(),
             <span class="ident">GrabStatus::Active</span>(<span class="ident">serial</span>, <span class="kw">_</span>) =&gt; <span class="ident">f</span>.<span class="ident">debug_tuple</span>(<span class="string">&quot;GrabStatus::Active&quot;</span>).<span class="ident">field</span>(<span class="kw-2">&amp;</span><span class="ident">serial</span>).<span class="ident">finish</span>(),
@@ -801,7 +801,7 @@
 
 <span class="comment">// image_callback does not implement debug, so we have to impl Debug manually</span>
 <span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">PointerInternal</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;PointerInternal&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;known_pointers&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">known_pointers</span>)
             .<span class="ident">field</span>(<span class="string">&quot;focus&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">focus</span>)
@@ -846,11 +846,11 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">with_grab</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>)
+    <span class="kw">fn</span> <span class="ident">with_grab</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>)
     <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">PointerGrab</span>),
+        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">PointerGrab</span>),
     {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">grab</span> <span class="op">=</span> <span class="ident">::std::mem::replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">grab</span>, <span class="ident">GrabStatus::Borrowed</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">grab</span> <span class="op">=</span> <span class="ident">::std::mem::replace</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">grab</span>, <span class="ident">GrabStatus::Borrowed</span>);
         <span class="kw">match</span> <span class="ident">grab</span> {
             <span class="ident">GrabStatus::Borrowed</span> =&gt; <span class="macro">panic!</span>(<span class="string">&quot;Accessed a pointer grab from within a pointer grab access.&quot;</span>),
             <span class="ident">GrabStatus::Active</span>(<span class="kw">_</span>, <span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">handler</span>) =&gt; {
@@ -858,14 +858,14 @@
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="kw-2">ref</span> <span class="ident">surface</span>, <span class="kw">_</span>)) <span class="op">=</span> <span class="ident">handler</span>.<span class="ident">start_data</span>().<span class="ident">focus</span> {
                     <span class="kw">if</span> <span class="op">!</span><span class="ident">surface</span>.<span class="ident">as_ref</span>().<span class="ident">is_alive</span>() {
                         <span class="self">self</span>.<span class="ident">grab</span> <span class="op">=</span> <span class="ident">GrabStatus::None</span>;
-                        <span class="ident">f</span>(<span class="ident">PointerInnerHandle</span> { <span class="ident">inner</span>: <span class="self">self</span> }, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">DefaultGrab</span>);
+                        <span class="ident">f</span>(<span class="ident">PointerInnerHandle</span> { <span class="ident">inner</span>: <span class="self">self</span> }, <span class="kw-2">&amp;mut</span> <span class="ident">DefaultGrab</span>);
                         <span class="kw">return</span>;
                     }
                 }
-                <span class="ident">f</span>(<span class="ident">PointerInnerHandle</span> { <span class="ident">inner</span>: <span class="self">self</span> }, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">handler</span>);
+                <span class="ident">f</span>(<span class="ident">PointerInnerHandle</span> { <span class="ident">inner</span>: <span class="self">self</span> }, <span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">handler</span>);
             }
             <span class="ident">GrabStatus::None</span> =&gt; {
-                <span class="ident">f</span>(<span class="ident">PointerInnerHandle</span> { <span class="ident">inner</span>: <span class="self">self</span> }, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">DefaultGrab</span>);
+                <span class="ident">f</span>(<span class="ident">PointerInnerHandle</span> { <span class="ident">inner</span>: <span class="self">self</span> }, <span class="kw-2">&amp;mut</span> <span class="ident">DefaultGrab</span>);
             }
         }
 
@@ -953,7 +953,7 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inner</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">borrow_mut</span>();
         <span class="ident">inner</span>.<span class="ident">pending_focus</span> <span class="op">=</span> <span class="ident">focus</span>.<span class="ident">clone</span>();
         <span class="ident">inner</span>.<span class="ident">with_grab</span>(<span class="kw">move</span> <span class="op">|</span><span class="kw-2">mut</span> <span class="ident">handle</span>, <span class="ident">grab</span><span class="op">|</span> {
-            <span class="ident">grab</span>.<span class="ident">motion</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">handle</span>, <span class="ident">location</span>, <span class="ident">focus</span>, <span class="ident">serial</span>, <span class="ident">time</span>);
+            <span class="ident">grab</span>.<span class="ident">motion</span>(<span class="kw-2">&amp;mut</span> <span class="ident">handle</span>, <span class="ident">location</span>, <span class="ident">focus</span>, <span class="ident">serial</span>, <span class="ident">time</span>);
         });
     }
 
@@ -973,7 +973,7 @@
             <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
         }
         <span class="ident">inner</span>.<span class="ident">with_grab</span>(<span class="op">|</span><span class="kw-2">mut</span> <span class="ident">handle</span>, <span class="ident">grab</span><span class="op">|</span> {
-            <span class="ident">grab</span>.<span class="ident">button</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">handle</span>, <span class="ident">button</span>, <span class="ident">state</span>, <span class="ident">serial</span>, <span class="ident">time</span>);
+            <span class="ident">grab</span>.<span class="ident">button</span>(<span class="kw-2">&amp;mut</span> <span class="ident">handle</span>, <span class="ident">button</span>, <span class="ident">state</span>, <span class="ident">serial</span>, <span class="ident">time</span>);
         });
     }
 
@@ -982,7 +982,7 @@
     <span class="doccomment">/// A single frame will group multiple scroll events as if they happened in the same instance.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">axis</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">details</span>: <span class="ident">AxisFrame</span>) {
         <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">borrow_mut</span>().<span class="ident">with_grab</span>(<span class="op">|</span><span class="kw-2">mut</span> <span class="ident">handle</span>, <span class="ident">grab</span><span class="op">|</span> {
-            <span class="ident">grab</span>.<span class="ident">axis</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">handle</span>, <span class="ident">details</span>);
+            <span class="ident">grab</span>.<span class="ident">axis</span>(<span class="kw-2">&amp;mut</span> <span class="ident">handle</span>, <span class="ident">details</span>);
         });
     }
 
@@ -1023,8 +1023,8 @@
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">PointerGrab</span> {
     <span class="doccomment">/// A motion was reported</span>
     <span class="kw">fn</span> <span class="ident">motion</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">handle</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
+        <span class="ident">handle</span>: <span class="kw-2">&amp;mut</span> <span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
         <span class="ident">location</span>: <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">f64</span>, <span class="ident">Logical</span><span class="op">&gt;</span>,
         <span class="ident">focus</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">WlSurface</span>, <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
         <span class="ident">serial</span>: <span class="ident">Serial</span>,
@@ -1032,15 +1032,15 @@
     );
     <span class="doccomment">/// A button press was reported</span>
     <span class="kw">fn</span> <span class="ident">button</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">handle</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
+        <span class="ident">handle</span>: <span class="kw-2">&amp;mut</span> <span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
         <span class="ident">button</span>: <span class="ident">u32</span>,
         <span class="ident">state</span>: <span class="ident">ButtonState</span>,
         <span class="ident">serial</span>: <span class="ident">Serial</span>,
         <span class="ident">time</span>: <span class="ident">u32</span>,
     );
     <span class="doccomment">/// An axis scroll was reported</span>
-    <span class="kw">fn</span> <span class="ident">axis</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">handle</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">details</span>: <span class="ident">AxisFrame</span>);
+    <span class="kw">fn</span> <span class="ident">axis</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">handle</span>: <span class="kw-2">&amp;mut</span> <span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">details</span>: <span class="ident">AxisFrame</span>);
     <span class="doccomment">/// The data about the event that started the grab.</span>
     <span class="kw">fn</span> <span class="ident">start_data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">GrabStartData</span>;
 }
@@ -1056,14 +1056,14 @@
     <span class="doccomment">/// Change the current grab on this pointer to the provided grab</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Overwrites any current grab.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_grab</span><span class="op">&lt;</span><span class="ident">G</span>: <span class="ident">PointerGrab</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">serial</span>: <span class="ident">Serial</span>, <span class="ident">grab</span>: <span class="ident">G</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_grab</span><span class="op">&lt;</span><span class="ident">G</span>: <span class="ident">PointerGrab</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">serial</span>: <span class="ident">Serial</span>, <span class="ident">grab</span>: <span class="ident">G</span>) {
         <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">grab</span> <span class="op">=</span> <span class="ident">GrabStatus::Active</span>(<span class="ident">serial</span>, <span class="ident">Box::new</span>(<span class="ident">grab</span>));
     }
 
     <span class="doccomment">/// Remove any current grab on this pointer, resetting it to the default behavior</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This will also restore the focus of the underlying pointer</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unset_grab</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">serial</span>: <span class="ident">Serial</span>, <span class="ident">time</span>: <span class="ident">u32</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unset_grab</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">serial</span>: <span class="ident">Serial</span>, <span class="ident">time</span>: <span class="ident">u32</span>) {
         <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">grab</span> <span class="op">=</span> <span class="ident">GrabStatus::None</span>;
         <span class="comment">// restore the focus</span>
         <span class="kw">let</span> <span class="ident">location</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">current_location</span>();
@@ -1101,7 +1101,7 @@
     <span class="doccomment">/// This will internally take care of notifying the appropriate client objects</span>
     <span class="doccomment">/// of enter/motion/leave events.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">motion</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">location</span>: <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">f64</span>, <span class="ident">Logical</span><span class="op">&gt;</span>,
         <span class="ident">focus</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">WlSurface</span>, <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
         <span class="ident">serial</span>: <span class="ident">Serial</span>,
@@ -1171,7 +1171,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This will internally send the appropriate axis events to the client</span>
     <span class="doccomment">/// objects matching with the currently focused surface.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">axis</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">details</span>: <span class="ident">AxisFrame</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">axis</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">details</span>: <span class="ident">AxisFrame</span>) {
         <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">with_focused_pointers</span>(<span class="op">|</span><span class="ident">pointer</span>, <span class="kw">_</span><span class="op">|</span> {
             <span class="comment">// axis</span>
             <span class="kw">if</span> <span class="ident">details</span>.<span class="ident">axis</span>.<span class="number">0</span> <span class="op">!</span><span class="op">=</span> <span class="number">0.0</span> {
@@ -1398,8 +1398,8 @@
 
 <span class="kw">impl</span> <span class="ident">PointerGrab</span> <span class="kw">for</span> <span class="ident">DefaultGrab</span> {
     <span class="kw">fn</span> <span class="ident">motion</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">handle</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
+        <span class="ident">handle</span>: <span class="kw-2">&amp;mut</span> <span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
         <span class="ident">location</span>: <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">f64</span>, <span class="ident">Logical</span><span class="op">&gt;</span>,
         <span class="ident">focus</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">WlSurface</span>, <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
         <span class="ident">serial</span>: <span class="ident">Serial</span>,
@@ -1408,8 +1408,8 @@
         <span class="ident">handle</span>.<span class="ident">motion</span>(<span class="ident">location</span>, <span class="ident">focus</span>, <span class="ident">serial</span>, <span class="ident">time</span>);
     }
     <span class="kw">fn</span> <span class="ident">button</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">handle</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
+        <span class="ident">handle</span>: <span class="kw-2">&amp;mut</span> <span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
         <span class="ident">button</span>: <span class="ident">u32</span>,
         <span class="ident">state</span>: <span class="ident">ButtonState</span>,
         <span class="ident">serial</span>: <span class="ident">Serial</span>,
@@ -1427,7 +1427,7 @@
             },
         );
     }
-    <span class="kw">fn</span> <span class="ident">axis</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">handle</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">details</span>: <span class="ident">AxisFrame</span>) {
+    <span class="kw">fn</span> <span class="ident">axis</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">handle</span>: <span class="kw-2">&amp;mut</span> <span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">details</span>: <span class="ident">AxisFrame</span>) {
         <span class="ident">handle</span>.<span class="ident">axis</span>(<span class="ident">details</span>);
     }
     <span class="kw">fn</span> <span class="ident">start_data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">GrabStartData</span> {
@@ -1446,8 +1446,8 @@
 
 <span class="kw">impl</span> <span class="ident">PointerGrab</span> <span class="kw">for</span> <span class="ident">ClickGrab</span> {
     <span class="kw">fn</span> <span class="ident">motion</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">handle</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
+        <span class="ident">handle</span>: <span class="kw-2">&amp;mut</span> <span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
         <span class="ident">location</span>: <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">f64</span>, <span class="ident">Logical</span><span class="op">&gt;</span>,
         <span class="ident">_focus</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">WlSurface</span>, <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
         <span class="ident">serial</span>: <span class="ident">Serial</span>,
@@ -1456,8 +1456,8 @@
         <span class="ident">handle</span>.<span class="ident">motion</span>(<span class="ident">location</span>, <span class="self">self</span>.<span class="ident">start_data</span>.<span class="ident">focus</span>.<span class="ident">clone</span>(), <span class="ident">serial</span>, <span class="ident">time</span>);
     }
     <span class="kw">fn</span> <span class="ident">button</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">handle</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
+        <span class="ident">handle</span>: <span class="kw-2">&amp;mut</span> <span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
         <span class="ident">button</span>: <span class="ident">u32</span>,
         <span class="ident">state</span>: <span class="ident">ButtonState</span>,
         <span class="ident">serial</span>: <span class="ident">Serial</span>,
@@ -1469,7 +1469,7 @@
             <span class="ident">handle</span>.<span class="ident">unset_grab</span>(<span class="ident">serial</span>, <span class="ident">time</span>);
         }
     }
-    <span class="kw">fn</span> <span class="ident">axis</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">handle</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">details</span>: <span class="ident">AxisFrame</span>) {
+    <span class="kw">fn</span> <span class="ident">axis</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">handle</span>: <span class="kw-2">&amp;mut</span> <span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">details</span>: <span class="ident">AxisFrame</span>) {
         <span class="ident">handle</span>.<span class="ident">axis</span>(<span class="ident">details</span>);
     }
     <span class="kw">fn</span> <span class="ident">start_data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">GrabStartData</span> {

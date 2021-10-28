@@ -640,17 +640,17 @@
 }
 
 <span class="kw">impl</span> <span class="ident">SeatData</span> {
-    <span class="kw">fn</span> <span class="ident">set_selection</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">new_selection</span>: <span class="ident">Selection</span>) {
+    <span class="kw">fn</span> <span class="ident">set_selection</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">new_selection</span>: <span class="ident">Selection</span>) {
         <span class="self">self</span>.<span class="ident">selection</span> <span class="op">=</span> <span class="ident">new_selection</span>;
         <span class="self">self</span>.<span class="ident">send_selection</span>();
     }
 
-    <span class="kw">fn</span> <span class="ident">set_focus</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">new_focus</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Client</span><span class="op">&gt;</span>) {
+    <span class="kw">fn</span> <span class="ident">set_focus</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">new_focus</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Client</span><span class="op">&gt;</span>) {
         <span class="self">self</span>.<span class="ident">current_focus</span> <span class="op">=</span> <span class="ident">new_focus</span>;
         <span class="self">self</span>.<span class="ident">send_selection</span>();
     }
 
-    <span class="kw">fn</span> <span class="ident">send_selection</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+    <span class="kw">fn</span> <span class="ident">send_selection</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">current_focus</span>.<span class="ident">as_ref</span>() {
             <span class="prelude-val">Some</span>(<span class="ident">c</span>) =&gt; <span class="ident">c</span>,
             <span class="prelude-val">None</span> =&gt; <span class="kw">return</span>,
@@ -745,7 +745,7 @@
                                 <span class="macro">debug!</span>(<span class="ident">log</span>, <span class="string">&quot;Denying a wl_data_offer.receive with invalid source.&quot;</span>);
                                 <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">::nix::unistd::close</span>(<span class="ident">fd</span>);
                             } <span class="kw">else</span> {
-                                (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">callback</span>.<span class="ident">borrow_mut</span>())(<span class="ident">DataDeviceEvent::SendSelection</span> {
+                                (<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">callback</span>.<span class="ident">borrow_mut</span>())(<span class="ident">DataDeviceEvent::SendSelection</span> {
                                     <span class="ident">mime_type</span>,
                                     <span class="ident">fd</span>,
                                 });
@@ -790,7 +790,7 @@
 <span class="doccomment">/// chosen (and thus the drag&#39;n&#39;drop should abort on drop), return</span>
 <span class="doccomment">/// [`DndAction::empty()`](wayland_server::protocol::wl_data_device_manager::DndAction::empty).</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">init_data_device</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">C</span>, <span class="ident">L</span><span class="op">&gt;</span>(
-    <span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Display</span>,
+    <span class="ident">display</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Display</span>,
     <span class="ident">callback</span>: <span class="ident">C</span>,
     <span class="ident">action_choice</span>: <span class="ident">F</span>,
     <span class="ident">logger</span>: <span class="ident">L</span>,
@@ -964,7 +964,7 @@
                         }
                     }
                     <span class="comment">// The StartDrag is in response to a pointer implicit grab, all is good</span>
-                    (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">callback</span>.<span class="ident">borrow_mut</span>())(<span class="ident">DataDeviceEvent::DnDStarted</span> {
+                    (<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">callback</span>.<span class="ident">borrow_mut</span>())(<span class="ident">DataDeviceEvent::DnDStarted</span> {
                         <span class="ident">source</span>: <span class="ident">source</span>.<span class="ident">clone</span>(),
                         <span class="ident">icon</span>: <span class="ident">icon</span>.<span class="ident">clone</span>(),
                     });
@@ -995,7 +995,7 @@
                     .<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>)
                 {
                     <span class="kw">let</span> <span class="ident">seat_data</span> <span class="op">=</span> <span class="ident">seat</span>.<span class="ident">user_data</span>().<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">SeatData</span><span class="op">&gt;</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
-                    (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">callback</span>.<span class="ident">borrow_mut</span>())(<span class="ident">DataDeviceEvent::NewSelection</span>(<span class="ident">source</span>.<span class="ident">clone</span>()));
+                    (<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">callback</span>.<span class="ident">borrow_mut</span>())(<span class="ident">DataDeviceEvent::NewSelection</span>(<span class="ident">source</span>.<span class="ident">clone</span>()));
                     <span class="comment">// The client has kbd focus, it can set the selection</span>
                     <span class="ident">seat_data</span>
                         .<span class="ident">borrow_mut</span>()

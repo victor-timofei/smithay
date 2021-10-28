@@ -190,7 +190,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">EGLSurface</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;EGLSurface&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;display&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">display</span>)
             <span class="comment">// native does not necessarily implement Debug</span>
@@ -236,7 +236,7 @@
         <span class="prelude-val">Ok</span>(<span class="ident">EGLSurface</span> {
             <span class="ident">display</span>: <span class="ident">display</span>.<span class="ident">display</span>.<span class="ident">clone</span>(),
             <span class="ident">native</span>: <span class="ident">Box::new</span>(<span class="ident">native</span>),
-            <span class="ident">surface</span>: <span class="ident">AtomicPtr::new</span>(<span class="ident">surface</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>),
+            <span class="ident">surface</span>: <span class="ident">AtomicPtr::new</span>(<span class="ident">surface</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="kw">_</span>),
             <span class="ident">config_id</span>: <span class="ident">config</span>,
             <span class="ident">pixel_format</span>,
             <span class="ident">logger</span>: <span class="ident">log</span>,
@@ -266,13 +266,13 @@
                     <span class="ident">surface</span>,
                     <span class="self">self</span>.<span class="ident">native</span>
                         .<span class="ident">create</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">display</span>, <span class="self">self</span>.<span class="ident">config_id</span>)
-                        .<span class="ident">map_err</span>(<span class="ident">SwapBuffersError::EGLCreateSurface</span>)<span class="question-mark">?</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+                        .<span class="ident">map_err</span>(<span class="ident">SwapBuffersError::EGLCreateSurface</span>)<span class="question-mark">?</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="kw">_</span>,
                     <span class="ident">Ordering::SeqCst</span>,
                     <span class="ident">Ordering::SeqCst</span>,
                 )
                 .<span class="ident">expect</span>(<span class="string">&quot;The surface pointer changed in between?&quot;</span>);
             <span class="kw">if</span> <span class="ident">previous</span> <span class="op">==</span> <span class="ident">surface</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">surface</span>.<span class="ident">is_null</span>() {
-                <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi::egl::DestroySurface</span>(<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">display</span>, <span class="ident">surface</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>) };
+                <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi::egl::DestroySurface</span>(<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">display</span>, <span class="ident">surface</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span>) };
             }
 
             <span class="comment">// if a recreation is pending anyway, ignore page-flip errors.</span>
@@ -290,8 +290,8 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_current</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="kw">let</span> <span class="ident">surface</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">surface</span>.<span class="ident">load</span>(<span class="ident">Ordering::SeqCst</span>);
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi::egl::GetCurrentSurface</span>(<span class="ident">ffi::egl::DRAW</span> <span class="kw">as</span> <span class="kw">_</span>) <span class="op">==</span> <span class="ident">surface</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>
-                <span class="op">&amp;&amp;</span> <span class="ident">ffi::egl::GetCurrentSurface</span>(<span class="ident">ffi::egl::READ</span> <span class="kw">as</span> <span class="kw">_</span>) <span class="op">==</span> <span class="ident">surface</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>
+            <span class="ident">ffi::egl::GetCurrentSurface</span>(<span class="ident">ffi::egl::DRAW</span> <span class="kw">as</span> <span class="kw">_</span>) <span class="op">==</span> <span class="ident">surface</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span>
+                <span class="op">&amp;&amp;</span> <span class="ident">ffi::egl::GetCurrentSurface</span>(<span class="ident">ffi::egl::READ</span> <span class="kw">as</span> <span class="kw">_</span>) <span class="op">==</span> <span class="ident">surface</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span>
         }
     }
 
@@ -320,9 +320,9 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">EGLSurface</span> {
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi::egl::DestroySurface</span>(<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">display</span>, <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">surface</span>.<span class="ident">get_mut</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>);
+            <span class="ident">ffi::egl::DestroySurface</span>(<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">display</span>, <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">surface</span>.<span class="ident">get_mut</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span>);
         }
     }
 }

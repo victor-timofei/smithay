@@ -28,7 +28,7 @@ itself and receive interactions of clients with it via an other dedicated callba
 
 <span class="comment">// init the data device:</span>
 <span class="ident">init_data_device</span>(
-    <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">display</span>,            <span class="comment">// the display</span>
+    <span class="kw-2">&amp;mut</span> <span class="ident">display</span>,            <span class="comment">// the display</span>
     <span class="op">|</span><span class="ident">dnd_event</span><span class="op">|</span> { <span class="comment">/* a callback to react to client DnD/selection actions */</span> },
     <span class="ident">default_action_chooser</span>,  <span class="comment">// a closure to choose the DnD action depending on clients</span>
                              <span class="comment">// negociation</span>

@@ -568,7 +568,7 @@
 
 <span class="kw">impl</span> <span class="ident">ShellState</span> {
     <span class="doccomment">/// Cleans the internal surface storage by removing all dead surfaces</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">cleanup_surfaces</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">cleanup_surfaces</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="self">self</span>.<span class="ident">known_surfaces</span>.<span class="ident">retain</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">alive</span>());
     }
 
@@ -580,7 +580,7 @@
 
 <span class="doccomment">/// Create a new `wl_shell` global</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wl_shell_init</span><span class="op">&lt;</span><span class="ident">L</span>, <span class="ident">Impl</span><span class="op">&gt;</span>(
-    <span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Display</span>,
+    <span class="ident">display</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Display</span>,
     <span class="ident">implementation</span>: <span class="ident">Impl</span>,
     <span class="ident">logger</span>: <span class="ident">L</span>,
 ) -&gt; (<span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">ShellState</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Global</span><span class="op">&lt;</span><span class="ident">wl_shell::WlShell</span><span class="op">&gt;</span>)

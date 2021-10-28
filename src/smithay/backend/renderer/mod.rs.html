@@ -672,7 +672,7 @@
     <span class="doccomment">/// Binding to target, while another one is already bound, is rendering defined.</span>
     <span class="doccomment">/// Some renderers might happily replace the current target, while other might drop the call</span>
     <span class="doccomment">/// or throw an error.</span>
-    <span class="kw">fn</span> <span class="ident">bind</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">target</span>: <span class="ident">Target</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Renderer</span><span class="op">&gt;</span><span class="ident">::Error</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">bind</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">target</span>: <span class="ident">Target</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Renderer</span><span class="op">&gt;</span><span class="ident">::Error</span><span class="op">&gt;</span>;
     <span class="doccomment">/// Supported pixel formats for given targets, if applicable.</span>
     <span class="kw">fn</span> <span class="ident">supported_formats</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident"><span class="kw">crate</span>::backend::allocator::Format</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="prelude-val">None</span>
@@ -684,7 +684,7 @@
     <span class="doccomment">/// Unbind the current rendering target.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// May fall back to a default target, if defined by the implementation.</span>
-    <span class="kw">fn</span> <span class="ident">unbind</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Renderer</span><span class="op">&gt;</span><span class="ident">::Error</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">unbind</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Renderer</span><span class="op">&gt;</span><span class="ident">::Error</span><span class="op">&gt;</span>;
 }
 
 <span class="doccomment">/// A two dimensional texture</span>
@@ -711,11 +711,11 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This operation is only valid in between a `begin` and `finish`-call.</span>
     <span class="doccomment">/// If called outside this operation may error-out, do nothing or modify future rendering results in any way.</span>
-    <span class="kw">fn</span> <span class="ident">clear</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">color</span>: [<span class="ident">f32</span>; <span class="number">4</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">clear</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">color</span>: [<span class="ident">f32</span>; <span class="number">4</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>;
     <span class="doccomment">/// Render a texture to the current target using given projection matrix and alpha.</span>
     <span class="doccomment">/// The given vertices are used to source the texture. This is mostly useful for cropping the texture.</span>
     <span class="kw">fn</span> <span class="ident">render_texture</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">texture</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::TextureId</span>,
         <span class="ident">matrix</span>: <span class="ident">Matrix3</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>,
         <span class="ident">tex_coords</span>: [<span class="ident">Vector2</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>; <span class="number">4</span>],
@@ -725,7 +725,7 @@
     <span class="doccomment">/// Render a texture to the current target as a flat 2d-plane at a given</span>
     <span class="doccomment">/// position and applying the given transformation with the given alpha value.</span>
     <span class="kw">fn</span> <span class="ident">render_texture_at</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">texture</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::TextureId</span>,
         <span class="ident">pos</span>: <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">f64</span>, <span class="ident">Physical</span><span class="op">&gt;</span>,
         <span class="ident">texture_scale</span>: <span class="ident">i32</span>,
@@ -752,7 +752,7 @@
     <span class="doccomment">/// Render part of a texture as given by src to the current target into the rectangle described by dest</span>
     <span class="doccomment">/// as a flat 2d-plane after applying the given transformations.</span>
     <span class="kw">fn</span> <span class="ident">render_texture_from_to</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">texture</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::TextureId</span>,
         <span class="ident">src</span>: <span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Buffer</span><span class="op">&gt;</span>,
         <span class="ident">dest</span>: <span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">f64</span>, <span class="ident">Physical</span><span class="op">&gt;</span>,
@@ -812,13 +812,13 @@
     <span class="doccomment">/// - This renderer implements `Bind`, no target was bound *and* has no default target.</span>
     <span class="doccomment">/// - (Renderers not implementing `Bind` always have a default target.)</span>
     <span class="kw">fn</span> <span class="ident">render</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">R</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">size</span>: <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Physical</span><span class="op">&gt;</span>,
         <span class="ident">transform</span>: <span class="ident">Transform</span>,
         <span class="ident">rendering</span>: <span class="ident">F</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident"><span class="self">Self</span>::Frame</span>) -&gt; <span class="ident">R</span>;
+        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;mut</span> <span class="self">Self</span>, <span class="kw-2">&amp;mut</span> <span class="ident"><span class="self">Self</span>::Frame</span>) -&gt; <span class="ident">R</span>;
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>)]</span>
@@ -840,7 +840,7 @@
     <span class="doccomment">/// The `damage` argument provides a list of rectangle locating parts of the buffer that need to be updated. When provided</span>
     <span class="doccomment">/// with an empty list `&amp;[]`, the renderer is allowed to not update the texture at all.</span>
     <span class="kw">fn</span> <span class="ident">import_shm_buffer</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="ident">wl_buffer::WlBuffer</span>,
         <span class="ident">surface</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident"><span class="kw">crate</span>::wayland::compositor::SurfaceData</span><span class="op">&gt;</span>,
         <span class="ident">damage</span>: <span class="kw-2">&amp;</span>[<span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Buffer</span><span class="op">&gt;</span>],
@@ -875,13 +875,13 @@
     <span class="doccomment">/// This might return [`OtherEGLDisplayAlreadyBound`](super::egl::Error::OtherEGLDisplayAlreadyBound)</span>
     <span class="doccomment">/// if called for the same [`Display`](wayland_server::Display) multiple times, as only one egl</span>
     <span class="doccomment">/// display may be bound at any given time.</span>
-    <span class="kw">fn</span> <span class="ident">bind_wl_display</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="ident">wayland_server::Display</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">EglError</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">bind_wl_display</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="ident">wayland_server::Display</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">EglError</span><span class="op">&gt;</span>;
 
     <span class="doccomment">/// Unbinds a previously bound egl display, if existing.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// *Note*: As a result any previously created egl-based WlBuffers will not be readable anymore.</span>
     <span class="doccomment">/// Your compositor will have to deal with existing buffers of *unknown* type.</span>
-    <span class="kw">fn</span> <span class="ident">unbind_wl_display</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>);
+    <span class="kw">fn</span> <span class="ident">unbind_wl_display</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>);
 
     <span class="doccomment">/// Returns the underlying [`EGLBufferReader`].</span>
     <span class="doccomment">///</span>
@@ -903,7 +903,7 @@
     <span class="doccomment">/// The implementation defines, if the id keeps being valid, if the buffer is released,</span>
     <span class="doccomment">/// to avoid relying on implementation details, keep the buffer alive, until you destroyed this texture again.</span>
     <span class="kw">fn</span> <span class="ident">import_egl_buffer</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="ident">wl_buffer::WlBuffer</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Renderer</span><span class="op">&gt;</span><span class="ident">::TextureId</span>, <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Renderer</span><span class="op">&gt;</span><span class="ident">::Error</span><span class="op">&gt;</span>;
 }
@@ -928,7 +928,7 @@
     <span class="doccomment">/// The implementation defines, if the id keeps being valid, if the buffer is released,</span>
     <span class="doccomment">/// to avoid relying on implementation details, keep the buffer alive, until you destroyed this texture again.</span>
     <span class="kw">fn</span> <span class="ident">import_dma_buffer</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="ident">wl_buffer::WlBuffer</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Renderer</span><span class="op">&gt;</span><span class="ident">::TextureId</span>, <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Renderer</span><span class="op">&gt;</span><span class="ident">::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">dmabuf</span> <span class="op">=</span> <span class="ident">buffer</span>
@@ -951,7 +951,7 @@
     <span class="doccomment">/// The implementation defines, if the id keeps being valid, if the buffer is released,</span>
     <span class="doccomment">/// to avoid relying on implementation details, keep the buffer alive, until you destroyed this texture again.</span>
     <span class="kw">fn</span> <span class="ident">import_dmabuf</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">dmabuf</span>: <span class="kw-2">&amp;</span><span class="ident">Dmabuf</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Renderer</span><span class="op">&gt;</span><span class="ident">::TextureId</span>, <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Renderer</span><span class="op">&gt;</span><span class="ident">::Error</span><span class="op">&gt;</span>;
 }
@@ -981,7 +981,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Returns `None`, if the buffer type cannot be determined.</span>
     <span class="kw">fn</span> <span class="ident">import_buffer</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="ident">wl_buffer::WlBuffer</span>,
         <span class="ident">surface</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident"><span class="kw">crate</span>::wayland::compositor::SurfaceData</span><span class="op">&gt;</span>,
         <span class="ident">damage</span>: <span class="kw-2">&amp;</span>[<span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Buffer</span><span class="op">&gt;</span>],
@@ -996,7 +996,7 @@
 ))]</span>
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Renderer</span> <span class="op">+</span> <span class="ident">ImportShm</span> <span class="op">+</span> <span class="ident">ImportEgl</span> <span class="op">+</span> <span class="ident">ImportDma</span><span class="op">&gt;</span> <span class="ident">ImportAll</span> <span class="kw">for</span> <span class="ident">R</span> {
     <span class="kw">fn</span> <span class="ident">import_buffer</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="ident">wl_buffer::WlBuffer</span>,
         <span class="ident">surface</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">SurfaceData</span><span class="op">&gt;</span>,
         <span class="ident">damage</span>: <span class="kw-2">&amp;</span>[<span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Buffer</span><span class="op">&gt;</span>],
@@ -1016,7 +1016,7 @@
 ))]</span>
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Renderer</span> <span class="op">+</span> <span class="ident">ImportShm</span> <span class="op">+</span> <span class="ident">ImportDma</span><span class="op">&gt;</span> <span class="ident">ImportAll</span> <span class="kw">for</span> <span class="ident">R</span> {
     <span class="kw">fn</span> <span class="ident">import_buffer</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="ident">wl_buffer::WlBuffer</span>,
         <span class="ident">surface</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">SurfaceData</span><span class="op">&gt;</span>,
         <span class="ident">damage</span>: <span class="kw-2">&amp;</span>[<span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Buffer</span><span class="op">&gt;</span>],
