@@ -5,11 +5,11 @@ pub enum Request {
         mode: <a class="enum" href="enum.Mode.html" title="enum wayland_protocols::unstable::xdg_decoration::v1::server::zxdg_toplevel_decoration_v1::Mode">Mode</a>,
     },
     UnsetMode,
-}</code></pre></div><h2 id="variants" class="variants small-section-header">Variants (Non-exhaustive)<a href="#variants" class="anchor"></a></h2><details class="rustdoc-toggle non-exhaustive"><summary class="hideme"><span>This enum is marked as non-exhaustive</span></summary><div class="docblock">Non-exhaustive enums could have additional variants added in future. Therefore, when matching against variants of non-exhaustive enums, an extra wildcard arm must be added to account for any future variants.</div></details><div id="variant.Destroy" class="variant small-section-header"><a href="#variant.Destroy" class="anchor field"></a><code>Destroy</code></div><div class="docblock"><p>destroy the decoration object</p>
+}</code></pre></div><h2 id="variants" class="variants small-section-header">Variants (Non-exhaustive)<a href="#variants" class="anchor"></a></h2><details class="rustdoc-toggle non-exhaustive"><summary class="hideme"><span>This enum is marked as non-exhaustive</span></summary><div class="docblock">Non-exhaustive enums could have additional variants added in future. Therefore, when matching against variants of non-exhaustive enums, an extra wildcard arm must be added to account for any future variants.</div></details><h3 id="variant.Destroy" class="variant small-section-header"><a href="#variant.Destroy" class="anchor field"></a><code>Destroy</code></h3><div class="docblock"><p>destroy the decoration object</p>
 <p>Switch back to a mode without any server-side decorations at the next
 commit.</p>
 <p>This is a destructor, once received this object cannot be used any longer.</p>
-</div><div id="variant.SetMode" class="variant small-section-header"><a href="#variant.SetMode" class="anchor field"></a><code>SetMode</code></div><div class="docblock"><p>set the decoration mode</p>
+</div><h3 id="variant.SetMode" class="variant small-section-header"><a href="#variant.SetMode" class="anchor field"></a><code>SetMode</code></h3><div class="sub-variant" id="variant.SetMode.fields"><h4>Fields</h4><div class="sub-variant-field"><span id="variant.SetMode.field.mode" class="variant small-section-header"><a href="#variant.SetMode.field.mode" class="anchor field"></a><code>mode:&nbsp;<a class="enum" href="enum.Mode.html" title="enum wayland_protocols::unstable::xdg_decoration::v1::server::zxdg_toplevel_decoration_v1::Mode">Mode</a></code></span></div></div><div class="docblock"><p>set the decoration mode</p>
 <p>Set the toplevel surface decoration mode. This informs the compositor
 that the client prefers the provided decoration mode.</p>
 <p>After requesting a decoration mode, the compositor will respond by
@@ -25,7 +25,7 @@ for the next xdg_surface.configure event to prevent unwanted state.
 Such clients are responsible for preventing configure loops and must
 make sure not to send multiple successive set_mode requests with the
 same decoration mode.</p>
-</div><div class="sub-variant" id="variant.SetMode.fields"><h3>Fields of <b>SetMode</b></h3><div><span id="variant.SetMode.field.mode" class="variant small-section-header"><a href="#variant.SetMode.field.mode" class="anchor field"></a><code>mode:&nbsp;<a class="enum" href="enum.Mode.html" title="enum wayland_protocols::unstable::xdg_decoration::v1::server::zxdg_toplevel_decoration_v1::Mode">Mode</a></code></span></div></div><div id="variant.UnsetMode" class="variant small-section-header"><a href="#variant.UnsetMode" class="anchor field"></a><code>UnsetMode</code></div><div class="docblock"><p>unset the decoration mode</p>
+</div><h3 id="variant.UnsetMode" class="variant small-section-header"><a href="#variant.UnsetMode" class="anchor field"></a><code>UnsetMode</code></h3><div class="docblock"><p>unset the decoration mode</p>
 <p>Unset the toplevel surface decoration mode. This informs the compositor
 that the client doesn’t prefer a particular decoration mode.</p>
 <p>This request has the same semantics as set_mode.</p>

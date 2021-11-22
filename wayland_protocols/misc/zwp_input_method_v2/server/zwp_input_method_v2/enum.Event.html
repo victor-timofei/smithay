@@ -16,7 +16,7 @@ pub enum Event {
     },
     Done,
     Unavailable,
-}</code></pre></div><h2 id="variants" class="variants small-section-header">Variants (Non-exhaustive)<a href="#variants" class="anchor"></a></h2><details class="rustdoc-toggle non-exhaustive"><summary class="hideme"><span>This enum is marked as non-exhaustive</span></summary><div class="docblock">Non-exhaustive enums could have additional variants added in future. Therefore, when matching against variants of non-exhaustive enums, an extra wildcard arm must be added to account for any future variants.</div></details><div id="variant.Activate" class="variant small-section-header"><a href="#variant.Activate" class="anchor field"></a><code>Activate</code></div><div class="docblock"><p>input method has been requested</p>
+}</code></pre></div><h2 id="variants" class="variants small-section-header">Variants (Non-exhaustive)<a href="#variants" class="anchor"></a></h2><details class="rustdoc-toggle non-exhaustive"><summary class="hideme"><span>This enum is marked as non-exhaustive</span></summary><div class="docblock">Non-exhaustive enums could have additional variants added in future. Therefore, when matching against variants of non-exhaustive enums, an extra wildcard arm must be added to account for any future variants.</div></details><h3 id="variant.Activate" class="variant small-section-header"><a href="#variant.Activate" class="anchor field"></a><code>Activate</code></h3><div class="docblock"><p>input method has been requested</p>
 <p>Notification that a text input focused on this seat requested the input
 method to be activated.</p>
 <p>This event serves the purpose of providing the compositor with an
@@ -32,7 +32,7 @@ next done event if the text input supports the respective
 functionality.</p>
 <p>State set with this event is double-buffered. It will get applied on
 the next zwp_input_method_v2.done event, and stay valid until changed.</p>
-</div><div id="variant.Deactivate" class="variant small-section-header"><a href="#variant.Deactivate" class="anchor field"></a><code>Deactivate</code></div><div class="docblock"><p>deactivate event</p>
+</div><h3 id="variant.Deactivate" class="variant small-section-header"><a href="#variant.Deactivate" class="anchor field"></a><code>Deactivate</code></h3><div class="docblock"><p>deactivate event</p>
 <p>Notification that no focused text input currently needs an active
 input method on this seat.</p>
 <p>This event marks the zwp_input_method_v2 object as inactive. The
@@ -40,7 +40,7 @@ compositor must make all existing zwp_input_popup_surface_v2 objects
 invisible until the next activate event.</p>
 <p>State set with this event is double-buffered. It will get applied on
 the next zwp_input_method_v2.done event, and stay valid until changed.</p>
-</div><div id="variant.SurroundingText" class="variant small-section-header"><a href="#variant.SurroundingText" class="anchor field"></a><code>SurroundingText</code></div><div class="docblock"><p>surrounding text event</p>
+</div><h3 id="variant.SurroundingText" class="variant small-section-header"><a href="#variant.SurroundingText" class="anchor field"></a><code>SurroundingText</code></h3><div class="sub-variant" id="variant.SurroundingText.fields"><h4>Fields</h4><div class="sub-variant-field"><span id="variant.SurroundingText.field.text" class="variant small-section-header"><a href="#variant.SurroundingText.field.text" class="anchor field"></a><code>text:&nbsp;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a></code></span></div><div class="sub-variant-field"><span id="variant.SurroundingText.field.cursor" class="variant small-section-header"><a href="#variant.SurroundingText.field.cursor" class="anchor field"></a><code>cursor:&nbsp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a></code></span></div><div class="sub-variant-field"><span id="variant.SurroundingText.field.anchor" class="variant small-section-header"><a href="#variant.SurroundingText.field.anchor" class="anchor field"></a><code>anchor:&nbsp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a></code></span></div></div><div class="docblock"><p>surrounding text event</p>
 <p>Updates the surrounding plain text around the cursor, excluding the
 preedit text.</p>
 <p>If any preedit text is present, it is replaced with the cursor for the
@@ -63,7 +63,7 @@ event.</p>
 <p>The initial state for affected fields is empty, meaning that the text
 input does not support sending surrounding text. If the empty values
 get applied, subsequent attempts to change them may have no effect.</p>
-</div><div class="sub-variant" id="variant.SurroundingText.fields"><h3>Fields of <b>SurroundingText</b></h3><div><span id="variant.SurroundingText.field.text" class="variant small-section-header"><a href="#variant.SurroundingText.field.text" class="anchor field"></a><code>text:&nbsp;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a></code></span><span id="variant.SurroundingText.field.cursor" class="variant small-section-header"><a href="#variant.SurroundingText.field.cursor" class="anchor field"></a><code>cursor:&nbsp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a></code></span><span id="variant.SurroundingText.field.anchor" class="variant small-section-header"><a href="#variant.SurroundingText.field.anchor" class="anchor field"></a><code>anchor:&nbsp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a></code></span></div></div><div id="variant.TextChangeCause" class="variant small-section-header"><a href="#variant.TextChangeCause" class="anchor field"></a><code>TextChangeCause</code></div><div class="docblock"><p>indicates the cause of surrounding text change</p>
+</div><h3 id="variant.TextChangeCause" class="variant small-section-header"><a href="#variant.TextChangeCause" class="anchor field"></a><code>TextChangeCause</code></h3><div class="sub-variant" id="variant.TextChangeCause.fields"><h4>Fields</h4><div class="sub-variant-field"><span id="variant.TextChangeCause.field.cause" class="variant small-section-header"><a href="#variant.TextChangeCause.field.cause" class="anchor field"></a><code>cause:&nbsp;<a class="enum" href="../../../../unstable/text_input/v3/server/zwp_text_input_v3/enum.ChangeCause.html" title="enum wayland_protocols::unstable::text_input::v3::server::zwp_text_input_v3::ChangeCause">ChangeCause</a></code></span></div></div><div class="docblock"><p>indicates the cause of surrounding text change</p>
 <p>Tells the input method why the text surrounding the cursor changed.</p>
 <p>Whenever the client detects an external change in text, cursor, or
 anchor position, it must issue this request to the compositor. This
@@ -75,14 +75,14 @@ starts typing with a keyboard.</p>
 and set to its initial value on the next zwp_input_method_v2.done
 event.</p>
 <p>The initial value of cause is input_method.</p>
-</div><div class="sub-variant" id="variant.TextChangeCause.fields"><h3>Fields of <b>TextChangeCause</b></h3><div><span id="variant.TextChangeCause.field.cause" class="variant small-section-header"><a href="#variant.TextChangeCause.field.cause" class="anchor field"></a><code>cause:&nbsp;<a class="enum" href="../../../../unstable/text_input/v3/server/zwp_text_input_v3/enum.ChangeCause.html" title="enum wayland_protocols::unstable::text_input::v3::server::zwp_text_input_v3::ChangeCause">ChangeCause</a></code></span></div></div><div id="variant.ContentType" class="variant small-section-header"><a href="#variant.ContentType" class="anchor field"></a><code>ContentType</code></div><div class="docblock"><p>content purpose and hint</p>
+</div><h3 id="variant.ContentType" class="variant small-section-header"><a href="#variant.ContentType" class="anchor field"></a><code>ContentType</code></h3><div class="sub-variant" id="variant.ContentType.fields"><h4>Fields</h4><div class="sub-variant-field"><span id="variant.ContentType.field.hint" class="variant small-section-header"><a href="#variant.ContentType.field.hint" class="anchor field"></a><code>hint:&nbsp;<a class="struct" href="../../../../unstable/text_input/v3/server/zwp_text_input_v3/struct.ContentHint.html" title="struct wayland_protocols::unstable::text_input::v3::server::zwp_text_input_v3::ContentHint">ContentHint</a></code></span></div><div class="sub-variant-field"><span id="variant.ContentType.field.purpose" class="variant small-section-header"><a href="#variant.ContentType.field.purpose" class="anchor field"></a><code>purpose:&nbsp;<a class="enum" href="../../../../unstable/text_input/v3/server/zwp_text_input_v3/enum.ContentPurpose.html" title="enum wayland_protocols::unstable::text_input::v3::server::zwp_text_input_v3::ContentPurpose">ContentPurpose</a></code></span></div></div><div class="docblock"><p>content purpose and hint</p>
 <p>Indicates the content type and hint for the current
 zwp_input_method_v2 instance.</p>
 <p>Values set with this event are double-buffered. They will get applied
 on the next zwp_input_method_v2.done event.</p>
 <p>The initial value for hint is none, and the initial value for purpose
 is normal.</p>
-</div><div class="sub-variant" id="variant.ContentType.fields"><h3>Fields of <b>ContentType</b></h3><div><span id="variant.ContentType.field.hint" class="variant small-section-header"><a href="#variant.ContentType.field.hint" class="anchor field"></a><code>hint:&nbsp;<a class="struct" href="../../../../unstable/text_input/v3/server/zwp_text_input_v3/struct.ContentHint.html" title="struct wayland_protocols::unstable::text_input::v3::server::zwp_text_input_v3::ContentHint">ContentHint</a></code></span><span id="variant.ContentType.field.purpose" class="variant small-section-header"><a href="#variant.ContentType.field.purpose" class="anchor field"></a><code>purpose:&nbsp;<a class="enum" href="../../../../unstable/text_input/v3/server/zwp_text_input_v3/enum.ContentPurpose.html" title="enum wayland_protocols::unstable::text_input::v3::server::zwp_text_input_v3::ContentPurpose">ContentPurpose</a></code></span></div></div><div id="variant.Done" class="variant small-section-header"><a href="#variant.Done" class="anchor field"></a><code>Done</code></div><div class="docblock"><p>apply state</p>
+</div><h3 id="variant.Done" class="variant small-section-header"><a href="#variant.Done" class="anchor field"></a><code>Done</code></h3><div class="docblock"><p>apply state</p>
 <p>Atomically applies state changes recently sent to the client.</p>
 <p>The done event establishes and updates the state of the client, and
 must be issued after any changes to apply them.</p>
@@ -95,7 +95,7 @@ replacing the current state. After done, the new pending state is as
 documented for each related request.</p>
 <p>Events must be applied in the order of arrival.</p>
 <p>Neither current nor pending state are modified unless noted otherwise.</p>
-</div><div id="variant.Unavailable" class="variant small-section-header"><a href="#variant.Unavailable" class="anchor field"></a><code>Unavailable</code></div><div class="docblock"><p>input method unavailable</p>
+</div><h3 id="variant.Unavailable" class="variant small-section-header"><a href="#variant.Unavailable" class="anchor field"></a><code>Unavailable</code></h3><div class="docblock"><p>input method unavailable</p>
 <p>The input method ceased to be available.</p>
 <p>The compositor must issue this event as the only event on the object if
 there was another input_method object associated with the same seat at

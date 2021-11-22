@@ -2,8 +2,8 @@
     NotManaged,
     BadMap,
 }</code></pre></div><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Error that can occur when accessing an SHM buffer</p>
-</div></details><h2 id="variants" class="variants small-section-header">Variants<a href="#variants" class="anchor"></a></h2><div id="variant.NotManaged" class="variant small-section-header"><a href="#variant.NotManaged" class="anchor field"></a><code>NotManaged</code></div><div class="docblock"><p>This buffer is not managed by the SHM handler</p>
-</div><div id="variant.BadMap" class="variant small-section-header"><a href="#variant.BadMap" class="anchor field"></a><code>BadMap</code></div><div class="docblock"><p>An error occurred while accessing the memory map</p>
+</div></details><h2 id="variants" class="variants small-section-header">Variants<a href="#variants" class="anchor"></a></h2><h3 id="variant.NotManaged" class="variant small-section-header"><a href="#variant.NotManaged" class="anchor field"></a><code>NotManaged</code></h3><div class="docblock"><p>This buffer is not managed by the SHM handler</p>
+</div><h3 id="variant.BadMap" class="variant small-section-header"><a href="#variant.BadMap" class="anchor field"></a><code>BadMap</code></h3><div class="docblock"><p>An error occurred while accessing the memory map</p>
 <p>This can happen if the client advertized a wrong size
 for the memory map.</p>
 <p>If this error occurs, the client has been killed as a result.</p>

@@ -9,12 +9,12 @@
 and not allowing them to be focused can improve the desktop experience</li>
 <li>some applications will want to take exclusive keyboard focus.</li>
 </ul>
-</div></details><h2 id="variants" class="variants small-section-header">Variants<a href="#variants" class="anchor"></a></h2><div id="variant.None" class="variant small-section-header"><a href="#variant.None" class="anchor field"></a><code>None</code></div><div class="docblock"><p>This value indicates that this surface is not interested in keyboard events
+</div></details><h2 id="variants" class="variants small-section-header">Variants<a href="#variants" class="anchor"></a></h2><h3 id="variant.None" class="variant small-section-header"><a href="#variant.None" class="anchor field"></a><code>None</code></h3><div class="docblock"><p>This value indicates that this surface is not interested in keyboard events
 and the compositor should never assign it the keyboard focus.</p>
 <p>This is the default value, set for newly created layer shell surfaces.</p>
 <p>This is useful for e.g. desktop widgets that display information
 or only have interaction with non-keyboard input devices.</p>
-</div><div id="variant.Exclusive" class="variant small-section-header"><a href="#variant.Exclusive" class="anchor field"></a><code>Exclusive</code></div><div class="docblock"><p>Request exclusive keyboard focus if this surface is above the shell surface layer.</p>
+</div><h3 id="variant.Exclusive" class="variant small-section-header"><a href="#variant.Exclusive" class="anchor field"></a><code>Exclusive</code></h3><div class="docblock"><p>Request exclusive keyboard focus if this surface is above the shell surface layer.</p>
 <p>For the top and overlay layers, the seat will always give exclusive keyboard focus
 to the top-most layer which has keyboard interactivity set to exclusive.
 If this layer contains multiple surfaces with keyboard interactivity set to exclusive,
@@ -23,7 +23,7 @@ In this case, no guarantee is made when this surface will receive keyboard focus
 <p>For the bottom and background layers, the compositor is allowed to use normal focus semantics.</p>
 <p>This setting is mainly intended for applications that need to
 ensure they receive all keyboard events, such as a lock screen or a password prompt.</p>
-</div><div id="variant.OnDemand" class="variant small-section-header"><a href="#variant.OnDemand" class="anchor field"></a><code>OnDemand</code></div><div class="docblock"><p>This requests the compositor to allow this surface
+</div><h3 id="variant.OnDemand" class="variant small-section-header"><a href="#variant.OnDemand" class="anchor field"></a><code>OnDemand</code></h3><div class="docblock"><p>This requests the compositor to allow this surface
 to be focused and unfocused by the user in an implementation-defined manner.
 The user should be able to unfocus this surface even regardless of the layer it is on.</p>
 <p>Typically, the compositor will want to use its normal mechanism

@@ -13,14 +13,14 @@ pub enum Request {
     },
     SetSync,
     SetDesync,
-}</code></pre></div><h2 id="variants" class="variants small-section-header">Variants (Non-exhaustive)<a href="#variants" class="anchor"></a></h2><details class="rustdoc-toggle non-exhaustive"><summary class="hideme"><span>This enum is marked as non-exhaustive</span></summary><div class="docblock">Non-exhaustive enums could have additional variants added in future. Therefore, when matching against variants of non-exhaustive enums, an extra wildcard arm must be added to account for any future variants.</div></details><div id="variant.Destroy" class="variant small-section-header"><a href="#variant.Destroy" class="anchor field"></a><code>Destroy</code></div><div class="docblock"><p>remove sub-surface interface</p>
+}</code></pre></div><h2 id="variants" class="variants small-section-header">Variants (Non-exhaustive)<a href="#variants" class="anchor"></a></h2><details class="rustdoc-toggle non-exhaustive"><summary class="hideme"><span>This enum is marked as non-exhaustive</span></summary><div class="docblock">Non-exhaustive enums could have additional variants added in future. Therefore, when matching against variants of non-exhaustive enums, an extra wildcard arm must be added to account for any future variants.</div></details><h3 id="variant.Destroy" class="variant small-section-header"><a href="#variant.Destroy" class="anchor field"></a><code>Destroy</code></h3><div class="docblock"><p>remove sub-surface interface</p>
 <p>The sub-surface interface is removed from the wl_surface object
 that was turned into a sub-surface with a
 wl_subcompositor.get_subsurface request. The wl_surface’s association
 to the parent is deleted, and the wl_surface loses its role as
 a sub-surface. The wl_surface is unmapped immediately.</p>
 <p>This is a destructor, once received this object cannot be used any longer.</p>
-</div><div id="variant.SetPosition" class="variant small-section-header"><a href="#variant.SetPosition" class="anchor field"></a><code>SetPosition</code></div><div class="docblock"><p>reposition the sub-surface</p>
+</div><h3 id="variant.SetPosition" class="variant small-section-header"><a href="#variant.SetPosition" class="anchor field"></a><code>SetPosition</code></h3><div class="sub-variant" id="variant.SetPosition.fields"><h4>Fields</h4><div class="sub-variant-field"><span id="variant.SetPosition.field.x" class="variant small-section-header"><a href="#variant.SetPosition.field.x" class="anchor field"></a><code>x:&nbsp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a></code></span></div><div class="sub-variant-field"><span id="variant.SetPosition.field.y" class="variant small-section-header"><a href="#variant.SetPosition.field.y" class="anchor field"></a><code>y:&nbsp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a></code></span></div></div><div class="docblock"><p>reposition the sub-surface</p>
 <p>This schedules a sub-surface position change.
 The sub-surface will be moved so that its origin (top left
 corner pixel) will be at the location x, y of the parent surface
@@ -34,7 +34,7 @@ wl_subsurface.set_sync and wl_subsurface.set_desync for details.</p>
 the commit of the parent surface, the position of a new request always
 replaces the scheduled position from any previous request.</p>
 <p>The initial position is 0, 0.</p>
-</div><div class="sub-variant" id="variant.SetPosition.fields"><h3>Fields of <b>SetPosition</b></h3><div><span id="variant.SetPosition.field.x" class="variant small-section-header"><a href="#variant.SetPosition.field.x" class="anchor field"></a><code>x:&nbsp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a></code></span><span id="variant.SetPosition.field.y" class="variant small-section-header"><a href="#variant.SetPosition.field.y" class="anchor field"></a><code>y:&nbsp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a></code></span></div></div><div id="variant.PlaceAbove" class="variant small-section-header"><a href="#variant.PlaceAbove" class="anchor field"></a><code>PlaceAbove</code></div><div class="docblock"><p>restack the sub-surface</p>
+</div><h3 id="variant.PlaceAbove" class="variant small-section-header"><a href="#variant.PlaceAbove" class="anchor field"></a><code>PlaceAbove</code></h3><div class="sub-variant" id="variant.PlaceAbove.fields"><h4>Fields</h4><div class="sub-variant-field"><span id="variant.PlaceAbove.field.sibling" class="variant small-section-header"><a href="#variant.PlaceAbove.field.sibling" class="anchor field"></a><code>sibling:&nbsp;<a class="struct" href="../wl_surface/struct.WlSurface.html" title="struct wayland_server::protocol::wl_surface::WlSurface">WlSurface</a></code></span></div></div><div class="docblock"><p>restack the sub-surface</p>
 <p>This sub-surface is taken from the stack, and put back just
 above the reference surface, changing the z-order of the sub-surfaces.
 The reference surface must be one of the sibling surfaces, or the
@@ -48,10 +48,10 @@ surface is in synchronized mode or not. See wl_subsurface.set_sync and
 wl_subsurface.set_desync for details.</p>
 <p>A new sub-surface is initially added as the top-most in the stack
 of its siblings and parent.</p>
-</div><div class="sub-variant" id="variant.PlaceAbove.fields"><h3>Fields of <b>PlaceAbove</b></h3><div><span id="variant.PlaceAbove.field.sibling" class="variant small-section-header"><a href="#variant.PlaceAbove.field.sibling" class="anchor field"></a><code>sibling:&nbsp;<a class="struct" href="../wl_surface/struct.WlSurface.html" title="struct wayland_server::protocol::wl_surface::WlSurface">WlSurface</a></code></span></div></div><div id="variant.PlaceBelow" class="variant small-section-header"><a href="#variant.PlaceBelow" class="anchor field"></a><code>PlaceBelow</code></div><div class="docblock"><p>restack the sub-surface</p>
+</div><h3 id="variant.PlaceBelow" class="variant small-section-header"><a href="#variant.PlaceBelow" class="anchor field"></a><code>PlaceBelow</code></h3><div class="sub-variant" id="variant.PlaceBelow.fields"><h4>Fields</h4><div class="sub-variant-field"><span id="variant.PlaceBelow.field.sibling" class="variant small-section-header"><a href="#variant.PlaceBelow.field.sibling" class="anchor field"></a><code>sibling:&nbsp;<a class="struct" href="../wl_surface/struct.WlSurface.html" title="struct wayland_server::protocol::wl_surface::WlSurface">WlSurface</a></code></span></div></div><div class="docblock"><p>restack the sub-surface</p>
 <p>The sub-surface is placed just below the reference surface.
 See wl_subsurface.place_above.</p>
-</div><div class="sub-variant" id="variant.PlaceBelow.fields"><h3>Fields of <b>PlaceBelow</b></h3><div><span id="variant.PlaceBelow.field.sibling" class="variant small-section-header"><a href="#variant.PlaceBelow.field.sibling" class="anchor field"></a><code>sibling:&nbsp;<a class="struct" href="../wl_surface/struct.WlSurface.html" title="struct wayland_server::protocol::wl_surface::WlSurface">WlSurface</a></code></span></div></div><div id="variant.SetSync" class="variant small-section-header"><a href="#variant.SetSync" class="anchor field"></a><code>SetSync</code></div><div class="docblock"><p>set sub-surface to synchronized mode</p>
+</div><h3 id="variant.SetSync" class="variant small-section-header"><a href="#variant.SetSync" class="anchor field"></a><code>SetSync</code></h3><div class="docblock"><p>set sub-surface to synchronized mode</p>
 <p>Change the commit behaviour of the sub-surface to synchronized
 mode, also described as the parent dependent mode.</p>
 <p>In synchronized mode, wl_surface.commit on a sub-surface will
@@ -63,7 +63,7 @@ updates of the parent and all its synchronized sub-surfaces.
 Applying the cached state will invalidate the cache, so further
 parent surface commits do not (re-)apply old state.</p>
 <p>See wl_subsurface for the recursive effect of this mode.</p>
-</div><div id="variant.SetDesync" class="variant small-section-header"><a href="#variant.SetDesync" class="anchor field"></a><code>SetDesync</code></div><div class="docblock"><p>set sub-surface to desynchronized mode</p>
+</div><h3 id="variant.SetDesync" class="variant small-section-header"><a href="#variant.SetDesync" class="anchor field"></a><code>SetDesync</code></h3><div class="docblock"><p>set sub-surface to desynchronized mode</p>
 <p>Change the commit behaviour of the sub-surface to desynchronized
 mode, also described as independent or freely running mode.</p>
 <p>In desynchronized mode, wl_surface.commit on a sub-surface will

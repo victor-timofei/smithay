@@ -3,15 +3,15 @@
     Level,
     Edge,
 }</code></pre></div><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Possible modes for registering a file descriptor</p>
-</div></details><h2 id="variants" class="variants small-section-header">Variants<a href="#variants" class="anchor"></a></h2><div id="variant.OneShot" class="variant small-section-header"><a href="#variant.OneShot" class="anchor field"></a><code>OneShot</code></div><div class="docblock"><p>Single event generation</p>
+</div></details><h2 id="variants" class="variants small-section-header">Variants<a href="#variants" class="anchor"></a></h2><h3 id="variant.OneShot" class="variant small-section-header"><a href="#variant.OneShot" class="anchor field"></a><code>OneShot</code></h3><div class="docblock"><p>Single event generation</p>
 <p>This FD will be disabled as soon as it has generated one event.</p>
 <p>The user will need to use <code>LoopHandle::update()</code> to re-enable it if
 desired.</p>
-</div><div id="variant.Level" class="variant small-section-header"><a href="#variant.Level" class="anchor field"></a><code>Level</code></div><div class="docblock"><p>Level-triggering</p>
+</div><h3 id="variant.Level" class="variant small-section-header"><a href="#variant.Level" class="anchor field"></a><code>Level</code></h3><div class="docblock"><p>Level-triggering</p>
 <p>This FD will report events on every poll as long as the requested interests
 are available. If the same FD is inserted in multiple event loops, all of
 them are notified of readiness.</p>
-</div><div id="variant.Edge" class="variant small-section-header"><a href="#variant.Edge" class="anchor field"></a><code>Edge</code></div><div class="docblock"><p>Edge-triggering</p>
+</div><h3 id="variant.Edge" class="variant small-section-header"><a href="#variant.Edge" class="anchor field"></a><code>Edge</code></h3><div class="docblock"><p>Edge-triggering</p>
 <p>This FD will report events only when it <em>gains</em> one of the requested interests.
 it must thus be fully processed befor it’ll generate events again. If the same
 FD is inserted on multiple event loops, it may be that not all of them are notified
