@@ -1698,6 +1698,11 @@
 <span id="1698">1698</span>
 <span id="1699">1699</span>
 <span id="1700">1700</span>
+<span id="1701">1701</span>
+<span id="1702">1702</span>
+<span id="1703">1703</span>
+<span id="1704">1704</span>
+<span id="1705">1705</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Utilities for handling shell surfaces with the `xdg_shell` protocol</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! This module provides automatic handling of shell surfaces objects, by being registered</span>
@@ -2601,6 +2606,11 @@
     <span class="doccomment">/// Is the toplevel surface referred by this handle still alive?</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">alive</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="ident">shell_surface</span>.<span class="ident">as_ref</span>().<span class="ident">is_alive</span>() <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">wl_surface</span>.<span class="ident">as_ref</span>().<span class="ident">is_alive</span>()
+    }
+
+    <span class="doccomment">/// Supported XDG shell protocol version.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u32</span> {
+        <span class="self">self</span>.<span class="ident">shell_surface</span>.<span class="ident">as_ref</span>().<span class="ident">version</span>()
     }
 
     <span class="doccomment">/// Retrieve the shell client owning this toplevel surface</span>
