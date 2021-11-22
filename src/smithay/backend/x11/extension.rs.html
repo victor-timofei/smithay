@@ -121,6 +121,18 @@
 <span id="121">121</span>
 <span id="122">122</span>
 <span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">MissingExtensionError</span>, <span class="ident">X11Error</span>};
 
 <span class="doccomment">/// The extension macro.</span>
@@ -148,6 +160,7 @@
         $(
             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">extension</span>:<span class="ident">ident</span> { <span class="comment">// Extension name for path lookup</span>
                 <span class="macro-nonterminal">$</span><span class="macro-nonterminal">extension_fn</span>:<span class="ident">ident</span>, <span class="comment">// Function used to look up the version of the extension</span>
+                <span class="ident">required</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">required</span>:<span class="ident">expr</span>,
                 <span class="ident">minimum</span>: (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">min_major</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">min_minor</span>:<span class="ident">expr</span>),
                 <span class="ident">request</span>: (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">req_major</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">req_minor</span>:<span class="ident">expr</span>),
             },
@@ -157,7 +170,7 @@
         <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Extensions</span> {
             $(
                 <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="macro">concat!</span>(<span class="string">&quot; The version of the `&quot;</span>, <span class="macro">stringify!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">extension</span>), <span class="string">&quot;` extension.&quot;</span>)]</span>
-                <span class="kw">pub</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">extension</span>: (<span class="ident">u32</span>, <span class="ident">u32</span>),
+                <span class="kw">pub</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">extension</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">u32</span>, <span class="ident">u32</span>)<span class="op">&gt;</span>,
             )<span class="op">*</span>
         }
 
@@ -182,35 +195,43 @@
                                     <span class="ident">version</span>.<span class="ident">minor_version</span>,
                                 );
 
-                                (<span class="ident">version</span>.<span class="ident">major_version</span>, <span class="ident">version</span>.<span class="ident">minor_version</span>)
+                                <span class="prelude-val">Some</span>((<span class="ident">version</span>.<span class="ident">major_version</span>, <span class="ident">version</span>.<span class="ident">minor_version</span>))
                             } <span class="kw">else</span> {
-                                <span class="macro">slog::error!</span>(
-                                    <span class="ident">logger</span>,
-                                    <span class="string">&quot;{} extension version is too low (have {}.{}, expected {}.{})&quot;</span>,
-                                    <span class="ident">X11_EXTENSION_NAME</span>,
-                                    <span class="ident">version</span>.<span class="ident">major_version</span>,
-                                    <span class="ident">version</span>.<span class="ident">minor_version</span>,
-                                    <span class="macro-nonterminal">$</span><span class="macro-nonterminal">req_major</span>,
-                                    <span class="macro-nonterminal">$</span><span class="macro-nonterminal">req_minor</span>,
-                                );
+                                <span class="kw">if</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">required</span> {
+                                    <span class="macro">slog::error!</span>(
+                                        <span class="ident">logger</span>,
+                                        <span class="string">&quot;required extension {} version is too low (have {}.{}, expected {}.{})&quot;</span>,
+                                        <span class="ident">X11_EXTENSION_NAME</span>,
+                                        <span class="ident">version</span>.<span class="ident">major_version</span>,
+                                        <span class="ident">version</span>.<span class="ident">minor_version</span>,
+                                        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">req_major</span>,
+                                        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">req_minor</span>,
+                                    );
 
-                                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">MissingExtensionError::WrongVersion</span> {
-                                    <span class="ident">name</span>: <span class="ident">X11_EXTENSION_NAME</span>,
-                                    <span class="ident">required_major</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">req_major</span>,
-                                    <span class="ident">required_minor</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">req_minor</span>,
-                                    <span class="ident">available_major</span>: <span class="ident">version</span>.<span class="ident">major_version</span>,
-                                    <span class="ident">available_minor</span>: <span class="ident">version</span>.<span class="ident">minor_version</span>,
-                                }.<span class="ident">into</span>());
+                                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">MissingExtensionError::WrongVersion</span> {
+                                        <span class="ident">name</span>: <span class="ident">X11_EXTENSION_NAME</span>,
+                                        <span class="ident">required_major</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">req_major</span>,
+                                        <span class="ident">required_minor</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">req_minor</span>,
+                                        <span class="ident">available_major</span>: <span class="ident">version</span>.<span class="ident">major_version</span>,
+                                        <span class="ident">available_minor</span>: <span class="ident">version</span>.<span class="ident">minor_version</span>,
+                                    }.<span class="ident">into</span>());
+                                } <span class="kw">else</span> {
+                                    <span class="prelude-val">None</span>
+                                }
                             }
                         } <span class="kw">else</span> {
-                            <span class="macro">slog::error!</span>(<span class="ident">logger</span>, <span class="string">&quot;{} extension not found&quot;</span>, <span class="ident">X11_EXTENSION_NAME</span>);
+                            <span class="kw">if</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">required</span> {
+                                <span class="macro">slog::error!</span>(<span class="ident">logger</span>, <span class="string">&quot;required extension {} not found&quot;</span>, <span class="ident">X11_EXTENSION_NAME</span>);
 
-                            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">MissingExtensionError::NotFound</span> {
-                                <span class="ident">name</span>: <span class="ident">X11_EXTENSION_NAME</span>,
-                                <span class="ident">major</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">min_major</span>,
-                                <span class="ident">minor</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">min_minor</span>,
+                                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">MissingExtensionError::NotFound</span> {
+                                    <span class="ident">name</span>: <span class="ident">X11_EXTENSION_NAME</span>,
+                                    <span class="ident">major</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">min_major</span>,
+                                    <span class="ident">minor</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">min_minor</span>,
+                                }
+                                .<span class="ident">into</span>());
+                            } <span class="kw">else</span> {
+                                <span class="prelude-val">None</span>
                             }
-                            .<span class="ident">into</span>());
                         }
                     };
                 )<span class="op">*</span>
@@ -228,18 +249,21 @@
 <span class="macro">extensions!</span> {
     <span class="ident">present</span> {
         <span class="ident">present_query_version</span>,
+        <span class="ident">required</span>: <span class="bool-val">true</span>,
         <span class="ident">minimum</span>: (<span class="number">1</span>, <span class="number">0</span>),
         <span class="ident">request</span>: (<span class="number">1</span>, <span class="number">0</span>),
     },
 
     <span class="ident">xfixes</span> {
         <span class="ident">xfixes_query_version</span>,
+        <span class="ident">required</span>: <span class="bool-val">true</span>,
         <span class="ident">minimum</span>: (<span class="number">4</span>, <span class="number">0</span>),
         <span class="ident">request</span>: (<span class="number">4</span>, <span class="number">0</span>),
     },
 
     <span class="ident">dri3</span> {
         <span class="ident">dri3_query_version</span>,
+        <span class="ident">required</span>: <span class="bool-val">true</span>,
         <span class="ident">minimum</span>: (<span class="number">1</span>, <span class="number">0</span>),
         <span class="ident">request</span>: (<span class="number">1</span>, <span class="number">2</span>),
     },

@@ -360,7 +360,7 @@
         }
 
         <span class="comment">// We need dri3 &gt;= 1.2 in order to use the enhanced dri3_pixmap_from_buffers function.</span>
-        <span class="kw">let</span> <span class="ident">xid</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">window_inner</span>.<span class="ident">extensions</span>.<span class="ident">dri3</span> <span class="op">&gt;</span><span class="op">=</span> (<span class="number">1</span>, <span class="number">2</span>) {
+        <span class="kw">let</span> <span class="ident">xid</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">window_inner</span>.<span class="ident">extensions</span>.<span class="ident">dri3</span> <span class="op">&gt;</span><span class="op">=</span> <span class="prelude-val">Some</span>((<span class="number">1</span>, <span class="number">2</span>)) {
             <span class="kw">if</span> <span class="ident">dmabuf</span>.<span class="ident">num_planes</span>() <span class="op">&gt;</span> <span class="number">4</span> {
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">CreatePixmapError::TooManyPlanes</span>);
             }
