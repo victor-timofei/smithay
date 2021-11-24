@@ -382,15 +382,6 @@
 <span id="381">381</span>
 <span id="382">382</span>
 <span id="383">383</span>
-<span id="384">384</span>
-<span id="385">385</span>
-<span id="386">386</span>
-<span id="387">387</span>
-<span id="388">388</span>
-<span id="389">389</span>
-<span id="390">390</span>
-<span id="391">391</span>
-<span id="392">392</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cell::RefCell</span>, <span class="ident">path::PathBuf</span>, <span class="ident">rc::Rc</span>};
 
 <span class="kw">use</span> <span class="ident">winit</span>::{
@@ -399,12 +390,12 @@
 };
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::backend::input</span>::{
-    <span class="self">self</span>, <span class="ident">Axis</span>, <span class="ident">AxisSource</span>, <span class="ident">ButtonState</span>, <span class="ident">Device</span>, <span class="ident">DeviceCapability</span>, <span class="ident">Event</span>, <span class="ident">InputBackend</span>, <span class="ident">InputEvent</span>, <span class="ident">KeyState</span>,
+    <span class="self">self</span>, <span class="ident">Axis</span>, <span class="ident">AxisSource</span>, <span class="ident">ButtonState</span>, <span class="ident">Device</span>, <span class="ident">DeviceCapability</span>, <span class="ident">Event</span>, <span class="ident">InputBackend</span>, <span class="ident">KeyState</span>,
     <span class="ident">KeyboardKeyEvent</span>, <span class="ident">PointerAxisEvent</span>, <span class="ident">PointerButtonEvent</span>, <span class="ident">PointerMotionAbsoluteEvent</span>, <span class="ident">TouchCancelEvent</span>,
     <span class="ident">TouchDownEvent</span>, <span class="ident">TouchMotionEvent</span>, <span class="ident">TouchSlot</span>, <span class="ident">TouchUpEvent</span>, <span class="ident">UnusedEvent</span>,
 };
 
-<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">WindowSize</span>, <span class="ident">WinitError</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::WindowSize</span>;
 
 <span class="doccomment">/// Marker used to define the `InputBackend` types for the winit backend.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
@@ -756,8 +747,6 @@
 }
 
 <span class="kw">impl</span> <span class="ident">InputBackend</span> <span class="kw">for</span> <span class="ident">WinitInput</span> {
-    <span class="kw">type</span> <span class="ident">EventError</span> <span class="op">=</span> <span class="ident">WinitError</span>;
-
     <span class="kw">type</span> <span class="ident">Device</span> <span class="op">=</span> <span class="ident">WinitVirtualDevice</span>;
     <span class="kw">type</span> <span class="ident">KeyboardKeyEvent</span> <span class="op">=</span> <span class="ident">WinitKeyboardInputEvent</span>;
     <span class="kw">type</span> <span class="ident">PointerAxisEvent</span> <span class="op">=</span> <span class="ident">WinitMouseWheelEvent</span>;
@@ -775,13 +764,6 @@
     <span class="kw">type</span> <span class="ident">TabletToolButtonEvent</span> <span class="op">=</span> <span class="ident">UnusedEvent</span>;
 
     <span class="kw">type</span> <span class="ident">SpecialEvent</span> <span class="op">=</span> <span class="ident">UnusedEvent</span>;
-
-    <span class="kw">fn</span> <span class="ident">dispatch_new_events</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">_callback</span>: <span class="ident">F</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident"><span class="self">Self</span>::EventError</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">InputEvent</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>),
-    {
-        <span class="macro">unreachable!</span>()
-    }
 }
 </code></pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-search-index-js="../../../../search-index.js" data-search-js="../../../../search.js"></div>

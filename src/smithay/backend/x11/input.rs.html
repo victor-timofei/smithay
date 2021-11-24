@@ -203,24 +203,11 @@
 <span id="202">202</span>
 <span id="203">203</span>
 <span id="204">204</span>
-<span id="205">205</span>
-<span id="206">206</span>
-<span id="207">207</span>
-<span id="208">208</span>
-<span id="209">209</span>
-<span id="210">210</span>
-<span id="211">211</span>
-<span id="212">212</span>
-<span id="213">213</span>
-<span id="214">214</span>
-<span id="215">215</span>
-<span id="216">216</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Input backend implementation for the X11 backend.</span>
 
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::X11Error</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">backend::input</span>::{
-        <span class="self">self</span>, <span class="ident">Axis</span>, <span class="ident">AxisSource</span>, <span class="ident">ButtonState</span>, <span class="ident">Device</span>, <span class="ident">DeviceCapability</span>, <span class="ident">InputBackend</span>, <span class="ident">InputEvent</span>, <span class="ident">KeyState</span>,
+        <span class="self">self</span>, <span class="ident">Axis</span>, <span class="ident">AxisSource</span>, <span class="ident">ButtonState</span>, <span class="ident">Device</span>, <span class="ident">DeviceCapability</span>, <span class="ident">InputBackend</span>, <span class="ident">KeyState</span>,
         <span class="ident">KeyboardKeyEvent</span>, <span class="ident">PointerAxisEvent</span>, <span class="ident">PointerButtonEvent</span>, <span class="ident">PointerMotionAbsoluteEvent</span>, <span class="ident">UnusedEvent</span>,
     },
     <span class="ident">utils</span>::{<span class="ident">Logical</span>, <span class="ident">Size</span>},
@@ -399,8 +386,6 @@
 }
 
 <span class="kw">impl</span> <span class="ident">InputBackend</span> <span class="kw">for</span> <span class="ident">X11Input</span> {
-    <span class="kw">type</span> <span class="ident">EventError</span> <span class="op">=</span> <span class="ident">X11Error</span>;
-
     <span class="kw">type</span> <span class="ident">Device</span> <span class="op">=</span> <span class="ident">X11VirtualDevice</span>;
     <span class="kw">type</span> <span class="ident">KeyboardKeyEvent</span> <span class="op">=</span> <span class="ident">X11KeyboardInputEvent</span>;
     <span class="kw">type</span> <span class="ident">PointerAxisEvent</span> <span class="op">=</span> <span class="ident">X11MouseWheelEvent</span>;
@@ -421,15 +406,6 @@
     <span class="kw">type</span> <span class="ident">TabletToolButtonEvent</span> <span class="op">=</span> <span class="ident">UnusedEvent</span>;
 
     <span class="kw">type</span> <span class="ident">SpecialEvent</span> <span class="op">=</span> <span class="ident">UnusedEvent</span>;
-
-    <span class="kw">fn</span> <span class="ident">dispatch_new_events</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">_callback</span>: <span class="ident">F</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident"><span class="self">Self</span>::EventError</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">InputEvent</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>),
-    {
-        <span class="comment">// The implementation of the trait here is exclusively for type definitions.</span>
-        <span class="comment">// See `X11Event::Input` to handle input events.</span>
-        <span class="macro">unreachable!</span>()
-    }
 }
 </code></pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-search-index-js="../../../../search-index.js" data-search-js="../../../../search.js"></div>
