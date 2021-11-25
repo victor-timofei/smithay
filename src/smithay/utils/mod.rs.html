@@ -32,6 +32,8 @@
 <span id="31">31</span>
 <span id="32">32</span>
 <span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Various utilities functions and types</span>
 
 <span class="kw">mod</span> <span class="ident">geometry</span>;
@@ -39,6 +41,8 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;x11rb_event_source&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">x11rb</span>;
+
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">user_data</span>;
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::geometry</span>::{<span class="ident">Buffer</span>, <span class="ident">Logical</span>, <span class="ident">Physical</span>, <span class="ident">Point</span>, <span class="ident">Raw</span>, <span class="ident">Rectangle</span>, <span class="ident">Size</span>};
 

@@ -158,13 +158,47 @@
 <span id="157">157</span>
 <span id="158">158</span>
 <span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::ops::Deref</span>;
 <span class="kw">use</span> <span class="ident">std::sync</span>::{
-    <span class="ident">atomic</span>::{<span class="ident">AtomicBool</span>, <span class="ident">Ordering</span>},
-    <span class="ident">Arc</span>, <span class="ident">Mutex</span>, <span class="ident">MutexGuard</span>,
+    <span class="ident">atomic</span>::{<span class="ident">AtomicBool</span>, <span class="ident">AtomicU8</span>, <span class="ident">Ordering</span>},
+    <span class="ident">Arc</span>,
 };
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::backend::allocator</span>::{<span class="ident">Allocator</span>, <span class="ident">Buffer</span>, <span class="ident">Fourcc</span>, <span class="ident">Modifier</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils::user_data::UserDataMap</span>;
 
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SLOT_CAP</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">4</span>;
 
@@ -196,7 +230,7 @@
 <span class="doccomment">/// you can store then in the `Slot`s userdata field. If a buffer is re-used, its userdata is preserved for the next time</span>
 <span class="doccomment">/// it is returned by `acquire()`.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Swapchain</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>, <span class="ident">B</span>: <span class="ident">Buffer</span>, <span class="ident">U</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Swapchain</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>, <span class="ident">B</span>: <span class="ident">Buffer</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Allocator used by the swapchain</span>
     <span class="kw">pub</span> <span class="ident">allocator</span>: <span class="ident">A</span>,
 
@@ -205,7 +239,7 @@
     <span class="ident">fourcc</span>: <span class="ident">Fourcc</span>,
     <span class="ident">modifiers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Modifier</span><span class="op">&gt;</span>,
 
-    <span class="ident">slots</span>: [<span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">InternalSlot</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">U</span><span class="op">&gt;</span><span class="op">&gt;</span>; <span class="ident">SLOT_CAP</span>],
+    <span class="ident">slots</span>: [<span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">InternalSlot</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>; <span class="ident">SLOT_CAP</span>],
 }
 
 <span class="doccomment">/// Slot of a swapchain containing an allocated buffer and its userdata.</span>
@@ -213,50 +247,56 @@
 <span class="doccomment">/// The buffer is marked for re-use once all copies are dropped.</span>
 <span class="doccomment">/// Holding on to this struct will block the buffer in the swapchain.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Slot</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Buffer</span>, <span class="ident">U</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">InternalSlot</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">U</span><span class="op">&gt;</span><span class="op">&gt;</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Slot</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Buffer</span><span class="op">&gt;</span>(<span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">InternalSlot</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>);
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">struct</span> <span class="ident">InternalSlot</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Buffer</span>, <span class="ident">U</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
+<span class="kw">struct</span> <span class="ident">InternalSlot</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Buffer</span><span class="op">&gt;</span> {
     <span class="ident">buffer</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
     <span class="ident">acquired</span>: <span class="ident">AtomicBool</span>,
-    <span class="ident">userdata</span>: <span class="ident">Mutex</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">age</span>: <span class="ident">AtomicU8</span>,
+    <span class="ident">userdata</span>: <span class="ident">UserDataMap</span>,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Buffer</span>, <span class="ident">U</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">Slot</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">U</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Buffer</span><span class="op">&gt;</span> <span class="ident">Slot</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Retrieve userdata for this slot.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">userdata</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MutexGuard</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">userdata</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>()
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">userdata</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">UserDataMap</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>.<span class="ident">userdata</span>
+    }
+
+    <span class="doccomment">/// Retrieve the age of the buffer</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">age</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u8</span> {
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">age</span>.<span class="ident">load</span>(<span class="ident">Ordering::SeqCst</span>)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Buffer</span>, <span class="ident">U</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">InternalSlot</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">U</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Buffer</span><span class="op">&gt;</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">InternalSlot</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
         <span class="ident">InternalSlot</span> {
             <span class="ident">buffer</span>: <span class="prelude-val">None</span>,
             <span class="ident">acquired</span>: <span class="ident">AtomicBool::new</span>(<span class="bool-val">false</span>),
-            <span class="ident">userdata</span>: <span class="ident">Mutex::new</span>(<span class="prelude-val">None</span>),
+            <span class="ident">age</span>: <span class="ident">AtomicU8::new</span>(<span class="number">0</span>),
+            <span class="ident">userdata</span>: <span class="ident">UserDataMap::new</span>(),
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Buffer</span>, <span class="ident">U</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">Slot</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">U</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Buffer</span><span class="op">&gt;</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">Slot</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="ident">B</span>;
     <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">B</span> {
         <span class="ident">Option::as_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>.<span class="ident">buffer</span>).<span class="ident">unwrap</span>()
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Buffer</span>, <span class="ident">U</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">Slot</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">U</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Buffer</span><span class="op">&gt;</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">Slot</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">acquired</span>.<span class="ident">store</span>(<span class="bool-val">false</span>, <span class="ident">Ordering::SeqCst</span>);
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">U</span><span class="op">&gt;</span> <span class="ident">Swapchain</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">U</span><span class="op">&gt;</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span><span class="op">&gt;</span> <span class="ident">Swapchain</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span><span class="op">&gt;</span>
 <span class="kw">where</span>
     <span class="ident">A</span>: <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
     <span class="ident">B</span>: <span class="ident">Buffer</span>,
-    <span class="ident">U</span>: <span class="lifetime">&#39;static</span>,
 {
     <span class="doccomment">/// Create a new swapchain with the desired allocator, dimensions and pixel format for the created buffers.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
@@ -265,7 +305,7 @@
         <span class="ident">height</span>: <span class="ident">u32</span>,
         <span class="ident">fourcc</span>: <span class="ident">Fourcc</span>,
         <span class="ident">modifiers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Modifier</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">Swapchain</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">U</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="ident">Swapchain</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span><span class="op">&gt;</span> {
         <span class="ident">Swapchain</span> {
             <span class="ident">allocator</span>,
             <span class="ident">width</span>,
@@ -280,7 +320,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// The swapchain has an internal maximum of four re-usable buffers.</span>
     <span class="doccomment">/// This function returns the first free one.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">acquire</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Slot</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">U</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">A::Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">acquire</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Slot</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">A::Error</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">free_slot</span>) <span class="op">=</span> <span class="self">self</span>
             .<span class="ident">slots</span>
             .<span class="ident">iter_mut</span>()
@@ -304,6 +344,27 @@
         <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
     }
 
+    <span class="doccomment">/// Mark a given buffer as submitted.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This might effect internal data (e.g. buffer age) and may only be called,</span>
+    <span class="doccomment">/// if the buffer was actually used for display.</span>
+    <span class="doccomment">/// Buffers can always just be safely discarded by dropping them, but not</span>
+    <span class="doccomment">/// calling this function may affect performance characteristics</span>
+    <span class="doccomment">/// (e.g. by not tracking the buffer age).</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">submitted</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">slot</span>: <span class="ident">Slot</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>) {
+        <span class="comment">// don&#39;t mess up the state, if the user submitted and old buffer, after e.g. a resize</span>
+        <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">slots</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">other</span><span class="op">|</span> <span class="ident">Arc::ptr_eq</span>(<span class="kw-2">&amp;</span><span class="ident">slot</span>.<span class="number">0</span>, <span class="ident">other</span>)) {
+            <span class="kw">return</span>;
+        }
+
+        <span class="ident">slot</span>.<span class="number">0</span>.<span class="ident">age</span>.<span class="ident">store</span>(<span class="number">1</span>, <span class="ident">Ordering::SeqCst</span>);
+        <span class="kw">for</span> <span class="ident">other_slot</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">slots</span> {
+            <span class="kw">if</span> <span class="op">!</span><span class="ident">Arc::ptr_eq</span>(<span class="ident">other_slot</span>, <span class="kw-2">&amp;</span><span class="ident">slot</span>.<span class="number">0</span>) {
+                <span class="ident">other_slot</span>.<span class="ident">age</span>.<span class="ident">fetch_add</span>(<span class="number">1</span>, <span class="ident">Ordering::SeqCst</span>);
+            }
+        }
+    }
+
     <span class="doccomment">/// Change the dimensions of newly returned buffers.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Already obtained buffers are unaffected and will be cleaned up on drop.</span>
@@ -314,6 +375,11 @@
 
         <span class="self">self</span>.<span class="ident">width</span> <span class="op">=</span> <span class="ident">width</span>;
         <span class="self">self</span>.<span class="ident">height</span> <span class="op">=</span> <span class="ident">height</span>;
+        <span class="self">self</span>.<span class="ident">slots</span> <span class="op">=</span> <span class="ident">Default::default</span>();
+    }
+
+    <span class="doccomment">/// Remove all internally cached buffers to e.g. reset age values</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reset_buffers</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="self">self</span>.<span class="ident">slots</span> <span class="op">=</span> <span class="ident">Default::default</span>();
     }
 }
