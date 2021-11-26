@@ -141,6 +141,11 @@
 <span id="140">140</span>
 <span id="141">141</span>
 <span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::ffi</span>;
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">thiserror::Error</span>, <span class="ident">Debug</span>)]</span>
@@ -188,6 +193,9 @@
     <span class="doccomment">/// Failed to create `EGLBuffer` from the buffer</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Failed to create `EGLBuffer` from the buffer&quot;</span>)]</span>
     <span class="ident">EGLImageCreationFailed</span>,
+    <span class="doccomment">/// Failed to query the available `EGLDevice`s</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Failed to query the available `EGLDevice`s&quot;</span>)]</span>
+    <span class="ident">QueryDevices</span>(<span class="attribute">#[<span class="ident">source</span>]</span> <span class="ident">EGLError</span>),
 }
 
 <span class="doccomment">/// Raw EGL error</span>
@@ -216,6 +224,9 @@
     <span class="doccomment">/// The current surface of the calling thread is a window, pixel buffer or pixmap that is no longer valid.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;The current surface of the calling thread is a window, pixel buffer or pixmap that is no longer valid.&quot;</span>)]</span>
     <span class="ident">BadCurrentSurface</span>,
+    <span class="doccomment">/// An EGLDevice argument is not valid for this display.</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;An EGLDevice argument is not valid for this display.&quot;</span>)]</span>
+    <span class="ident">BadDevice</span>,
     <span class="doccomment">/// An EGLDisplay argument does not name a valid EGL display connection.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;An EGLDisplay argument does not name a valid EGL display connection.&quot;</span>)]</span>
     <span class="ident">BadDisplay</span>,
@@ -234,7 +245,6 @@
     <span class="doccomment">/// A NativeWindowType argument does not refer to a valid native window.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;A NativeWindowType argument does not refer to a valid native window.&quot;</span>)]</span>
     <span class="ident">BadNativeWindow</span>,
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_drm_eglstream&quot;</span>)]</span>
     <span class="doccomment">/// The EGL operation failed due to temporary unavailability of a requested resource, but the arguments were otherwise valid, and a subsequent attempt may succeed.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;The EGL operation failed due to temporary unavailability of a requested resource, but the arguments were otherwise valid, and a subsequent attempt may succeed.&quot;</span>)]</span>
     <span class="ident">ResourceBusy</span>,
@@ -255,13 +265,13 @@
             <span class="ident">ffi::egl::BAD_ATTRIBUTE</span> =&gt; <span class="ident">EGLError::BadAttribute</span>,
             <span class="ident">ffi::egl::BAD_CONTEXT</span> =&gt; <span class="ident">EGLError::BadContext</span>,
             <span class="ident">ffi::egl::BAD_CURRENT_SURFACE</span> =&gt; <span class="ident">EGLError::BadCurrentSurface</span>,
+            <span class="ident">ffi::egl::BAD_DEVICE_EXT</span> =&gt; <span class="ident">EGLError::BadDevice</span>,
             <span class="ident">ffi::egl::BAD_DISPLAY</span> =&gt; <span class="ident">EGLError::BadDisplay</span>,
             <span class="ident">ffi::egl::BAD_SURFACE</span> =&gt; <span class="ident">EGLError::BadSurface</span>,
             <span class="ident">ffi::egl::BAD_MATCH</span> =&gt; <span class="ident">EGLError::BadMatch</span>,
             <span class="ident">ffi::egl::BAD_PARAMETER</span> =&gt; <span class="ident">EGLError::BadParameter</span>,
             <span class="ident">ffi::egl::BAD_NATIVE_PIXMAP</span> =&gt; <span class="ident">EGLError::BadNativePixmap</span>,
             <span class="ident">ffi::egl::BAD_NATIVE_WINDOW</span> =&gt; <span class="ident">EGLError::BadNativeWindow</span>,
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_drm_eglstream&quot;</span>)]</span>
             <span class="ident">ffi::egl::RESOURCE_BUSY_EXT</span> =&gt; <span class="ident">EGLError::ResourceBusy</span>,
             <span class="ident">ffi::egl::CONTEXT_LOST</span> =&gt; <span class="ident">EGLError::ContextLost</span>,
             <span class="ident">x</span> =&gt; <span class="ident">EGLError::Unknown</span>(<span class="ident">x</span>),

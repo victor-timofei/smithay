@@ -157,11 +157,9 @@
 <span id="156">156</span>
 <span id="157">157</span>
 <span id="158">158</span>
-<span id="159">159</span>
-<span id="160">160</span>
-<span id="161">161</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::io</span>;
 
+<span class="kw">use</span> <span class="ident">gbm::DeviceDestroyedError</span>;
 <span class="kw">use</span> <span class="ident">nix::errno::Errno</span>;
 <span class="kw">use</span> <span class="ident">x11rb::rust_connection</span>::{<span class="ident">ConnectError</span>, <span class="ident">ConnectionError</span>, <span class="ident">ReplyError</span>, <span class="ident">ReplyOrIdError</span>};
 
@@ -185,6 +183,10 @@
     <span class="doccomment">/// Creating the window failed.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Creating the window failed&quot;</span>)]</span>
     <span class="ident">CreateWindow</span>(<span class="ident">CreateWindowError</span>),
+
+    <span class="doccomment">/// An X11 surface already exists for this backend.</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;An X11 surface already exists for this backend&quot;</span>)]</span>
+    <span class="ident">SurfaceExists</span>,
 
     <span class="doccomment">/// The X server is not capable of direct rendering.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;The X server is not capable of direct rendering&quot;</span>)]</span>
@@ -278,7 +280,11 @@
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">AllocateBuffersError</span> {
     <span class="doccomment">/// Failed to open the DRM device to allocate buffers.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Failed to open the DRM device to allocate buffers.&quot;</span>)]</span>
-    <span class="ident">OpenDevice</span>(<span class="ident">io::Error</span>),
+    <span class="ident">OpenDevice</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">io::Error</span>),
+
+    <span class="doccomment">/// The gbm device was destroyed</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;The gbm device was destroyed.&quot;</span>)]</span>
+    <span class="ident">DeviceDestroyed</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">DeviceDestroyedError</span>),
 
     <span class="doccomment">/// The device used to allocate buffers is not the correct drm node type.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;The device used to allocate buffers is not the correct drm node type.&quot;</span>)]</span>
@@ -286,24 +292,12 @@
 
     <span class="doccomment">/// Exporting a dmabuf failed.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Exporting a dmabuf failed.&quot;</span>)]</span>
-    <span class="ident">ExportDmabuf</span>(<span class="ident">GbmConvertError</span>),
+    <span class="ident">ExportDmabuf</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">GbmConvertError</span>),
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Errno</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">AllocateBuffersError</span> {
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">Errno</span>) -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::OpenDevice</span>(<span class="ident">err</span>.<span class="ident">into</span>())
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">io::Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">AllocateBuffersError</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">io::Error</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::OpenDevice</span>(<span class="ident">err</span>)
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">GbmConvertError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">AllocateBuffersError</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">GbmConvertError</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::ExportDmabuf</span>(<span class="ident">err</span>)
     }
 }
 

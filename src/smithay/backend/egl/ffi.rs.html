@@ -331,6 +331,8 @@
 <span id="330">330</span>
 <span id="331">331</span>
 <span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
 </pre><pre class="rust"><code><span class="attribute">#![<span class="ident">allow</span>(<span class="ident">missing_docs</span>)]</span>
 
 <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::Error</span>;
@@ -461,6 +463,8 @@
     <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">DEBUG</span>: <span class="ident">Once</span> <span class="op">=</span> <span class="ident">Once::new</span>();
 
     <span class="macro">include!</span>(<span class="macro">concat!</span>(<span class="macro">env!</span>(<span class="string">&quot;OUT_DIR&quot;</span>), <span class="string">&quot;/egl_bindings.rs&quot;</span>));
+
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RESOURCE_BUSY_EXT</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">0x3353</span>;
 
     <span class="kw">type</span> <span class="ident">EGLDEBUGPROCKHR</span> <span class="op">=</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>
         <span class="kw">extern</span> <span class="string">&quot;system&quot;</span> <span class="kw">fn</span>(
