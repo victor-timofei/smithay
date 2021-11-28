@@ -12,20 +12,21 @@ use smithay::{
         winit::{self, WinitEvent},
         SwapBuffersError,
     },
+    desktop::RenderError,
     reexports::{
         calloop::EventLoop,
         wayland_server::{protocol::wl_output, Display},
     },
     wayland::{
-        output::{Mode, PhysicalProperties},
+        output::{Mode, Output, PhysicalProperties},
         seat::CursorImageStatus,
     },
 };
 
 use slog::Logger;
 
+use crate::drawing::*;
 use crate::state::{AnvilState, Backend};
-use crate::{drawing::*, render::render_layers_and_windows};
 
 pub const OUTPUT_NAME: &str = "winit";
 
@@ -104,16 +105,19 @@ pub fn run_winit(log: Logger) {
         refresh: 60_000,
     };
 
-    state.output_map.borrow_mut().add(
-        OUTPUT_NAME,
+    let (output, _global) = Output::new(
+        &mut *display.borrow_mut(),
+        OUTPUT_NAME.to_string(),
         PhysicalProperties {
             size: (0, 0).into(),
             subpixel: wl_output::Subpixel::Unknown,
             make: "Smithay".into(),
             model: "Winit".into(),
         },
-        mode,
+        log.clone(),
     );
+    output.change_current_state(Some(mode), None, None, Some((0, 0).into()));
+    state.space.borrow_mut().map_output(&output, 1.0, (0, 0).into());
 
     let start_time = std::time::Instant::now();
     let mut cursor_visible = true;
@@ -127,18 +131,20 @@ pub fn run_winit(log: Logger) {
         if winit
             .dispatch_new_events(|event| match event {
                 WinitEvent::Resized { size, .. } => {
-                    state.output_map.borrow_mut().update_mode_by_name(
-                        Mode {
+                    let mut space = state.space.borrow_mut();
+                    // We only have one output
+                    let output = space.outputs().next().unwrap().clone();
+                    let current_scale = space.output_scale(&output).unwrap();
+                    space.map_output(&output, current_scale, (0, 0).into());
+                    output.change_current_state(
+                        Some(Mode {
                             size,
                             refresh: 60_000,
-                        },
-                        OUTPUT_NAME,
+                        }),
+                        None,
+                        None,
+                        None,
                     );
-
-                    let output_mut = state.output_map.borrow();
-                    let output = output_mut.find_by_name(OUTPUT_NAME).unwrap();
-
-                    state.window_map.borrow_mut().layers.arange_layers(output);
                 }
 
                 WinitEvent::Input(event) => state.process_input_event_windowed(event, OUTPUT_NAME),
@@ -154,91 +160,21 @@ pub fn run_winit(log: Logger) {
         // drawing logic
         {
             let mut renderer = renderer.borrow_mut();
-            // This is safe to do as with winit we are guaranteed to have exactly one output
-            let (output_geometry, output_scale) = state
-                .output_map
-                .borrow()
-                .find_by_name(OUTPUT_NAME)
-                .map(|output| (output.geometry(), output.scale()))
-                .unwrap();
-
+            // We would need to support EGL_EXT_buffer_age for winit to use age, so lets not bother instead.
+            // TODO: Make WinitGraphicsBackend a renderer that delegates to Gles2Renderer and adjusts the transformation instead...
             let result = renderer
-                .render(|renderer, frame| {
-                    render_layers_and_windows(
-                        renderer,
-                        frame,
-                        &*state.window_map.borrow(),
-                        output_geometry,
-                        output_scale,
-                        &log,
-                    )?;
-
-                    let (x, y) = state.pointer_location.into();
-
-                    // draw the dnd icon if any
-                    {
-                        let guard = state.dnd_icon.lock().unwrap();
-                        if let Some(ref surface) = *guard {
-                            if surface.as_ref().is_alive() {
-                                draw_dnd_icon(
-                                    renderer,
-                                    frame,
-                                    surface,
-                                    (x as i32, y as i32).into(),
-                                    output_scale,
-                                    &log,
-                                )?;
-                            }
-                        }
-                    }
-                    // draw the cursor as relevant
-                    {
-                        let mut guard = state.cursor_status.lock().unwrap();
-                        // reset the cursor if the surface is no longer alive
-                        let mut reset = false;
-                        if let CursorImageStatus::Image(ref surface) = *guard {
-                            reset = !surface.as_ref().is_alive();
-                        }
-                        if reset {
-                            *guard = CursorImageStatus::Default;
-                        }
-
-                        // draw as relevant
-                        if let CursorImageStatus::Image(ref surface) = *guard {
-                            cursor_visible = false;
-                            draw_cursor(
-                                renderer,
-                                frame,
-                                surface,
-                                (x as i32, y as i32).into(),
-                                output_scale,
-                                &log,
-                            )?;
-                        } else {
-                            cursor_visible = true;
-                        }
-                    }
-
-                    #[cfg(feature = "debug")]
-                    {
-                        let fps = state.backend_data.fps.avg().round() as u32;
-
-                        draw_fps(
-                            renderer,
-                            frame,
-                            &state.backend_data.fps_texture,
-                            output_scale as f64,
-                            fps,
-                        )?;
-                    }
-
-                    Ok(())
+                .render(|renderer, _| {
+                    state
+                        .space
+                        .borrow_mut()
+                        .render_output(&mut *renderer, &output, 0, CLEAR_COLOR)
                 })
-                .map_err(Into::<SwapBuffersError>::into)
-                .and_then(|x| x);
-
-            renderer.window().set_cursor_visible(cursor_visible);
-
+                .and_then(|x| {
+                    x.map_err(|err| match err {
+                        RenderError::OutputNoMode => unreachable!(),
+                        RenderError::Rendering(err) => err.into(),
+                    })
+                });
             if let Err(SwapBuffersError::ContextLost(err)) = result {
                 error!(log, "Critical Rendering Error: {}", err);
                 state.running.store(false, Ordering::SeqCst);
@@ -247,9 +183,9 @@ pub fn run_winit(log: Logger) {
 
         // Send frame events so that client start drawing their next frame
         state
-            .window_map
+            .space
             .borrow()
-            .send_frames(start_time.elapsed().as_millis() as u32);
+            .send_frames(false, start_time.elapsed().as_millis() as u32);
         display.borrow_mut().flush_clients(&mut state);
 
         if event_loop
@@ -258,15 +194,11 @@ pub fn run_winit(log: Logger) {
         {
             state.running.store(false, Ordering::SeqCst);
         } else {
+            state.space.borrow_mut().refresh();
             display.borrow_mut().flush_clients(&mut state);
-            state.window_map.borrow_mut().refresh();
-            state.output_map.borrow_mut().refresh();
         }
 
         #[cfg(feature = "debug")]
         state.backend_data.fps.tick();
     }
-
-    // Cleanup stuff
-    state.window_map.borrow_mut().clear();
 }

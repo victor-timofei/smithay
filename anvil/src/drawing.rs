@@ -1,4 +1,4 @@
-#![allow(clippy::too_many_arguments)]
+#![allow(clippy::too_many_arguments, unused_imports)]
 
 use std::{cell::RefCell, sync::Mutex};
 
@@ -24,21 +24,11 @@ use smithay::{
     },
 };
 
-use crate::{shell::SurfaceData, window_map::WindowMap};
+use crate::shell::SurfaceData;
 
-struct BufferTextures<T> {
-    buffer: Option<wl_buffer::WlBuffer>,
-    texture: T,
-}
+pub static CLEAR_COLOR: [f32; 4] = [0.8, 0.8, 0.9, 1.0];
 
-impl<T> Drop for BufferTextures<T> {
-    fn drop(&mut self) {
-        if let Some(buffer) = self.buffer.take() {
-            buffer.release();
-        }
-    }
-}
-
+/*
 pub fn draw_cursor<R, E, F, T>(
     renderer: &mut R,
     frame: &mut F,
@@ -76,170 +66,6 @@ where
         }
     };
     draw_surface_tree(renderer, frame, surface, location - delta, output_scale, log)
-}
-
-fn draw_surface_tree<R, E, F, T>(
-    renderer: &mut R,
-    frame: &mut F,
-    root: &wl_surface::WlSurface,
-    location: Point<i32, Logical>,
-    output_scale: f32,
-    log: &Logger,
-) -> Result<(), SwapBuffersError>
-where
-    R: Renderer<Error = E, TextureId = T, Frame = F> + ImportAll,
-    F: Frame<Error = E, TextureId = T>,
-    E: std::error::Error + Into<SwapBuffersError>,
-    T: Texture + 'static,
-{
-    let mut result = Ok(());
-
-    with_surface_tree_upward(
-        root,
-        location,
-        |_surface, states, location| {
-            let mut location = *location;
-            // Pull a new buffer if available
-            if let Some(data) = states.data_map.get::<RefCell<SurfaceData>>() {
-                let mut data = data.borrow_mut();
-                let attributes = states.cached_state.current::<SurfaceAttributes>();
-                if data.texture.is_none() {
-                    if let Some(buffer) = data.buffer.take() {
-                        let damage = attributes
-                            .damage
-                            .iter()
-                            .map(|dmg| match dmg {
-                                Damage::Buffer(rect) => *rect,
-                                // TODO also apply transformations
-                                Damage::Surface(rect) => rect.to_buffer(attributes.buffer_scale),
-                            })
-                            .collect::<Vec<_>>();
-
-                        match renderer.import_buffer(&buffer, Some(states), &damage) {
-                            Some(Ok(m)) => {
-                                let texture_buffer = if let Some(BufferType::Shm) = buffer_type(&buffer) {
-                                    buffer.release();
-                                    None
-                                } else {
-                                    Some(buffer)
-                                };
-                                data.texture = Some(Box::new(BufferTextures {
-                                    buffer: texture_buffer,
-                                    texture: m,
-                                }))
-                            }
-                            Some(Err(err)) => {
-                                warn!(log, "Error loading buffer: {:?}", err);
-                                buffer.release();
-                            }
-                            None => {
-                                error!(log, "Unknown buffer format for: {:?}", buffer);
-                                buffer.release();
-                            }
-                        }
-                    }
-                }
-                // Now, should we be drawn ?
-                if data.texture.is_some() {
-                    // if yes, also process the children
-                    if states.role == Some("subsurface") {
-                        let current = states.cached_state.current::<SubsurfaceCachedState>();
-                        location += current.location;
-                    }
-                    TraversalAction::DoChildren(location)
-                } else {
-                    // we are not displayed, so our children are neither
-                    TraversalAction::SkipChildren
-                }
-            } else {
-                // we are not displayed, so our children are neither
-                TraversalAction::SkipChildren
-            }
-        },
-        |_surface, states, location| {
-            let mut location = *location;
-            if let Some(data) = states.data_map.get::<RefCell<SurfaceData>>() {
-                let mut data = data.borrow_mut();
-                let buffer_scale = data.buffer_scale;
-                if let Some(texture) = data
-                    .texture
-                    .as_mut()
-                    .and_then(|x| x.downcast_mut::<BufferTextures<T>>())
-                {
-                    // we need to re-extract the subsurface offset, as the previous closure
-                    // only passes it to our children
-                    if states.role == Some("subsurface") {
-                        let current = states.cached_state.current::<SubsurfaceCachedState>();
-                        location += current.location;
-                    }
-                    if let Err(err) = frame.render_texture_at(
-                        &texture.texture,
-                        location.to_f64().to_physical(output_scale as f64).to_i32_round(),
-                        buffer_scale,
-                        output_scale as f64,
-                        Transform::Normal, /* TODO */
-                        1.0,
-                    ) {
-                        result = Err(err.into());
-                    }
-                }
-            }
-        },
-        |_, _, _| true,
-    );
-
-    result
-}
-
-pub fn draw_windows<R, E, F, T>(
-    renderer: &mut R,
-    frame: &mut F,
-    window_map: &WindowMap,
-    output_rect: Rectangle<i32, Logical>,
-    output_scale: f32,
-    log: &::slog::Logger,
-) -> Result<(), SwapBuffersError>
-where
-    R: Renderer<Error = E, TextureId = T, Frame = F> + ImportAll,
-    F: Frame<Error = E, TextureId = T>,
-    E: std::error::Error + Into<SwapBuffersError>,
-    T: Texture + 'static,
-{
-    let mut result = Ok(());
-
-    // redraw the frame, in a simple but inneficient way
-    window_map.with_windows_from_bottom_to_top(|toplevel_surface, mut initial_place, &bounding_box| {
-        // skip windows that do not overlap with a given output
-        if !output_rect.overlaps(bounding_box) {
-            return;
-        }
-        initial_place.x -= output_rect.loc.x;
-        if let Some(wl_surface) = toplevel_surface.get_surface() {
-            // this surface is a root of a subsurface tree that needs to be drawn
-            if let Err(err) = draw_surface_tree(renderer, frame, wl_surface, initial_place, output_scale, log)
-            {
-                result = Err(err);
-            }
-            // furthermore, draw its popups
-            let toplevel_geometry_offset = window_map
-                .geometry(toplevel_surface)
-                .map(|g| g.loc)
-                .unwrap_or_default();
-            window_map.with_child_popups(wl_surface, |popup| {
-                let location = popup.location();
-                let draw_location = initial_place + location + toplevel_geometry_offset;
-                if let Some(wl_surface) = popup.get_surface() {
-                    if let Err(err) =
-                        draw_surface_tree(renderer, frame, wl_surface, draw_location, output_scale, log)
-                    {
-                        result = Err(err);
-                    }
-                }
-            });
-        }
-    });
-
-    result
 }
 
 pub fn draw_layers<R, E, F, T>(
@@ -317,6 +143,8 @@ where
     }
     draw_surface_tree(renderer, frame, surface, location, output_scale, log)
 }
+
+*/
 
 #[cfg(feature = "debug")]
 pub static FPS_NUMBERS_PNG: &[u8] = include_bytes!("../resources/numbers.png");

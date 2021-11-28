@@ -21,14 +21,14 @@ use smithay::{
         wayland_server::{protocol::wl_output, Display},
     },
     wayland::{
-        output::{Mode, PhysicalProperties},
+        output::{Mode, Output, PhysicalProperties},
         seat::CursorImageStatus,
     },
 };
 
 use crate::{
-    drawing::{draw_cursor, draw_dnd_icon},
-    render::render_layers_and_windows,
+    //drawing::{draw_cursor, draw_dnd_icon},
+    drawing::CLEAR_COLOR,
     state::Backend,
     AnvilState,
 };
@@ -152,52 +152,52 @@ pub fn run_x11(log: Logger) {
     };
 
     let mut state = AnvilState::init(display.clone(), event_loop.handle(), data, log.clone(), true);
-
-    state.output_map.borrow_mut().add(
-        OUTPUT_NAME,
+    let (output, _global) = Output::new(
+        &mut *display.borrow_mut(),
+        OUTPUT_NAME.to_string(),
         PhysicalProperties {
             size: (0, 0).into(),
             subpixel: wl_output::Subpixel::Unknown,
             make: "Smithay".into(),
             model: "X11".into(),
         },
-        mode,
+        log.clone(),
     );
+    output.change_current_state(Some(mode), None, None, Some((0, 0).into()));
+    output.set_preferred(mode);
+    state.space.borrow_mut().map_output(&output, 1.0, (0, 0).into());
 
+    let mut output_clone = output.clone();
     event_loop
         .handle()
-        .insert_source(backend, |event, _window, state| match event {
-            X11Event::CloseRequested => {
-                state.running.store(false, Ordering::SeqCst);
-            }
+        .insert_source(backend, move |event, _window, state| {
+            let output = &mut output_clone;
+            match event {
+                X11Event::CloseRequested => {
+                    state.running.store(false, Ordering::SeqCst);
+                }
 
-            X11Event::Resized(size) => {
-                let size = { (size.w as i32, size.h as i32).into() };
+                X11Event::Resized(size) => {
+                    let size = { (size.w as i32, size.h as i32).into() };
 
-                state.backend_data.mode = Mode {
-                    size,
-                    refresh: 60_000,
-                };
-                state.output_map.borrow_mut().update_mode_by_name(
-                    Mode {
+                    state.backend_data.mode = Mode {
                         size,
                         refresh: 60_000,
-                    },
-                    OUTPUT_NAME,
-                );
+                    };
+                    output.delete_mode(output.current_mode().unwrap());
+                    output.change_current_state(Some(state.backend_data.mode), None, None, None);
+                    output.set_preferred(state.backend_data.mode);
+                    // TODO: Scale
 
-                let output_mut = state.output_map.borrow();
-                let output = output_mut.find_by_name(OUTPUT_NAME).unwrap();
+                    state.backend_data.render = true;
+                }
 
-                state.window_map.borrow_mut().layers.arange_layers(output);
-                state.backend_data.render = true;
+                X11Event::PresentCompleted | X11Event::Refresh => {
+                    state.backend_data.render = true;
+                }
+
+                X11Event::Input(event) => state.process_input_event_windowed(event, OUTPUT_NAME),
             }
-
-            X11Event::PresentCompleted | X11Event::Refresh => {
-                state.backend_data.render = true;
-            }
-
-            X11Event::Input(event) => state.process_input_event_windowed(event, OUTPUT_NAME),
         })
         .expect("Failed to insert X11 Backend into event loop");
 
@@ -210,20 +210,13 @@ pub fn run_x11(log: Logger) {
     info!(log, "Initialization completed, starting the main loop.");
 
     while state.running.load(Ordering::SeqCst) {
-        let (output_geometry, output_scale) = state
-            .output_map
-            .borrow()
-            .find_by_name(OUTPUT_NAME)
-            .map(|output| (output.geometry(), output.scale()))
-            .unwrap();
+        let mut space = state.space.borrow_mut();
 
         if state.backend_data.render {
-            state.backend_data.render = false;
             let backend_data = &mut state.backend_data;
             let mut renderer = renderer.borrow_mut();
 
             // We need to borrow everything we want to refer to inside the renderer callback otherwise rustc is unhappy.
-            let window_map = state.window_map.borrow();
             let (x, y) = state.pointer_location.into();
             let dnd_icon = &state.dnd_icon;
             let cursor_status = &state.cursor_status;
@@ -232,127 +225,45 @@ pub fn run_x11(log: Logger) {
             #[cfg(feature = "debug")]
             let fps_texture = &backend_data.fps_texture;
 
-            let (buffer, _age) = backend_data.surface.buffer().expect("gbm device was destroyed");
+            let (buffer, age) = backend_data.surface.buffer().expect("gbm device was destroyed");
             if let Err(err) = renderer.bind(buffer) {
                 error!(log, "Error while binding buffer: {}", err);
+                continue;
             }
 
-            // drawing logic
-            match renderer
-                // TODO: Address this issue in renderer.
-                .render(backend_data.mode.size, Transform::Normal, |renderer, frame| {
-                    render_layers_and_windows(
-                        renderer,
-                        frame,
-                        &*window_map,
-                        output_geometry,
-                        output_scale,
-                        &log,
-                    )?;
-
-                    // draw the dnd icon if any
-                    {
-                        let guard = dnd_icon.lock().unwrap();
-                        if let Some(ref surface) = *guard {
-                            if surface.as_ref().is_alive() {
-                                draw_dnd_icon(
-                                    renderer,
-                                    frame,
-                                    surface,
-                                    (x as i32, y as i32).into(),
-                                    output_scale,
-                                    &log,
-                                )?;
-                            }
-                        }
-                    }
-
-                    // draw the cursor as relevant
-                    {
-                        let mut guard = cursor_status.lock().unwrap();
-                        // reset the cursor if the surface is no longer alive
-                        let mut reset = false;
-
-                        if let CursorImageStatus::Image(ref surface) = *guard {
-                            reset = !surface.as_ref().is_alive();
-                        }
-
-                        if reset {
-                            *guard = CursorImageStatus::Default;
-                        }
-
-                        // draw as relevant
-                        if let CursorImageStatus::Image(ref surface) = *guard {
-                            cursor_visible = false;
-                            draw_cursor(
-                                renderer,
-                                frame,
-                                surface,
-                                (x as i32, y as i32).into(),
-                                output_scale,
-                                &log,
-                            )?;
-                        } else {
-                            cursor_visible = true;
-                        }
-                    }
-
-                    #[cfg(feature = "debug")]
-                    {
-                        use crate::drawing::draw_fps;
-
-                        draw_fps(renderer, frame, fps_texture, output_scale as f64, fps)?;
-                    }
-
-                    Ok(())
-                })
-                .map_err(Into::<SwapBuffersError>::into)
-                .and_then(|x| x)
-                .map_err(Into::<SwapBuffersError>::into)
-            {
-                Ok(()) => {
-                    // Unbind the buffer
-                    if let Err(err) = renderer.unbind() {
-                        error!(log, "Error while unbinding buffer: {}", err);
-                    }
-
-                    // Submit the buffer
-                    if let Err(err) = backend_data.surface.submit() {
-                        error!(log, "Error submitting buffer for display: {}", err);
-                    }
+            // TODO fullscreen surface
+            match space.render_output(&mut *renderer, &output, age as usize, CLEAR_COLOR) {
+                Ok(true) => {
+                    slog::trace!(log, "Finished rendering");
+                    backend_data.surface.submit();
+                    state.backend_data.render = false;
                 }
-
+                Ok(false) => {
+                    let _ = renderer.unbind();
+                }
                 Err(err) => {
-                    if let SwapBuffersError::ContextLost(err) = err {
-                        error!(log, "Critical Rendering Error: {}", err);
-                        state.running.store(false, Ordering::SeqCst);
-                    }
+                    backend_data.surface.reset_buffers();
+                    error!(log, "Rendering error: {}", err);
+                    // TODO: convert RenderError into SwapBuffersError and skip temporary (will retry) and panic on ContextLost or recreate
                 }
+                _ => {}
             }
 
             #[cfg(feature = "debug")]
             state.backend_data.fps.tick();
             window.set_cursor_visible(cursor_visible);
-
-            // Send frame events so that client start drawing their next frame
-            window_map.send_frames(start_time.elapsed().as_millis() as u32);
-            std::mem::drop(window_map);
-
-            display.borrow_mut().flush_clients(&mut state);
         }
 
-        if event_loop
-            .dispatch(Some(Duration::from_millis(16)), &mut state)
-            .is_err()
-        {
+        // Send frame events so that client start drawing their next frame
+        space.send_frames(false, start_time.elapsed().as_millis() as u32);
+        std::mem::drop(space);
+
+        if event_loop.dispatch(None, &mut state).is_err() {
             state.running.store(false, Ordering::SeqCst);
         } else {
+            state.space.borrow_mut().refresh();
+            state.popups.borrow_mut().cleanup();
             display.borrow_mut().flush_clients(&mut state);
-            state.window_map.borrow_mut().refresh();
-            state.output_map.borrow_mut().refresh();
         }
     }
-
-    // Cleanup stuff
-    state.window_map.borrow_mut().clear();
 }

@@ -11,6 +11,7 @@ use smithay::{
         PointerButtonEvent,
     },
     reexports::wayland_server::protocol::wl_pointer,
+    utils::Coordinate,
     wayland::{
         seat::{keysyms as xkb, AxisFrame, FilterResult, Keysym, ModifiersState},
         SERIAL_COUNTER as SCOUNTER,
@@ -18,7 +19,7 @@ use smithay::{
 };
 
 #[cfg(any(feature = "winit", feature = "x11"))]
-use smithay::backend::input::PointerMotionAbsoluteEvent;
+use smithay::{backend::input::PointerMotionAbsoluteEvent, wayland::output::Output};
 
 #[cfg(feature = "udev")]
 use smithay::{
@@ -115,12 +116,16 @@ impl<Backend> AnvilState<Backend> {
             input::ButtonState::Pressed => {
                 // change the keyboard focus unless the pointer is grabbed
                 if !self.pointer.is_grabbed() {
-                    let under = self
-                        .window_map
-                        .borrow_mut()
-                        .get_surface_and_bring_to_top(self.pointer_location);
-                    self.keyboard
-                        .set_focus(under.as_ref().map(|&(ref s, _)| s), serial);
+                    let mut space = self.space.borrow_mut();
+                    let w = space.window_under(self.pointer_location).cloned();
+                    if let Some(window) = w {
+                        space.raise_window(&window);
+                        let window_loc = space.window_geometry(&window).unwrap().loc;
+                        let surface = window
+                            .surface_under(self.pointer_location - window_loc.to_f64())
+                            .map(|(s, _)| s);
+                        self.keyboard.set_focus(surface.as_ref(), serial);
+                    }
                 }
                 wl_pointer::ButtonState::Pressed
             }
@@ -173,31 +178,25 @@ impl<Backend> AnvilState<Backend> {
         match event {
             InputEvent::Keyboard { event } => match self.keyboard_key_to_action::<B>(event) {
                 KeyAction::ScaleUp => {
-                    let current_scale = {
-                        self.output_map
-                            .borrow()
-                            .find_by_name(output_name)
-                            .map(|o| o.scale())
-                            .unwrap_or(1.0)
-                    };
+                    let mut space = self.space.borrow_mut();
+                    let output = space.outputs().find(|o| o.name() == output_name).unwrap().clone();
 
-                    self.output_map
-                        .borrow_mut()
-                        .update_scale_by_name(current_scale + 0.25f32, output_name);
+                    let geometry = space.output_geometry(&output).unwrap();
+                    let current_scale = space.output_scale(&output).unwrap();
+                    let new_scale = current_scale + 0.25;
+                    space.map_output(&output, new_scale, geometry.loc);
+                    output.change_current_state(None, None, Some(new_scale.ceil() as i32), None);
                 }
 
                 KeyAction::ScaleDown => {
-                    let current_scale = {
-                        self.output_map
-                            .borrow()
-                            .find_by_name(output_name)
-                            .map(|o| o.scale())
-                            .unwrap_or(1.0)
-                    };
+                    let mut space = self.space.borrow_mut();
+                    let output = space.outputs().find(|o| o.name() == output_name).unwrap().clone();
 
-                    self.output_map
-                        .borrow_mut()
-                        .update_scale_by_name(f32::max(1.0f32, current_scale - 0.25f32), output_name);
+                    let geometry = space.output_geometry(&output).unwrap();
+                    let current_scale = space.output_scale(&output).unwrap();
+                    let new_scale = current_scale - 0.25;
+                    space.map_output(&output, new_scale, geometry.loc);
+                    output.change_current_state(None, None, Some(new_scale.ceil() as i32), None);
                 }
 
                 action => match action {
@@ -213,7 +212,14 @@ impl<Backend> AnvilState<Backend> {
             },
 
             InputEvent::PointerMotionAbsolute { event } => {
-                self.on_pointer_move_absolute_windowed::<B>(event, output_name)
+                let output = self
+                    .space
+                    .borrow()
+                    .outputs()
+                    .find(|o| o.name() == output_name)
+                    .unwrap()
+                    .clone();
+                self.on_pointer_move_absolute_windowed::<B>(event, &output)
             }
             InputEvent::PointerButton { event } => self.on_pointer_button::<B>(event),
             InputEvent::PointerAxis { event } => self.on_pointer_axis::<B>(event),
@@ -224,19 +230,22 @@ impl<Backend> AnvilState<Backend> {
     fn on_pointer_move_absolute_windowed<B: InputBackend>(
         &mut self,
         evt: B::PointerMotionAbsoluteEvent,
-        output_name: &str,
+        output: &Output,
     ) {
-        let output_size = self
-            .output_map
-            .borrow()
-            .find_by_name(output_name)
-            .map(|o| o.size())
-            .unwrap();
+        let output_geo = self.space.borrow().output_geometry(output).unwrap();
 
-        let pos = evt.position_transformed(output_size);
+        let pos = evt.position_transformed(output_geo.size) + output_geo.loc.to_f64();
         self.pointer_location = pos;
         let serial = SCOUNTER.next_serial();
-        let under = self.window_map.borrow().get_surface_under(pos);
+        let space = self.space.borrow();
+        let window = space.window_under(pos);
+        let under = window.and_then(|window| {
+            let window_loc = space.window_geometry(window).unwrap().loc;
+            window
+                .surface_under(pos - window_loc.to_f64())
+                .map(|(s, loc)| (s, loc + window_loc))
+        });
+        std::mem::drop(space);
         self.pointer.motion(pos, under, serial, evt.time());
     }
 }
