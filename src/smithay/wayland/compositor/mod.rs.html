@@ -496,12 +496,6 @@
 <span id="495">495</span>
 <span id="496">496</span>
 <span id="497">497</span>
-<span id="498">498</span>
-<span id="499">499</span>
-<span id="500">500</span>
-<span id="501">501</span>
-<span id="502">502</span>
-<span id="503">503</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Utilities for handling surfaces, subsurfaces and regions</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! This module provides automatic handling of surfaces, subsurfaces</span>
@@ -748,16 +742,10 @@
 <span class="doccomment">/// This struct contains an ordered `Vec` containing the rectangles defining</span>
 <span class="doccomment">/// a region. They should be added or subtracted in this order to compute the</span>
 <span class="doccomment">/// actual contents of the region.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Default</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RegionAttributes</span> {
     <span class="doccomment">/// List of rectangle part of this region</span>
     <span class="kw">pub</span> <span class="ident">rects</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">RectangleKind</span>, <span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">RegionAttributes</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="ident">RegionAttributes</span> {
-        <span class="ident">RegionAttributes</span> { <span class="ident">rects</span>: <span class="ident">Vec::new</span>() }
-    }
 }
 
 <span class="kw">impl</span> <span class="ident">RegionAttributes</span> {
@@ -1006,5 +994,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (db9d361a4 2021-11-28)" ></div>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (acbe4443c 2021-12-02)" ></div>
 </body></html>

@@ -1677,42 +1677,6 @@
 <span id="1676">1676</span>
 <span id="1677">1677</span>
 <span id="1678">1678</span>
-<span id="1679">1679</span>
-<span id="1680">1680</span>
-<span id="1681">1681</span>
-<span id="1682">1682</span>
-<span id="1683">1683</span>
-<span id="1684">1684</span>
-<span id="1685">1685</span>
-<span id="1686">1686</span>
-<span id="1687">1687</span>
-<span id="1688">1688</span>
-<span id="1689">1689</span>
-<span id="1690">1690</span>
-<span id="1691">1691</span>
-<span id="1692">1692</span>
-<span id="1693">1693</span>
-<span id="1694">1694</span>
-<span id="1695">1695</span>
-<span id="1696">1696</span>
-<span id="1697">1697</span>
-<span id="1698">1698</span>
-<span id="1699">1699</span>
-<span id="1700">1700</span>
-<span id="1701">1701</span>
-<span id="1702">1702</span>
-<span id="1703">1703</span>
-<span id="1704">1704</span>
-<span id="1705">1705</span>
-<span id="1706">1706</span>
-<span id="1707">1707</span>
-<span id="1708">1708</span>
-<span id="1709">1709</span>
-<span id="1710">1710</span>
-<span id="1711">1711</span>
-<span id="1712">1712</span>
-<span id="1713">1713</span>
-<span id="1714">1714</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Utilities for handling shell surfaces with the `xdg_shell` protocol</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! This module provides automatic handling of shell surfaces objects, by being registered</span>
@@ -2103,7 +2067,7 @@
 );
 
 <span class="doccomment">/// Represents the state of the popup</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Default</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PopupState</span> {
     <span class="doccomment">/// The positioner state can be used by the compositor</span>
     <span class="doccomment">/// to calculate the best placement for the popup.</span>
@@ -2121,15 +2085,6 @@
     <span class="doccomment">/// The position is relative to the window geometry as defined by</span>
     <span class="doccomment">/// xdg_surface.set_window_geometry of the parent surface.</span>
     <span class="kw">pub</span> <span class="ident">geometry</span>: <span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">PopupState</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">geometry</span>: <span class="ident">Default::default</span>(),
-            <span class="ident">positioner</span>: <span class="ident">Default::default</span>(),
-        }
-    }
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
@@ -2313,7 +2268,7 @@
 }
 
 <span class="doccomment">/// State of a regular toplevel surface</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Default</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ToplevelState</span> {
     <span class="doccomment">/// The suggested size of the surface</span>
     <span class="kw">pub</span> <span class="ident">size</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span><span class="op">&gt;</span>,
@@ -2326,17 +2281,6 @@
 
     <span class="doccomment">/// The xdg decoration mode of the surface</span>
     <span class="kw">pub</span> <span class="ident">decoration_mode</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">zxdg_toplevel_decoration_v1::Mode</span><span class="op">&gt;</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">ToplevelState</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident">ToplevelState</span> {
-            <span class="ident">fullscreen_output</span>: <span class="prelude-val">None</span>,
-            <span class="ident">states</span>: <span class="ident">Default::default</span>(),
-            <span class="ident">size</span>: <span class="prelude-val">None</span>,
-            <span class="ident">decoration_mode</span>: <span class="prelude-val">None</span>,
-        }
-    }
 }
 
 <span class="kw">impl</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">ToplevelState</span> {
@@ -2356,7 +2300,7 @@
 <span class="doccomment">/// having the same `xdg_toplevel::State` multiple times</span>
 <span class="doccomment">/// and simplifies setting and un-setting a particularly</span>
 <span class="doccomment">/// `xdg_toplevel::State`</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Default</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ToplevelStateSet</span> {
     <span class="ident">states</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">xdg_toplevel::State</span><span class="op">&gt;</span>,
 }
@@ -2426,12 +2370,6 @@
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">ToplevelStateSet</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> { <span class="ident">states</span>: <span class="ident">Vec::new</span>() }
-    }
-}
-
 <span class="kw">impl</span> <span class="ident">IntoIterator</span> <span class="kw">for</span> <span class="ident">ToplevelStateSet</span> {
     <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">xdg_toplevel::State</span>;
     <span class="kw">type</span> <span class="ident">IntoIter</span> <span class="op">=</span> <span class="ident">std::vec::IntoIter</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span>;
@@ -2448,7 +2386,7 @@
 }
 
 <span class="doccomment">/// Represents the client pending state</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Default</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SurfaceCachedState</span> {
     <span class="doccomment">/// Holds the double-buffered geometry that may be specified</span>
     <span class="doccomment">/// by xdg_surface.set_window_geometry.</span>
@@ -2467,16 +2405,6 @@
     <span class="doccomment">/// This is only relevant for xdg_toplevel, and will always be</span>
     <span class="doccomment">/// `(0, 0)` for xdg_popup.</span>
     <span class="kw">pub</span> <span class="ident">max_size</span>: <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">SurfaceCachedState</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">geometry</span>: <span class="prelude-val">None</span>,
-            <span class="ident">min_size</span>: <span class="ident">Default::default</span>(),
-            <span class="ident">max_size</span>: <span class="ident">Default::default</span>(),
-        }
-    }
 }
 
 <span class="kw">impl</span> <span class="ident">Cacheable</span> <span class="kw">for</span> <span class="ident">SurfaceCachedState</span> {
@@ -3428,5 +3356,5 @@
     },
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="smithay" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (db9d361a4 2021-11-28)" ></div>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="smithay" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (acbe4443c 2021-12-02)" ></div>
 </body></html>

@@ -375,6 +375,7 @@
 <span id="374">374</span>
 <span id="375">375</span>
 <span id="376">376</span>
+<span id="377">377</span>
 </pre><pre class="rust"><code><span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;backend_session&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">std::cell::RefCell</span>;
 <span class="kw">use</span> <span class="ident">std::os::unix::io</span>::{<span class="ident">AsRawFd</span>, <span class="ident">RawFd</span>};
@@ -447,6 +448,7 @@
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::large_enum_variant</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">DrmDeviceInternal</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">AsRawFd</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
     <span class="ident">Atomic</span>(<span class="ident">AtomicDrmDevice</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>),
     <span class="ident">Legacy</span>(<span class="ident">LegacyDrmDevice</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>),
@@ -752,5 +754,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="smithay" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (db9d361a4 2021-11-28)" ></div>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="smithay" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (acbe4443c 2021-12-02)" ></div>
 </body></html>

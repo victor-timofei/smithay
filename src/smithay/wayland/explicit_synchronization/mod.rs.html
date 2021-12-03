@@ -286,15 +286,6 @@
 <span id="285">285</span>
 <span id="286">286</span>
 <span id="287">287</span>
-<span id="288">288</span>
-<span id="289">289</span>
-<span id="290">290</span>
-<span id="291">291</span>
-<span id="292">292</span>
-<span id="293">293</span>
-<span id="294">294</span>
-<span id="295">295</span>
-<span id="296">296</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Explicit buffer synchronization per wayland surface</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! This interface allow clients to switch from a per-buffer signaling of buffer release (via the</span>
@@ -384,7 +375,7 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// When processing the current state, [`Option::take`] the values from it. Otherwise they&#39;ll be</span>
 <span class="doccomment">/// treated as unused and released when overwritten by the next client commit.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Default</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ExplicitSyncState</span> {
     <span class="doccomment">/// An acquire `dma_fence` object, that you should wait on before accessing the contents of the</span>
     <span class="doccomment">/// buffer associated with the surface.</span>
@@ -392,15 +383,6 @@
     <span class="doccomment">/// A buffer release object, that you should use to signal the client when you are done using the</span>
     <span class="doccomment">/// buffer associated with the surface.</span>
     <span class="kw">pub</span> <span class="ident">release</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ExplicitBufferRelease</span><span class="op">&gt;</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">ExplicitSyncState</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident">ExplicitSyncState</span> {
-            <span class="ident">acquire</span>: <span class="prelude-val">None</span>,
-            <span class="ident">release</span>: <span class="prelude-val">None</span>,
-        }
-    }
 }
 
 <span class="kw">impl</span> <span class="ident">Cacheable</span> <span class="kw">for</span> <span class="ident">ExplicitSyncState</span> {
@@ -592,5 +574,5 @@
     <span class="ident">id</span>.<span class="ident">deref</span>().<span class="ident">clone</span>()
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (db9d361a4 2021-11-28)" ></div>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (acbe4443c 2021-12-02)" ></div>
 </body></html>

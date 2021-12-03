@@ -538,18 +538,6 @@
 <span id="537">537</span>
 <span id="538">538</span>
 <span id="539">539</span>
-<span id="540">540</span>
-<span id="541">541</span>
-<span id="542">542</span>
-<span id="543">543</span>
-<span id="544">544</span>
-<span id="545">545</span>
-<span id="546">546</span>
-<span id="547">547</span>
-<span id="548">548</span>
-<span id="549">549</span>
-<span id="550">550</span>
-<span id="551">551</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::backend::input::KeyState</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::wayland::Serial</span>;
 <span class="kw">use</span> <span class="ident">slog</span>::{<span class="ident">debug</span>, <span class="ident">info</span>, <span class="ident">o</span>, <span class="ident">trace</span>, <span class="ident">warn</span>};
@@ -618,7 +606,7 @@
 <span class="doccomment">/// For details, see the [documentation at xkbcommon.org][docs].</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// [docs]: https://xkbcommon.org/doc/current/structxkb__rule__names.html</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">XkbConfig</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="doccomment">/// The rules file to use.</span>
     <span class="doccomment">///</span>
@@ -636,18 +624,6 @@
     <span class="doccomment">/// preferences, like which key combinations are used for switching layouts, or which key is the</span>
     <span class="doccomment">/// Compose key.</span>
     <span class="kw">pub</span> <span class="ident">options</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">XkbConfig</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">rules</span>: <span class="string">&quot;&quot;</span>,
-            <span class="ident">model</span>: <span class="string">&quot;&quot;</span>,
-            <span class="ident">layout</span>: <span class="string">&quot;&quot;</span>,
-            <span class="ident">variant</span>: <span class="string">&quot;&quot;</span>,
-            <span class="ident">options</span>: <span class="prelude-val">None</span>,
-        }
-    }
 }
 
 <span class="kw">struct</span> <span class="ident">KbdInternal</span> {
@@ -1102,5 +1078,5 @@
     <span class="ident">keyboard</span>.<span class="ident">deref</span>().<span class="ident">clone</span>()
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (db9d361a4 2021-11-28)" ></div>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (acbe4443c 2021-12-02)" ></div>
 </body></html>
