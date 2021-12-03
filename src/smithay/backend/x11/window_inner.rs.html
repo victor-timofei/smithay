@@ -293,6 +293,12 @@
 <span id="292">292</span>
 <span id="293">293</span>
 <span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
 </pre><pre class="rust"><code><span class="doccomment">/**
 A note for future contributors and maintainers:
 
@@ -310,6 +316,7 @@ A link to the ICCCM Section 4: https://tronche.com/gui/x/icccm/sec-4.html
 <span class="kw">use</span> <span class="ident">drm_fourcc::DrmFourcc</span>;
 <span class="kw">use</span> <span class="ident">std::sync</span>::{
     <span class="ident">atomic</span>::{<span class="ident">AtomicU32</span>, <span class="ident">AtomicU64</span>},
+    <span class="ident">mpsc::Sender</span>,
     <span class="ident">Arc</span>, <span class="ident">Mutex</span>, <span class="ident">Weak</span>,
 };
 <span class="kw">use</span> <span class="ident">x11rb</span>::{
@@ -355,6 +362,10 @@ A link to the ICCCM Section 4: https://tronche.com/gui/x/icccm/sec-4.html
     <span class="kw">pub</span> <span class="ident">atoms</span>: <span class="ident">Atoms</span>,
     <span class="kw">pub</span> <span class="ident">cursor_state</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">CursorState</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">size</span>: <span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">Size</span><span class="op">&lt;</span><span class="ident">u16</span>, <span class="ident">Logical</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Channel used to send resize notifications to the surface that presents to this window.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This value will be [`None`] if no surface is bound to the window.</span>
+    <span class="kw">pub</span> <span class="ident">resize</span>: <span class="ident">Mutex</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">Size</span><span class="op">&lt;</span><span class="ident">u16</span>, <span class="ident">Logical</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">next_serial</span>: <span class="ident">AtomicU32</span>,
     <span class="kw">pub</span> <span class="ident">last_msc</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">AtomicU64</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">format</span>: <span class="ident">DrmFourcc</span>,
@@ -449,6 +460,7 @@ A link to the ICCCM Section 4: https://tronche.com/gui/x/icccm/sec-4.html
             <span class="ident">format</span>,
             <span class="ident">depth</span>,
             <span class="ident">extensions</span>,
+            <span class="ident">resize</span>: <span class="ident">Mutex::new</span>(<span class="prelude-val">None</span>),
         };
 
         <span class="comment">// Enable WM_DELETE_WINDOW so our client is not disconnected upon our toplevel window being destroyed.</span>

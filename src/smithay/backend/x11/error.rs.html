@@ -161,6 +161,13 @@
 <span id="160">160</span>
 <span id="161">161</span>
 <span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::io</span>;
 
 <span class="kw">use</span> <span class="ident">gbm::DeviceDestroyedError</span>;
@@ -188,9 +195,16 @@
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Creating the window failed&quot;</span>)]</span>
     <span class="ident">CreateWindow</span>(<span class="ident">CreateWindowError</span>),
 
-    <span class="doccomment">/// An X11 surface already exists for this backend.</span>
-    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;An X11 surface already exists for this backend&quot;</span>)]</span>
+    <span class="doccomment">/// An X11 surface already exists for this window.</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;An X11 surface already exists for this window&quot;</span>)]</span>
     <span class="ident">SurfaceExists</span>,
+
+    <span class="doccomment">/// An invalid window was used to create an X11 surface.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This error will be risen if the window was destroyed or the window does not belong to the [`X11Handle`](super::X11Handle)</span>
+    <span class="doccomment">/// in use.</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;An invalid window was used to create an X11 surface&quot;</span>)]</span>
+    <span class="ident">InvalidWindow</span>,
 
     <span class="doccomment">/// The X server is not capable of direct rendering.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;The X server is not capable of direct rendering&quot;</span>)]</span>
