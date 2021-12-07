@@ -29,6 +29,22 @@ pub trait Coordinate:
     fn to_f64(self) -> f64;
     /// Convert to this coordinate from a f64
     fn from_f64(v: f64) -> Self;
+    /// Compare and return the smaller one
+    fn min(self, other: Self) -> Self {
+        if self < other {
+            self
+        } else {
+            other
+        }
+    }
+    /// Compare and return the larger one
+    fn max(self, other: Self) -> Self {
+        if self > other {
+            self
+        } else {
+            other
+        }
+    }
     /// Test if the coordinate is not negative
     fn non_negative(self) -> bool;
     /// Returns the absolute value of this coordinate
@@ -192,6 +208,7 @@ floating_point_coordinate_impl! {
  */
 
 /// A point as defined by its x and y coordinates
+#[repr(C)]
 pub struct Point<N, Kind> {
     /// horizontal coordinate
     pub x: N,
@@ -455,6 +472,7 @@ impl<N: Default, Kind> Default for Point<N, Kind> {
 /// Constructors of this type ensure that the values are always positive via
 /// `debug_assert!()`, however manually changing the values of the fields
 /// can break this invariant.
+#[repr(C)]
 pub struct Size<N, Kind> {
     /// horizontal coordinate
     pub w: N,
@@ -715,6 +733,7 @@ impl<N: Sub<Output = N>, Kind> Sub<Size<N, Kind>> for Point<N, Kind> {
 }
 
 /// A rectangle defined by its top-left corner and dimensions
+#[repr(C)]
 pub struct Rectangle<N, Kind> {
     /// Location of the top-left corner of the rectangle
     pub loc: Point<N, Kind>,
@@ -804,7 +823,8 @@ impl<N: Coordinate, Kind> Rectangle<N, Kind> {
 
     /// Checks whether a given [`Rectangle`] overlaps with this one
     #[inline]
-    pub fn overlaps(self, other: Rectangle<N, Kind>) -> bool {
+    pub fn overlaps(self, other: impl Into<Rectangle<N, Kind>>) -> bool {
+        let other = other.into();
         // if the rectangle is not outside of the other
         // they must overlap
         !(
@@ -819,37 +839,39 @@ impl<N: Coordinate, Kind> Rectangle<N, Kind> {
         )
     }
 
+    /// Clamp rectangle to min and max corners
+    #[inline]
+    pub fn clamp_to_rect(
+        self,
+        other: impl Into<Rectangle<N, Kind>>,
+    ) -> Self {
+        let other = other.into();
+        Rectangle::from_extemities(
+            (
+                self.loc.x.max(other.loc.x),
+                self.loc.y.max(other.loc.y),
+            ),
+            (
+                (self.loc.x + self.size.w).min(other.loc.x + other.size.w),
+                (self.loc.y + self.size.h).min(other.loc.y + other.size.h),
+            ),
+        )
+    }
+
     /// Compute the bounding box of a given set of points
     pub fn bounding_box(points: impl IntoIterator<Item = Point<N, Kind>>) -> Self {
         let ret = points.into_iter().fold(None, |acc, point| {
             match acc {
                 None => Some((point, point)),
-                // we don't have cmp::{min,max} for f64 :(
                 Some((min_point, max_point)) => Some((
                     (
-                        if min_point.x > point.x {
-                            point.x
-                        } else {
-                            min_point.x
-                        },
-                        if min_point.y > point.y {
-                            point.y
-                        } else {
-                            min_point.y
-                        },
+                        point.x.min(min_point.x),
+                        point.y.min(min_point.y),
                     )
                         .into(),
                     (
-                        if max_point.x < point.x {
-                            point.x
-                        } else {
-                            max_point.x
-                        },
-                        if max_point.y < point.y {
-                            point.y
-                        } else {
-                            max_point.y
-                        },
+                        point.x.max(max_point.x),
+                        point.y.max(max_point.y),
                     )
                         .into(),
                 )),
