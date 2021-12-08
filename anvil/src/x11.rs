@@ -208,6 +208,7 @@ pub fn run_x11(log: Logger) {
     state.start_xwayland();
 
     info!(log, "Initialization completed, starting the main loop.");
+    
 
     while state.running.load(Ordering::SeqCst) {
         let mut space = state.space.borrow_mut();
@@ -231,6 +232,9 @@ pub fn run_x11(log: Logger) {
                 continue;
             }
 
+            if let Some(mut renderdoc) = state.renderdoc.as_mut() {
+                renderdoc.start_frame_capture(renderer.egl.context, std::ptr::null());
+            }
             // TODO fullscreen surface
             match space.render_output(&mut *renderer, &output, age as usize, CLEAR_COLOR) {
                 Ok(true) => {
@@ -247,6 +251,10 @@ pub fn run_x11(log: Logger) {
                     // TODO: convert RenderError into SwapBuffersError and skip temporary (will retry) and panic on ContextLost or recreate
                 }
                 _ => {}
+            }
+    
+            if let Some(mut renderdoc) = state.renderdoc.as_mut() {
+                renderdoc.end_frame_capture(renderer.egl.context, std::ptr::null());
             }
 
             #[cfg(feature = "debug")]
