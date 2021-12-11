@@ -526,9 +526,8 @@ enum KeyAction {
 }
 
 fn process_keyboard_shortcut(modifiers: ModifiersState, keysym: Keysym) -> Option<KeyAction> {
-    if modifiers.ctrl && modifiers.alt && keysym == xkb::KEY_BackSpace
-        || modifiers.logo && keysym == xkb::KEY_q
-    {
+    let modkey = modifiers.ctrl;
+    if modkey && keysym == xkb::KEY_q {
         // ctrl+alt+backspace = quit
         // logo + q = quit
         Some(KeyAction::Quit)
@@ -537,14 +536,14 @@ fn process_keyboard_shortcut(modifiers: ModifiersState, keysym: Keysym) -> Optio
         Some(KeyAction::VtSwitch(
             (keysym - xkb::KEY_XF86Switch_VT_1 + 1) as i32,
         ))
-    } else if modifiers.logo && keysym == xkb::KEY_Return {
+    } else if modkey && keysym == xkb::KEY_Return {
         // run terminal
-        Some(KeyAction::Run("weston-terminal".into()))
-    } else if modifiers.logo && keysym >= xkb::KEY_1 && keysym <= xkb::KEY_9 {
+        Some(KeyAction::Run("alacritty".into()))
+    } else if modkey && keysym >= xkb::KEY_1 && keysym <= xkb::KEY_9 {
         Some(KeyAction::Screen((keysym - xkb::KEY_1) as usize))
-    } else if modifiers.logo && modifiers.shift && keysym == xkb::KEY_M {
+    } else if modkey && modifiers.shift && keysym == xkb::KEY_M {
         Some(KeyAction::ScaleDown)
-    } else if modifiers.logo && modifiers.shift && keysym == xkb::KEY_P {
+    } else if modkey && modifiers.shift && keysym == xkb::KEY_P {
         Some(KeyAction::ScaleUp)
     } else {
         None
