@@ -358,7 +358,10 @@ impl AnvilState<UdevData> {
         let under;
         // set focus for this window
         if !self.pointer.is_grabbed() {
-            under = self.window_map.borrow_mut().get_surface_and_bring_to_top(self.pointer_location);
+            under = self
+                .window_map
+                .borrow_mut()
+                .get_surface_and_bring_to_top(self.pointer_location);
             self.keyboard
                 .set_focus(under.as_ref().map(|&(ref s, _)| s), serial);
         } else {
