@@ -121,11 +121,7 @@ impl<BackendData: Backend + 'static> AnvilState<BackendData> {
             log.clone(),
         );
 
-        init_xdg_decoration_manager(
-            &mut display.borrow_mut(),
-            |_, _| {},
-            log.clone(),
-        );
+        init_xdg_decoration_manager(&mut display.borrow_mut(), |_, _| {}, log.clone());
 
         let socket_name = if listen_on_socket {
             let socket_name = display
