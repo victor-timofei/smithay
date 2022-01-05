@@ -79,15 +79,12 @@ mod error;
 #[macro_use]
 mod extension;
 mod input;
+mod surface;
 mod window_inner;
 
-use self::{buffer::PixmapWrapperExt, window_inner::WindowInner};
 use crate::{
     backend::{
-        allocator::{
-            dmabuf::{AsDmabuf, Dmabuf},
-            Slot, Swapchain,
-        },
+        allocator::Swapchain,
         drm::{node::path_to_type, CreateDrmNodeError, DrmNode, NodeType},
         egl::{native::X11DefaultDisplay, EGLDevice, EGLDisplay, Error as EGLError},
         input::{Axis, ButtonState, InputEvent, KeyState},
@@ -96,7 +93,6 @@ use crate::{
 };
 use calloop::{EventSource, Poll, PostAction, Readiness, Token, TokenFactory};
 use drm_fourcc::{DrmFourcc, DrmModifier};
-use gbm::BufferObject;
 use nix::{
     fcntl::{self, OFlag},
     sys::stat::Mode,
@@ -104,12 +100,11 @@ use nix::{
 use slog::{error, info, o, Logger};
 use std::{
     collections::HashMap,
-    io, mem,
+    io,
     os::unix::prelude::AsRawFd,
     sync::{
         atomic::{AtomicU32, Ordering},
-        mpsc::{self, Receiver},
-        Arc, Mutex, MutexGuard, Weak,
+        mpsc, Arc, Mutex, Weak,
     },
 };
 use x11rb::{
@@ -118,38 +113,51 @@ use x11rb::{
     protocol::{
         self as x11,
         dri3::ConnectionExt as _,
-        xproto::{
-            ColormapAlloc, ConnectionExt, CreateWindowAux, PixmapWrapper, VisualClass, WindowClass,
-            WindowWrapper,
-        },
+        xproto::{ColormapAlloc, ConnectionExt, CreateWindowAux, VisualClass, WindowClass, WindowWrapper},
         ErrorKind,
     },
     rust_connection::{ReplyError, RustConnection},
 };
 
+use self::{extension::Extensions, window_inner::WindowInner};
+
 pub use self::error::*;
-use self::extension::Extensions;
 pub use self::input::*;
+pub use self::surface::*;
 
 /// An event emitted by the X11 backend.
 #[derive(Debug)]
 pub enum X11Event {
     /// The X server has required the compositor to redraw the contents of window.
-    Refresh,
+    Refresh {
+        /// XID of the window
+        window_id: u32,
+    },
 
     /// An input event occurred.
     Input(InputEvent<X11Input>),
 
     /// The window was resized.
-    Resized(Size<u16, Logical>),
+    Resized {
+        /// The new size of the window
+        new_size: Size<u16, Logical>,
+        /// XID of the window
+        window_id: u32,
+    },
 
     /// The last buffer presented to the window has been displayed.
     ///
     /// When this event is scheduled, the next frame may be rendered.
-    PresentCompleted,
+    PresentCompleted {
+        /// XID of the window
+        window_id: u32,
+    },
 
     /// The window has received a request to be closed.
-    CloseRequested,
+    CloseRequested {
+        /// XID of the window
+        window_id: u32,
+    },
 }
 
 /// Represents an active connection to the X to manage events on the Window provided by the backend.
@@ -159,16 +167,6 @@ pub struct X11Backend {
     connection: Arc<RustConnection>,
     source: X11Source,
     inner: Arc<Mutex<X11Inner>>,
-}
-
-atom_manager! {
-    pub(crate) Atoms: AtomCollectionCookie {
-        WM_PROTOCOLS,
-        WM_DELETE_WINDOW,
-        _NET_WM_NAME,
-        UTF8_STRING,
-        _SMITHAY_X11_BACKEND_CLOSE,
-    }
 }
 
 impl X11Backend {
@@ -257,6 +255,7 @@ impl X11Backend {
             atoms,
             depth,
             visual_id,
+            devices: false,
         };
 
         Ok(X11Backend {
@@ -277,100 +276,12 @@ impl X11Backend {
     }
 }
 
-/// An X11 surface which uses GBM to allocate and present buffers.
-#[derive(Debug)]
-pub struct X11Surface {
-    connection: Weak<RustConnection>,
-    window: Weak<WindowInner>,
-    resize: Receiver<Size<u16, Logical>>,
-    swapchain: Swapchain<Arc<Mutex<gbm::Device<DrmNode>>>, BufferObject<()>>,
-    format: DrmFourcc,
-    width: u16,
-    height: u16,
-    buffer: Option<Slot<BufferObject<()>>>,
-}
-
 #[derive(Debug, thiserror::Error)]
 enum EGLInitError {
     #[error(transparent)]
     EGL(#[from] EGLError),
     #[error(transparent)]
     IO(#[from] io::Error),
-}
-
-fn egl_init(_: &X11Inner) -> Result<DrmNode, EGLInitError> {
-    let display = EGLDisplay::new(&X11DefaultDisplay, None)?;
-    let device = EGLDevice::device_for_display(&display)?;
-    let path = path_to_type(device.drm_device_path()?, NodeType::Render)?;
-    fcntl::open(&path, OFlag::O_RDWR | OFlag::O_CLOEXEC, Mode::empty())
-        .map_err(Into::<io::Error>::into)
-        .and_then(|fd| {
-            DrmNode::from_fd(fd).map_err(|err| match err {
-                CreateDrmNodeError::Io(err) => err,
-                _ => unreachable!(),
-            })
-        })
-        .map_err(EGLInitError::IO)
-}
-
-fn dri3_init(x11: &X11Inner) -> Result<DrmNode, X11Error> {
-    let connection = &x11.connection;
-
-    // Determine which drm-device the Display is using.
-    let screen = &connection.setup().roots[x11.screen_number];
-    // provider being NONE tells the X server to use the RandR provider.
-    let dri3 = match connection.dri3_open(screen.root, x11rb::NONE)?.reply() {
-        Ok(reply) => reply,
-        Err(err) => {
-            return Err(if let ReplyError::X11Error(ref protocol_error) = err {
-                match protocol_error.error_kind {
-                    // Implementation is risen when the renderer is not capable of X server is not capable
-                    // of rendering at all.
-                    ErrorKind::Implementation => X11Error::CannotDirectRender,
-                    // Match may occur when the node cannot be authenticated for the client.
-                    ErrorKind::Match => X11Error::CannotDirectRender,
-                    _ => err.into(),
-                }
-            } else {
-                err.into()
-            });
-        }
-    };
-
-    // Take ownership of the container's inner value so we do not need to duplicate the fd.
-    // This is fine because the X server will always open a new file descriptor.
-    let drm_device_fd = dri3.device_fd.into_raw_fd();
-
-    let fd_flags =
-        fcntl::fcntl(drm_device_fd.as_raw_fd(), fcntl::F_GETFD).map_err(AllocateBuffersError::from)?;
-
-    // Enable the close-on-exec flag.
-    fcntl::fcntl(
-        drm_device_fd,
-        fcntl::F_SETFD(fcntl::FdFlag::from_bits_truncate(fd_flags) | fcntl::FdFlag::FD_CLOEXEC),
-    )
-    .map_err(AllocateBuffersError::from)?;
-    let drm_node = DrmNode::from_fd(drm_device_fd).map_err(Into::<AllocateBuffersError>::into)?;
-
-    if drm_node.ty() != NodeType::Render && drm_node.has_render() {
-        // Try to get the render node.
-        if let Some(path) = drm_node.dev_path_with_type(NodeType::Render) {
-            return Ok(fcntl::open(&path, OFlag::O_RDWR | OFlag::O_CLOEXEC, Mode::empty())
-                .map_err(Into::<std::io::Error>::into)
-                .map_err(CreateDrmNodeError::Io)
-                .and_then(DrmNode::from_fd)
-                .unwrap_or_else(|err| {
-                    slog::warn!(&x11.log, "Could not create render node from existing DRM node ({}), falling back to primary node", err);
-                    drm_node
-                }));
-        }
-    }
-
-    slog::warn!(
-        &x11.log,
-        "DRM Device does not have a render node, falling back to primary node"
-    );
-    Ok(drm_node)
 }
 
 /// A handle to the X11 backend.
@@ -456,7 +367,12 @@ impl X11Handle {
             return Err(X11Error::InvalidWindow);
         }
 
-        let modifiers = modifiers.collect::<Vec<_>>();
+        let mut modifiers = modifiers.collect::<Vec<_>>();
+        // older dri3 versions do only support buffers with one plane.
+        // we need to make sure, we don't accidently allocate buffers with more.
+        if window.0.extensions.dri3 < Some((1, 2)) {
+            modifiers.retain(|modi| modi == &DrmModifier::Invalid || modi == &DrmModifier::Linear);
+        }
 
         let format = window.0.format;
         let size = window.size();
@@ -480,114 +396,13 @@ impl X11Handle {
             resize: recv,
         })
     }
-}
 
-impl X11Surface {
-    /// Returns the window the surface presents to.
-    ///
-    /// This will return [`None`] if the window has been destroyed.
-    pub fn window(&self) -> Option<impl AsRef<Window> + '_> {
-        let window = self.window.upgrade().map(Window).map(WindowTemporary);
-
-        struct WindowTemporary(Window);
-
-        impl AsRef<Window> for WindowTemporary {
-            fn as_ref(&self) -> &Window {
-                &self.0
-            }
-        }
-
-        window
-    }
-
-    /// Returns a handle to the GBM device used to allocate buffers.
-    pub fn device(&self) -> MutexGuard<'_, gbm::Device<DrmNode>> {
-        self.swapchain.allocator.lock().unwrap()
-    }
-
-    /// Returns the format of the buffers the surface accepts.
-    pub fn format(&self) -> DrmFourcc {
-        self.format
-    }
-
-    /// Returns the next buffer that will be presented to the Window and its age.
-    ///
-    /// You may bind this buffer to a renderer to render.
-    /// This function will return the same buffer until [`submit`](Self::submit) is called
-    /// or [`reset_buffers`](Self::reset_buffer) is used to reset the buffers.
-    pub fn buffer(&mut self) -> Result<(Dmabuf, u8), AllocateBuffersError> {
-        if let Some(new_size) = self.resize.try_iter().last() {
-            self.resize(new_size)?;
-        }
-
-        if self.buffer.is_none() {
-            self.buffer = Some(
-                self.swapchain
-                    .acquire()
-                    .map_err(Into::<AllocateBuffersError>::into)?
-                    .ok_or(AllocateBuffersError::NoFreeSlots)?,
-            );
-        }
-
-        let slot = self.buffer.as_ref().unwrap();
-        let age = slot.age();
-        match slot.userdata().get::<Dmabuf>() {
-            Some(dmabuf) => Ok((dmabuf.clone(), age)),
-            None => {
-                let dmabuf = slot.export().map_err(Into::<AllocateBuffersError>::into)?;
-                slot.userdata().insert_if_missing(|| dmabuf.clone());
-                Ok((dmabuf, age))
-            }
-        }
-    }
-
-    /// Consume and submit the buffer to the window.
-    pub fn submit(&mut self) -> Result<(), AllocateBuffersError> {
-        if let Some(connection) = self.connection.upgrade() {
-            // Get a new buffer
-            let mut next = self
-                .swapchain
-                .acquire()
-                .map_err(Into::<AllocateBuffersError>::into)?
-                .ok_or(AllocateBuffersError::NoFreeSlots)?;
-
-            // Swap the buffers
-            if let Some(current) = self.buffer.as_mut() {
-                mem::swap(&mut next, current);
-            }
-
-            let window = self.window().ok_or(AllocateBuffersError::WindowDestroyed)?;
-
-            if let Ok(pixmap) = PixmapWrapper::with_dmabuf(
-                &*connection,
-                window.as_ref(),
-                next.userdata().get::<Dmabuf>().unwrap(),
-            ) {
-                // Now present the current buffer
-                let _ = pixmap.present(&*connection, window.as_ref());
-            }
-            self.swapchain.submitted(next);
-
-            // Flush the connection after presenting to the window to ensure we don't run out of buffer space in the X11 connection.
-            let _ = connection.flush();
-        }
-        Ok(())
-    }
-
-    /// Resets the internal buffers, e.g. to reset age values
-    pub fn reset_buffers(&mut self) {
-        self.swapchain.reset_buffers();
-        self.buffer = None;
-    }
-
-    fn resize(&mut self, size: Size<u16, Logical>) -> Result<(), AllocateBuffersError> {
-        self.swapchain.resize(size.w as u32, size.h as u32);
-        self.buffer = None;
-
-        self.width = size.w;
-        self.height = size.h;
-
-        Ok(())
+    /// Get a temporary reference to a window by its XID
+    pub fn window_ref_from_id(&self, id: u32) -> Option<impl AsRef<Window> + '_> {
+        X11Inner::window_ref_from_id(&self.inner, &id)
+            .and_then(|w| w.upgrade())
+            .map(Window)
+            .map(WindowTemporary)
     }
 }
 
@@ -711,11 +526,19 @@ impl PartialEq for Window {
     }
 }
 
+struct WindowTemporary(Window);
+
+impl AsRef<Window> for WindowTemporary {
+    fn as_ref(&self) -> &Window {
+        &self.0
+    }
+}
+
 impl EventSource for X11Backend {
     type Event = X11Event;
 
     /// The window the incoming events are applicable to.
-    type Metadata = Window;
+    type Metadata = ();
 
     type Ret = ();
 
@@ -755,6 +578,16 @@ impl EventSource for X11Backend {
     }
 }
 
+atom_manager! {
+    pub(crate) Atoms: AtomCollectionCookie {
+        WM_PROTOCOLS,
+        WM_DELETE_WINDOW,
+        _NET_WM_NAME,
+        UTF8_STRING,
+        _SMITHAY_X11_BACKEND_CLOSE,
+    }
+}
+
 #[derive(Debug)]
 pub(crate) struct X11Inner {
     log: Logger,
@@ -768,30 +601,48 @@ pub(crate) struct X11Inner {
     atoms: Atoms,
     depth: x11::xproto::Depth,
     visual_id: u32,
+    devices: bool,
 }
 
 impl X11Inner {
+    fn window_ref_from_id(inner: &Arc<Mutex<X11Inner>>, id: &u32) -> Option<Weak<WindowInner>> {
+        let mut inner = inner.lock().unwrap();
+        inner.windows.retain(|_, weak| weak.upgrade().is_some());
+        inner.windows.get(id).cloned()
+    }
+
     fn process_event<F>(inner: &Arc<Mutex<X11Inner>>, log: &Logger, event: x11::Event, callback: &mut F)
     where
-        F: FnMut(X11Event, &mut Window),
+        F: FnMut(X11Event, &mut ()),
     {
-        use self::X11Event::Input;
-
-        fn window_from_id(inner: &Arc<Mutex<X11Inner>>, id: &u32) -> Option<Arc<WindowInner>> {
-            inner
-                .lock()
-                .unwrap()
-                .windows
-                .get(id)
-                .cloned()
-                .and_then(|weak| weak.upgrade())
+        {
+            let mut inner = inner.lock().unwrap();
+            if !inner.windows.is_empty() && !inner.devices {
+                callback(
+                    Input(InputEvent::DeviceAdded {
+                        device: X11VirtualDevice,
+                    }),
+                    &mut (),
+                );
+                inner.devices = true;
+            } else if inner.windows.is_empty() && inner.devices {
+                callback(
+                    Input(InputEvent::DeviceRemoved {
+                        device: X11VirtualDevice,
+                    }),
+                    &mut (),
+                );
+                inner.devices = false;
+            }
         }
+
+        use self::X11Event::Input;
 
         // If X11 is deadlocking somewhere here, make sure you drop your mutex guards.
 
         match event {
             x11::Event::ButtonPress(button_press) => {
-                if let Some(window) = window_from_id(inner, &button_press.event) {
+                if let Some(window) = X11Inner::window_ref_from_id(inner, &button_press.event) {
                     // X11 decided to associate scroll wheel with a button, 4, 5, 6 and 7 for
                     // up, down, right and left. For scrolling, a press event is emitted and a
                     // release is them immediately followed for scrolling. This means we can
@@ -834,9 +685,10 @@ impl X11Inner {
 
                                         _ => unreachable!(),
                                     },
+                                    window,
                                 },
                             }),
-                            &mut Window(window),
+                            &mut (),
                         )
                     } else {
                         callback(
@@ -845,9 +697,10 @@ impl X11Inner {
                                     time: button_press.time,
                                     raw: button_press.detail as u32,
                                     state: ButtonState::Pressed,
+                                    window,
                                 },
                             }),
-                            &mut Window(window),
+                            &mut (),
                         )
                     }
                 }
@@ -861,22 +714,23 @@ impl X11Inner {
                     return;
                 }
 
-                if let Some(window) = window_from_id(inner, &button_release.event) {
+                if let Some(window) = X11Inner::window_ref_from_id(inner, &button_release.event) {
                     callback(
                         Input(InputEvent::PointerButton {
                             event: X11MouseInputEvent {
                                 time: button_release.time,
                                 raw: button_release.detail as u32,
                                 state: ButtonState::Released,
+                                window,
                             },
                         }),
-                        &mut Window(window),
+                        &mut (),
                     );
                 }
             }
 
             x11::Event::KeyPress(key_press) => {
-                if let Some(window) = window_from_id(inner, &key_press.event) {
+                if let Some(window) = X11Inner::window_ref_from_id(inner, &key_press.event) {
                     // Do not hold the lock.
                     let count = { inner.lock().unwrap().key_counter.fetch_add(1, Ordering::SeqCst) + 1 };
 
@@ -892,15 +746,16 @@ impl X11Inner {
                                 key: key_press.detail as u32 - 8,
                                 count,
                                 state: KeyState::Pressed,
+                                window,
                             },
                         }),
-                        &mut Window(window),
+                        &mut (),
                     )
                 }
             }
 
             x11::Event::KeyRelease(key_release) => {
-                if let Some(window) = window_from_id(inner, &key_release.event) {
+                if let Some(window) = X11Inner::window_ref_from_id(inner, &key_release.event) {
                     let count = {
                         let key_counter = inner.lock().unwrap().key_counter.clone();
 
@@ -924,15 +779,18 @@ impl X11Inner {
                                 key: key_release.detail as u32 - 8,
                                 count,
                                 state: KeyState::Released,
+                                window,
                             },
                         }),
-                        &mut Window(window),
+                        &mut (),
                     );
                 }
             }
 
             x11::Event::MotionNotify(motion_notify) => {
-                if let Some(window) = window_from_id(inner, &motion_notify.event) {
+                if let Some(window) =
+                    X11Inner::window_ref_from_id(inner, &motion_notify.event).and_then(|w| w.upgrade())
+                {
                     // Use event_x/y since those are relative the the window receiving events.
                     let x = motion_notify.event_x as f64;
                     let y = motion_notify.event_y as f64;
@@ -946,15 +804,18 @@ impl X11Inner {
                                 x,
                                 y,
                                 size: window_size,
+                                window: Arc::downgrade(&window),
                             },
                         }),
-                        &mut Window(window),
+                        &mut (),
                     )
                 }
             }
 
             x11::Event::ConfigureNotify(configure_notify) => {
-                if let Some(window) = window_from_id(inner, &configure_notify.window) {
+                if let Some(window) =
+                    X11Inner::window_ref_from_id(inner, &configure_notify.window).and_then(|w| w.upgrade())
+                {
                     let previous_size = { *window.size.lock().unwrap() };
 
                     // Did the size of the window change?
@@ -971,8 +832,11 @@ impl X11Inner {
                         }
 
                         (callback)(
-                            X11Event::Resized(configure_notify_size),
-                            &mut Window(window.clone()),
+                            X11Event::Resized {
+                                new_size: configure_notify_size,
+                                window_id: configure_notify.window,
+                            },
+                            &mut (),
                         );
 
                         if let Some(resize_sender) = window.resize.lock().unwrap().as_ref() {
@@ -983,40 +847,61 @@ impl X11Inner {
             }
 
             x11::Event::EnterNotify(enter_notify) => {
-                if let Some(window) = window_from_id(inner, &enter_notify.event) {
+                if let Some(window) =
+                    X11Inner::window_ref_from_id(inner, &enter_notify.event).and_then(|w| w.upgrade())
+                {
                     window.cursor_enter();
                 }
             }
 
             x11::Event::LeaveNotify(leave_notify) => {
-                if let Some(window) = window_from_id(inner, &leave_notify.event) {
+                if let Some(window) =
+                    X11Inner::window_ref_from_id(inner, &leave_notify.event).and_then(|w| w.upgrade())
+                {
                     window.cursor_leave();
                 }
             }
 
             x11::Event::ClientMessage(client_message) => {
-                if let Some(window) = window_from_id(inner, &client_message.window) {
+                if let Some(window) =
+                    X11Inner::window_ref_from_id(inner, &client_message.window).and_then(|w| w.upgrade())
+                {
                     if client_message.data.as_data32()[0] == window.atoms.WM_DELETE_WINDOW
                     // Destroy the window?
                     {
-                        (callback)(X11Event::CloseRequested, &mut Window(window));
+                        (callback)(
+                            X11Event::CloseRequested {
+                                window_id: client_message.window,
+                            },
+                            &mut (),
+                        );
                     }
                 }
             }
 
             x11::Event::Expose(expose) => {
-                if let Some(window) = window_from_id(inner, &expose.window) {
-                    if expose.count == 0 {
-                        (callback)(X11Event::Refresh, &mut Window(window));
-                    }
+                if expose.count == 0 {
+                    (callback)(
+                        X11Event::Refresh {
+                            window_id: expose.window,
+                        },
+                        &mut (),
+                    );
                 }
             }
 
             x11::Event::PresentCompleteNotify(complete_notify) => {
-                if let Some(window) = window_from_id(inner, &complete_notify.window) {
+                if let Some(window) =
+                    X11Inner::window_ref_from_id(inner, &complete_notify.window).and_then(|w| w.upgrade())
+                {
                     window.last_msc.store(complete_notify.msc, Ordering::SeqCst);
 
-                    (callback)(X11Event::PresentCompleted, &mut Window(window));
+                    (callback)(
+                        X11Event::PresentCompleted {
+                            window_id: complete_notify.window,
+                        },
+                        &mut (),
+                    );
                 }
             }
 
@@ -1031,4 +916,79 @@ impl X11Inner {
             _ => (),
         }
     }
+}
+
+fn egl_init(_: &X11Inner) -> Result<DrmNode, EGLInitError> {
+    let display = EGLDisplay::new(&X11DefaultDisplay, None)?;
+    let device = EGLDevice::device_for_display(&display)?;
+    let path = path_to_type(device.drm_device_path()?, NodeType::Render)?;
+    fcntl::open(&path, OFlag::O_RDWR | OFlag::O_CLOEXEC, Mode::empty())
+        .map_err(Into::<io::Error>::into)
+        .and_then(|fd| {
+            DrmNode::from_fd(fd).map_err(|err| match err {
+                CreateDrmNodeError::Io(err) => err,
+                _ => unreachable!(),
+            })
+        })
+        .map_err(EGLInitError::IO)
+}
+
+fn dri3_init(x11: &X11Inner) -> Result<DrmNode, X11Error> {
+    let connection = &x11.connection;
+
+    // Determine which drm-device the Display is using.
+    let screen = &connection.setup().roots[x11.screen_number];
+    // provider being NONE tells the X server to use the RandR provider.
+    let dri3 = match connection.dri3_open(screen.root, x11rb::NONE)?.reply() {
+        Ok(reply) => reply,
+        Err(err) => {
+            return Err(if let ReplyError::X11Error(ref protocol_error) = err {
+                match protocol_error.error_kind {
+                    // Implementation is risen when the renderer is not capable of X server is not capable
+                    // of rendering at all.
+                    ErrorKind::Implementation => X11Error::CannotDirectRender,
+                    // Match may occur when the node cannot be authenticated for the client.
+                    ErrorKind::Match => X11Error::CannotDirectRender,
+                    _ => err.into(),
+                }
+            } else {
+                err.into()
+            });
+        }
+    };
+
+    // Take ownership of the container's inner value so we do not need to duplicate the fd.
+    // This is fine because the X server will always open a new file descriptor.
+    let drm_device_fd = dri3.device_fd.into_raw_fd();
+
+    let fd_flags =
+        fcntl::fcntl(drm_device_fd.as_raw_fd(), fcntl::F_GETFD).map_err(AllocateBuffersError::from)?;
+
+    // Enable the close-on-exec flag.
+    fcntl::fcntl(
+        drm_device_fd,
+        fcntl::F_SETFD(fcntl::FdFlag::from_bits_truncate(fd_flags) | fcntl::FdFlag::FD_CLOEXEC),
+    )
+    .map_err(AllocateBuffersError::from)?;
+    let drm_node = DrmNode::from_fd(drm_device_fd).map_err(Into::<AllocateBuffersError>::into)?;
+
+    if drm_node.ty() != NodeType::Render && drm_node.has_render() {
+        // Try to get the render node.
+        if let Some(path) = drm_node.dev_path_with_type(NodeType::Render) {
+            return Ok(fcntl::open(&path, OFlag::O_RDWR | OFlag::O_CLOEXEC, Mode::empty())
+                .map_err(Into::<std::io::Error>::into)
+                .map_err(CreateDrmNodeError::Io)
+                .and_then(DrmNode::from_fd)
+                .unwrap_or_else(|err| {
+                    slog::warn!(&x11.log, "Could not create render node from existing DRM node ({}), falling back to primary node", err);
+                    drm_node
+                }));
+        }
+    }
+
+    slog::warn!(
+        &x11.log,
+        "DRM Device does not have a render node, falling back to primary node"
+    );
+    Ok(drm_node)
 }
