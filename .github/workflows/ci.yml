@@ -105,7 +105,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: update
-          args: -p libdbus-sys -p calloop:0.6.1
+          args: -p libdbus-sys
       - name: Check
         uses: actions-rs/cargo@v1
         with:
@@ -131,6 +131,7 @@ jobs:
         - backend_session_logind
         - backend_session_libseat
         - backend_x11
+        - desktop
         - renderer_gl
         - wayland_frontend
         - xwayland
