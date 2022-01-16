@@ -1,6 +1,7 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src&#x2F;backend&#x2F;x11&#x2F;error.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>error.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script src="../../../../crates.js"></script><script defer src="../../../../main.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script>
-    <noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a class="sidebar-logo" href="../../../../smithay/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.png" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../smithay/index.html"><img class="rust-logo" src="../../../../rust-logo.png" alt="logo"></a><nav class="sub"><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../../wheel.svg"></a></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/backend/x11/error.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>error.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script src="../../../../crates.js"></script><script defer src="../../../../main.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script>
+    <noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a class="sidebar-logo" href="../../../../smithay/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
+        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../smithay/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><form class="search-form"><div class="search-container"><div>
+                                <input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../../wheel.svg"></a></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -149,30 +150,6 @@
 <span id="147">147</span>
 <span id="148">148</span>
 <span id="149">149</span>
-<span id="150">150</span>
-<span id="151">151</span>
-<span id="152">152</span>
-<span id="153">153</span>
-<span id="154">154</span>
-<span id="155">155</span>
-<span id="156">156</span>
-<span id="157">157</span>
-<span id="158">158</span>
-<span id="159">159</span>
-<span id="160">160</span>
-<span id="161">161</span>
-<span id="162">162</span>
-<span id="163">163</span>
-<span id="164">164</span>
-<span id="165">165</span>
-<span id="166">166</span>
-<span id="167">167</span>
-<span id="168">168</span>
-<span id="169">169</span>
-<span id="170">170</span>
-<span id="171">171</span>
-<span id="172">172</span>
-<span id="173">173</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::io</span>;
 
 <span class="kw">use</span> <span class="ident">gbm::DeviceDestroyedError</span>;
@@ -181,24 +158,26 @@
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::backend</span>::{<span class="ident">allocator::gbm::GbmConvertError</span>, <span class="ident">drm::CreateDrmNodeError</span>};
 
+<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::PresentError</span>;
+
 <span class="doccomment">/// An error emitted by the X11 backend during setup.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">thiserror::Error</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">X11Error</span> {
     <span class="doccomment">/// Connecting to the X server failed.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Connecting to the X server failed&quot;</span>)]</span>
-    <span class="ident">ConnectionFailed</span>(<span class="ident">ConnectError</span>),
+    <span class="ident">ConnectionFailed</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">ConnectError</span>),
 
     <span class="doccomment">/// A required X11 extension was not present or has the right version.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;{0}&quot;</span>)]</span>
-    <span class="ident">MissingExtension</span>(<span class="ident">MissingExtensionError</span>),
+    <span class="ident">MissingExtension</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">MissingExtensionError</span>),
 
     <span class="doccomment">/// Some protocol error occurred during setup.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Some protocol error occurred during setup&quot;</span>)]</span>
-    <span class="ident">Protocol</span>(<span class="ident">ReplyOrIdError</span>),
+    <span class="ident">Protocol</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">ReplyOrIdError</span>),
 
     <span class="doccomment">/// Creating the window failed.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Creating the window failed&quot;</span>)]</span>
-    <span class="ident">CreateWindow</span>(<span class="ident">CreateWindowError</span>),
+    <span class="ident">CreateWindow</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">CreateWindowError</span>),
 
     <span class="doccomment">/// An X11 surface already exists for this window.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;An X11 surface already exists for this window&quot;</span>)]</span>
@@ -217,13 +196,11 @@
 
     <span class="doccomment">/// Failed to allocate buffers needed to present to the window.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Failed to allocate buffers needed to present to the window&quot;</span>)]</span>
-    <span class="ident">Allocation</span>(<span class="ident">AllocateBuffersError</span>),
-}
+    <span class="ident">Allocation</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">AllocateBuffersError</span>),
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">ConnectError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">X11Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">ConnectError</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::ConnectionFailed</span>(<span class="ident">err</span>)
-    }
+    <span class="doccomment">/// Error while presenting to a window.</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="ident">transparent</span>)]</span>
+    <span class="ident">Present</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">PresentError</span>),
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">ReplyError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">X11Error</span> {
@@ -235,12 +212,6 @@
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">ConnectionError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">X11Error</span> {
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">ConnectionError</span>) -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::Protocol</span>(<span class="ident">err</span>.<span class="ident">into</span>())
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">ReplyOrIdError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">X11Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">ReplyOrIdError</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::Protocol</span>(<span class="ident">err</span>)
     }
 }
 
@@ -274,12 +245,6 @@
     },
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">MissingExtensionError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">X11Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">MissingExtensionError</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::MissingExtension</span>(<span class="ident">err</span>)
-    }
-}
-
 <span class="doccomment">/// An error which may occur when creating an X11 window.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">thiserror::Error</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">CreateWindowError</span> {
@@ -290,12 +255,6 @@
     <span class="doccomment">/// No visual fulfilling the pixel format requirements was found.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;No visual fulfilling the requirements was found&quot;</span>)]</span>
     <span class="ident">NoVisual</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">CreateWindowError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">X11Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">CreateWindowError</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::CreateWindow</span>(<span class="ident">err</span>)
-    }
 }
 
 <span class="doccomment">/// An error which may occur when allocating buffers for presentation to the window.</span>
@@ -340,12 +299,6 @@
         }
     }
 }
-
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">AllocateBuffersError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">X11Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">AllocateBuffersError</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::Allocation</span>(<span class="ident">err</span>)
-    }
-}
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (91a0600a5 2021-12-18)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (ec4bcaac4 2022-01-15)" ></div>
 </body></html>

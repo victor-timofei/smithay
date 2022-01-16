@@ -1,6 +1,7 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src&#x2F;backend&#x2F;renderer&#x2F;gles2&#x2F;mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../../storage.js"></script><script src="../../../../../crates.js"></script><script defer src="../../../../../main.js"></script><script defer src="../../../../../source-script.js"></script><script defer src="../../../../../source-files.js"></script>
-    <noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a class="sidebar-logo" href="../../../../../smithay/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.png" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../../smithay/index.html"><img class="rust-logo" src="../../../../../rust-logo.png" alt="logo"></a><nav class="sub"><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../../../wheel.svg"></a></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">   1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/backend/renderer/gles2/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../../storage.js"></script><script src="../../../../../crates.js"></script><script defer src="../../../../../main.js"></script><script defer src="../../../../../source-script.js"></script><script defer src="../../../../../source-files.js"></script>
+    <noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a class="sidebar-logo" href="../../../../../smithay/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div>
+        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../../smithay/index.html"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><form class="search-form"><div class="search-container"><div>
+                                <input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../../../wheel.svg"></a></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">   1</span>
 <span id="2">   2</span>
 <span id="3">   3</span>
 <span id="4">   4</span>
@@ -1253,6 +1254,198 @@
 <span id="1251">1251</span>
 <span id="1252">1252</span>
 <span id="1253">1253</span>
+<span id="1254">1254</span>
+<span id="1255">1255</span>
+<span id="1256">1256</span>
+<span id="1257">1257</span>
+<span id="1258">1258</span>
+<span id="1259">1259</span>
+<span id="1260">1260</span>
+<span id="1261">1261</span>
+<span id="1262">1262</span>
+<span id="1263">1263</span>
+<span id="1264">1264</span>
+<span id="1265">1265</span>
+<span id="1266">1266</span>
+<span id="1267">1267</span>
+<span id="1268">1268</span>
+<span id="1269">1269</span>
+<span id="1270">1270</span>
+<span id="1271">1271</span>
+<span id="1272">1272</span>
+<span id="1273">1273</span>
+<span id="1274">1274</span>
+<span id="1275">1275</span>
+<span id="1276">1276</span>
+<span id="1277">1277</span>
+<span id="1278">1278</span>
+<span id="1279">1279</span>
+<span id="1280">1280</span>
+<span id="1281">1281</span>
+<span id="1282">1282</span>
+<span id="1283">1283</span>
+<span id="1284">1284</span>
+<span id="1285">1285</span>
+<span id="1286">1286</span>
+<span id="1287">1287</span>
+<span id="1288">1288</span>
+<span id="1289">1289</span>
+<span id="1290">1290</span>
+<span id="1291">1291</span>
+<span id="1292">1292</span>
+<span id="1293">1293</span>
+<span id="1294">1294</span>
+<span id="1295">1295</span>
+<span id="1296">1296</span>
+<span id="1297">1297</span>
+<span id="1298">1298</span>
+<span id="1299">1299</span>
+<span id="1300">1300</span>
+<span id="1301">1301</span>
+<span id="1302">1302</span>
+<span id="1303">1303</span>
+<span id="1304">1304</span>
+<span id="1305">1305</span>
+<span id="1306">1306</span>
+<span id="1307">1307</span>
+<span id="1308">1308</span>
+<span id="1309">1309</span>
+<span id="1310">1310</span>
+<span id="1311">1311</span>
+<span id="1312">1312</span>
+<span id="1313">1313</span>
+<span id="1314">1314</span>
+<span id="1315">1315</span>
+<span id="1316">1316</span>
+<span id="1317">1317</span>
+<span id="1318">1318</span>
+<span id="1319">1319</span>
+<span id="1320">1320</span>
+<span id="1321">1321</span>
+<span id="1322">1322</span>
+<span id="1323">1323</span>
+<span id="1324">1324</span>
+<span id="1325">1325</span>
+<span id="1326">1326</span>
+<span id="1327">1327</span>
+<span id="1328">1328</span>
+<span id="1329">1329</span>
+<span id="1330">1330</span>
+<span id="1331">1331</span>
+<span id="1332">1332</span>
+<span id="1333">1333</span>
+<span id="1334">1334</span>
+<span id="1335">1335</span>
+<span id="1336">1336</span>
+<span id="1337">1337</span>
+<span id="1338">1338</span>
+<span id="1339">1339</span>
+<span id="1340">1340</span>
+<span id="1341">1341</span>
+<span id="1342">1342</span>
+<span id="1343">1343</span>
+<span id="1344">1344</span>
+<span id="1345">1345</span>
+<span id="1346">1346</span>
+<span id="1347">1347</span>
+<span id="1348">1348</span>
+<span id="1349">1349</span>
+<span id="1350">1350</span>
+<span id="1351">1351</span>
+<span id="1352">1352</span>
+<span id="1353">1353</span>
+<span id="1354">1354</span>
+<span id="1355">1355</span>
+<span id="1356">1356</span>
+<span id="1357">1357</span>
+<span id="1358">1358</span>
+<span id="1359">1359</span>
+<span id="1360">1360</span>
+<span id="1361">1361</span>
+<span id="1362">1362</span>
+<span id="1363">1363</span>
+<span id="1364">1364</span>
+<span id="1365">1365</span>
+<span id="1366">1366</span>
+<span id="1367">1367</span>
+<span id="1368">1368</span>
+<span id="1369">1369</span>
+<span id="1370">1370</span>
+<span id="1371">1371</span>
+<span id="1372">1372</span>
+<span id="1373">1373</span>
+<span id="1374">1374</span>
+<span id="1375">1375</span>
+<span id="1376">1376</span>
+<span id="1377">1377</span>
+<span id="1378">1378</span>
+<span id="1379">1379</span>
+<span id="1380">1380</span>
+<span id="1381">1381</span>
+<span id="1382">1382</span>
+<span id="1383">1383</span>
+<span id="1384">1384</span>
+<span id="1385">1385</span>
+<span id="1386">1386</span>
+<span id="1387">1387</span>
+<span id="1388">1388</span>
+<span id="1389">1389</span>
+<span id="1390">1390</span>
+<span id="1391">1391</span>
+<span id="1392">1392</span>
+<span id="1393">1393</span>
+<span id="1394">1394</span>
+<span id="1395">1395</span>
+<span id="1396">1396</span>
+<span id="1397">1397</span>
+<span id="1398">1398</span>
+<span id="1399">1399</span>
+<span id="1400">1400</span>
+<span id="1401">1401</span>
+<span id="1402">1402</span>
+<span id="1403">1403</span>
+<span id="1404">1404</span>
+<span id="1405">1405</span>
+<span id="1406">1406</span>
+<span id="1407">1407</span>
+<span id="1408">1408</span>
+<span id="1409">1409</span>
+<span id="1410">1410</span>
+<span id="1411">1411</span>
+<span id="1412">1412</span>
+<span id="1413">1413</span>
+<span id="1414">1414</span>
+<span id="1415">1415</span>
+<span id="1416">1416</span>
+<span id="1417">1417</span>
+<span id="1418">1418</span>
+<span id="1419">1419</span>
+<span id="1420">1420</span>
+<span id="1421">1421</span>
+<span id="1422">1422</span>
+<span id="1423">1423</span>
+<span id="1424">1424</span>
+<span id="1425">1425</span>
+<span id="1426">1426</span>
+<span id="1427">1427</span>
+<span id="1428">1428</span>
+<span id="1429">1429</span>
+<span id="1430">1430</span>
+<span id="1431">1431</span>
+<span id="1432">1432</span>
+<span id="1433">1433</span>
+<span id="1434">1434</span>
+<span id="1435">1435</span>
+<span id="1436">1436</span>
+<span id="1437">1437</span>
+<span id="1438">1438</span>
+<span id="1439">1439</span>
+<span id="1440">1440</span>
+<span id="1441">1441</span>
+<span id="1442">1442</span>
+<span id="1443">1443</span>
+<span id="1444">1444</span>
+<span id="1445">1445</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Implementation of the rendering traits using OpenGL ES 2</span>
 
 <span class="kw">use</span> <span class="ident">std::convert::TryFrom</span>;
@@ -1260,10 +1453,7 @@
 <span class="kw">use</span> <span class="ident">std::fmt</span>;
 <span class="kw">use</span> <span class="ident">std::ptr</span>;
 <span class="kw">use</span> <span class="ident">std::rc::Rc</span>;
-<span class="kw">use</span> <span class="ident">std::sync</span>::{
-    <span class="ident">atomic</span>::{<span class="ident">AtomicUsize</span>, <span class="ident">Ordering</span>},
-    <span class="ident">mpsc</span>::{<span class="ident">channel</span>, <span class="ident">Receiver</span>, <span class="ident">Sender</span>},
-};
+<span class="kw">use</span> <span class="ident">std::sync::mpsc</span>::{<span class="ident">channel</span>, <span class="ident">Receiver</span>, <span class="ident">Sender</span>};
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">collections::HashSet</span>, <span class="ident">os::raw::c_char</span>};
 
 <span class="kw">use</span> <span class="ident">cgmath</span>::{<span class="ident">prelude</span>::<span class="kw-2">*</span>, <span class="ident">Matrix3</span>, <span class="ident">Vector2</span>, <span class="ident">Vector3</span>};
@@ -1299,21 +1489,25 @@
     <span class="macro">include!</span>(<span class="macro">concat!</span>(<span class="macro">env!</span>(<span class="string">&quot;OUT_DIR&quot;</span>), <span class="string">&quot;/gl_bindings.rs&quot;</span>));
 }
 
-<span class="comment">// This static is used to assign every created Renderer a unique ID (until is overflows...).</span>
-<span class="comment">//</span>
-<span class="comment">// This id is used to differenciate between user_data of different renderers, because one</span>
-<span class="comment">// cannot assume, that resources between two renderers are (and even can be) shared.</span>
-<span class="kw">static</span> <span class="ident">RENDERER_COUNTER</span>: <span class="ident">AtomicUsize</span> <span class="op">=</span> <span class="ident">AtomicUsize::new</span>(<span class="number">0</span>);
-
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">struct</span> <span class="ident">Gles2Program</span> {
+<span class="kw">struct</span> <span class="ident">Gles2TexProgram</span> {
     <span class="ident">program</span>: <span class="ident">ffi::types::GLuint</span>,
     <span class="ident">uniform_tex</span>: <span class="ident">ffi::types::GLint</span>,
     <span class="ident">uniform_matrix</span>: <span class="ident">ffi::types::GLint</span>,
     <span class="ident">uniform_invert_y</span>: <span class="ident">ffi::types::GLint</span>,
     <span class="ident">uniform_alpha</span>: <span class="ident">ffi::types::GLint</span>,
+    <span class="ident">attrib_vert</span>: <span class="ident">ffi::types::GLint</span>,
     <span class="ident">attrib_position</span>: <span class="ident">ffi::types::GLint</span>,
     <span class="ident">attrib_tex_coords</span>: <span class="ident">ffi::types::GLint</span>,
+}
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
+<span class="kw">struct</span> <span class="ident">Gles2SolidProgram</span> {
+    <span class="ident">program</span>: <span class="ident">ffi::types::GLuint</span>,
+    <span class="ident">uniform_matrix</span>: <span class="ident">ffi::types::GLint</span>,
+    <span class="ident">uniform_color</span>: <span class="ident">ffi::types::GLint</span>,
+    <span class="ident">attrib_vert</span>: <span class="ident">ffi::types::GLint</span>,
+    <span class="ident">attrib_position</span>: <span class="ident">ffi::types::GLint</span>,
 }
 
 <span class="doccomment">/// A handle to a GLES2 texture</span>
@@ -1413,45 +1607,27 @@
     <span class="ident">_dmabuf</span>: <span class="ident">Dmabuf</span>,
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>)]</span>
-<span class="kw">struct</span> <span class="ident">BufferEntry</span> {
-    <span class="ident">id</span>: <span class="ident">u32</span>,
-    <span class="ident">buffer</span>: <span class="ident">wl_buffer::WlBuffer</span>,
-}
-
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>)]</span>
-<span class="kw">impl</span> <span class="ident">std::hash::Hash</span> <span class="kw">for</span> <span class="ident">BufferEntry</span> {
-    <span class="kw">fn</span> <span class="ident">hash</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">std::hash::Hasher</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">hasher</span>: <span class="kw-2">&amp;mut</span> <span class="ident">H</span>) {
-        <span class="self">self</span>.<span class="ident">id</span>.<span class="ident">hash</span>(<span class="ident">hasher</span>);
-    }
-}
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>)]</span>
-<span class="kw">impl</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="ident">BufferEntry</span> {
-    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">buffer</span> <span class="op">==</span> <span class="ident">other</span>.<span class="ident">buffer</span>
-    }
-}
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>)]</span>
-<span class="kw">impl</span> <span class="ident">Eq</span> <span class="kw">for</span> <span class="ident">BufferEntry</span> {}
-
 <span class="doccomment">/// A renderer utilizing OpenGL ES 2</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Gles2Renderer</span> {
-    <span class="ident">id</span>: <span class="ident">usize</span>,
     <span class="ident">buffers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">WeakGles2Buffer</span><span class="op">&gt;</span>,
     <span class="ident">target_buffer</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Gles2Buffer</span><span class="op">&gt;</span>,
     <span class="ident">target_surface</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">EGLSurface</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">extensions</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="ident">programs</span>: [<span class="ident">Gles2Program</span>; <span class="ident">shaders::FRAGMENT_COUNT</span>],
+    <span class="ident">tex_programs</span>: [<span class="ident">Gles2TexProgram</span>; <span class="ident">shaders::FRAGMENT_COUNT</span>],
+    <span class="ident">solid_program</span>: <span class="ident">Gles2SolidProgram</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>)]</span>
     <span class="ident">dmabuf_cache</span>: <span class="ident">std::collections::HashMap</span><span class="op">&lt;</span><span class="ident">WeakDmabuf</span>, <span class="ident">Gles2Texture</span><span class="op">&gt;</span>,
     <span class="ident">egl</span>: <span class="ident">EGLContext</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_system_lib&quot;</span>))]</span>
     <span class="ident">egl_reader</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">EGLBufferReader</span><span class="op">&gt;</span>,
+    <span class="ident">vbos</span>: [<span class="ident">ffi::types::GLuint</span>; <span class="number">2</span>],
     <span class="ident">gl</span>: <span class="ident">ffi::Gles2</span>,
     <span class="ident">destruction_callback</span>: <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">CleanupResource</span><span class="op">&gt;</span>,
     <span class="comment">// This field is only accessed if the image or wayland_frontend features are active</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
     <span class="ident">destruction_callback_sender</span>: <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">CleanupResource</span><span class="op">&gt;</span>,
+    <span class="ident">min_filter</span>: <span class="ident">TextureFilter</span>,
+    <span class="ident">max_filter</span>: <span class="ident">TextureFilter</span>,
     <span class="ident">logger_ptr</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">*mut</span> <span class="ident">::slog::Logger</span><span class="op">&gt;</span>,
     <span class="ident">logger</span>: <span class="ident">::slog::Logger</span>,
     <span class="ident">_not_send</span>: <span class="kw-2">*mut</span> (),
@@ -1460,15 +1636,25 @@
 <span class="doccomment">/// Handle to the currently rendered frame during [`Gles2Renderer::render`](Renderer::render)</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Gles2Frame</span> {
     <span class="ident">current_projection</span>: <span class="ident">Matrix3</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>,
+    <span class="ident">transform</span>: <span class="ident">Transform</span>,
     <span class="ident">gl</span>: <span class="ident">ffi::Gles2</span>,
-    <span class="ident">programs</span>: [<span class="ident">Gles2Program</span>; <span class="ident">shaders::FRAGMENT_COUNT</span>],
+    <span class="ident">tex_programs</span>: [<span class="ident">Gles2TexProgram</span>; <span class="ident">shaders::FRAGMENT_COUNT</span>],
+    <span class="ident">solid_program</span>: <span class="ident">Gles2SolidProgram</span>,
+    <span class="ident">vbos</span>: [<span class="ident">ffi::types::GLuint</span>; <span class="number">2</span>],
+    <span class="ident">size</span>: <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Physical</span><span class="op">&gt;</span>,
+    <span class="ident">min_filter</span>: <span class="ident">TextureFilter</span>,
+    <span class="ident">max_filter</span>: <span class="ident">TextureFilter</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">Gles2Frame</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Gles2Frame&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;current_projection&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">current_projection</span>)
-            .<span class="ident">field</span>(<span class="string">&quot;programs&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">programs</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;tex_programs&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">tex_programs</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;solid_program&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">solid_program</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;size&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">size</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;min_filter&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">min_filter</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;max_filter&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">max_filter</span>)
             .<span class="ident">finish_non_exhaustive</span>()
     }
 }
@@ -1476,14 +1662,16 @@
 <span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">Gles2Renderer</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Gles2Renderer&quot;</span>)
-            .<span class="ident">field</span>(<span class="string">&quot;id&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">id</span>)
             .<span class="ident">field</span>(<span class="string">&quot;buffers&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">buffers</span>)
             .<span class="ident">field</span>(<span class="string">&quot;target_buffer&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">target_buffer</span>)
             .<span class="ident">field</span>(<span class="string">&quot;target_surface&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">target_surface</span>)
             .<span class="ident">field</span>(<span class="string">&quot;extensions&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">extensions</span>)
-            .<span class="ident">field</span>(<span class="string">&quot;programs&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">programs</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;tex_programs&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">tex_programs</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;solid_program&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">solid_program</span>)
             <span class="comment">// ffi::Gles2 does not implement Debug</span>
             .<span class="ident">field</span>(<span class="string">&quot;egl&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">egl</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;min_filter&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">min_filter</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;max_filter&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">max_filter</span>)
             .<span class="ident">field</span>(<span class="string">&quot;logger&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">logger</span>)
             .<span class="ident">finish</span>()
     }
@@ -1637,9 +1825,10 @@
     <span class="prelude-val">Ok</span>(<span class="ident">program</span>)
 }
 
-<span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">texture_program</span>(<span class="ident">gl</span>: <span class="kw-2">&amp;</span><span class="ident">ffi::Gles2</span>, <span class="ident">frag</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Gles2Program</span>, <span class="ident">Gles2Error</span><span class="op">&gt;</span> {
+<span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">texture_program</span>(<span class="ident">gl</span>: <span class="kw-2">&amp;</span><span class="ident">ffi::Gles2</span>, <span class="ident">frag</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Gles2TexProgram</span>, <span class="ident">Gles2Error</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">program</span> <span class="op">=</span> <span class="ident">link_program</span>(<span class="ident">gl</span>, <span class="ident">shaders::VERTEX_SHADER</span>, <span class="ident">frag</span>)<span class="question-mark">?</span>;
 
+    <span class="kw">let</span> <span class="ident">vert</span> <span class="op">=</span> <span class="ident">CStr::from_bytes_with_nul</span>(<span class="string">b&quot;vert\0&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;NULL terminated&quot;</span>);
     <span class="kw">let</span> <span class="ident">position</span> <span class="op">=</span> <span class="ident">CStr::from_bytes_with_nul</span>(<span class="string">b&quot;position\0&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;NULL terminated&quot;</span>);
     <span class="kw">let</span> <span class="ident">tex_coords</span> <span class="op">=</span> <span class="ident">CStr::from_bytes_with_nul</span>(<span class="string">b&quot;tex_coords\0&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;NULL terminated&quot;</span>);
     <span class="kw">let</span> <span class="ident">tex</span> <span class="op">=</span> <span class="ident">CStr::from_bytes_with_nul</span>(<span class="string">b&quot;tex\0&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;NULL terminated&quot;</span>);
@@ -1647,14 +1836,32 @@
     <span class="kw">let</span> <span class="ident">invert_y</span> <span class="op">=</span> <span class="ident">CStr::from_bytes_with_nul</span>(<span class="string">b&quot;invert_y\0&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;NULL terminated&quot;</span>);
     <span class="kw">let</span> <span class="ident">alpha</span> <span class="op">=</span> <span class="ident">CStr::from_bytes_with_nul</span>(<span class="string">b&quot;alpha\0&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;NULL terminated&quot;</span>);
 
-    <span class="prelude-val">Ok</span>(<span class="ident">Gles2Program</span> {
+    <span class="prelude-val">Ok</span>(<span class="ident">Gles2TexProgram</span> {
         <span class="ident">program</span>,
         <span class="ident">uniform_tex</span>: <span class="ident">gl</span>.<span class="ident">GetUniformLocation</span>(<span class="ident">program</span>, <span class="ident">tex</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">ffi::types::GLchar</span>),
         <span class="ident">uniform_matrix</span>: <span class="ident">gl</span>.<span class="ident">GetUniformLocation</span>(<span class="ident">program</span>, <span class="ident">matrix</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">ffi::types::GLchar</span>),
         <span class="ident">uniform_invert_y</span>: <span class="ident">gl</span>.<span class="ident">GetUniformLocation</span>(<span class="ident">program</span>, <span class="ident">invert_y</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">ffi::types::GLchar</span>),
         <span class="ident">uniform_alpha</span>: <span class="ident">gl</span>.<span class="ident">GetUniformLocation</span>(<span class="ident">program</span>, <span class="ident">alpha</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">ffi::types::GLchar</span>),
+        <span class="ident">attrib_vert</span>: <span class="ident">gl</span>.<span class="ident">GetAttribLocation</span>(<span class="ident">program</span>, <span class="ident">vert</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">ffi::types::GLchar</span>),
         <span class="ident">attrib_position</span>: <span class="ident">gl</span>.<span class="ident">GetAttribLocation</span>(<span class="ident">program</span>, <span class="ident">position</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">ffi::types::GLchar</span>),
         <span class="ident">attrib_tex_coords</span>: <span class="ident">gl</span>.<span class="ident">GetAttribLocation</span>(<span class="ident">program</span>, <span class="ident">tex_coords</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">ffi::types::GLchar</span>),
+    })
+}
+
+<span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">solid_program</span>(<span class="ident">gl</span>: <span class="kw-2">&amp;</span><span class="ident">ffi::Gles2</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Gles2SolidProgram</span>, <span class="ident">Gles2Error</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">program</span> <span class="op">=</span> <span class="ident">link_program</span>(<span class="ident">gl</span>, <span class="ident">shaders::VERTEX_SHADER_SOLID</span>, <span class="ident">shaders::FRAGMENT_SHADER_SOLID</span>)<span class="question-mark">?</span>;
+
+    <span class="kw">let</span> <span class="ident">matrix</span> <span class="op">=</span> <span class="ident">CStr::from_bytes_with_nul</span>(<span class="string">b&quot;matrix\0&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;NULL terminated&quot;</span>);
+    <span class="kw">let</span> <span class="ident">color</span> <span class="op">=</span> <span class="ident">CStr::from_bytes_with_nul</span>(<span class="string">b&quot;color\0&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;NULL terminated&quot;</span>);
+    <span class="kw">let</span> <span class="ident">vert</span> <span class="op">=</span> <span class="ident">CStr::from_bytes_with_nul</span>(<span class="string">b&quot;vert\0&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;NULL terminated&quot;</span>);
+    <span class="kw">let</span> <span class="ident">position</span> <span class="op">=</span> <span class="ident">CStr::from_bytes_with_nul</span>(<span class="string">b&quot;position\0&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;NULL terminated&quot;</span>);
+
+    <span class="prelude-val">Ok</span>(<span class="ident">Gles2SolidProgram</span> {
+        <span class="ident">program</span>,
+        <span class="ident">uniform_matrix</span>: <span class="ident">gl</span>.<span class="ident">GetUniformLocation</span>(<span class="ident">program</span>, <span class="ident">matrix</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">ffi::types::GLchar</span>),
+        <span class="ident">uniform_color</span>: <span class="ident">gl</span>.<span class="ident">GetUniformLocation</span>(<span class="ident">program</span>, <span class="ident">color</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">ffi::types::GLchar</span>),
+        <span class="ident">attrib_vert</span>: <span class="ident">gl</span>.<span class="ident">GetAttribLocation</span>(<span class="ident">program</span>, <span class="ident">vert</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">ffi::types::GLchar</span>),
+        <span class="ident">attrib_position</span>: <span class="ident">gl</span>.<span class="ident">GetAttribLocation</span>(<span class="ident">program</span>, <span class="ident">position</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">ffi::types::GLchar</span>),
     })
 }
 
@@ -1728,6 +1935,16 @@
             <span class="kw">if</span> <span class="ident">gl_version</span> <span class="op">&lt;</span> <span class="ident">version::GLES_3_0</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">exts</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">ext</span><span class="op">|</span> <span class="ident">ext</span> <span class="op">==</span> <span class="string">&quot;GL_EXT_unpack_subimage&quot;</span>) {
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Gles2Error::GLExtensionNotSupported</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;GL_EXT_unpack_subimage&quot;</span>]));
             }
+            <span class="comment">// required for instanced damage rendering</span>
+            <span class="kw">if</span> <span class="ident">gl_version</span> <span class="op">&lt;</span> <span class="ident">version::GLES_3_0</span>
+                <span class="op">&amp;&amp;</span> <span class="op">!</span>(<span class="ident">exts</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">ext</span><span class="op">|</span> <span class="ident">ext</span> <span class="op">==</span> <span class="string">&quot;GL_EXT_instanced_arrays&quot;</span>)
+                    <span class="op">&amp;&amp;</span> <span class="ident">exts</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">ext</span><span class="op">|</span> <span class="ident">ext</span> <span class="op">==</span> <span class="string">&quot;GL_EXT_draw_instanced&quot;</span>))
+            {
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Gles2Error::GLExtensionNotSupported</span>(<span class="kw-2">&amp;</span>[
+                    <span class="string">&quot;GL_EXT_instanced_arrays&quot;</span>,
+                    <span class="string">&quot;GL_EXT_draw_instanced&quot;</span>,
+                ]));
+            }
 
             <span class="kw">let</span> <span class="ident">logger</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">exts</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">ext</span><span class="op">|</span> <span class="ident">ext</span> <span class="op">==</span> <span class="string">&quot;GL_KHR_debug&quot;</span>) {
                 <span class="kw">let</span> <span class="ident">logger</span> <span class="op">=</span> <span class="ident">Box::into_raw</span>(<span class="ident">Box::new</span>(<span class="ident">log</span>.<span class="ident">clone</span>()));
@@ -1742,21 +1959,33 @@
             (<span class="ident">gl</span>, <span class="ident">exts</span>, <span class="ident">logger</span>)
         };
 
-        <span class="kw">let</span> <span class="ident">programs</span> <span class="op">=</span> [
+        <span class="kw">let</span> <span class="ident">tex_programs</span> <span class="op">=</span> [
             <span class="ident">texture_program</span>(<span class="kw-2">&amp;</span><span class="ident">gl</span>, <span class="ident">shaders::FRAGMENT_SHADER_ABGR</span>)<span class="question-mark">?</span>,
             <span class="ident">texture_program</span>(<span class="kw-2">&amp;</span><span class="ident">gl</span>, <span class="ident">shaders::FRAGMENT_SHADER_XBGR</span>)<span class="question-mark">?</span>,
             <span class="ident">texture_program</span>(<span class="kw-2">&amp;</span><span class="ident">gl</span>, <span class="ident">shaders::FRAGMENT_SHADER_EXTERNAL</span>)<span class="question-mark">?</span>,
         ];
+        <span class="kw">let</span> <span class="ident">solid_program</span> <span class="op">=</span> <span class="ident">solid_program</span>(<span class="kw-2">&amp;</span><span class="ident">gl</span>)<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">vbos</span> <span class="op">=</span> [<span class="number">0</span>; <span class="number">2</span>];
+        <span class="ident">gl</span>.<span class="ident">GenBuffers</span>(<span class="number">2</span>, <span class="ident">vbos</span>.<span class="ident">as_mut_ptr</span>());
+        <span class="ident">gl</span>.<span class="ident">BindBuffer</span>(<span class="ident">ffi::ARRAY_BUFFER</span>, <span class="ident">vbos</span>[<span class="number">0</span>]);
+        <span class="ident">gl</span>.<span class="ident">BufferData</span>(
+            <span class="ident">ffi::ARRAY_BUFFER</span>,
+            (<span class="ident">std::mem::size_of</span>::<span class="op">&lt;</span><span class="ident">ffi::types::GLfloat</span><span class="op">&gt;</span>() <span class="op">*</span> <span class="ident">VERTS</span>.<span class="ident">len</span>()) <span class="kw">as</span> <span class="ident">isize</span>,
+            <span class="ident">VERTS</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span>,
+            <span class="ident">ffi::STATIC_DRAW</span>,
+        );
+        <span class="ident">gl</span>.<span class="ident">BindBuffer</span>(<span class="ident">ffi::ARRAY_BUFFER</span>, <span class="number">0</span>);
 
         <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">channel</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">renderer</span> <span class="op">=</span> <span class="ident">Gles2Renderer</span> {
-            <span class="ident">id</span>: <span class="ident">RENDERER_COUNTER</span>.<span class="ident">fetch_add</span>(<span class="number">1</span>, <span class="ident">Ordering::SeqCst</span>),
+        <span class="kw">let</span> <span class="ident">renderer</span> <span class="op">=</span> <span class="ident">Gles2Renderer</span> {
             <span class="ident">gl</span>,
             <span class="ident">egl</span>: <span class="ident">context</span>,
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_system_lib&quot;</span>))]</span>
             <span class="ident">egl_reader</span>: <span class="prelude-val">None</span>,
             <span class="ident">extensions</span>: <span class="ident">exts</span>,
-            <span class="ident">programs</span>,
+            <span class="ident">tex_programs</span>,
+            <span class="ident">solid_program</span>,
             <span class="ident">target_buffer</span>: <span class="prelude-val">None</span>,
             <span class="ident">target_surface</span>: <span class="prelude-val">None</span>,
             <span class="ident">buffers</span>: <span class="ident">Vec::new</span>(),
@@ -1764,12 +1993,13 @@
             <span class="ident">dmabuf_cache</span>: <span class="ident">std::collections::HashMap::new</span>(),
             <span class="ident">destruction_callback</span>: <span class="ident">rx</span>,
             <span class="ident">destruction_callback_sender</span>: <span class="ident">tx</span>,
+            <span class="ident">vbos</span>,
+            <span class="ident">min_filter</span>: <span class="ident">TextureFilter::Nearest</span>,
+            <span class="ident">max_filter</span>: <span class="ident">TextureFilter::Linear</span>,
             <span class="ident">logger_ptr</span>,
             <span class="ident">logger</span>: <span class="ident">log</span>,
             <span class="ident">_not_send</span>: <span class="ident">std::ptr::null_mut</span>(),
         };
-        <span class="ident">renderer</span>.<span class="ident">downscale_filter</span>(<span class="ident">TextureFilter::Nearest</span>)<span class="question-mark">?</span>;
-        <span class="ident">renderer</span>.<span class="ident">upscale_filter</span>(<span class="ident">TextureFilter::Linear</span>)<span class="question-mark">?</span>;
         <span class="ident">renderer</span>.<span class="ident">egl</span>.<span class="ident">unbind</span>()<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">renderer</span>)
     }
@@ -1862,7 +2092,6 @@
 
             <span class="kw">unsafe</span> {
                 <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">BindTexture</span>(<span class="ident">ffi::TEXTURE_2D</span>, <span class="ident">texture</span>.<span class="number">0</span>.<span class="ident">texture</span>);
-
                 <span class="self">self</span>.<span class="ident">gl</span>
                     .<span class="ident">TexParameteri</span>(<span class="ident">ffi::TEXTURE_2D</span>, <span class="ident">ffi::TEXTURE_WRAP_S</span>, <span class="ident">ffi::CLAMP_TO_EDGE</span> <span class="kw">as</span> <span class="ident">i32</span>);
                 <span class="self">self</span>.<span class="ident">gl</span>
@@ -2221,9 +2450,11 @@
         <span class="kw">unsafe</span> {
             <span class="kw">if</span> <span class="self">self</span>.<span class="ident">egl</span>.<span class="ident">make_current</span>().<span class="ident">is_ok</span>() {
                 <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">BindFramebuffer</span>(<span class="ident">ffi::FRAMEBUFFER</span>, <span class="number">0</span>);
-                <span class="kw">for</span> <span class="ident">program</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">programs</span> {
+                <span class="kw">for</span> <span class="ident">program</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">tex_programs</span> {
                     <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">DeleteProgram</span>(<span class="ident">program</span>.<span class="ident">program</span>);
                 }
+                <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">DeleteProgram</span>(<span class="self">self</span>.<span class="ident">solid_program</span>.<span class="ident">program</span>);
+                <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">DeleteBuffers</span>(<span class="number">2</span>, <span class="self">self</span>.<span class="ident">vbos</span>.<span class="ident">as_ptr</span>());
 
                 <span class="kw">if</span> <span class="self">self</span>.<span class="ident">extensions</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">ext</span><span class="op">|</span> <span class="ident">ext</span> <span class="op">==</span> <span class="string">&quot;GL_KHR_debug&quot;</span>) {
                     <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">Disable</span>(<span class="ident">ffi::DEBUG_OUTPUT</span>);
@@ -2242,12 +2473,25 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Gles2Renderer</span> {
+    <span class="doccomment">/// Get access to the underlying [`EGLContext`].</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// *Note*: Modifying the context state, might result in rendering issues.</span>
+    <span class="doccomment">/// The context state is considerd an implementation detail</span>
+    <span class="doccomment">/// and no guarantee is made about what can or cannot be changed.</span>
+    <span class="doccomment">/// To make sure a certain modification does not interfere with</span>
+    <span class="doccomment">/// the renderer&#39;s behaviour, check the source.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">egl_context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">EGLContext</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">egl</span>
+    }
+
     <span class="doccomment">/// Run custom code in the GL context owned by this renderer.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// *Note*: Any changes to the GL state should be restored at the end of this function.</span>
-    <span class="doccomment">/// Otherwise this can lead to rendering errors while using functions of this renderer.</span>
-    <span class="doccomment">/// Relying on any state set by the renderer may break on any smithay update as the</span>
-    <span class="doccomment">/// details about how this renderer works are considered an implementation detail.</span>
+    <span class="doccomment">/// The OpenGL state of the renderer is considered an implementation detail</span>
+    <span class="doccomment">/// and no guarantee is made about what can or cannot be changed,</span>
+    <span class="doccomment">/// as such you should reset everything you change back to its previous value</span>
+    <span class="doccomment">/// or check the source code of the version of Smithay you are using to ensure</span>
+    <span class="doccomment">/// your changes don&#39;t interfere with the renderer&#39;s behavior.</span>
+    <span class="doccomment">/// Doing otherwise can lead to rendering errors while using other functions of this renderer.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_context</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">func</span>: <span class="ident">F</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">Gles2Error</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;mut</span> <span class="self">Self</span>, <span class="kw-2">&amp;</span><span class="ident">ffi::Gles2</span>) -&gt; <span class="ident">R</span>,
@@ -2264,31 +2508,11 @@
     <span class="kw">type</span> <span class="ident">Frame</span> <span class="op">=</span> <span class="ident">Gles2Frame</span>;
 
     <span class="kw">fn</span> <span class="ident">downscale_filter</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">filter</span>: <span class="ident">TextureFilter</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">make_current</span>()<span class="question-mark">?</span>;
-        <span class="kw">unsafe</span> {
-            <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">TexParameteri</span>(
-                <span class="ident">ffi::TEXTURE_2D</span>,
-                <span class="ident">ffi::TEXTURE_MIN_FILTER</span>,
-                <span class="kw">match</span> <span class="ident">filter</span> {
-                    <span class="ident">TextureFilter::Nearest</span> =&gt; <span class="ident">ffi::NEAREST</span> <span class="kw">as</span> <span class="ident">i32</span>,
-                    <span class="ident">TextureFilter::Linear</span> =&gt; <span class="ident">ffi::LINEAR</span> <span class="kw">as</span> <span class="ident">i32</span>,
-                },
-            );
-        }
+        <span class="self">self</span>.<span class="ident">min_filter</span> <span class="op">=</span> <span class="ident">filter</span>;
         <span class="prelude-val">Ok</span>(())
     }
     <span class="kw">fn</span> <span class="ident">upscale_filter</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">filter</span>: <span class="ident">TextureFilter</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">make_current</span>()<span class="question-mark">?</span>;
-        <span class="kw">unsafe</span> {
-            <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">TexParameteri</span>(
-                <span class="ident">ffi::TEXTURE_2D</span>,
-                <span class="ident">ffi::TEXTURE_MAG_FILTER</span>,
-                <span class="kw">match</span> <span class="ident">filter</span> {
-                    <span class="ident">TextureFilter::Nearest</span> =&gt; <span class="ident">ffi::NEAREST</span> <span class="kw">as</span> <span class="ident">i32</span>,
-                    <span class="ident">TextureFilter::Linear</span> =&gt; <span class="ident">ffi::LINEAR</span> <span class="kw">as</span> <span class="ident">i32</span>,
-                },
-            );
-        }
+        <span class="self">self</span>.<span class="ident">max_filter</span> <span class="op">=</span> <span class="ident">filter</span>;
         <span class="prelude-val">Ok</span>(())
     }
 
@@ -2332,11 +2556,20 @@
         <span class="ident">renderer</span>[<span class="number">2</span>][<span class="number">0</span>] <span class="op">=</span> <span class="op">-</span>(<span class="number">1.0f32</span>.<span class="ident">copysign</span>(<span class="ident">renderer</span>[<span class="number">0</span>][<span class="number">0</span>] <span class="op">+</span> <span class="ident">renderer</span>[<span class="number">1</span>][<span class="number">0</span>]));
         <span class="ident">renderer</span>[<span class="number">2</span>][<span class="number">1</span>] <span class="op">=</span> <span class="op">-</span>(<span class="number">1.0f32</span>.<span class="ident">copysign</span>(<span class="ident">renderer</span>[<span class="number">0</span>][<span class="number">1</span>] <span class="op">+</span> <span class="ident">renderer</span>[<span class="number">1</span>][<span class="number">1</span>]));
 
+        <span class="comment">// We account for OpenGLs coordinate system here</span>
+        <span class="kw">let</span> <span class="ident">flip180</span> <span class="op">=</span> <span class="ident">Matrix3::new</span>(<span class="number">1.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="op">-</span><span class="number">1.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">1.0</span>);
+
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">frame</span> <span class="op">=</span> <span class="ident">Gles2Frame</span> {
             <span class="ident">gl</span>: <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">clone</span>(),
-            <span class="ident">programs</span>: <span class="self">self</span>.<span class="ident">programs</span>.<span class="ident">clone</span>(),
+            <span class="ident">tex_programs</span>: <span class="self">self</span>.<span class="ident">tex_programs</span>.<span class="ident">clone</span>(),
+            <span class="ident">solid_program</span>: <span class="self">self</span>.<span class="ident">solid_program</span>.<span class="ident">clone</span>(),
             <span class="comment">// output transformation passed in by the user</span>
-            <span class="ident">current_projection</span>: <span class="ident">transform</span>.<span class="ident">matrix</span>() <span class="op">*</span> <span class="ident">renderer</span>,
+            <span class="ident">current_projection</span>: <span class="ident">flip180</span> <span class="op">*</span> <span class="ident">transform</span>.<span class="ident">matrix</span>() <span class="op">*</span> <span class="ident">renderer</span>,
+            <span class="ident">transform</span>,
+            <span class="ident">vbos</span>: <span class="self">self</span>.<span class="ident">vbos</span>,
+            <span class="ident">size</span>,
+            <span class="ident">min_filter</span>: <span class="self">self</span>.<span class="ident">min_filter</span>,
+            <span class="ident">max_filter</span>: <span class="self">self</span>.<span class="ident">max_filter</span>,
         };
 
         <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">rendering</span>(<span class="self">self</span>, <span class="kw-2">&amp;mut</span> <span class="ident">frame</span>);
@@ -2376,10 +2609,85 @@
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">Gles2Error</span>;
     <span class="kw">type</span> <span class="ident">TextureId</span> <span class="op">=</span> <span class="ident">Gles2Texture</span>;
 
-    <span class="kw">fn</span> <span class="ident">clear</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">color</span>: [<span class="ident">f32</span>; <span class="number">4</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">clear</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">color</span>: [<span class="ident">f32</span>; <span class="number">4</span>], <span class="ident">at</span>: <span class="kw-2">&amp;</span>[<span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Physical</span><span class="op">&gt;</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="ident">at</span>.<span class="ident">is_empty</span>() {
+            <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
+        }
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">mat</span> <span class="op">=</span> <span class="ident">Matrix3</span>::<span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span><span class="ident">::identity</span>();
+        <span class="ident">mat</span> <span class="op">=</span> <span class="ident">mat</span> <span class="op">*</span> <span class="ident">Matrix3::from_translation</span>(<span class="ident">Vector2::new</span>(<span class="number">0.0</span>, <span class="number">0.0</span>));
+        <span class="ident">mat</span> <span class="op">=</span> <span class="ident">mat</span> <span class="op">*</span> <span class="ident">Matrix3::from_nonuniform_scale</span>(<span class="self">self</span>.<span class="ident">size</span>.<span class="ident">w</span> <span class="kw">as</span> <span class="ident">f32</span>, <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">h</span> <span class="kw">as</span> <span class="ident">f32</span>);
+        <span class="ident">mat</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">current_projection</span> <span class="op">*</span> <span class="ident">mat</span>;
+
+        <span class="kw">let</span> <span class="ident">damage</span> <span class="op">=</span> <span class="ident">at</span>
+            .<span class="ident">iter</span>()
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">rect</span><span class="op">|</span> {
+                [
+                    <span class="ident">rect</span>.<span class="ident">loc</span>.<span class="ident">x</span> <span class="kw">as</span> <span class="ident">f32</span> <span class="op">/</span> <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">w</span> <span class="kw">as</span> <span class="ident">f32</span>,
+                    <span class="ident">rect</span>.<span class="ident">loc</span>.<span class="ident">y</span> <span class="kw">as</span> <span class="ident">f32</span> <span class="op">/</span> <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">h</span> <span class="kw">as</span> <span class="ident">f32</span>,
+                    <span class="ident">rect</span>.<span class="ident">size</span>.<span class="ident">w</span> <span class="kw">as</span> <span class="ident">f32</span> <span class="op">/</span> <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">w</span> <span class="kw">as</span> <span class="ident">f32</span>,
+                    <span class="ident">rect</span>.<span class="ident">size</span>.<span class="ident">h</span> <span class="kw">as</span> <span class="ident">f32</span> <span class="op">/</span> <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">h</span> <span class="kw">as</span> <span class="ident">f32</span>,
+                ]
+            })
+            .<span class="ident">flatten</span>()
+            .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ffi::types::GLfloat</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+
         <span class="kw">unsafe</span> {
-            <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">ClearColor</span>(<span class="ident">color</span>[<span class="number">0</span>], <span class="ident">color</span>[<span class="number">1</span>], <span class="ident">color</span>[<span class="number">2</span>], <span class="ident">color</span>[<span class="number">3</span>]);
-            <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">Clear</span>(<span class="ident">ffi::COLOR_BUFFER_BIT</span>);
+            <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">UseProgram</span>(<span class="self">self</span>.<span class="ident">solid_program</span>.<span class="ident">program</span>);
+            <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">Uniform4f</span>(
+                <span class="self">self</span>.<span class="ident">solid_program</span>.<span class="ident">uniform_color</span>,
+                <span class="ident">color</span>[<span class="number">0</span>],
+                <span class="ident">color</span>[<span class="number">1</span>],
+                <span class="ident">color</span>[<span class="number">2</span>],
+                <span class="ident">color</span>[<span class="number">3</span>],
+            );
+            <span class="self">self</span>.<span class="ident">gl</span>
+                .<span class="ident">UniformMatrix3fv</span>(<span class="self">self</span>.<span class="ident">solid_program</span>.<span class="ident">uniform_matrix</span>, <span class="number">1</span>, <span class="ident">ffi::FALSE</span>, <span class="ident">mat</span>.<span class="ident">as_ptr</span>());
+
+            <span class="self">self</span>.<span class="ident">gl</span>
+                .<span class="ident">EnableVertexAttribArray</span>(<span class="self">self</span>.<span class="ident">solid_program</span>.<span class="ident">attrib_vert</span> <span class="kw">as</span> <span class="ident">u32</span>);
+            <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">BindBuffer</span>(<span class="ident">ffi::ARRAY_BUFFER</span>, <span class="self">self</span>.<span class="ident">vbos</span>[<span class="number">0</span>]);
+            <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">VertexAttribPointer</span>(
+                <span class="self">self</span>.<span class="ident">solid_program</span>.<span class="ident">attrib_vert</span> <span class="kw">as</span> <span class="ident">u32</span>,
+                <span class="number">2</span>,
+                <span class="ident">ffi::FLOAT</span>,
+                <span class="ident">ffi::FALSE</span>,
+                <span class="number">0</span>,
+                <span class="ident">std::ptr::null</span>(),
+            );
+
+            <span class="self">self</span>.<span class="ident">gl</span>
+                .<span class="ident">EnableVertexAttribArray</span>(<span class="self">self</span>.<span class="ident">solid_program</span>.<span class="ident">attrib_position</span> <span class="kw">as</span> <span class="ident">u32</span>);
+            <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">BindBuffer</span>(<span class="ident">ffi::ARRAY_BUFFER</span>, <span class="self">self</span>.<span class="ident">vbos</span>[<span class="number">1</span>]);
+            <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">BufferData</span>(
+                <span class="ident">ffi::ARRAY_BUFFER</span>,
+                (<span class="ident">std::mem::size_of</span>::<span class="op">&lt;</span><span class="ident">ffi::types::GLfloat</span><span class="op">&gt;</span>() <span class="op">*</span> <span class="ident">damage</span>.<span class="ident">len</span>()) <span class="kw">as</span> <span class="ident">isize</span>,
+                <span class="ident">damage</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span>,
+                <span class="ident">ffi::STREAM_DRAW</span>,
+            );
+
+            <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">VertexAttribPointer</span>(
+                <span class="self">self</span>.<span class="ident">solid_program</span>.<span class="ident">attrib_position</span> <span class="kw">as</span> <span class="ident">u32</span>,
+                <span class="number">4</span>,
+                <span class="ident">ffi::FLOAT</span>,
+                <span class="ident">ffi::FALSE</span>,
+                <span class="number">0</span>,
+                <span class="ident">std::ptr::null</span>(),
+            );
+            <span class="self">self</span>.<span class="ident">gl</span>
+                .<span class="ident">VertexAttribDivisor</span>(<span class="self">self</span>.<span class="ident">solid_program</span>.<span class="ident">attrib_vert</span> <span class="kw">as</span> <span class="ident">u32</span>, <span class="number">0</span>);
+
+            <span class="self">self</span>.<span class="ident">gl</span>
+                .<span class="ident">VertexAttribDivisor</span>(<span class="self">self</span>.<span class="ident">solid_program</span>.<span class="ident">attrib_position</span> <span class="kw">as</span> <span class="ident">u32</span>, <span class="number">1</span>);
+
+            <span class="self">self</span>.<span class="ident">gl</span>
+                .<span class="ident">DrawArraysInstanced</span>(<span class="ident">ffi::TRIANGLE_STRIP</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="ident">at</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">i32</span>);
+
+            <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">BindBuffer</span>(<span class="ident">ffi::ARRAY_BUFFER</span>, <span class="number">0</span>);
+            <span class="self">self</span>.<span class="ident">gl</span>
+                .<span class="ident">DisableVertexAttribArray</span>(<span class="self">self</span>.<span class="ident">solid_program</span>.<span class="ident">attrib_vert</span> <span class="kw">as</span> <span class="ident">u32</span>);
+            <span class="self">self</span>.<span class="ident">gl</span>
+                .<span class="ident">DisableVertexAttribArray</span>(<span class="self">self</span>.<span class="ident">solid_program</span>.<span class="ident">attrib_position</span> <span class="kw">as</span> <span class="ident">u32</span>);
         }
 
         <span class="prelude-val">Ok</span>(())
@@ -2390,6 +2698,7 @@
         <span class="ident">texture</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::TextureId</span>,
         <span class="ident">src</span>: <span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Buffer</span><span class="op">&gt;</span>,
         <span class="ident">dest</span>: <span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">f64</span>, <span class="ident">Physical</span><span class="op">&gt;</span>,
+        <span class="ident">damage</span>: <span class="kw-2">&amp;</span>[<span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Physical</span><span class="op">&gt;</span>],
         <span class="ident">transform</span>: <span class="ident">Transform</span>,
         <span class="ident">alpha</span>: <span class="ident">f32</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
@@ -2413,7 +2722,7 @@
         <span class="kw">let</span> <span class="ident">texture_mat</span> <span class="op">=</span> <span class="ident">Matrix3::from_nonuniform_scale</span>(<span class="ident">tex_size</span>.<span class="ident">w</span> <span class="kw">as</span> <span class="ident">f32</span>, <span class="ident">tex_size</span>.<span class="ident">h</span> <span class="kw">as</span> <span class="ident">f32</span>)
             .<span class="ident">invert</span>()
             .<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">verts</span> <span class="op">=</span> [
+        <span class="kw">let</span> <span class="ident">tex_verts</span> <span class="op">=</span> [
             (<span class="ident">texture_mat</span> <span class="op">*</span> <span class="ident">Vector3::new</span>((<span class="ident">src</span>.<span class="ident">loc</span>.<span class="ident">x</span> <span class="op">+</span> <span class="ident">src</span>.<span class="ident">size</span>.<span class="ident">w</span>) <span class="kw">as</span> <span class="ident">f32</span>, <span class="ident">src</span>.<span class="ident">loc</span>.<span class="ident">y</span> <span class="kw">as</span> <span class="ident">f32</span>, <span class="number">0.0</span>)).<span class="ident">truncate</span>(), <span class="comment">// top-right</span>
             (<span class="ident">texture_mat</span> <span class="op">*</span> <span class="ident">Vector3::new</span>(<span class="ident">src</span>.<span class="ident">loc</span>.<span class="ident">x</span> <span class="kw">as</span> <span class="ident">f32</span>, <span class="ident">src</span>.<span class="ident">loc</span>.<span class="ident">y</span> <span class="kw">as</span> <span class="ident">f32</span>, <span class="number">0.0</span>)).<span class="ident">truncate</span>(), <span class="comment">// top-left</span>
             (<span class="ident">texture_mat</span>
@@ -2425,7 +2734,32 @@
             .<span class="ident">truncate</span>(), <span class="comment">// bottom-right</span>
             (<span class="ident">texture_mat</span> <span class="op">*</span> <span class="ident">Vector3::new</span>(<span class="ident">src</span>.<span class="ident">loc</span>.<span class="ident">x</span> <span class="kw">as</span> <span class="ident">f32</span>, (<span class="ident">src</span>.<span class="ident">loc</span>.<span class="ident">y</span> <span class="op">+</span> <span class="ident">src</span>.<span class="ident">size</span>.<span class="ident">h</span>) <span class="kw">as</span> <span class="ident">f32</span>, <span class="number">0.0</span>)).<span class="ident">truncate</span>(), <span class="comment">// bottom-left</span>
         ];
-        <span class="self">self</span>.<span class="ident">render_texture</span>(<span class="ident">texture</span>, <span class="ident">mat</span>, <span class="ident">verts</span>, <span class="ident">alpha</span>)
+
+        <span class="kw">let</span> <span class="ident">damage</span> <span class="op">=</span> <span class="ident">damage</span>
+            .<span class="ident">iter</span>()
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">rect</span><span class="op">|</span> {
+                <span class="kw">let</span> <span class="ident">rect</span> <span class="op">=</span> <span class="ident">rect</span>.<span class="ident">to_f64</span>();
+
+                <span class="kw">let</span> <span class="ident">rect_constrained_loc</span> <span class="op">=</span> <span class="ident">rect</span>
+                    .<span class="ident">loc</span>
+                    .<span class="ident">constrain</span>(<span class="ident">Rectangle::from_extemities</span>((<span class="number">0f64</span>, <span class="number">0f64</span>), <span class="ident">dest</span>.<span class="ident">size</span>.<span class="ident">to_point</span>()));
+                <span class="kw">let</span> <span class="ident">rect_clamped_size</span> <span class="op">=</span> <span class="ident">rect</span>.<span class="ident">size</span>.<span class="ident">clamp</span>((<span class="number">0f64</span>, <span class="number">0f64</span>), <span class="ident">dest</span>.<span class="ident">size</span>);
+
+                [
+                    (<span class="ident">rect_constrained_loc</span>.<span class="ident">x</span> <span class="op">/</span> <span class="ident">dest</span>.<span class="ident">size</span>.<span class="ident">w</span>) <span class="kw">as</span> <span class="ident">f32</span>,
+                    (<span class="ident">rect_constrained_loc</span>.<span class="ident">y</span> <span class="op">/</span> <span class="ident">dest</span>.<span class="ident">size</span>.<span class="ident">h</span>) <span class="kw">as</span> <span class="ident">f32</span>,
+                    (<span class="ident">rect_clamped_size</span>.<span class="ident">w</span> <span class="op">/</span> <span class="ident">dest</span>.<span class="ident">size</span>.<span class="ident">w</span>) <span class="kw">as</span> <span class="ident">f32</span>,
+                    (<span class="ident">rect_clamped_size</span>.<span class="ident">h</span> <span class="op">/</span> <span class="ident">dest</span>.<span class="ident">size</span>.<span class="ident">h</span>) <span class="kw">as</span> <span class="ident">f32</span>,
+                ]
+            })
+            .<span class="ident">flatten</span>()
+            .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+
+        <span class="self">self</span>.<span class="ident">render_texture</span>(<span class="ident">texture</span>, <span class="ident">mat</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">damage</span>), <span class="ident">tex_verts</span>, <span class="ident">alpha</span>)
+    }
+
+    <span class="kw">fn</span> <span class="ident">transformation</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Transform</span> {
+        <span class="self">self</span>.<span class="ident">transform</span>
     }
 }
 
@@ -2436,6 +2770,7 @@
         <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">tex</span>: <span class="kw-2">&amp;</span><span class="ident">Gles2Texture</span>,
         <span class="kw-2">mut</span> <span class="ident">matrix</span>: <span class="ident">Matrix3</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>,
+        <span class="ident">instances</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">ffi::types::GLfloat</span>]<span class="op">&gt;</span>,
         <span class="ident">tex_coords</span>: [<span class="ident">Vector2</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>; <span class="number">4</span>],
         <span class="ident">alpha</span>: <span class="ident">f32</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Gles2Error</span><span class="op">&gt;</span> {
@@ -2452,35 +2787,43 @@
         <span class="kw">unsafe</span> {
             <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">ActiveTexture</span>(<span class="ident">ffi::TEXTURE0</span>);
             <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">BindTexture</span>(<span class="ident">target</span>, <span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">texture</span>);
-            <span class="self">self</span>.<span class="ident">gl</span>
-                .<span class="ident">TexParameteri</span>(<span class="ident">target</span>, <span class="ident">ffi::TEXTURE_MIN_FILTER</span>, <span class="ident">ffi::LINEAR</span> <span class="kw">as</span> <span class="ident">i32</span>);
-            <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">UseProgram</span>(<span class="self">self</span>.<span class="ident">programs</span>[<span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">texture_kind</span>].<span class="ident">program</span>);
+            <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">TexParameteri</span>(
+                <span class="ident">ffi::TEXTURE_2D</span>,
+                <span class="ident">ffi::TEXTURE_MIN_FILTER</span>,
+                <span class="kw">match</span> <span class="self">self</span>.<span class="ident">min_filter</span> {
+                    <span class="ident">TextureFilter::Nearest</span> =&gt; <span class="ident">ffi::NEAREST</span> <span class="kw">as</span> <span class="ident">i32</span>,
+                    <span class="ident">TextureFilter::Linear</span> =&gt; <span class="ident">ffi::LINEAR</span> <span class="kw">as</span> <span class="ident">i32</span>,
+                },
+            );
+            <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">TexParameteri</span>(
+                <span class="ident">ffi::TEXTURE_2D</span>,
+                <span class="ident">ffi::TEXTURE_MAG_FILTER</span>,
+                <span class="kw">match</span> <span class="self">self</span>.<span class="ident">max_filter</span> {
+                    <span class="ident">TextureFilter::Nearest</span> =&gt; <span class="ident">ffi::NEAREST</span> <span class="kw">as</span> <span class="ident">i32</span>,
+                    <span class="ident">TextureFilter::Linear</span> =&gt; <span class="ident">ffi::LINEAR</span> <span class="kw">as</span> <span class="ident">i32</span>,
+                },
+            );
+            <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">UseProgram</span>(<span class="self">self</span>.<span class="ident">tex_programs</span>[<span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">texture_kind</span>].<span class="ident">program</span>);
 
             <span class="self">self</span>.<span class="ident">gl</span>
-                .<span class="ident">Uniform1i</span>(<span class="self">self</span>.<span class="ident">programs</span>[<span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">texture_kind</span>].<span class="ident">uniform_tex</span>, <span class="number">0</span>);
+                .<span class="ident">Uniform1i</span>(<span class="self">self</span>.<span class="ident">tex_programs</span>[<span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">texture_kind</span>].<span class="ident">uniform_tex</span>, <span class="number">0</span>);
             <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">UniformMatrix3fv</span>(
-                <span class="self">self</span>.<span class="ident">programs</span>[<span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">texture_kind</span>].<span class="ident">uniform_matrix</span>,
+                <span class="self">self</span>.<span class="ident">tex_programs</span>[<span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">texture_kind</span>].<span class="ident">uniform_matrix</span>,
                 <span class="number">1</span>,
                 <span class="ident">ffi::FALSE</span>,
                 <span class="ident">matrix</span>.<span class="ident">as_ptr</span>(),
             );
             <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">Uniform1i</span>(
-                <span class="self">self</span>.<span class="ident">programs</span>[<span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">texture_kind</span>].<span class="ident">uniform_invert_y</span>,
+                <span class="self">self</span>.<span class="ident">tex_programs</span>[<span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">texture_kind</span>].<span class="ident">uniform_invert_y</span>,
                 <span class="kw">if</span> <span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">y_inverted</span> { <span class="number">1</span> } <span class="kw">else</span> { <span class="number">0</span> },
             );
             <span class="self">self</span>.<span class="ident">gl</span>
-                .<span class="ident">Uniform1f</span>(<span class="self">self</span>.<span class="ident">programs</span>[<span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">texture_kind</span>].<span class="ident">uniform_alpha</span>, <span class="ident">alpha</span>);
+                .<span class="ident">Uniform1f</span>(<span class="self">self</span>.<span class="ident">tex_programs</span>[<span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">texture_kind</span>].<span class="ident">uniform_alpha</span>, <span class="ident">alpha</span>);
 
+            <span class="self">self</span>.<span class="ident">gl</span>
+                .<span class="ident">EnableVertexAttribArray</span>(<span class="self">self</span>.<span class="ident">tex_programs</span>[<span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">texture_kind</span>].<span class="ident">attrib_tex_coords</span> <span class="kw">as</span> <span class="ident">u32</span>);
             <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">VertexAttribPointer</span>(
-                <span class="self">self</span>.<span class="ident">programs</span>[<span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">texture_kind</span>].<span class="ident">attrib_position</span> <span class="kw">as</span> <span class="ident">u32</span>,
-                <span class="number">2</span>,
-                <span class="ident">ffi::FLOAT</span>,
-                <span class="ident">ffi::FALSE</span>,
-                <span class="number">0</span>,
-                <span class="ident">VERTS</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span>,
-            );
-            <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">VertexAttribPointer</span>(
-                <span class="self">self</span>.<span class="ident">programs</span>[<span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">texture_kind</span>].<span class="ident">attrib_tex_coords</span> <span class="kw">as</span> <span class="ident">u32</span>,
+                <span class="self">self</span>.<span class="ident">tex_programs</span>[<span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">texture_kind</span>].<span class="ident">attrib_tex_coords</span> <span class="kw">as</span> <span class="ident">u32</span>,
                 <span class="number">2</span>,
                 <span class="ident">ffi::FLOAT</span>,
                 <span class="ident">ffi::FALSE</span>,
@@ -2489,23 +2832,65 @@
             );
 
             <span class="self">self</span>.<span class="ident">gl</span>
-                .<span class="ident">EnableVertexAttribArray</span>(<span class="self">self</span>.<span class="ident">programs</span>[<span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">texture_kind</span>].<span class="ident">attrib_position</span> <span class="kw">as</span> <span class="ident">u32</span>);
-            <span class="self">self</span>.<span class="ident">gl</span>
-                .<span class="ident">EnableVertexAttribArray</span>(<span class="self">self</span>.<span class="ident">programs</span>[<span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">texture_kind</span>].<span class="ident">attrib_tex_coords</span> <span class="kw">as</span> <span class="ident">u32</span>);
+                .<span class="ident">EnableVertexAttribArray</span>(<span class="self">self</span>.<span class="ident">tex_programs</span>[<span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">texture_kind</span>].<span class="ident">attrib_vert</span> <span class="kw">as</span> <span class="ident">u32</span>);
+            <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">BindBuffer</span>(<span class="ident">ffi::ARRAY_BUFFER</span>, <span class="self">self</span>.<span class="ident">vbos</span>[<span class="number">0</span>]);
+            <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">VertexAttribPointer</span>(
+                <span class="self">self</span>.<span class="ident">solid_program</span>.<span class="ident">attrib_vert</span> <span class="kw">as</span> <span class="ident">u32</span>,
+                <span class="number">2</span>,
+                <span class="ident">ffi::FLOAT</span>,
+                <span class="ident">ffi::FALSE</span>,
+                <span class="number">0</span>,
+                <span class="ident">std::ptr::null</span>(),
+            );
 
-            <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">DrawArrays</span>(<span class="ident">ffi::TRIANGLE_STRIP</span>, <span class="number">0</span>, <span class="number">4</span>);
+            <span class="kw">let</span> <span class="ident">damage</span> <span class="op">=</span> <span class="ident">instances</span>.<span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span>[<span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">1.0</span>, <span class="number">1.0</span>]);
+            <span class="self">self</span>.<span class="ident">gl</span>
+                .<span class="ident">EnableVertexAttribArray</span>(<span class="self">self</span>.<span class="ident">tex_programs</span>[<span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">texture_kind</span>].<span class="ident">attrib_position</span> <span class="kw">as</span> <span class="ident">u32</span>);
+            <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">BindBuffer</span>(<span class="ident">ffi::ARRAY_BUFFER</span>, <span class="self">self</span>.<span class="ident">vbos</span>[<span class="number">1</span>]);
+            <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">BufferData</span>(
+                <span class="ident">ffi::ARRAY_BUFFER</span>,
+                (<span class="ident">std::mem::size_of</span>::<span class="op">&lt;</span><span class="ident">ffi::types::GLfloat</span><span class="op">&gt;</span>() <span class="op">*</span> <span class="ident">damage</span>.<span class="ident">len</span>()) <span class="kw">as</span> <span class="ident">isize</span>,
+                <span class="ident">damage</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span>,
+                <span class="ident">ffi::STREAM_DRAW</span>,
+            );
+
+            <span class="kw">let</span> <span class="ident">count</span> <span class="op">=</span> (<span class="ident">damage</span>.<span class="ident">len</span>() <span class="op">/</span> <span class="number">4</span>) <span class="kw">as</span> <span class="ident">i32</span>;
+            <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">VertexAttribPointer</span>(
+                <span class="self">self</span>.<span class="ident">tex_programs</span>[<span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">texture_kind</span>].<span class="ident">attrib_position</span> <span class="kw">as</span> <span class="ident">u32</span>,
+                <span class="number">4</span>,
+                <span class="ident">ffi::FLOAT</span>,
+                <span class="ident">ffi::FALSE</span>,
+                <span class="number">0</span>,
+                <span class="ident">std::ptr::null</span>(),
+            );
 
             <span class="self">self</span>.<span class="ident">gl</span>
-                .<span class="ident">DisableVertexAttribArray</span>(<span class="self">self</span>.<span class="ident">programs</span>[<span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">texture_kind</span>].<span class="ident">attrib_position</span> <span class="kw">as</span> <span class="ident">u32</span>);
+                .<span class="ident">VertexAttribDivisor</span>(<span class="self">self</span>.<span class="ident">tex_programs</span>[<span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">texture_kind</span>].<span class="ident">attrib_vert</span> <span class="kw">as</span> <span class="ident">u32</span>, <span class="number">0</span>);
             <span class="self">self</span>.<span class="ident">gl</span>
-                .<span class="ident">DisableVertexAttribArray</span>(<span class="self">self</span>.<span class="ident">programs</span>[<span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">texture_kind</span>].<span class="ident">attrib_tex_coords</span> <span class="kw">as</span> <span class="ident">u32</span>);
+                .<span class="ident">VertexAttribDivisor</span>(<span class="self">self</span>.<span class="ident">tex_programs</span>[<span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">texture_kind</span>].<span class="ident">attrib_tex_coords</span> <span class="kw">as</span> <span class="ident">u32</span>, <span class="number">0</span>);
+            <span class="self">self</span>.<span class="ident">gl</span>
+                .<span class="ident">VertexAttribDivisor</span>(<span class="self">self</span>.<span class="ident">tex_programs</span>[<span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">texture_kind</span>].<span class="ident">attrib_position</span> <span class="kw">as</span> <span class="ident">u32</span>, <span class="number">1</span>);
 
+            <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">DrawArraysInstanced</span>(<span class="ident">ffi::TRIANGLE_STRIP</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="ident">count</span>);
+
+            <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">BindBuffer</span>(<span class="ident">ffi::ARRAY_BUFFER</span>, <span class="number">0</span>);
             <span class="self">self</span>.<span class="ident">gl</span>.<span class="ident">BindTexture</span>(<span class="ident">target</span>, <span class="number">0</span>);
+            <span class="self">self</span>.<span class="ident">gl</span>
+                .<span class="ident">DisableVertexAttribArray</span>(<span class="self">self</span>.<span class="ident">tex_programs</span>[<span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">texture_kind</span>].<span class="ident">attrib_tex_coords</span> <span class="kw">as</span> <span class="ident">u32</span>);
+            <span class="self">self</span>.<span class="ident">gl</span>
+                .<span class="ident">DisableVertexAttribArray</span>(<span class="self">self</span>.<span class="ident">tex_programs</span>[<span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">texture_kind</span>].<span class="ident">attrib_vert</span> <span class="kw">as</span> <span class="ident">u32</span>);
+            <span class="self">self</span>.<span class="ident">gl</span>
+                .<span class="ident">DisableVertexAttribArray</span>(<span class="self">self</span>.<span class="ident">tex_programs</span>[<span class="ident">tex</span>.<span class="number">0</span>.<span class="ident">texture_kind</span>].<span class="ident">attrib_position</span> <span class="kw">as</span> <span class="ident">u32</span>);
         }
 
         <span class="prelude-val">Ok</span>(())
     }
+
+    <span class="doccomment">/// Projection matrix for this frame</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">projection</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">f32</span>; <span class="number">9</span>] {
+        <span class="self">self</span>.<span class="ident">current_projection</span>.<span class="ident">as_ref</span>()
+    }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="smithay" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (91a0600a5 2021-12-18)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="smithay" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (ec4bcaac4 2022-01-15)" ></div>
 </body></html>

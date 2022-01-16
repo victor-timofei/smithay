@@ -1,6 +1,7 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src&#x2F;backend&#x2F;renderer&#x2F;mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script src="../../../../crates.js"></script><script defer src="../../../../main.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script>
-    <noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a class="sidebar-logo" href="../../../../smithay/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.png" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../smithay/index.html"><img class="rust-logo" src="../../../../rust-logo.png" alt="logo"></a><nav class="sub"><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../../wheel.svg"></a></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/backend/renderer/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script src="../../../../crates.js"></script><script defer src="../../../../main.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script>
+    <noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a class="sidebar-logo" href="../../../../smithay/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
+        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../smithay/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><form class="search-form"><div class="search-container"><div>
+                                <input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../../wheel.svg"></a></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -522,6 +523,145 @@
 <span id="520">520</span>
 <span id="521">521</span>
 <span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+<span id="593">593</span>
+<span id="594">594</span>
+<span id="595">595</span>
+<span id="596">596</span>
+<span id="597">597</span>
+<span id="598">598</span>
+<span id="599">599</span>
+<span id="600">600</span>
+<span id="601">601</span>
+<span id="602">602</span>
+<span id="603">603</span>
+<span id="604">604</span>
+<span id="605">605</span>
+<span id="606">606</span>
+<span id="607">607</span>
+<span id="608">608</span>
+<span id="609">609</span>
+<span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
+<span id="613">613</span>
+<span id="614">614</span>
+<span id="615">615</span>
+<span id="616">616</span>
+<span id="617">617</span>
+<span id="618">618</span>
+<span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
+<span id="622">622</span>
+<span id="623">623</span>
+<span id="624">624</span>
+<span id="625">625</span>
+<span id="626">626</span>
+<span id="627">627</span>
+<span id="628">628</span>
+<span id="629">629</span>
+<span id="630">630</span>
+<span id="631">631</span>
+<span id="632">632</span>
+<span id="633">633</span>
+<span id="634">634</span>
+<span id="635">635</span>
+<span id="636">636</span>
+<span id="637">637</span>
+<span id="638">638</span>
+<span id="639">639</span>
+<span id="640">640</span>
+<span id="641">641</span>
+<span id="642">642</span>
+<span id="643">643</span>
+<span id="644">644</span>
+<span id="645">645</span>
+<span id="646">646</span>
+<span id="647">647</span>
+<span id="648">648</span>
+<span id="649">649</span>
+<span id="650">650</span>
+<span id="651">651</span>
+<span id="652">652</span>
+<span id="653">653</span>
+<span id="654">654</span>
+<span id="655">655</span>
+<span id="656">656</span>
+<span id="657">657</span>
+<span id="658">658</span>
+<span id="659">659</span>
+<span id="660">660</span>
+<span id="661">661</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Rendering functionality and abstractions</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Collection of common traits and implementations</span>
@@ -534,7 +674,7 @@
 <span class="kw">use</span> <span class="ident">std::collections::HashSet</span>;
 <span class="kw">use</span> <span class="ident">std::error::Error</span>;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils</span>::{<span class="ident">Buffer</span>, <span class="ident">Physical</span>, <span class="ident">Point</span>, <span class="ident">Rectangle</span>, <span class="ident">Size</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils</span>::{<span class="ident">Buffer</span>, <span class="ident">Coordinate</span>, <span class="ident">Physical</span>, <span class="ident">Point</span>, <span class="ident">Rectangle</span>, <span class="ident">Size</span>};
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::wayland::compositor::SurfaceData</span>;
@@ -555,6 +695,9 @@
     <span class="ident">display</span>::{<span class="ident">EGLBufferReader</span>, <span class="ident">BUFFER_READER</span>},
     <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">EglError</span>,
 };
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wayland_frontend&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">utils</span>;
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
 <span class="doccomment">/// Possible transformations to two-dimensional planes</span>
@@ -618,16 +761,46 @@
     }
 
     <span class="doccomment">/// Transformed size after applying this transformation.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">transform_size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">width</span>: <span class="ident">u32</span>, <span class="ident">height</span>: <span class="ident">u32</span>) -&gt; (<span class="ident">u32</span>, <span class="ident">u32</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">transform_size</span><span class="op">&lt;</span><span class="ident">N</span>: <span class="ident">Coordinate</span>, <span class="ident">Kind</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">size</span>: <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">Kind</span><span class="op">&gt;</span>) -&gt; <span class="ident">Size</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">Kind</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="kw-2">*</span><span class="self">self</span> <span class="op">==</span> <span class="ident">Transform::_90</span>
             <span class="op">|</span><span class="op">|</span> <span class="kw-2">*</span><span class="self">self</span> <span class="op">==</span> <span class="ident">Transform::_270</span>
             <span class="op">|</span><span class="op">|</span> <span class="kw-2">*</span><span class="self">self</span> <span class="op">==</span> <span class="ident">Transform::Flipped90</span>
             <span class="op">|</span><span class="op">|</span> <span class="kw-2">*</span><span class="self">self</span> <span class="op">==</span> <span class="ident">Transform::Flipped270</span>
         {
-            (<span class="ident">height</span>, <span class="ident">width</span>)
+            (<span class="ident">size</span>.<span class="ident">h</span>, <span class="ident">size</span>.<span class="ident">w</span>).<span class="ident">into</span>()
         } <span class="kw">else</span> {
-            (<span class="ident">width</span>, <span class="ident">height</span>)
+            <span class="ident">size</span>
         }
+    }
+
+    <span class="doccomment">/// Transforms a rectangle inside an area of a given size by applying this transformation</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">transform_rect_in</span><span class="op">&lt;</span><span class="ident">N</span>: <span class="ident">Coordinate</span>, <span class="ident">Kind</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">rect</span>: <span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">Kind</span><span class="op">&gt;</span>,
+        <span class="ident">area</span>: <span class="kw-2">&amp;</span><span class="ident">Size</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">Kind</span><span class="op">&gt;</span>,
+    ) -&gt; <span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">Kind</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">transform_size</span>(<span class="ident">rect</span>.<span class="ident">size</span>);
+
+        <span class="kw">let</span> <span class="ident">loc</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">Transform::Normal</span> =&gt; <span class="ident">rect</span>.<span class="ident">loc</span>,
+            <span class="ident">Transform::_90</span> =&gt; (<span class="ident">area</span>.<span class="ident">h</span> <span class="op">-</span> <span class="ident">rect</span>.<span class="ident">loc</span>.<span class="ident">y</span> <span class="op">-</span> <span class="ident">rect</span>.<span class="ident">size</span>.<span class="ident">h</span>, <span class="ident">rect</span>.<span class="ident">loc</span>.<span class="ident">x</span>).<span class="ident">into</span>(),
+            <span class="ident">Transform::_180</span> =&gt; (
+                <span class="ident">area</span>.<span class="ident">w</span> <span class="op">-</span> <span class="ident">rect</span>.<span class="ident">loc</span>.<span class="ident">x</span> <span class="op">-</span> <span class="ident">rect</span>.<span class="ident">size</span>.<span class="ident">w</span>,
+                <span class="ident">area</span>.<span class="ident">h</span> <span class="op">-</span> <span class="ident">rect</span>.<span class="ident">loc</span>.<span class="ident">y</span> <span class="op">-</span> <span class="ident">rect</span>.<span class="ident">size</span>.<span class="ident">h</span>,
+            )
+                .<span class="ident">into</span>(),
+            <span class="ident">Transform::_270</span> =&gt; (<span class="ident">rect</span>.<span class="ident">loc</span>.<span class="ident">y</span>, <span class="ident">area</span>.<span class="ident">w</span> <span class="op">-</span> <span class="ident">rect</span>.<span class="ident">loc</span>.<span class="ident">x</span> <span class="op">-</span> <span class="ident">rect</span>.<span class="ident">size</span>.<span class="ident">w</span>).<span class="ident">into</span>(),
+            <span class="ident">Transform::Flipped</span> =&gt; (<span class="ident">area</span>.<span class="ident">w</span> <span class="op">-</span> <span class="ident">rect</span>.<span class="ident">loc</span>.<span class="ident">x</span> <span class="op">-</span> <span class="ident">rect</span>.<span class="ident">size</span>.<span class="ident">w</span>, <span class="ident">rect</span>.<span class="ident">loc</span>.<span class="ident">y</span>).<span class="ident">into</span>(),
+            <span class="ident">Transform::Flipped90</span> =&gt; (<span class="ident">rect</span>.<span class="ident">loc</span>.<span class="ident">y</span>, <span class="ident">rect</span>.<span class="ident">loc</span>.<span class="ident">x</span>).<span class="ident">into</span>(),
+            <span class="ident">Transform::Flipped180</span> =&gt; (<span class="ident">rect</span>.<span class="ident">loc</span>.<span class="ident">x</span>, <span class="ident">area</span>.<span class="ident">h</span> <span class="op">-</span> <span class="ident">rect</span>.<span class="ident">loc</span>.<span class="ident">y</span> <span class="op">-</span> <span class="ident">rect</span>.<span class="ident">size</span>.<span class="ident">h</span>).<span class="ident">into</span>(),
+            <span class="ident">Transform::Flipped270</span> =&gt; (
+                <span class="ident">area</span>.<span class="ident">h</span> <span class="op">-</span> <span class="ident">rect</span>.<span class="ident">loc</span>.<span class="ident">y</span> <span class="op">-</span> <span class="ident">rect</span>.<span class="ident">size</span>.<span class="ident">h</span>,
+                <span class="ident">area</span>.<span class="ident">w</span> <span class="op">-</span> <span class="ident">rect</span>.<span class="ident">loc</span>.<span class="ident">x</span> <span class="op">-</span> <span class="ident">rect</span>.<span class="ident">size</span>.<span class="ident">w</span>,
+            )
+                .<span class="ident">into</span>(),
+        };
+
+        <span class="ident">Rectangle::from_loc_and_size</span>(<span class="ident">loc</span>, <span class="ident">size</span>)
     }
 }
 
@@ -695,11 +868,12 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This operation is only valid in between a `begin` and `finish`-call.</span>
     <span class="doccomment">/// If called outside this operation may error-out, do nothing or modify future rendering results in any way.</span>
-    <span class="kw">fn</span> <span class="ident">clear</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">color</span>: [<span class="ident">f32</span>; <span class="number">4</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">clear</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">color</span>: [<span class="ident">f32</span>; <span class="number">4</span>], <span class="ident">at</span>: <span class="kw-2">&amp;</span>[<span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Physical</span><span class="op">&gt;</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>;
 
     <span class="doccomment">/// Render a texture to the current target as a flat 2d-plane at a given</span>
     <span class="doccomment">/// position and applying the given transformation with the given alpha value.</span>
     <span class="doccomment">/// (Meaning `src_transform` should match the orientation of surface being rendered).</span>
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_arguments</span>)]</span>
     <span class="kw">fn</span> <span class="ident">render_texture_at</span>(
         <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">texture</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::TextureId</span>,
@@ -707,6 +881,7 @@
         <span class="ident">texture_scale</span>: <span class="ident">i32</span>,
         <span class="ident">output_scale</span>: <span class="ident">f64</span>,
         <span class="ident">src_transform</span>: <span class="ident">Transform</span>,
+        <span class="ident">damage</span>: <span class="kw-2">&amp;</span>[<span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Physical</span><span class="op">&gt;</span>],
         <span class="ident">alpha</span>: <span class="ident">f32</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">render_texture_from_to</span>(
@@ -720,6 +895,7 @@
                     .<span class="ident">to_f64</span>()
                     .<span class="ident">to_physical</span>(<span class="ident">output_scale</span>),
             ),
+            <span class="ident">damage</span>,
             <span class="ident">src_transform</span>,
             <span class="ident">alpha</span>,
         )
@@ -733,9 +909,13 @@
         <span class="ident">texture</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::TextureId</span>,
         <span class="ident">src</span>: <span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Buffer</span><span class="op">&gt;</span>,
         <span class="ident">dst</span>: <span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">f64</span>, <span class="ident">Physical</span><span class="op">&gt;</span>,
+        <span class="ident">damage</span>: <span class="kw-2">&amp;</span>[<span class="ident">Rectangle</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Physical</span><span class="op">&gt;</span>],
         <span class="ident">src_transform</span>: <span class="ident">Transform</span>,
         <span class="ident">alpha</span>: <span class="ident">f32</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>;
+
+    <span class="doccomment">/// Output transformation that is applied to this frame</span>
+    <span class="kw">fn</span> <span class="ident">transformation</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Transform</span>;
 }
 
 <span class="doccomment">/// Abstraction of commonly used rendering operations for compositors.</span>
@@ -774,7 +954,7 @@
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">ImportShm</span>: <span class="ident">Renderer</span> {
     <span class="doccomment">/// Import a given shm-based buffer into the renderer (see [`buffer_type`]).</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns a texture_id, which can be used with [`Frame::render_texture`] (or [`Frame::render_texture_at`])</span>
+    <span class="doccomment">/// Returns a texture_id, which can be used with [`Frame::render_texture_from_to`] (or [`Frame::render_texture_at`])</span>
     <span class="doccomment">/// or implementation-specific functions.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// If not otherwise defined by the implementation, this texture id is only valid for the renderer, that created it.</span>
@@ -841,7 +1021,7 @@
 
     <span class="doccomment">/// Import a given wl_drm-based buffer into the renderer (see [`buffer_type`]).</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns a texture_id, which can be used with [`Frame::render_texture`] (or [`Frame::render_texture_at`])</span>
+    <span class="doccomment">/// Returns a texture_id, which can be used with [`Frame::render_texture_from_to`] (or [`Frame::render_texture_at`])</span>
     <span class="doccomment">/// or implementation-specific functions.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// If not otherwise defined by the implementation, this texture id is only valid for the renderer, that created it.</span>
@@ -889,7 +1069,7 @@
 
     <span class="doccomment">/// Import a given raw dmabuf into the renderer.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns a texture_id, which can be used with [`Frame::render_texture`] (or [`Frame::render_texture_at`])</span>
+    <span class="doccomment">/// Returns a texture_id, which can be used with [`Frame::render_texture_from_to`] (or [`Frame::render_texture_at`])</span>
     <span class="doccomment">/// or implementation-specific functions.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// If not otherwise defined by the implementation, this texture id is only valid for the renderer, that created it.</span>
@@ -912,7 +1092,7 @@
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">ImportAll</span>: <span class="ident">Renderer</span> {
     <span class="doccomment">/// Import a given buffer into the renderer.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns a texture_id, which can be used with [`Frame::render_texture`] (or [`Frame::render_texture_at`])</span>
+    <span class="doccomment">/// Returns a texture_id, which can be used with [`Frame::render_texture_from_to`] (or [`Frame::render_texture_at`])</span>
     <span class="doccomment">/// or implementation-specific functions.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// If not otherwise defined by the implementation, this texture id is only valid for the renderer, that created it.</span>
@@ -1044,6 +1224,105 @@
 
     <span class="ident"><span class="kw">crate</span>::wayland::shm::with_buffer_contents</span>(<span class="ident">buffer</span>, <span class="op">|</span><span class="kw">_</span>, <span class="ident">data</span><span class="op">|</span> (<span class="ident">data</span>.<span class="ident">width</span>, <span class="ident">data</span>.<span class="ident">height</span>).<span class="ident">into</span>()).<span class="ident">ok</span>()
 }
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">tests</span> {
+    <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::Transform</span>;
+    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils</span>::{<span class="ident">Logical</span>, <span class="ident">Rectangle</span>, <span class="ident">Size</span>};
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">transform_rect_ident</span>() {
+        <span class="kw">let</span> <span class="ident">rect</span> <span class="op">=</span> <span class="ident">Rectangle</span>::<span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span><span class="ident">::from_loc_and_size</span>((<span class="number">10</span>, <span class="number">20</span>), (<span class="number">30</span>, <span class="number">40</span>));
+        <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">Size::from</span>((<span class="number">70</span>, <span class="number">90</span>));
+        <span class="kw">let</span> <span class="ident">transform</span> <span class="op">=</span> <span class="ident">Transform::Normal</span>;
+
+        <span class="macro">assert_eq!</span>(<span class="ident">rect</span>, <span class="ident">transform</span>.<span class="ident">transform_rect_in</span>(<span class="ident">rect</span>, <span class="kw-2">&amp;</span><span class="ident">size</span>))
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">transform_rect_90</span>() {
+        <span class="kw">let</span> <span class="ident">rect</span> <span class="op">=</span> <span class="ident">Rectangle</span>::<span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span><span class="ident">::from_loc_and_size</span>((<span class="number">10</span>, <span class="number">20</span>), (<span class="number">30</span>, <span class="number">40</span>));
+        <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">Size::from</span>((<span class="number">70</span>, <span class="number">90</span>));
+        <span class="kw">let</span> <span class="ident">transform</span> <span class="op">=</span> <span class="ident">Transform::_90</span>;
+
+        <span class="macro">assert_eq!</span>(
+            <span class="ident">Rectangle::from_loc_and_size</span>((<span class="number">30</span>, <span class="number">10</span>), (<span class="number">40</span>, <span class="number">30</span>)),
+            <span class="ident">transform</span>.<span class="ident">transform_rect_in</span>(<span class="ident">rect</span>, <span class="kw-2">&amp;</span><span class="ident">size</span>)
+        )
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">transform_rect_180</span>() {
+        <span class="kw">let</span> <span class="ident">rect</span> <span class="op">=</span> <span class="ident">Rectangle</span>::<span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span><span class="ident">::from_loc_and_size</span>((<span class="number">10</span>, <span class="number">20</span>), (<span class="number">30</span>, <span class="number">40</span>));
+        <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">Size::from</span>((<span class="number">70</span>, <span class="number">90</span>));
+        <span class="kw">let</span> <span class="ident">transform</span> <span class="op">=</span> <span class="ident">Transform::_180</span>;
+
+        <span class="macro">assert_eq!</span>(
+            <span class="ident">Rectangle::from_loc_and_size</span>((<span class="number">30</span>, <span class="number">30</span>), (<span class="number">30</span>, <span class="number">40</span>)),
+            <span class="ident">transform</span>.<span class="ident">transform_rect_in</span>(<span class="ident">rect</span>, <span class="kw-2">&amp;</span><span class="ident">size</span>)
+        )
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">transform_rect_270</span>() {
+        <span class="kw">let</span> <span class="ident">rect</span> <span class="op">=</span> <span class="ident">Rectangle</span>::<span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span><span class="ident">::from_loc_and_size</span>((<span class="number">10</span>, <span class="number">20</span>), (<span class="number">30</span>, <span class="number">40</span>));
+        <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">Size::from</span>((<span class="number">70</span>, <span class="number">90</span>));
+        <span class="kw">let</span> <span class="ident">transform</span> <span class="op">=</span> <span class="ident">Transform::_270</span>;
+
+        <span class="macro">assert_eq!</span>(
+            <span class="ident">Rectangle::from_loc_and_size</span>((<span class="number">20</span>, <span class="number">30</span>), (<span class="number">40</span>, <span class="number">30</span>)),
+            <span class="ident">transform</span>.<span class="ident">transform_rect_in</span>(<span class="ident">rect</span>, <span class="kw-2">&amp;</span><span class="ident">size</span>)
+        )
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">transform_rect_f</span>() {
+        <span class="kw">let</span> <span class="ident">rect</span> <span class="op">=</span> <span class="ident">Rectangle</span>::<span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span><span class="ident">::from_loc_and_size</span>((<span class="number">10</span>, <span class="number">20</span>), (<span class="number">30</span>, <span class="number">40</span>));
+        <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">Size::from</span>((<span class="number">70</span>, <span class="number">90</span>));
+        <span class="kw">let</span> <span class="ident">transform</span> <span class="op">=</span> <span class="ident">Transform::Flipped</span>;
+
+        <span class="macro">assert_eq!</span>(
+            <span class="ident">Rectangle::from_loc_and_size</span>((<span class="number">30</span>, <span class="number">20</span>), (<span class="number">30</span>, <span class="number">40</span>)),
+            <span class="ident">transform</span>.<span class="ident">transform_rect_in</span>(<span class="ident">rect</span>, <span class="kw-2">&amp;</span><span class="ident">size</span>)
+        )
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">transform_rect_f90</span>() {
+        <span class="kw">let</span> <span class="ident">rect</span> <span class="op">=</span> <span class="ident">Rectangle</span>::<span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span><span class="ident">::from_loc_and_size</span>((<span class="number">10</span>, <span class="number">20</span>), (<span class="number">30</span>, <span class="number">40</span>));
+        <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">Size::from</span>((<span class="number">70</span>, <span class="number">80</span>));
+        <span class="kw">let</span> <span class="ident">transform</span> <span class="op">=</span> <span class="ident">Transform::Flipped90</span>;
+
+        <span class="macro">assert_eq!</span>(
+            <span class="ident">Rectangle::from_loc_and_size</span>((<span class="number">20</span>, <span class="number">10</span>), (<span class="number">40</span>, <span class="number">30</span>)),
+            <span class="ident">transform</span>.<span class="ident">transform_rect_in</span>(<span class="ident">rect</span>, <span class="kw-2">&amp;</span><span class="ident">size</span>)
+        )
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">transform_rect_f180</span>() {
+        <span class="kw">let</span> <span class="ident">rect</span> <span class="op">=</span> <span class="ident">Rectangle</span>::<span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span><span class="ident">::from_loc_and_size</span>((<span class="number">10</span>, <span class="number">20</span>), (<span class="number">30</span>, <span class="number">40</span>));
+        <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">Size::from</span>((<span class="number">70</span>, <span class="number">90</span>));
+        <span class="kw">let</span> <span class="ident">transform</span> <span class="op">=</span> <span class="ident">Transform::Flipped180</span>;
+
+        <span class="macro">assert_eq!</span>(
+            <span class="ident">Rectangle::from_loc_and_size</span>((<span class="number">10</span>, <span class="number">30</span>), (<span class="number">30</span>, <span class="number">40</span>)),
+            <span class="ident">transform</span>.<span class="ident">transform_rect_in</span>(<span class="ident">rect</span>, <span class="kw-2">&amp;</span><span class="ident">size</span>)
+        )
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">transform_rect_f270</span>() {
+        <span class="kw">let</span> <span class="ident">rect</span> <span class="op">=</span> <span class="ident">Rectangle</span>::<span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span><span class="ident">::from_loc_and_size</span>((<span class="number">10</span>, <span class="number">20</span>), (<span class="number">30</span>, <span class="number">40</span>));
+        <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">Size::from</span>((<span class="number">70</span>, <span class="number">90</span>));
+        <span class="kw">let</span> <span class="ident">transform</span> <span class="op">=</span> <span class="ident">Transform::Flipped270</span>;
+
+        <span class="macro">assert_eq!</span>(
+            <span class="ident">Rectangle::from_loc_and_size</span>((<span class="number">30</span>, <span class="number">30</span>), (<span class="number">40</span>, <span class="number">30</span>)),
+            <span class="ident">transform</span>.<span class="ident">transform_rect_in</span>(<span class="ident">rect</span>, <span class="kw-2">&amp;</span><span class="ident">size</span>)
+        )
+    }
+}
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (91a0600a5 2021-12-18)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (ec4bcaac4 2022-01-15)" ></div>
 </body></html>

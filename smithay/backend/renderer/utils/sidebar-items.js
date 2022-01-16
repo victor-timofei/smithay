@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["draw_surface_tree","Draws a surface and its subsurfaces using a given [`Renderer`] and [`Frame`]."],["on_commit_buffer_handler","Handler to let smithay take over buffer management."]]});
