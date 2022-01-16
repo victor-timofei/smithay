@@ -325,18 +325,6 @@
 <span id="322">322</span>
 <span id="323">323</span>
 <span id="324">324</span>
-<span id="325">325</span>
-<span id="326">326</span>
-<span id="327">327</span>
-<span id="328">328</span>
-<span id="329">329</span>
-<span id="330">330</span>
-<span id="331">331</span>
-<span id="332">332</span>
-<span id="333">333</span>
-<span id="334">334</span>
-<span id="335">335</span>
-<span id="336">336</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">backend::renderer</span>::{<span class="ident">utils::draw_surface_tree</span>, <span class="ident">Frame</span>, <span class="ident">ImportAll</span>, <span class="ident">Renderer</span>, <span class="ident">Texture</span>},
     <span class="ident">desktop</span>::{<span class="ident">utils</span>::<span class="kw-2">*</span>, <span class="ident">PopupManager</span>, <span class="ident">Space</span>},
@@ -597,18 +585,6 @@
                     .<span class="ident">into_iter</span>()
                     .<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">rect</span><span class="op">|</span> <span class="ident">rect</span>.<span class="ident">intersection</span>(<span class="self">self</span>.<span class="ident">bbox</span>())),
             );
-            <span class="kw">for</span> (<span class="ident">popup</span>, <span class="ident">location</span>) <span class="kw">in</span> <span class="ident">PopupManager::popups_for_surface</span>(<span class="ident">surface</span>)
-                .<span class="ident">ok</span>()
-                .<span class="ident">into_iter</span>()
-                .<span class="ident">flatten</span>()
-            {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">surface</span>) <span class="op">=</span> <span class="ident">popup</span>.<span class="ident">get_surface</span>() {
-                    <span class="kw">let</span> <span class="ident">offset</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">geometry</span>().<span class="ident">loc</span> <span class="op">+</span> <span class="ident">location</span> <span class="op">-</span> <span class="ident">popup</span>.<span class="ident">geometry</span>().<span class="ident">loc</span>;
-                    <span class="kw">let</span> <span class="ident">bbox</span> <span class="op">=</span> <span class="ident">bbox_from_surface_tree</span>(<span class="ident">surface</span>, <span class="ident">offset</span>);
-                    <span class="kw">let</span> <span class="ident">popup_damage</span> <span class="op">=</span> <span class="ident">damage_from_surface_tree</span>(<span class="ident">surface</span>, <span class="ident">offset</span>, <span class="ident">for_values</span>);
-                    <span class="ident">damage</span>.<span class="ident">extend</span>(<span class="ident">popup_damage</span>.<span class="ident">into_iter</span>().<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">rect</span><span class="op">|</span> <span class="ident">rect</span>.<span class="ident">intersection</span>(<span class="ident">bbox</span>)));
-                }
-            }
         }
         <span class="ident">damage</span>
     }

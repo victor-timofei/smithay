@@ -38,6 +38,7 @@
 <span id="35">35</span>
 <span id="36">36</span>
 <span id="37">37</span>
+<span id="38">38</span>
 </pre><pre class="rust"><code><span class="macro">macro_rules!</span> <span class="ident">id_gen</span> {
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">func_name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">id_name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ids_name</span>:<span class="ident">ident</span>) =&gt; {
         <span class="kw">static</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">id_name</span>: <span class="ident">std::sync::atomic::AtomicUsize</span> <span class="op">=</span> <span class="ident">std::sync::atomic::AtomicUsize::new</span>(<span class="number">0</span>);
@@ -60,6 +61,7 @@
                         <span class="kw">while</span> <span class="ident">ids</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">k</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">k</span> <span class="op">==</span> <span class="ident">id</span>) {
                             <span class="ident">id</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                         }
+                        <span class="ident">id</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                         <span class="prelude-val">Some</span>(<span class="ident">id</span>)
                     },
                 );
