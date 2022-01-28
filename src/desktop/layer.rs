@@ -3,7 +3,7 @@ use crate::{
     desktop::{utils::*, PopupManager, Space},
     utils::{user_data::UserDataMap, Logical, Point, Rectangle},
     wayland::{
-        compositor::with_states,
+        compositor::{with_states, with_surface_tree_downward, TraversalAction},
         output::{Inner as OutputInner, Output},
         shell::wlr_layer::{
             Anchor, ExclusiveZone, KeyboardInteractivity, Layer as WlrLayer, LayerSurface as WlrLayerSurface,
@@ -21,6 +21,8 @@ use std::{
     sync::{Arc, Mutex, Weak},
 };
 
+use super::WindowSurfaceType;
+
 crate::utils::ids::id_gen!(next_layer_id, LAYER_ID, LAYER_IDS);
 
 /// Map of [`LayerSurface`]s on an [`Output`]
@@ -29,6 +31,9 @@ pub struct LayerMap {
     layers: IndexSet<LayerSurface>,
     output: Weak<(Mutex<OutputInner>, wayland_server::UserDataMap)>,
     zone: Rectangle<i32, Logical>,
+    // surfaces for tracking enter and leave events
+    surfaces: Vec<WlSurface>,
+    logger: ::slog::Logger,
 }
 
 /// Retrieve a [`LayerMap`] for a given [`Output`].
@@ -53,6 +58,10 @@ pub fn layer_map_for_output(o: &Output) -> RefMut<'_, LayerMap> {
                     .map(|mode| mode.size.to_logical(o.current_scale()))
                     .unwrap_or_else(|| (0, 0).into()),
             ),
+            surfaces: Vec::new(),
+            logger: (*o.inner.0.lock().unwrap())
+                .log
+                .new(slog::o!("smithay_module" => "layer_map")),
         })
     });
     userdata.get::<RefCell<LayerMap>>().unwrap().borrow_mut()
@@ -89,6 +98,34 @@ impl LayerMap {
         if self.layers.shift_remove(layer) {
             let _ = layer.user_data().get::<LayerUserdata>().take();
             self.arrange();
+        }
+        if let (Some(output), Some(surface)) = (self.output(), layer.get_surface()) {
+            with_surface_tree_downward(
+                surface,
+                (),
+                |_, _, _| TraversalAction::DoChildren(()),
+                |wl_surface, _, _| {
+                    output_leave(&output, &mut self.surfaces, wl_surface, &self.logger);
+                },
+                |_, _, _| true,
+            );
+            for (popup, _) in PopupManager::popups_for_surface(surface)
+                .ok()
+                .into_iter()
+                .flatten()
+            {
+                if let Some(surface) = popup.get_surface() {
+                    with_surface_tree_downward(
+                        surface,
+                        (),
+                        |_, _, _| TraversalAction::DoChildren(()),
+                        |wl_surface, _, _| {
+                            output_leave(&output, &mut self.surfaces, wl_surface, &self.logger);
+                        },
+                        |_, _, _| true,
+                    )
+                }
+            }
         }
     }
 
@@ -160,11 +197,7 @@ impl LayerMap {
                     .unwrap_or_else(|| (0, 0).into()),
             );
             let mut zone = output_rect;
-            slog::debug!(
-                crate::slog_or_fallback(None),
-                "Arranging layers into {:?}",
-                output_rect.size
-            );
+            slog::trace!(self.logger, "Arranging layers into {:?}", output_rect.size);
 
             for layer in self.layers.iter() {
                 let surface = if let Some(surface) = layer.get_surface() {
@@ -172,6 +205,35 @@ impl LayerMap {
                 } else {
                     continue;
                 };
+
+                let logger_ref = &self.logger;
+                let surfaces_ref = &mut self.surfaces;
+                with_surface_tree_downward(
+                    surface,
+                    (),
+                    |_, _, _| TraversalAction::DoChildren(()),
+                    |wl_surface, _, _| {
+                        output_enter(&output, surfaces_ref, wl_surface, logger_ref);
+                    },
+                    |_, _, _| true,
+                );
+                for (popup, _) in PopupManager::popups_for_surface(surface)
+                    .ok()
+                    .into_iter()
+                    .flatten()
+                {
+                    if let Some(surface) = popup.get_surface() {
+                        with_surface_tree_downward(
+                            surface,
+                            (),
+                            |_, _, _| TraversalAction::DoChildren(()),
+                            |wl_surface, _, _| {
+                                output_enter(&output, surfaces_ref, wl_surface, logger_ref);
+                            },
+                            |_, _, _| true,
+                        )
+                    }
+                }
 
                 let data = with_states(surface, |states| {
                     *states.cached_state.current::<LayerSurfaceCachedState>()
@@ -233,8 +295,8 @@ impl LayerMap {
                     }
                 }
 
-                slog::debug!(
-                    crate::slog_or_fallback(None),
+                slog::trace!(
+                    self.logger,
                     "Setting layer to pos {:?} and size {:?}",
                     location,
                     size
@@ -253,7 +315,7 @@ impl LayerMap {
                 layer_state(layer).location = location;
             }
 
-            slog::debug!(crate::slog_or_fallback(None), "Remaining zone {:?}", zone);
+            slog::trace!(self.logger, "Remaining zone {:?}", zone);
             self.zone = zone;
         }
     }
@@ -267,7 +329,14 @@ impl LayerMap {
     /// This function needs to be called periodically (though not necessarily frequently)
     /// to be able cleanup internally used resources.
     pub fn cleanup(&mut self) {
-        self.layers.retain(|layer| layer.alive())
+        self.layers.retain(|layer| layer.alive());
+        self.surfaces.retain(|s| s.as_ref().is_alive());
+    }
+
+    /// Returns layers count
+    #[allow(clippy::len_without_is_empty)] //we don't need is_empty on that struct for now, mark as allow
+    pub fn len(&self) -> usize {
+        self.layers.len()
     }
 }
 
@@ -428,6 +497,7 @@ impl LayerSurface {
     pub fn surface_under<P: Into<Point<f64, Logical>>>(
         &self,
         point: P,
+        surface_type: WindowSurfaceType,
     ) -> Option<(WlSurface, Point<i32, Logical>)> {
         let point = point.into();
         if let Some(surface) = self.get_surface() {
@@ -438,13 +508,13 @@ impl LayerSurface {
             {
                 if let Some(result) = popup
                     .get_surface()
-                    .and_then(|surface| under_from_surface_tree(surface, point, location))
+                    .and_then(|surface| under_from_surface_tree(surface, point, location, surface_type))
                 {
                     return Some(result);
                 }
             }
 
-            under_from_surface_tree(surface, point, (0, 0))
+            under_from_surface_tree(surface, point, (0, 0), surface_type)
         } else {
             None
         }
@@ -485,7 +555,16 @@ impl LayerSurface {
     /// window that requested it
     pub fn send_frame(&self, time: u32) {
         if let Some(wl_surface) = self.0.surface.get_surface() {
-            send_frames_surface_tree(wl_surface, time)
+            send_frames_surface_tree(wl_surface, time);
+            for (popup, _) in PopupManager::popups_for_surface(wl_surface)
+                .ok()
+                .into_iter()
+                .flatten()
+            {
+                if let Some(surface) = popup.get_surface() {
+                    send_frames_surface_tree(surface, time);
+                }
+            }
         }
     }
 

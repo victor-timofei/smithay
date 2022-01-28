@@ -2,23 +2,21 @@
 //! rendering helpers to add custom elements or different clients to a space.
 
 use crate::{
-    backend::renderer::{utils::SurfaceState, Frame, ImportAll, Renderer, Transform},
+    backend::renderer::{Frame, ImportAll, Renderer},
     desktop::{
         layer::{layer_map_for_output, LayerSurface},
+        popup::PopupManager,
+        utils::{output_leave, output_update},
         window::Window,
     },
-    utils::{Logical, Point, Rectangle},
+    utils::{Logical, Point, Rectangle, Transform},
     wayland::{
-        compositor::{
-            get_parent, is_sync_subsurface, with_surface_tree_downward, SubsurfaceCachedState,
-            TraversalAction,
-        },
+        compositor::{get_parent, is_sync_subsurface},
         output::Output,
-        shell::wlr_layer::Layer as WlrLayer,
     },
 };
 use indexmap::{IndexMap, IndexSet};
-use std::{cell::RefCell, collections::VecDeque, fmt};
+use std::{collections::VecDeque, fmt};
 use wayland_server::protocol::wl_surface::WlSurface;
 
 mod element;
@@ -43,10 +41,6 @@ pub struct Space {
     outputs: Vec<Output>,
     logger: ::slog::Logger,
 }
-
-/// Elements rendered by [`Space::render_output`] in addition to windows, layers and popups.
-pub type DynamicRenderElements<R> =
-    Box<dyn RenderElement<R, <R as Renderer>::Frame, <R as Renderer>::Error, <R as Renderer>::TextureId>>;
 
 impl PartialEq for Space {
     fn eq(&self, other: &Space) -> bool {
@@ -326,97 +320,39 @@ impl Space {
                 // the output.
                 if !output_geometry.overlaps(bbox) {
                     if let Some(surface) = kind.get_surface() {
-                        with_surface_tree_downward(
-                            surface,
-                            (),
-                            |_, _, _| TraversalAction::DoChildren(()),
-                            |wl_surface, _, _| {
-                                if output_state.surfaces.contains(wl_surface) {
-                                    slog::trace!(
-                                        self.logger,
-                                        "surface ({:?}) leaving output {:?}",
-                                        wl_surface,
-                                        output.name()
-                                    );
-                                    output.leave(wl_surface);
-                                    output_state.surfaces.retain(|s| s != wl_surface);
-                                }
-                            },
-                            |_, _, _| true,
-                        )
+                        output_leave(output, &mut output_state.surfaces, surface, &self.logger);
                     }
                     continue;
                 }
 
                 if let Some(surface) = kind.get_surface() {
-                    with_surface_tree_downward(
+                    output_update(
+                        output,
+                        output_geometry,
+                        &mut output_state.surfaces,
                         surface,
                         window_loc(window, &self.id),
-                        |_, states, location| {
-                            let mut location = *location;
-                            let data = states.data_map.get::<RefCell<SurfaceState>>();
+                        &self.logger,
+                    );
 
-                            if data.is_some() {
-                                if states.role == Some("subsurface") {
-                                    let current = states.cached_state.current::<SubsurfaceCachedState>();
-                                    location += current.location;
-                                }
-
-                                TraversalAction::DoChildren(location)
-                            } else {
-                                // If the parent surface is unmapped, then the child surfaces are hidden as
-                                // well, no need to consider them here.
-                                TraversalAction::SkipChildren
-                            }
-                        },
-                        |wl_surface, states, &loc| {
-                            let data = states.data_map.get::<RefCell<SurfaceState>>();
-
-                            if let Some(size) = data.and_then(|d| d.borrow().size()) {
-                                let surface_rectangle = Rectangle { loc, size };
-
-                                if output_geometry.overlaps(surface_rectangle) {
-                                    // We found a matching output, check if we already sent enter
-                                    if !output_state.surfaces.contains(wl_surface) {
-                                        slog::trace!(
-                                            self.logger,
-                                            "surface ({:?}) entering output {:?}",
-                                            wl_surface,
-                                            output.name()
-                                        );
-                                        output.enter(wl_surface);
-                                        output_state.surfaces.push(wl_surface.clone());
-                                    }
-                                } else {
-                                    // Surface does not match output, if we sent enter earlier
-                                    // we should now send leave
-                                    if output_state.surfaces.contains(wl_surface) {
-                                        slog::trace!(
-                                            self.logger,
-                                            "surface ({:?}) leaving output {:?}",
-                                            wl_surface,
-                                            output.name()
-                                        );
-                                        output.leave(wl_surface);
-                                        output_state.surfaces.retain(|s| s != wl_surface);
-                                    }
-                                }
-                            } else {
-                                // Maybe the the surface got unmapped, send leave on output
-                                if output_state.surfaces.contains(wl_surface) {
-                                    slog::trace!(
-                                        self.logger,
-                                        "surface ({:?}) leaving output {:?}",
-                                        wl_surface,
-                                        output.name()
-                                    );
-                                    output.leave(wl_surface);
-                                    output_state.surfaces.retain(|s| s != wl_surface);
-                                }
-                            }
-                        },
-                        |_, _, _| true,
-                    )
+                    for (popup, location) in PopupManager::popups_for_surface(surface)
+                        .ok()
+                        .into_iter()
+                        .flatten()
+                    {
+                        if let Some(surface) = popup.get_surface() {
+                            let location = window_loc(window, &self.id) + window.geometry().loc + location
+                                - popup.geometry().loc;
+                            output_update(
+                                output,
+                                output_geometry,
+                                &mut output_state.surfaces,
+                                surface,
+                                location,
+                                &self.logger,
+                            );
+                        }
+                    }
                 }
             }
         }
@@ -454,7 +390,8 @@ impl Space {
     /// trait and use `custom_elements` to provide them to this function. `custom_elements are rendered
     /// after every other element.
     ///
-    /// Returns a list of updated regions (or `None` if that list would be empty) in case of success.
+    /// Returns a list of updated regions relative to the rendered output
+    /// (or `None` if that list would be empty) in case of success.
     pub fn render_output<R>(
         &mut self,
         renderer: &mut R,
@@ -472,9 +409,6 @@ impl Space {
         if !self.outputs.contains(output) {
             return Err(RenderError::UnmappedOutput);
         }
-
-        type SpaceElem<R> =
-            dyn SpaceElement<R, <R as Renderer>::Frame, <R as Renderer>::Error, <R as Renderer>::TextureId>;
 
         let mut state = output_state(self.id, output);
         let output_size = output
@@ -497,23 +431,31 @@ impl Space {
             .flat_map(|l| l.popup_elements::<R>(self.id))
             .collect::<Vec<_>>();
 
+        let mut render_elements: Vec<&SpaceElem<R>> = Vec::with_capacity(
+            custom_elements.len()
+                + layer_map.len()
+                + self.windows.len()
+                + window_popups.len()
+                + layer_popups.len(),
+        );
+
+        render_elements.extend(custom_elements.iter().map(|l| l as &SpaceElem<R>));
+        render_elements.extend(self.windows.iter().map(|l| l as &SpaceElem<R>));
+        render_elements.extend(window_popups.iter().map(|l| l as &SpaceElem<R>));
+        render_elements.extend(layer_map.layers().map(|l| l as &SpaceElem<R>));
+        render_elements.extend(layer_popups.iter().map(|l| l as &SpaceElem<R>));
+
+        render_elements.sort_by_key(|e| e.z_index());
+
         // This will hold all the damage we need for this rendering step
         let mut damage = Vec::<Rectangle<i32, Logical>>::new();
         // First add damage for windows gone
+
         for old_toplevel in state
             .last_state
             .iter()
             .filter_map(|(id, geo)| {
-                if !self
-                    .windows
-                    .iter()
-                    .map(|w| w as &SpaceElem<R>)
-                    .chain(window_popups.iter().map(|p| p as &SpaceElem<R>))
-                    .chain(layer_map.layers().map(|l| l as &SpaceElem<R>))
-                    .chain(layer_popups.iter().map(|p| p as &SpaceElem<R>))
-                    .chain(custom_elements.iter().map(|c| c as &SpaceElem<R>))
-                    .any(|e| ToplevelId::from(e) == *id)
-                {
+                if !render_elements.iter().any(|e| ToplevelId::from(*e) == *id) {
                     Some(*geo)
                 } else {
                     None
@@ -526,17 +468,9 @@ impl Space {
         }
 
         // lets iterate front to back and figure out, what new windows or unmoved windows we have
-        for element in self
-            .windows
-            .iter()
-            .map(|w| w as &SpaceElem<R>)
-            .chain(window_popups.iter().map(|p| p as &SpaceElem<R>))
-            .chain(layer_map.layers().map(|l| l as &SpaceElem<R>))
-            .chain(layer_popups.iter().map(|p| p as &SpaceElem<R>))
-            .chain(custom_elements.iter().map(|c| c as &SpaceElem<R>))
-        {
+        for element in &render_elements {
             let geo = element.geometry(self.id);
-            let old_geo = state.last_state.get(&ToplevelId::from(element)).cloned();
+            let old_geo = state.last_state.get(&ToplevelId::from(*element)).cloned();
 
             // window was moved or resized
             if old_geo.map(|old_geo| old_geo != geo).unwrap_or(false) {
@@ -572,12 +506,15 @@ impl Space {
         damage.retain(|rect| rect.overlaps(output_geo));
         damage.retain(|rect| rect.size.h > 0 && rect.size.w > 0);
         // merge overlapping rectangles
-        damage = damage.into_iter().fold(Vec::new(), |mut new_damage, rect| {
-            if let Some(existing) = new_damage.iter_mut().find(|other| rect.overlaps(**other)) {
-                *existing = existing.merge(rect);
-            } else {
-                new_damage.push(rect);
+        damage = damage.into_iter().fold(Vec::new(), |new_damage, mut rect| {
+            // replace with drain_filter, when that becomes stable to reuse the original Vec's memory
+            let (overlapping, mut new_damage): (Vec<_>, Vec<_>) =
+                new_damage.into_iter().partition(|other| other.overlaps(rect));
+
+            for overlap in overlapping {
+                rect = rect.merge(overlap);
             }
+            new_damage.push(rect);
             new_damage
         });
 
@@ -600,37 +537,28 @@ impl Space {
                     clear_color,
                     &damage
                         .iter()
+                        // Map from global space to output space
+                        .map(|geo| Rectangle::from_loc_and_size(geo.loc - output_geo.loc, geo.size))
+                        // Map from logical to physical
                         .map(|geo| geo.to_f64().to_physical(state.render_scale).to_i32_round())
                         .collect::<Vec<_>>(),
                 )?;
-
                 // Then re-draw all windows & layers overlapping with a damage rect.
 
-                for element in layer_map
-                    .layers_on(WlrLayer::Background)
-                    .chain(layer_map.layers_on(WlrLayer::Bottom))
-                    .map(|l| l as &SpaceElem<R>)
-                    .chain(self.windows.iter().map(|w| w as &SpaceElem<R>))
-                    .chain(
-                        layer_map
-                            .layers_on(WlrLayer::Top)
-                            .chain(layer_map.layers_on(WlrLayer::Overlay))
-                            .map(|l| l as &SpaceElem<R>),
-                    )
-                    .chain(custom_elements.iter().map(|c| c as &SpaceElem<R>))
-                {
+                for element in &render_elements {
                     let geo = element.geometry(self.id);
                     if damage.iter().any(|d| d.overlaps(geo)) {
-                        let loc = element.location(self.id) - output_geo.loc;
+                        let loc = element.location(self.id);
                         let damage = damage
                             .iter()
                             .flat_map(|d| d.intersection(geo))
+                            // Map from output space to surface-relative coordinates
                             .map(|geo| Rectangle::from_loc_and_size(geo.loc - loc, geo.size))
                             .collect::<Vec<_>>();
                         slog::trace!(
                             self.logger,
                             "Rendering toplevel at {:?} with damage {:#?}",
-                            geo,
+                            Rectangle::from_loc_and_size(geo.loc - output_geo.loc, geo.size),
                             damage
                         );
                         element.draw(
@@ -638,7 +566,7 @@ impl Space {
                             renderer,
                             frame,
                             state.render_scale,
-                            loc,
+                            loc - output_geo.loc,
                             &damage,
                             &self.logger,
                         )?;
@@ -658,22 +586,24 @@ impl Space {
         }
 
         // If rendering was successful capture the state and add the damage
-        state.last_state = self
-            .windows
+        state.last_state = render_elements
             .iter()
-            .map(|w| w as &SpaceElem<R>)
-            .chain(window_popups.iter().map(|p| p as &SpaceElem<R>))
-            .chain(layer_map.layers().map(|l| l as &SpaceElem<R>))
-            .chain(layer_popups.iter().map(|p| p as &SpaceElem<R>))
-            .chain(custom_elements.iter().map(|c| c as &SpaceElem<R>))
             .map(|elem| {
                 let geo = elem.geometry(self.id);
-                (ToplevelId::from(elem), geo)
+                (ToplevelId::from(*elem), geo)
             })
             .collect();
         state.old_damage.push_front(new_damage.clone());
 
-        Ok(Some(new_damage))
+        Ok(Some(
+            new_damage
+                .into_iter()
+                .map(|mut geo| {
+                    geo.loc -= output_geo.loc;
+                    geo
+                })
+                .collect(),
+        ))
     }
 
     /// Sends the frame callback to mapped [`Window`]s and [`LayerSurface`]s.

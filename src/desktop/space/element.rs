@@ -10,6 +10,33 @@ use std::{
 };
 use wayland_server::protocol::wl_surface::WlSurface;
 
+/// Indicates default values for some zindexs inside smithay
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[repr(u8)]
+pub enum RenderZindex {
+    /// WlrLayer::Background default zindex
+    Background = 10,
+    /// WlrLayer::Bottom default zindex
+    Bottom = 20,
+    /// Default zindex for Windows
+    Shell = 30,
+    /// WlrLayer::Top default zindex
+    Top = 40,
+    /// Default zindex for Windows PopUps
+    Popups = 50,
+    /// Default Layer for RenderElements
+    Overlay = 60,
+    /// Default Layer for Overlay PopUp
+    PopupsOverlay = 70,
+}
+
+/// Elements rendered by [`Space::render_output`] in addition to windows, layers and popups.
+pub type DynamicRenderElements<R> =
+    Box<dyn RenderElement<R, <R as Renderer>::Frame, <R as Renderer>::Error, <R as Renderer>::TextureId>>;
+
+pub(super) type SpaceElem<R> =
+    dyn SpaceElement<R, <R as Renderer>::Frame, <R as Renderer>::Error, <R as Renderer>::TextureId>;
+
 /// Trait for custom elements to be rendered during [`Space::render_output`].
 pub trait RenderElement<R, F, E, T>
 where
@@ -28,6 +55,7 @@ where
     /// Returns the bounding box of this element including its position in the space.
     fn geometry(&self) -> Rectangle<i32, Logical>;
     /// Returns the damage of the element since it's last update.
+    /// It should be relative to the elements coordinates.
     ///
     /// If you receive `Some(_)` for `for_values` you may cache that you
     /// send the damage for this `Space` and `Output` combination once
@@ -43,6 +71,8 @@ where
     /// Draws the element using the provided `Frame` and `Renderer`.
     ///
     /// - `scale` provides the current fractional scale value to render as
+    /// - `location` refers to the relative position in the bound buffer the element should be drawn at,
+    ///    so that it matches with the space-relative coordinates returned by [`RenderElement::geometry`].
     /// - `damage` provides the regions you need to re-draw and *may* not
     ///   be equivalent to the damage returned by `accumulated_damage`.
     ///   Redrawing other parts of the element is not valid and may cause rendering artifacts.
@@ -51,9 +81,15 @@ where
         renderer: &mut R,
         frame: &mut F,
         scale: f64,
+        location: Point<i32, Logical>,
         damage: &[Rectangle<i32, Logical>],
         log: &slog::Logger,
     ) -> Result<(), R::Error>;
+
+    /// Returns z_index of RenderElement, reverf too [`RenderZindex`] for default values
+    fn z_index(&self) -> u8 {
+        RenderZindex::Overlay as u8
+    }
 }
 
 pub(crate) trait SpaceElement<R, F, E, T>
@@ -81,6 +117,7 @@ where
         damage: &[Rectangle<i32, Logical>],
         log: &slog::Logger,
     ) -> Result<(), R::Error>;
+    fn z_index(&self) -> u8;
 }
 
 impl<R, F, E, T> SpaceElement<R, F, E, T> for Box<dyn RenderElement<R, F, E, T>>
@@ -108,11 +145,15 @@ where
         renderer: &mut R,
         frame: &mut F,
         scale: f64,
-        _location: Point<i32, Logical>,
+        location: Point<i32, Logical>,
         damage: &[Rectangle<i32, Logical>],
         log: &slog::Logger,
     ) -> Result<(), R::Error> {
-        (&**self as &dyn RenderElement<R, F, E, T>).draw(renderer, frame, scale, damage, log)
+        (&**self as &dyn RenderElement<R, F, E, T>).draw(renderer, frame, scale, location, damage, log)
+    }
+
+    fn z_index(&self) -> u8 {
+        RenderElement::z_index(self.as_ref())
     }
 }
 
@@ -161,6 +202,7 @@ where
         renderer: &mut R,
         frame: &mut F,
         scale: f64,
+        location: Point<i32, Logical>,
         damage: &[Rectangle<i32, Logical>],
         log: &slog::Logger,
     ) -> Result<(), R::Error> {
@@ -169,7 +211,7 @@ where
             frame,
             &self.surface,
             scale,
-            self.position,
+            location,
             damage,
             log,
         )

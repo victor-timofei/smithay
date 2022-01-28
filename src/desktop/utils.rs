@@ -3,7 +3,7 @@
 use crate::{
     backend::renderer::utils::SurfaceState,
     desktop::Space,
-    utils::{Logical, Point, Rectangle, Size},
+    utils::{Logical, Point, Rectangle},
     wayland::{
         compositor::{
             with_surface_tree_downward, with_surface_tree_upward, Damage, SubsurfaceCachedState,
@@ -16,16 +16,12 @@ use wayland_server::protocol::wl_surface;
 
 use std::cell::RefCell;
 
-impl SurfaceState {
-    /// Returns the size of the surface.
-    pub fn size(&self) -> Option<Size<i32, Logical>> {
-        self.buffer_dimensions
-            .map(|dims| dims.to_logical(self.buffer_scale))
-    }
+use super::WindowSurfaceType;
 
+impl SurfaceState {
     fn contains_point<P: Into<Point<f64, Logical>>>(&self, attrs: &SurfaceAttributes, point: P) -> bool {
         let point = point.into();
-        let size = match self.size() {
+        let size = match self.surface_size() {
             None => return false, // If the surface has no size, it can't have an input region.
             Some(size) => size,
         };
@@ -71,7 +67,7 @@ where
             let mut loc = *loc;
             let data = states.data_map.get::<RefCell<SurfaceState>>();
 
-            if let Some(size) = data.and_then(|d| d.borrow().size()) {
+            if let Some(size) = data.and_then(|d| d.borrow().surface_size()) {
                 if states.role == Some("subsurface") {
                     let current = states.cached_state.current::<SubsurfaceCachedState>();
                     loc += current.location;
@@ -148,7 +144,11 @@ where
 
                     damage.extend(attributes.damage.iter().map(|dmg| {
                         let mut rect = match dmg {
-                            Damage::Buffer(rect) => rect.to_logical(attributes.buffer_scale),
+                            Damage::Buffer(rect) => rect.to_logical(
+                                attributes.buffer_scale,
+                                attributes.buffer_transform.into(),
+                                &data.buffer_dimensions.unwrap(),
+                            ),
                             Damage::Surface(rect) => *rect,
                         };
                         rect.loc += location;
@@ -174,6 +174,7 @@ pub fn under_from_surface_tree<P>(
     surface: &wl_surface::WlSurface,
     point: Point<f64, Logical>,
     location: P,
+    surface_type: WindowSurfaceType,
 ) -> Option<(wl_surface::WlSurface, Point<i32, Logical>)>
 where
     P: Into<Point<i32, Logical>>,
@@ -191,17 +192,23 @@ where
                 location += current.location;
             }
 
-            let contains_the_point = data
-                .map(|data| {
-                    data.borrow()
-                        .contains_point(&*states.cached_state.current(), point - location.to_f64())
-                })
-                .unwrap_or(false);
-            if contains_the_point {
-                *found.borrow_mut() = Some((wl_surface.clone(), location));
+            if states.role == Some("subsurface") || surface_type.contains(WindowSurfaceType::TOPLEVEL) {
+                let contains_the_point = data
+                    .map(|data| {
+                        data.borrow()
+                            .contains_point(&*states.cached_state.current(), point - location.to_f64())
+                    })
+                    .unwrap_or(false);
+                if contains_the_point {
+                    *found.borrow_mut() = Some((wl_surface.clone(), location));
+                }
             }
 
-            TraversalAction::DoChildren(location)
+            if surface_type.contains(WindowSurfaceType::SUBSURFACE) {
+                TraversalAction::DoChildren(location)
+            } else {
+                TraversalAction::SkipChildren
+            }
         },
         |_, _, _| {},
         |_, _, _| {
@@ -232,4 +239,90 @@ pub fn send_frames_surface_tree(surface: &wl_surface::WlSurface, time: u32) {
         },
         |_, _, &()| true,
     );
+}
+
+pub(crate) fn output_update(
+    output: &Output,
+    output_geometry: Rectangle<i32, Logical>,
+    surface_list: &mut Vec<wl_surface::WlSurface>,
+    surface: &wl_surface::WlSurface,
+    location: Point<i32, Logical>,
+    logger: &slog::Logger,
+) {
+    with_surface_tree_downward(
+        surface,
+        location,
+        |_, states, location| {
+            let mut location = *location;
+            let data = states.data_map.get::<RefCell<SurfaceState>>();
+
+            if data.is_some() {
+                if states.role == Some("subsurface") {
+                    let current = states.cached_state.current::<SubsurfaceCachedState>();
+                    location += current.location;
+                }
+
+                TraversalAction::DoChildren(location)
+            } else {
+                // If the parent surface is unmapped, then the child surfaces are hidden as
+                // well, no need to consider them here.
+                TraversalAction::SkipChildren
+            }
+        },
+        |wl_surface, states, &loc| {
+            let data = states.data_map.get::<RefCell<SurfaceState>>();
+
+            if let Some(size) = data.and_then(|d| d.borrow().surface_size()) {
+                let surface_rectangle = Rectangle { loc, size };
+                if output_geometry.overlaps(surface_rectangle) {
+                    // We found a matching output, check if we already sent enter
+                    output_enter(output, surface_list, wl_surface, logger);
+                } else {
+                    // Surface does not match output, if we sent enter earlier
+                    // we should now send leave
+                    output_leave(output, surface_list, wl_surface, logger);
+                }
+            } else {
+                // Maybe the the surface got unmapped, send leave on output
+                output_leave(output, surface_list, wl_surface, logger);
+            }
+        },
+        |_, _, _| true,
+    );
+}
+
+pub(crate) fn output_enter(
+    output: &Output,
+    surface_list: &mut Vec<wl_surface::WlSurface>,
+    surface: &wl_surface::WlSurface,
+    logger: &slog::Logger,
+) {
+    if !surface_list.contains(surface) {
+        slog::debug!(
+            logger,
+            "surface ({:?}) entering output {:?}",
+            surface,
+            output.name()
+        );
+        output.enter(surface);
+        surface_list.push(surface.clone());
+    }
+}
+
+pub(crate) fn output_leave(
+    output: &Output,
+    surface_list: &mut Vec<wl_surface::WlSurface>,
+    surface: &wl_surface::WlSurface,
+    logger: &slog::Logger,
+) {
+    if surface_list.contains(surface) {
+        slog::debug!(
+            logger,
+            "surface ({:?}) leaving output {:?}",
+            surface,
+            output.name()
+        );
+        output.leave(surface);
+        surface_list.retain(|s| s != surface);
+    }
 }
