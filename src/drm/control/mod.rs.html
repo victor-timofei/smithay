@@ -1,7 +1,9 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/drm-0.5.0/src/control/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><script defer src="../../../main.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script>
-    <noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a class="sidebar-logo" href="../../../drm/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../drm/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><form class="search-form"><div class="search-container"><div>
-                                <input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../../wheel.svg"></a></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">   1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/drm-0.6.2/src/control/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><script defer src="../../../main.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script>
+    <noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../drm/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"></h2>
+    </nav>
+    <nav class="sidebar"><a class="sidebar-logo" href="../../../drm/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
+        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../drm/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><div class="theme-picker hidden"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="22" height="22" alt="Pick another theme!" src="../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">   1</span>
 <span id="2">   2</span>
 <span id="3">   3</span>
 <span id="4">   4</span>
@@ -1125,6 +1127,142 @@
 <span id="1122">1122</span>
 <span id="1123">1123</span>
 <span id="1124">1124</span>
+<span id="1125">1125</span>
+<span id="1126">1126</span>
+<span id="1127">1127</span>
+<span id="1128">1128</span>
+<span id="1129">1129</span>
+<span id="1130">1130</span>
+<span id="1131">1131</span>
+<span id="1132">1132</span>
+<span id="1133">1133</span>
+<span id="1134">1134</span>
+<span id="1135">1135</span>
+<span id="1136">1136</span>
+<span id="1137">1137</span>
+<span id="1138">1138</span>
+<span id="1139">1139</span>
+<span id="1140">1140</span>
+<span id="1141">1141</span>
+<span id="1142">1142</span>
+<span id="1143">1143</span>
+<span id="1144">1144</span>
+<span id="1145">1145</span>
+<span id="1146">1146</span>
+<span id="1147">1147</span>
+<span id="1148">1148</span>
+<span id="1149">1149</span>
+<span id="1150">1150</span>
+<span id="1151">1151</span>
+<span id="1152">1152</span>
+<span id="1153">1153</span>
+<span id="1154">1154</span>
+<span id="1155">1155</span>
+<span id="1156">1156</span>
+<span id="1157">1157</span>
+<span id="1158">1158</span>
+<span id="1159">1159</span>
+<span id="1160">1160</span>
+<span id="1161">1161</span>
+<span id="1162">1162</span>
+<span id="1163">1163</span>
+<span id="1164">1164</span>
+<span id="1165">1165</span>
+<span id="1166">1166</span>
+<span id="1167">1167</span>
+<span id="1168">1168</span>
+<span id="1169">1169</span>
+<span id="1170">1170</span>
+<span id="1171">1171</span>
+<span id="1172">1172</span>
+<span id="1173">1173</span>
+<span id="1174">1174</span>
+<span id="1175">1175</span>
+<span id="1176">1176</span>
+<span id="1177">1177</span>
+<span id="1178">1178</span>
+<span id="1179">1179</span>
+<span id="1180">1180</span>
+<span id="1181">1181</span>
+<span id="1182">1182</span>
+<span id="1183">1183</span>
+<span id="1184">1184</span>
+<span id="1185">1185</span>
+<span id="1186">1186</span>
+<span id="1187">1187</span>
+<span id="1188">1188</span>
+<span id="1189">1189</span>
+<span id="1190">1190</span>
+<span id="1191">1191</span>
+<span id="1192">1192</span>
+<span id="1193">1193</span>
+<span id="1194">1194</span>
+<span id="1195">1195</span>
+<span id="1196">1196</span>
+<span id="1197">1197</span>
+<span id="1198">1198</span>
+<span id="1199">1199</span>
+<span id="1200">1200</span>
+<span id="1201">1201</span>
+<span id="1202">1202</span>
+<span id="1203">1203</span>
+<span id="1204">1204</span>
+<span id="1205">1205</span>
+<span id="1206">1206</span>
+<span id="1207">1207</span>
+<span id="1208">1208</span>
+<span id="1209">1209</span>
+<span id="1210">1210</span>
+<span id="1211">1211</span>
+<span id="1212">1212</span>
+<span id="1213">1213</span>
+<span id="1214">1214</span>
+<span id="1215">1215</span>
+<span id="1216">1216</span>
+<span id="1217">1217</span>
+<span id="1218">1218</span>
+<span id="1219">1219</span>
+<span id="1220">1220</span>
+<span id="1221">1221</span>
+<span id="1222">1222</span>
+<span id="1223">1223</span>
+<span id="1224">1224</span>
+<span id="1225">1225</span>
+<span id="1226">1226</span>
+<span id="1227">1227</span>
+<span id="1228">1228</span>
+<span id="1229">1229</span>
+<span id="1230">1230</span>
+<span id="1231">1231</span>
+<span id="1232">1232</span>
+<span id="1233">1233</span>
+<span id="1234">1234</span>
+<span id="1235">1235</span>
+<span id="1236">1236</span>
+<span id="1237">1237</span>
+<span id="1238">1238</span>
+<span id="1239">1239</span>
+<span id="1240">1240</span>
+<span id="1241">1241</span>
+<span id="1242">1242</span>
+<span id="1243">1243</span>
+<span id="1244">1244</span>
+<span id="1245">1245</span>
+<span id="1246">1246</span>
+<span id="1247">1247</span>
+<span id="1248">1248</span>
+<span id="1249">1249</span>
+<span id="1250">1250</span>
+<span id="1251">1251</span>
+<span id="1252">1252</span>
+<span id="1253">1253</span>
+<span id="1254">1254</span>
+<span id="1255">1255</span>
+<span id="1256">1256</span>
+<span id="1257">1257</span>
+<span id="1258">1258</span>
+<span id="1259">1259</span>
+<span id="1260">1260</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Modesetting operations that the DRM subsystem exposes.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # Summary</span>
@@ -1521,13 +1659,13 @@
             <span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut</span> <span class="ident">enum_slice</span>),
         )<span class="question-mark">?</span>;
 
+        <span class="kw">let</span> <span class="ident">flags</span> <span class="op">=</span> <span class="ident">ModePropFlags::from_bits_truncate</span>(<span class="ident">info</span>.<span class="ident">flags</span>);
         <span class="kw">let</span> <span class="ident">val_len</span> <span class="op">=</span> <span class="ident">val_slice</span>.<span class="ident">len</span>();
 
         <span class="kw">let</span> <span class="ident">val_type</span> <span class="op">=</span> {
             <span class="kw">use</span> <span class="ident"><span class="self">self</span>::property::ValueType</span>;
-            <span class="kw">let</span> <span class="ident">flags</span> <span class="op">=</span> <span class="ident">info</span>.<span class="ident">flags</span>;
 
-            <span class="kw">if</span> <span class="ident">flags</span> <span class="op">&amp;</span> <span class="ident">ffi::DRM_MODE_PROP_RANGE</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
+            <span class="kw">if</span> <span class="ident">flags</span>.<span class="ident">contains</span>(<span class="ident">ModePropFlags::RANGE</span>) {
                 <span class="kw">let</span> <span class="ident">min</span> <span class="op">=</span> <span class="ident">values</span>[<span class="number">0</span>];
                 <span class="kw">let</span> <span class="ident">max</span> <span class="op">=</span> <span class="ident">values</span>[<span class="number">1</span>];
 
@@ -1535,12 +1673,12 @@
                     (<span class="number">0</span>, <span class="number">1</span>) =&gt; <span class="ident">ValueType::Boolean</span>,
                     (<span class="ident">min</span>, <span class="ident">max</span>) =&gt; <span class="ident">ValueType::UnsignedRange</span>(<span class="ident">min</span>, <span class="ident">max</span>),
                 }
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">flags</span> <span class="op">&amp;</span> <span class="ident">ffi::DRM_MODE_PROP_SIGNED_RANGE</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
+            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">flags</span>.<span class="ident">contains</span>(<span class="ident">ModePropFlags::SIGNED_RANGE</span>) {
                 <span class="kw">let</span> <span class="ident">min</span> <span class="op">=</span> <span class="ident">values</span>[<span class="number">0</span>];
                 <span class="kw">let</span> <span class="ident">max</span> <span class="op">=</span> <span class="ident">values</span>[<span class="number">1</span>];
 
                 <span class="ident">ValueType::SignedRange</span>(<span class="ident">min</span> <span class="kw">as</span> <span class="ident">i64</span>, <span class="ident">max</span> <span class="kw">as</span> <span class="ident">i64</span>)
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">flags</span> <span class="op">&amp;</span> <span class="ident">ffi::DRM_MODE_PROP_ENUM</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
+            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">flags</span>.<span class="ident">contains</span>(<span class="ident">ModePropFlags::ENUM</span>) {
                 <span class="kw">let</span> <span class="ident">enum_values</span> <span class="op">=</span> <span class="ident"><span class="self">self</span>::property::EnumValues</span> {
                     <span class="ident">values</span>,
                     <span class="ident">enums</span>: <span class="kw">unsafe</span> { <span class="ident">mem::transmute</span>(<span class="ident">enums</span>) },
@@ -1548,11 +1686,11 @@
                 };
 
                 <span class="ident">ValueType::Enum</span>(<span class="ident">enum_values</span>)
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">flags</span> <span class="op">&amp;</span> <span class="ident">ffi::DRM_MODE_PROP_BLOB</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
+            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">flags</span>.<span class="ident">contains</span>(<span class="ident">ModePropFlags::BLOB</span>) {
                 <span class="ident">ValueType::Blob</span>
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">flags</span> <span class="op">&amp;</span> <span class="ident">ffi::DRM_MODE_PROP_BITMASK</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
+            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">flags</span>.<span class="ident">contains</span>(<span class="ident">ModePropFlags::BITMASK</span>) {
                 <span class="ident">ValueType::Bitmask</span>
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">flags</span> <span class="op">&amp;</span> <span class="ident">ffi::DRM_MODE_PROP_OBJECT</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
+            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">flags</span>.<span class="ident">contains</span>(<span class="ident">ModePropFlags::OBJECT</span>) {
                 <span class="kw">match</span> <span class="ident">values</span>[<span class="number">0</span>] <span class="kw">as</span> <span class="ident">u32</span> {
                     <span class="ident">ffi::DRM_MODE_OBJECT_CRTC</span> =&gt; <span class="ident">ValueType::CRTC</span>,
                     <span class="ident">ffi::DRM_MODE_OBJECT_CONNECTOR</span> =&gt; <span class="ident">ValueType::Connector</span>,
@@ -1572,8 +1710,8 @@
         <span class="kw">let</span> <span class="ident">property</span> <span class="op">=</span> <span class="ident">property::Info</span> {
             <span class="ident">handle</span>,
             <span class="ident">val_type</span>,
-            <span class="ident">mutable</span>: <span class="ident">info</span>.<span class="ident">flags</span> <span class="op">&amp;</span> <span class="ident">ffi::DRM_MODE_PROP_IMMUTABLE</span> <span class="op">==</span> <span class="number">0</span>,
-            <span class="ident">atomic</span>: <span class="ident">info</span>.<span class="ident">flags</span> <span class="op">&amp;</span> <span class="ident">ffi::DRM_MODE_PROP_ATOMIC</span> <span class="op">==</span> <span class="number">0</span>,
+            <span class="ident">mutable</span>: <span class="op">!</span><span class="ident">flags</span>.<span class="ident">contains</span>(<span class="ident">ModePropFlags::IMMUTABLE</span>),
+            <span class="ident">atomic</span>: <span class="ident">flags</span>.<span class="ident">contains</span>(<span class="ident">ModePropFlags::ATOMIC</span>),
             <span class="ident">info</span>,
         };
 
@@ -1855,12 +1993,12 @@
     <span class="doccomment">/// Request an atomic commit with given flags and property-value pair for a list of objects.</span>
     <span class="kw">fn</span> <span class="ident">atomic_commit</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">flags</span>: <span class="kw-2">&amp;</span>[<span class="ident">AtomicCommitFlags</span>],
+        <span class="ident">flags</span>: <span class="ident">AtomicCommitFlags</span>,
         <span class="kw-2">mut</span> <span class="ident">req</span>: <span class="ident">atomic::AtomicModeReq</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
         <span class="ident">drm_ffi::mode::atomic_commit</span>(
             <span class="self">self</span>.<span class="ident">as_raw_fd</span>(),
-            <span class="ident">flags</span>.<span class="ident">iter</span>().<span class="ident">fold</span>(<span class="number">0</span>, <span class="op">|</span><span class="ident">acc</span>, <span class="ident">x</span><span class="op">|</span> <span class="ident">acc</span> <span class="op">|</span> <span class="kw-2">*</span><span class="ident">x</span> <span class="kw">as</span> <span class="ident">u32</span>),
+            <span class="ident">flags</span>.<span class="ident">bits</span>(),
             <span class="kw">unsafe</span> { <span class="kw-2">&amp;mut</span> <span class="kw-2">*</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">req</span>.<span class="ident">objects</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="kw">_</span> <span class="kw">as</span> <span class="kw-2">*mut</span> [<span class="ident">u32</span>]) },
             <span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">req</span>.<span class="ident">count_props_per_object</span>,
             <span class="kw">unsafe</span> { <span class="kw-2">&amp;mut</span> <span class="kw-2">*</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">req</span>.<span class="ident">props</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="kw">_</span> <span class="kw">as</span> <span class="kw-2">*mut</span> [<span class="ident">u32</span>]) },
@@ -1885,12 +2023,12 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">handle</span>: <span class="ident">crtc::Handle</span>,
         <span class="ident">framebuffer</span>: <span class="ident">framebuffer::Handle</span>,
-        <span class="ident">flags</span>: <span class="kw-2">&amp;</span>[<span class="ident">PageFlipFlags</span>],
-        <span class="ident">target</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PageFlipTarget</span><span class="op">&gt;</span>,
+        <span class="ident">flags</span>: <span class="ident">PageFlipFlags</span>,
+        <span class="ident">target_sequence</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">PageFlipTarget</span>, <span class="ident">u32</span>)<span class="op">&gt;</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SystemError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">flags</span> <span class="op">=</span> <span class="ident">flags</span>.<span class="ident">iter</span>().<span class="ident">fold</span>(<span class="number">0</span>, <span class="op">|</span><span class="ident">val</span>, <span class="ident">flag</span><span class="op">|</span> <span class="ident">val</span> <span class="op">|</span> <span class="kw-2">*</span><span class="ident">flag</span> <span class="kw">as</span> <span class="ident">u32</span>);
-        <span class="kw">if</span> <span class="ident">target</span>.<span class="ident">is_some</span>() {
-            <span class="ident">flags</span> <span class="op">|</span><span class="op">=</span> <span class="ident">ffi::drm_sys::DRM_MODE_PAGE_FLIP_TARGET</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">flags</span> <span class="op">=</span> <span class="ident">flags</span>.<span class="ident">bits</span>();
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">target</span>, <span class="kw">_</span>)) <span class="op">=</span> <span class="ident">target_sequence</span> {
+            <span class="ident">flags</span> <span class="op">|</span><span class="op">=</span> <span class="ident">target</span> <span class="kw">as</span> <span class="ident">u32</span>;
         }
 
         <span class="kw">let</span> <span class="ident">_info</span> <span class="op">=</span> <span class="ident">ffi::mode::page_flip</span>(
@@ -1898,7 +2036,7 @@
             <span class="ident">handle</span>.<span class="ident">into</span>(),
             <span class="ident">framebuffer</span>.<span class="ident">into</span>(),
             <span class="ident">flags</span>,
-            <span class="ident">target</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span> <span class="kw">as</span> <span class="kw">_</span>).<span class="ident">unwrap_or</span>(<span class="number">0</span>),
+            <span class="ident">target_sequence</span>.<span class="ident">map</span>(<span class="op">|</span>(<span class="kw">_</span>, <span class="ident">sequence</span>)<span class="op">|</span> <span class="ident">sequence</span>).<span class="ident">unwrap_or</span>(<span class="number">0</span>),
         )<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(())
@@ -1920,19 +2058,27 @@
     }
 }
 
-<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">u32</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>)]</span>
-<span class="doccomment">/// Flags to alter the behaviour of a page flip</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">PageFlipFlags</span> {
-    <span class="doccomment">/// Request a vblank event on page flip</span>
-    <span class="ident">PageFlipEvent</span> <span class="op">=</span> <span class="ident">ffi::drm_sys::DRM_MODE_PAGE_FLIP_EVENT</span>,
-    <span class="doccomment">/// Request page flip as soon as possible, not waiting for vblank</span>
-    <span class="ident">PageFlipAsync</span> <span class="op">=</span> <span class="ident">ffi::drm_sys::DRM_MODE_PAGE_FLIP_ASYNC</span>,
+<span class="macro">bitflags::bitflags!</span> {
+    <span class="doccomment">/// Flags to alter the behaviour of a page flip</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Limited to the values in [`ffi::drm_sys::DRM_MODE_PAGE_FLIP_FLAGS`],</span>
+    <span class="doccomment">/// minus [`ffi::drm_sys::DRM_MODE_PAGE_FLIP_TARGET`] bits which are</span>
+    <span class="doccomment">/// passed through [`PageFlipTarget`].</span>
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PageFlipFlags</span> : <span class="ident">u32</span> {
+        <span class="doccomment">/// Request a vblank event on page flip</span>
+        <span class="kw">const</span> <span class="ident">EVENT</span> <span class="op">=</span> <span class="ident">ffi::drm_sys::DRM_MODE_PAGE_FLIP_EVENT</span>;
+        <span class="doccomment">/// Request page flip as soon as possible, not waiting for vblank</span>
+        <span class="kw">const</span> <span class="ident">ASYNC</span> <span class="op">=</span> <span class="ident">ffi::drm_sys::DRM_MODE_PAGE_FLIP_ASYNC</span>;
+    }
 }
 
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">u32</span>)]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>)]</span>
 <span class="doccomment">/// Target to alter the sequence of page flips</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// These are the [`ffi::drm_sys::DRM_MODE_PAGE_FLIP_FLAGS`] bits</span>
+<span class="doccomment">/// of [`PageFlipFlags`] wrapped in a regular `enum` due to their</span>
+<span class="doccomment">/// mutual-exclusiveness.</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">PageFlipTarget</span> {
     <span class="doccomment">/// Absolute Vblank Sequence</span>
     <span class="ident">Absolute</span> <span class="op">=</span> <span class="ident">ffi::drm_sys::DRM_MODE_PAGE_FLIP_TARGET_ABSOLUTE</span>,
@@ -1985,19 +2131,19 @@
             <span class="kw">let</span> <span class="ident">event</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="self">self</span>.<span class="ident">event_buf</span>.<span class="ident">as_ptr</span>().<span class="ident">add</span>(<span class="self">self</span>.<span class="ident">i</span>) <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">ffi::drm_event</span>) };
             <span class="self">self</span>.<span class="ident">i</span> <span class="op">+</span><span class="op">=</span> <span class="ident">event</span>.<span class="ident">length</span> <span class="kw">as</span> <span class="ident">usize</span>;
             <span class="kw">match</span> <span class="ident">event</span>.<span class="ident">type_</span> {
-                <span class="ident">x</span> <span class="kw">if</span> <span class="ident">x</span> <span class="op">==</span> <span class="ident">ffi::DRM_EVENT_VBLANK</span> =&gt; {
+                <span class="ident">ffi::DRM_EVENT_VBLANK</span> =&gt; {
                     <span class="kw">let</span> <span class="ident">vblank_event</span> <span class="op">=</span>
                         <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">event</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">ffi::drm_event_vblank</span>) };
                     <span class="prelude-val">Some</span>(<span class="ident">Event::Vblank</span>(<span class="ident">VblankEvent</span> {
                         <span class="ident">frame</span>: <span class="ident">vblank_event</span>.<span class="ident">sequence</span>,
                         <span class="ident">duration</span>: <span class="ident">Duration::new</span>(
                             <span class="ident">vblank_event</span>.<span class="ident">tv_sec</span> <span class="kw">as</span> <span class="ident">u64</span>,
-                            <span class="ident">vblank_event</span>.<span class="ident">tv_usec</span> <span class="op">*</span> <span class="number">100</span>,
+                            <span class="ident">vblank_event</span>.<span class="ident">tv_usec</span> <span class="op">*</span> <span class="number">1000</span>,
                         ),
                         <span class="ident">crtc</span>: <span class="kw">unsafe</span> { <span class="ident">mem::transmute</span>(<span class="ident">vblank_event</span>.<span class="ident">user_data</span> <span class="kw">as</span> <span class="ident">u32</span>) },
                     }))
                 }
-                <span class="ident">x</span> <span class="kw">if</span> <span class="ident">x</span> <span class="op">==</span> <span class="ident">ffi::DRM_EVENT_FLIP_COMPLETE</span> =&gt; {
+                <span class="ident">ffi::DRM_EVENT_FLIP_COMPLETE</span> =&gt; {
                     <span class="kw">let</span> <span class="ident">vblank_event</span> <span class="op">=</span>
                         <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">event</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">ffi::drm_event_vblank</span>) };
                     <span class="prelude-val">Some</span>(<span class="ident">Event::PageFlip</span>(<span class="ident">PageFlipEvent</span> {
@@ -2169,6 +2315,16 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">vrefresh</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u32</span> {
         <span class="self">self</span>.<span class="ident">mode</span>.<span class="ident">vrefresh</span>
     }
+
+    <span class="doccomment">/// Returns the bitmask of this mode</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mode_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ModeTypeFlags</span> {
+        <span class="ident">ModeTypeFlags::from_bits_truncate</span>(<span class="self">self</span>.<span class="ident">mode</span>.<span class="ident">type_</span>)
+    }
+
+    <span class="doccomment">/// Returns the flags of this mode</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">flags</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ModeFlags</span> {
+        <span class="ident">ModeFlags::from_bits_truncate</span>(<span class="self">self</span>.<span class="ident">mode</span>.<span class="ident">flags</span>)
+    }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">ffi::drm_mode_modeinfo</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Mode</span> {
@@ -2194,7 +2350,86 @@
             .<span class="ident">field</span>(<span class="string">&quot;hskew&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">hskew</span>())
             .<span class="ident">field</span>(<span class="string">&quot;vscan&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">vscan</span>())
             .<span class="ident">field</span>(<span class="string">&quot;vrefresh&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">vrefresh</span>())
+            .<span class="ident">field</span>(<span class="string">&quot;mode_type&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">mode_type</span>())
             .<span class="ident">finish</span>()
+    }
+}
+
+<span class="macro">bitflags::bitflags!</span> {
+    <span class="doccomment">/// Display mode type flags</span>
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ModeTypeFlags</span> : <span class="ident">u32</span> {
+        <span class="doccomment">/// Builtin mode type</span>
+        <span class="attribute">#[<span class="ident">deprecated</span>]</span>
+        <span class="kw">const</span> <span class="ident">BUILTIN</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_TYPE_BUILTIN</span>;
+        <span class="doccomment">/// CLOCK_C mode type</span>
+        <span class="attribute">#[<span class="ident">deprecated</span>]</span>
+        <span class="kw">const</span> <span class="ident">CLOCK_C</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_TYPE_CLOCK_C</span>;
+        <span class="doccomment">/// CRTC_C mode type</span>
+        <span class="attribute">#[<span class="ident">deprecated</span>]</span>
+        <span class="kw">const</span> <span class="ident">CRTC_C</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_TYPE_CRTC_C</span>;
+        <span class="doccomment">/// Preferred mode</span>
+        <span class="kw">const</span> <span class="ident">PREFERRED</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_TYPE_PREFERRED</span>;
+        <span class="doccomment">/// Default mode</span>
+        <span class="attribute">#[<span class="ident">deprecated</span>]</span>
+        <span class="kw">const</span> <span class="ident">DEFAULT</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_TYPE_DEFAULT</span>;
+        <span class="doccomment">/// User defined mode type</span>
+        <span class="kw">const</span> <span class="ident">USERDEF</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_TYPE_USERDEF</span>;
+        <span class="doccomment">/// Mode created by driver</span>
+        <span class="kw">const</span> <span class="ident">DRIVER</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_TYPE_DRIVER</span>;
+        <span class="doccomment">/// Bitmask of all valid (non-deprecated) mode type flags</span>
+        <span class="kw">const</span> <span class="ident">ALL</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_TYPE_ALL</span>;
+    }
+}
+
+<span class="macro">bitflags::bitflags!</span> {
+    <span class="doccomment">/// Display mode flags</span>
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ModeFlags</span>: <span class="ident">u32</span> {
+        <span class="doccomment">/// PHSYNC flag</span>
+        <span class="kw">const</span> <span class="ident">PHSYNC</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_FLAG_PHSYNC</span>;
+        <span class="doccomment">/// NHSYNC flag</span>
+        <span class="kw">const</span> <span class="ident">NHSYNC</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_FLAG_NHSYNC</span>;
+        <span class="doccomment">/// PVSYNC flag</span>
+        <span class="kw">const</span> <span class="ident">PVSYNC</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_FLAG_PVSYNC</span>;
+        <span class="doccomment">/// NVSYNC flag</span>
+        <span class="kw">const</span> <span class="ident">NVSYNC</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_FLAG_NVSYNC</span>;
+        <span class="doccomment">/// Interlace flag</span>
+        <span class="kw">const</span> <span class="ident">INTERLACE</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_FLAG_INTERLACE</span>;
+        <span class="doccomment">/// DBLSCAN flag</span>
+        <span class="kw">const</span> <span class="ident">DBLSCAN</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_FLAG_DBLSCAN</span>;
+        <span class="doccomment">/// CSYNC flag</span>
+        <span class="kw">const</span> <span class="ident">CSYNC</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_FLAG_CSYNC</span>;
+        <span class="doccomment">/// PCSYNC flag</span>
+        <span class="kw">const</span> <span class="ident">PCSYNC</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_FLAG_PCSYNC</span>;
+        <span class="doccomment">/// NCSYNC flag</span>
+        <span class="kw">const</span> <span class="ident">NCSYNC</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_FLAG_NCSYNC</span>;
+        <span class="doccomment">/// HSKEW flag</span>
+        <span class="kw">const</span> <span class="ident">HSKEW</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_FLAG_HSKEW</span>;
+        <span class="attribute">#[<span class="ident">deprecated</span>]</span>
+        <span class="doccomment">/// BCAST flag</span>
+        <span class="kw">const</span> <span class="ident">BCAST</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_FLAG_BCAST</span>;
+        <span class="attribute">#[<span class="ident">deprecated</span>]</span>
+        <span class="doccomment">/// PIXMUX flag</span>
+        <span class="kw">const</span> <span class="ident">PIXMUX</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_FLAG_PIXMUX</span>;
+        <span class="doccomment">/// DBLCLK flag</span>
+        <span class="kw">const</span> <span class="ident">DBLCLK</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_FLAG_DBLCLK</span>;
+        <span class="doccomment">/// CLKDIV2 flag</span>
+        <span class="kw">const</span> <span class="ident">CLKDIV2</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_FLAG_CLKDIV2</span>;
+        <span class="doccomment">/// Stereo 3D mode utilizing frame packing</span>
+        <span class="kw">const</span> <span class="ident">_3D_FRAME_PACKING</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_FLAG_3D_FRAME_PACKING</span>;
+        <span class="doccomment">/// Stereo 3D mode utilizing alternating fields</span>
+        <span class="kw">const</span> <span class="ident">_3D_FIELD_ALTERNATIVE</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_FLAG_3D_FIELD_ALTERNATIVE</span>;
+        <span class="doccomment">/// Stereo 3D mode utilizing alternating lines</span>
+        <span class="kw">const</span> <span class="ident">_3D_LINE_ALTERNATIVE</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_FLAG_3D_LINE_ALTERNATIVE</span>;
+        <span class="doccomment">/// Stereo 3D mode utilizing side by side full size image</span>
+        <span class="kw">const</span> <span class="ident">_3D_SIDE_BY_SIDE_FULL</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_FLAG_3D_SIDE_BY_SIDE_FULL</span>;
+        <span class="doccomment">/// Stereo 3D mode utilizing depth images</span>
+        <span class="kw">const</span> <span class="ident">_3D_L_DEPTH</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_FLAG_3D_L_DEPTH</span>;
+        <span class="doccomment">/// Stereo 3D mode utilizing depth images</span>
+        <span class="kw">const</span> <span class="ident">_3D_L_DEPTH_GFX_GFX_DEPTH</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_FLAG_3D_L_DEPTH_GFX_GFX_DEPTH</span>;
+        <span class="doccomment">/// Stereo 3D mode utilizing top and bottom images</span>
+        <span class="kw">const</span> <span class="ident">_3D_TOP_AND_BOTTOM</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_FLAG_3D_TOP_AND_BOTTOM</span>;
+        <span class="doccomment">/// Stereo 3D mode utilizing side by side half size image</span>
+        <span class="kw">const</span> <span class="ident">_3D_SIDE_BY_SIDE_HALF</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_FLAG_3D_SIDE_BY_SIDE_HALF</span>;
     }
 }
 
@@ -2232,23 +2467,62 @@
 
 <span class="kw">type</span> <span class="ident">ClipRect</span> <span class="op">=</span> <span class="ident">ffi::drm_sys::drm_clip_rect</span>;
 
-<span class="doccomment">/// Commit flags for atomic mode setting</span>
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">missing_docs</span>)]</span>
-<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">u32</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>, <span class="ident">Hash</span>)]</span>
-<span class="doccomment">/// Flags for an atomic commit</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">AtomicCommitFlags</span> {
-    <span class="doccomment">/// Test only validity of the request, do not actually apply the requested changes.</span>
-    <span class="ident">TestOnly</span> <span class="op">=</span> <span class="ident">ffi::drm_sys::DRM_MODE_ATOMIC_TEST_ONLY</span>,
-    <span class="doccomment">/// Do not block on the request and return early.</span>
-    <span class="ident">Nonblock</span> <span class="op">=</span> <span class="ident">ffi::drm_sys::DRM_MODE_ATOMIC_NONBLOCK</span>,
-    <span class="doccomment">/// Allow the changes to trigger a modeset, if necessary.</span>
+<span class="macro">bitflags::bitflags!</span> {
+    <span class="doccomment">/// Commit flags for atomic mode setting</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Changes requiring a modeset are rejected otherwise.</span>
-    <span class="ident">AllowModeset</span> <span class="op">=</span> <span class="ident">ffi::drm_sys::DRM_MODE_ATOMIC_ALLOW_MODESET</span>,
-    <span class="doccomment">/// Generate a page flip event, when the changes are applied.</span>
-    <span class="ident">PageFlipEvent</span> <span class="op">=</span> <span class="ident">ffi::drm_sys::DRM_MODE_PAGE_FLIP_EVENT</span>,
+    <span class="doccomment">/// Limited to the values in [`ffi::drm_sys::DRM_MODE_ATOMIC_FLAGS`].</span>
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AtomicCommitFlags</span> : <span class="ident">u32</span> {
+        <span class="doccomment">/// Generate a page flip event, when the changes are applied</span>
+        <span class="kw">const</span> <span class="ident">PAGE_FLIP_EVENT</span> <span class="op">=</span> <span class="ident">ffi::drm_sys::DRM_MODE_PAGE_FLIP_EVENT</span>;
+        <span class="doccomment">/// Request page flip when the changes are applied, not waiting for vblank</span>
+        <span class="kw">const</span> <span class="ident">PAGE_FLIP_ASYNC</span> <span class="op">=</span> <span class="ident">ffi::drm_sys::DRM_MODE_PAGE_FLIP_ASYNC</span>;
+        <span class="doccomment">/// Test only validity of the request, do not actually apply the requested changes</span>
+        <span class="kw">const</span> <span class="ident">TEST_ONLY</span> <span class="op">=</span> <span class="ident">ffi::drm_sys::DRM_MODE_ATOMIC_TEST_ONLY</span>;
+        <span class="doccomment">/// Do not block on the request and return early</span>
+        <span class="kw">const</span> <span class="ident">NONBLOCK</span> <span class="op">=</span> <span class="ident">ffi::drm_sys::DRM_MODE_ATOMIC_NONBLOCK</span>;
+        <span class="doccomment">/// Allow the changes to trigger a modeset, if necessary</span>
+        <span class="doccomment">///</span>
+        <span class="doccomment">/// Changes requiring a modeset are rejected otherwise.</span>
+        <span class="kw">const</span> <span class="ident">ALLOW_MODESET</span> <span class="op">=</span> <span class="ident">ffi::drm_sys::DRM_MODE_ATOMIC_ALLOW_MODESET</span>;
+    }
+}
+
+<span class="macro">bitflags::bitflags!</span> {
+    <span class="doccomment">/// Mode property flags</span>
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ModePropFlags</span> : <span class="ident">u32</span> {
+        <span class="doccomment">/// Do not use</span>
+        <span class="attribute">#[<span class="ident">deprecated</span>]</span>
+        <span class="kw">const</span> <span class="ident">PENDING</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_PROP_PENDING</span>;
+
+        <span class="doccomment">/// Non-extended types: legacy bitmask, one bit per type:</span>
+        <span class="kw">const</span> <span class="ident">LEGACY_TYPE</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_PROP_LEGACY_TYPE</span>;
+        <span class="doccomment">/// An unsigned integer that has a min and max value</span>
+        <span class="kw">const</span> <span class="ident">RANGE</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_PROP_RANGE</span>;
+        <span class="doccomment">/// Set when this property is informational only and cannot be modified</span>
+        <span class="kw">const</span> <span class="ident">IMMUTABLE</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_PROP_IMMUTABLE</span>;
+        <span class="doccomment">/// Enumerated type with text strings</span>
+        <span class="kw">const</span> <span class="ident">ENUM</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_PROP_ENUM</span>;
+        <span class="doccomment">/// A chunk of binary data that must be acquired</span>
+        <span class="kw">const</span> <span class="ident">BLOB</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_PROP_BLOB</span>;
+        <span class="doccomment">/// Bitmask of enumerated types</span>
+        <span class="kw">const</span> <span class="ident">BITMASK</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_PROP_BITMASK</span>;
+
+        <span class="doccomment">/// Extended-types: rather than continue to consume a bit per type,</span>
+        <span class="doccomment">/// grab a chunk of the bits to use as integer type id.</span>
+        <span class="kw">const</span> <span class="ident">EXTENDED_TYPE</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_PROP_EXTENDED_TYPE</span>;
+        <span class="doccomment">/// A DRM object that can have a specific type</span>
+        <span class="doccomment">///</span>
+        <span class="doccomment">/// See `ffi::DRM_MODE_OBJECT_*` for specific types.</span>
+        <span class="kw">const</span> <span class="ident">OBJECT</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_PROP_OBJECT</span>;
+        <span class="doccomment">/// A signed integer that has a min and max value</span>
+        <span class="kw">const</span> <span class="ident">SIGNED_RANGE</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_PROP_SIGNED_RANGE</span>;
+        <span class="doccomment">/// the [`Self::ATOMIC`] flag is used to hide properties from userspace that</span>
+        <span class="doccomment">/// is not aware of atomic properties.  This is mostly to work around</span>
+        <span class="doccomment">/// older userspace (DDX drivers) that read/write each prop they find,</span>
+        <span class="doccomment">/// witout being aware that this could be triggering a lengthy modeset.</span>
+        <span class="kw">const</span> <span class="ident">ATOMIC</span> <span class="op">=</span> <span class="ident">ffi::DRM_MODE_PROP_ATOMIC</span>;
+    }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="drm" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (ec4bcaac4 2022-01-15)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="drm" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (21b4a9cfd 2022-01-27)" ></div>
 </body></html>
