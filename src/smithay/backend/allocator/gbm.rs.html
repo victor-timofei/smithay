@@ -167,6 +167,11 @@
 <span id="162">162</span>
 <span id="163">163</span>
 <span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Module for Buffers created using [libgbm](gbm).</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! The re-exported [`GbmDevice`](gbm::Device) implements the [`Allocator`](super::Allocator) trait</span>
@@ -265,14 +270,19 @@
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">GbmConvertError::UnsupportedBuffer</span>); <span class="comment">//TODO</span>
         }
 
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">fd</span>()<span class="question-mark">?</span> <span class="op">==</span> <span class="number">0</span> {
+        <span class="comment">// Make sure to only call fd once as each call will create</span>
+        <span class="comment">// a new file descriptor which has to be closed</span>
+        <span class="kw">let</span> <span class="ident">fd</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">fd</span>()<span class="question-mark">?</span>;
+
+        <span class="comment">// gbm_bo_get_fd returns -1 if an error occurs</span>
+        <span class="kw">if</span> <span class="ident">fd</span> <span class="op">==</span> <span class="op">-</span><span class="number">1</span> {
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">GbmConvertError::InvalidFD</span>);
         }
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">Dmabuf::builder_from_buffer</span>(<span class="self">self</span>, <span class="ident">DmabufFlags::empty</span>());
         <span class="kw">for</span> <span class="ident">idx</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">planes</span> {
             <span class="ident">builder</span>.<span class="ident">add_plane</span>(
-                <span class="self">self</span>.<span class="ident">fd</span>()<span class="question-mark">?</span>,
+                <span class="ident">fd</span>,
                 <span class="ident">idx</span> <span class="kw">as</span> <span class="ident">u32</span>,
                 <span class="self">self</span>.<span class="ident">offset</span>(<span class="ident">idx</span>)<span class="question-mark">?</span>,
                 <span class="self">self</span>.<span class="ident">stride_for_plane</span>(<span class="ident">idx</span>)<span class="question-mark">?</span>,
@@ -332,5 +342,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (21b4a9cfd 2022-01-27)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (88fb06a1f 2022-02-05)" ></div>
 </body></html>

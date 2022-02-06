@@ -744,6 +744,44 @@
 <span id="739">739</span>
 <span id="740">740</span>
 <span id="741">741</span>
+<span id="742">742</span>
+<span id="743">743</span>
+<span id="744">744</span>
+<span id="745">745</span>
+<span id="746">746</span>
+<span id="747">747</span>
+<span id="748">748</span>
+<span id="749">749</span>
+<span id="750">750</span>
+<span id="751">751</span>
+<span id="752">752</span>
+<span id="753">753</span>
+<span id="754">754</span>
+<span id="755">755</span>
+<span id="756">756</span>
+<span id="757">757</span>
+<span id="758">758</span>
+<span id="759">759</span>
+<span id="760">760</span>
+<span id="761">761</span>
+<span id="762">762</span>
+<span id="763">763</span>
+<span id="764">764</span>
+<span id="765">765</span>
+<span id="766">766</span>
+<span id="767">767</span>
+<span id="768">768</span>
+<span id="769">769</span>
+<span id="770">770</span>
+<span id="771">771</span>
+<span id="772">772</span>
+<span id="773">773</span>
+<span id="774">774</span>
+<span id="775">775</span>
+<span id="776">776</span>
+<span id="777">777</span>
+<span id="778">778</span>
+<span id="779">779</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cell::RefCell</span>, <span class="ident">fmt</span>, <span class="ident">ops::Deref</span> <span class="kw">as</span> <span class="kw">_</span>, <span class="ident">rc::Rc</span>, <span class="ident">sync::Mutex</span>};
 
 <span class="kw">use</span> <span class="ident">wayland_server</span>::{
@@ -837,6 +875,76 @@
         }
     }
 
+    <span class="kw">fn</span> <span class="ident">set_grab</span><span class="op">&lt;</span><span class="ident">G</span>: <span class="ident">PointerGrab</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">serial</span>: <span class="ident">Serial</span>, <span class="ident">grab</span>: <span class="ident">G</span>, <span class="ident">time</span>: <span class="ident">u32</span>) {
+        <span class="self">self</span>.<span class="ident">grab</span> <span class="op">=</span> <span class="ident">GrabStatus::Active</span>(<span class="ident">serial</span>, <span class="ident">Box::new</span>(<span class="ident">grab</span>));
+        <span class="comment">// generate a move to let the grab change the focus or move the pointer as result of its initialization</span>
+        <span class="kw">let</span> <span class="ident">location</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">location</span>;
+        <span class="kw">let</span> <span class="ident">focus</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">focus</span>.<span class="ident">clone</span>();
+        <span class="self">self</span>.<span class="ident">motion</span>(<span class="ident">location</span>, <span class="ident">focus</span>, <span class="ident">serial</span>, <span class="ident">time</span>);
+    }
+
+    <span class="kw">fn</span> <span class="ident">unset_grab</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">serial</span>: <span class="ident">Serial</span>, <span class="ident">time</span>: <span class="ident">u32</span>) {
+        <span class="self">self</span>.<span class="ident">grab</span> <span class="op">=</span> <span class="ident">GrabStatus::None</span>;
+        <span class="comment">// restore the focus</span>
+        <span class="kw">let</span> <span class="ident">location</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">location</span>;
+        <span class="kw">let</span> <span class="ident">focus</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">pending_focus</span>.<span class="ident">clone</span>();
+        <span class="self">self</span>.<span class="ident">motion</span>(<span class="ident">location</span>, <span class="ident">focus</span>, <span class="ident">serial</span>, <span class="ident">time</span>);
+    }
+
+    <span class="kw">fn</span> <span class="ident">motion</span>(
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
+        <span class="ident">location</span>: <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">f64</span>, <span class="ident">Logical</span><span class="op">&gt;</span>,
+        <span class="ident">focus</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">WlSurface</span>, <span class="ident">Point</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">Logical</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
+        <span class="ident">serial</span>: <span class="ident">Serial</span>,
+        <span class="ident">time</span>: <span class="ident">u32</span>,
+    ) {
+        <span class="comment">// do we leave a surface ?</span>
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">leave</span> <span class="op">=</span> <span class="bool-val">true</span>;
+        <span class="self">self</span>.<span class="ident">location</span> <span class="op">=</span> <span class="ident">location</span>;
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="kw-2">ref</span> <span class="ident">current_focus</span>, <span class="kw">_</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">focus</span> {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="kw-2">ref</span> <span class="ident">surface</span>, <span class="kw">_</span>)) <span class="op">=</span> <span class="ident">focus</span> {
+                <span class="kw">if</span> <span class="ident">current_focus</span>.<span class="ident">as_ref</span>().<span class="ident">equals</span>(<span class="ident">surface</span>.<span class="ident">as_ref</span>()) {
+                    <span class="ident">leave</span> <span class="op">=</span> <span class="bool-val">false</span>;
+                }
+            }
+        }
+        <span class="kw">if</span> <span class="ident">leave</span> {
+            <span class="self">self</span>.<span class="ident">with_focused_pointers</span>(<span class="op">|</span><span class="ident">pointer</span>, <span class="ident">surface</span><span class="op">|</span> {
+                <span class="ident">pointer</span>.<span class="ident">leave</span>(<span class="ident">serial</span>.<span class="ident">into</span>(), <span class="ident">surface</span>);
+                <span class="kw">if</span> <span class="ident">pointer</span>.<span class="ident">as_ref</span>().<span class="ident">version</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="number">5</span> {
+                    <span class="ident">pointer</span>.<span class="ident">frame</span>();
+                }
+            });
+            <span class="self">self</span>.<span class="ident">focus</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+            (<span class="self">self</span>.<span class="ident">image_callback</span>)(<span class="ident">CursorImageStatus::Default</span>);
+        }
+
+        <span class="comment">// do we enter one ?</span>
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">surface</span>, <span class="ident">surface_location</span>)) <span class="op">=</span> <span class="ident">focus</span> {
+            <span class="kw">let</span> <span class="ident">entered</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">focus</span>.<span class="ident">is_none</span>();
+            <span class="comment">// in all cases, update the focus, the coordinates of the surface</span>
+            <span class="comment">// might have changed</span>
+            <span class="self">self</span>.<span class="ident">focus</span> <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="ident">surface</span>, <span class="ident">surface_location</span>));
+            <span class="kw">let</span> (<span class="ident">x</span>, <span class="ident">y</span>) <span class="op">=</span> (<span class="ident">location</span> <span class="op">-</span> <span class="ident">surface_location</span>.<span class="ident">to_f64</span>()).<span class="ident">into</span>();
+            <span class="kw">if</span> <span class="ident">entered</span> {
+                <span class="self">self</span>.<span class="ident">with_focused_pointers</span>(<span class="op">|</span><span class="ident">pointer</span>, <span class="ident">surface</span><span class="op">|</span> {
+                    <span class="ident">pointer</span>.<span class="ident">enter</span>(<span class="ident">serial</span>.<span class="ident">into</span>(), <span class="ident">surface</span>, <span class="ident">x</span>, <span class="ident">y</span>);
+                    <span class="kw">if</span> <span class="ident">pointer</span>.<span class="ident">as_ref</span>().<span class="ident">version</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="number">5</span> {
+                        <span class="ident">pointer</span>.<span class="ident">frame</span>();
+                    }
+                })
+            } <span class="kw">else</span> {
+                <span class="comment">// we were on top of a surface and remained on it</span>
+                <span class="self">self</span>.<span class="ident">with_focused_pointers</span>(<span class="op">|</span><span class="ident">pointer</span>, <span class="kw">_</span><span class="op">|</span> {
+                    <span class="ident">pointer</span>.<span class="ident">motion</span>(<span class="ident">time</span>, <span class="ident">x</span>, <span class="ident">y</span>);
+                    <span class="kw">if</span> <span class="ident">pointer</span>.<span class="ident">as_ref</span>().<span class="ident">version</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="number">5</span> {
+                        <span class="ident">pointer</span>.<span class="ident">frame</span>();
+                    }
+                })
+            }
+        }
+    }
+
     <span class="kw">fn</span> <span class="ident">with_focused_pointers</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">f</span>: <span class="ident">F</span>)
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">WlPointer</span>, <span class="kw-2">&amp;</span><span class="ident">WlSurface</span>),
@@ -906,13 +1014,13 @@
     <span class="doccomment">/// Change the current grab on this pointer to the provided grab</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Overwrites any current grab.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_grab</span><span class="op">&lt;</span><span class="ident">G</span>: <span class="ident">PointerGrab</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">grab</span>: <span class="ident">G</span>, <span class="ident">serial</span>: <span class="ident">Serial</span>) {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">borrow_mut</span>().<span class="ident">grab</span> <span class="op">=</span> <span class="ident">GrabStatus::Active</span>(<span class="ident">serial</span>, <span class="ident">Box::new</span>(<span class="ident">grab</span>));
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_grab</span><span class="op">&lt;</span><span class="ident">G</span>: <span class="ident">PointerGrab</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">grab</span>: <span class="ident">G</span>, <span class="ident">serial</span>: <span class="ident">Serial</span>, <span class="ident">time</span>: <span class="ident">u32</span>) {
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">borrow_mut</span>().<span class="ident">set_grab</span>(<span class="ident">serial</span>, <span class="ident">grab</span>, <span class="ident">time</span>);
     }
 
     <span class="doccomment">/// Remove any current grab on this pointer, resetting it to the default behavior</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unset_grab</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">borrow_mut</span>().<span class="ident">grab</span> <span class="op">=</span> <span class="ident">GrabStatus::None</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unset_grab</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">serial</span>: <span class="ident">Serial</span>, <span class="ident">time</span>: <span class="ident">u32</span>) {
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">borrow_mut</span>().<span class="ident">unset_grab</span>(<span class="ident">serial</span>, <span class="ident">time</span>);
     }
 
     <span class="doccomment">/// Check if this pointer is currently grabbed with this serial</span>
@@ -1029,6 +1137,13 @@
 <span class="doccomment">/// rather than trying to guess when the grab will end.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">PointerGrab</span> {
     <span class="doccomment">/// A motion was reported</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This method allows you attach additional behavior to a motion event, possibly altering it.</span>
+    <span class="doccomment">/// You generally will want to invoke `PointerInnerHandle::motion()` as part of your processing. If you</span>
+    <span class="doccomment">/// don&#39;t, the rest of the compositor will behave as if the motion event never occurred.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Some grabs (such as drag&#39;n&#39;drop, shell resize and motion) unset the focus while they are active,</span>
+    <span class="doccomment">/// this is achieved by just setting the focus to `None` when invoking `PointerInnerHandle::motion()`.</span>
     <span class="kw">fn</span> <span class="ident">motion</span>(
         <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">handle</span>: <span class="kw-2">&amp;mut</span> <span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
@@ -1038,6 +1153,10 @@
         <span class="ident">time</span>: <span class="ident">u32</span>,
     );
     <span class="doccomment">/// A button press was reported</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This method allows you attach additional behavior to a button event, possibly altering it.</span>
+    <span class="doccomment">/// You generally will want to invoke `PointerInnerHandle::button()` as part of your processing. If you</span>
+    <span class="doccomment">/// don&#39;t, the rest of the compositor will behave as if the button event never occurred.</span>
     <span class="kw">fn</span> <span class="ident">button</span>(
         <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">handle</span>: <span class="kw-2">&amp;mut</span> <span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
@@ -1047,6 +1166,10 @@
         <span class="ident">time</span>: <span class="ident">u32</span>,
     );
     <span class="doccomment">/// An axis scroll was reported</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This method allows you attach additional behavior to an axis event, possibly altering it.</span>
+    <span class="doccomment">/// You generally will want to invoke `PointerInnerHandle::axis()` as part of your processing. If you</span>
+    <span class="doccomment">/// don&#39;t, the rest of the compositor will behave as if the axis event never occurred.</span>
     <span class="kw">fn</span> <span class="ident">axis</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">handle</span>: <span class="kw-2">&amp;mut</span> <span class="ident">PointerInnerHandle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">details</span>: <span class="ident">AxisFrame</span>);
     <span class="doccomment">/// The data about the event that started the grab.</span>
     <span class="kw">fn</span> <span class="ident">start_data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">GrabStartData</span>;
@@ -1063,19 +1186,15 @@
     <span class="doccomment">/// Change the current grab on this pointer to the provided grab</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Overwrites any current grab.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_grab</span><span class="op">&lt;</span><span class="ident">G</span>: <span class="ident">PointerGrab</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">serial</span>: <span class="ident">Serial</span>, <span class="ident">grab</span>: <span class="ident">G</span>) {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">grab</span> <span class="op">=</span> <span class="ident">GrabStatus::Active</span>(<span class="ident">serial</span>, <span class="ident">Box::new</span>(<span class="ident">grab</span>));
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_grab</span><span class="op">&lt;</span><span class="ident">G</span>: <span class="ident">PointerGrab</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">serial</span>: <span class="ident">Serial</span>, <span class="ident">grab</span>: <span class="ident">G</span>, <span class="ident">time</span>: <span class="ident">u32</span>) {
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">set_grab</span>(<span class="ident">serial</span>, <span class="ident">grab</span>, <span class="ident">time</span>);
     }
 
     <span class="doccomment">/// Remove any current grab on this pointer, resetting it to the default behavior</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This will also restore the focus of the underlying pointer</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unset_grab</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">serial</span>: <span class="ident">Serial</span>, <span class="ident">time</span>: <span class="ident">u32</span>) {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">grab</span> <span class="op">=</span> <span class="ident">GrabStatus::None</span>;
-        <span class="comment">// restore the focus</span>
-        <span class="kw">let</span> <span class="ident">location</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">current_location</span>();
-        <span class="kw">let</span> <span class="ident">focus</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">pending_focus</span>.<span class="ident">clone</span>();
-        <span class="self">self</span>.<span class="ident">motion</span>(<span class="ident">location</span>, <span class="ident">focus</span>, <span class="ident">serial</span>, <span class="ident">time</span>);
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">unset_grab</span>(<span class="ident">serial</span>, <span class="ident">time</span>);
     }
 
     <span class="doccomment">/// Access the current focus of this pointer</span>
@@ -1114,51 +1233,7 @@
         <span class="ident">serial</span>: <span class="ident">Serial</span>,
         <span class="ident">time</span>: <span class="ident">u32</span>,
     ) {
-        <span class="comment">// do we leave a surface ?</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">leave</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">location</span> <span class="op">=</span> <span class="ident">location</span>;
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="kw-2">ref</span> <span class="ident">current_focus</span>, <span class="kw">_</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">focus</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="kw-2">ref</span> <span class="ident">surface</span>, <span class="kw">_</span>)) <span class="op">=</span> <span class="ident">focus</span> {
-                <span class="kw">if</span> <span class="ident">current_focus</span>.<span class="ident">as_ref</span>().<span class="ident">equals</span>(<span class="ident">surface</span>.<span class="ident">as_ref</span>()) {
-                    <span class="ident">leave</span> <span class="op">=</span> <span class="bool-val">false</span>;
-                }
-            }
-        }
-        <span class="kw">if</span> <span class="ident">leave</span> {
-            <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">with_focused_pointers</span>(<span class="op">|</span><span class="ident">pointer</span>, <span class="ident">surface</span><span class="op">|</span> {
-                <span class="ident">pointer</span>.<span class="ident">leave</span>(<span class="ident">serial</span>.<span class="ident">into</span>(), <span class="ident">surface</span>);
-                <span class="kw">if</span> <span class="ident">pointer</span>.<span class="ident">as_ref</span>().<span class="ident">version</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="number">5</span> {
-                    <span class="ident">pointer</span>.<span class="ident">frame</span>();
-                }
-            });
-            <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">focus</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-            (<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">image_callback</span>)(<span class="ident">CursorImageStatus::Default</span>);
-        }
-
-        <span class="comment">// do we enter one ?</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">surface</span>, <span class="ident">surface_location</span>)) <span class="op">=</span> <span class="ident">focus</span> {
-            <span class="kw">let</span> <span class="ident">entered</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">focus</span>.<span class="ident">is_none</span>();
-            <span class="comment">// in all cases, update the focus, the coordinates of the surface</span>
-            <span class="comment">// might have changed</span>
-            <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">focus</span> <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="ident">surface</span>, <span class="ident">surface_location</span>));
-            <span class="kw">let</span> (<span class="ident">x</span>, <span class="ident">y</span>) <span class="op">=</span> (<span class="ident">location</span> <span class="op">-</span> <span class="ident">surface_location</span>.<span class="ident">to_f64</span>()).<span class="ident">into</span>();
-            <span class="kw">if</span> <span class="ident">entered</span> {
-                <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">with_focused_pointers</span>(<span class="op">|</span><span class="ident">pointer</span>, <span class="ident">surface</span><span class="op">|</span> {
-                    <span class="ident">pointer</span>.<span class="ident">enter</span>(<span class="ident">serial</span>.<span class="ident">into</span>(), <span class="ident">surface</span>, <span class="ident">x</span>, <span class="ident">y</span>);
-                    <span class="kw">if</span> <span class="ident">pointer</span>.<span class="ident">as_ref</span>().<span class="ident">version</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="number">5</span> {
-                        <span class="ident">pointer</span>.<span class="ident">frame</span>();
-                    }
-                })
-            } <span class="kw">else</span> {
-                <span class="comment">// we were on top of a surface and remained on it</span>
-                <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">with_focused_pointers</span>(<span class="op">|</span><span class="ident">pointer</span>, <span class="kw">_</span><span class="op">|</span> {
-                    <span class="ident">pointer</span>.<span class="ident">motion</span>(<span class="ident">time</span>, <span class="ident">x</span>, <span class="ident">y</span>);
-                    <span class="kw">if</span> <span class="ident">pointer</span>.<span class="ident">as_ref</span>().<span class="ident">version</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="number">5</span> {
-                        <span class="ident">pointer</span>.<span class="ident">frame</span>();
-                    }
-                })
-            }
-        }
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">motion</span>(<span class="ident">location</span>, <span class="ident">focus</span>, <span class="ident">serial</span>, <span class="ident">time</span>);
     }
 
     <span class="doccomment">/// Notify that a button was pressed</span>
@@ -1433,6 +1508,7 @@
                         <span class="ident">location</span>: <span class="ident">handle</span>.<span class="ident">current_location</span>(),
                     },
                 },
+                <span class="ident">time</span>,
             );
         }
     }
@@ -1486,5 +1562,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (21b4a9cfd 2022-01-27)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (88fb06a1f 2022-02-05)" ></div>
 </body></html>

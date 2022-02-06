@@ -525,6 +525,14 @@
 <span id="520">520</span>
 <span id="521">521</span>
 <span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Utilities for manipulating the data devices</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! The data device is wayland&#39;s abstraction to represent both selection (copy/paste) and</span>
@@ -615,13 +623,18 @@
         <span class="doccomment">/// The icon the client requested to be used to be associated with the cursor icon</span>
         <span class="doccomment">/// during the drag&#39;n&#39;drop.</span>
         <span class="ident">icon</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">wl_surface::WlSurface</span><span class="op">&gt;</span>,
+        <span class="doccomment">/// The seat on which the DnD operation was started</span>
+        <span class="ident">seat</span>: <span class="ident">Seat</span>,
     },
     <span class="doccomment">/// The drag&#39;n&#39;drop action was finished by the user releasing the buttons</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// At this point, any pointer icon should be removed.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Note that this event will only be generated for client-initiated drag&#39;n&#39;drop session.</span>
-    <span class="ident">DnDDropped</span>,
+    <span class="ident">DnDDropped</span> {
+        <span class="doccomment">/// The seat on which the DnD action was finished.</span>
+        <span class="ident">seat</span>: <span class="ident">Seat</span>,
+    },
     <span class="doccomment">/// A client requested to read the server-set selection</span>
     <span class="ident">SendSelection</span> {
         <span class="doccomment">/// the requested mime type</span>
@@ -883,6 +896,7 @@
                 <span class="ident">Rc::new</span>(<span class="ident">RefCell::new</span>(<span class="ident">callback</span>)),
             ),
             <span class="ident">serial</span>,
+            <span class="number">0</span>,
         );
     }
 }
@@ -972,6 +986,7 @@
                     (<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">callback</span>.<span class="ident">borrow_mut</span>())(<span class="ident">DataDeviceEvent::DnDStarted</span> {
                         <span class="ident">source</span>: <span class="ident">source</span>.<span class="ident">clone</span>(),
                         <span class="ident">icon</span>: <span class="ident">icon</span>.<span class="ident">clone</span>(),
+                        <span class="ident">seat</span>: <span class="ident">seat</span>.<span class="ident">clone</span>(),
                     });
                     <span class="kw">let</span> <span class="ident">start_data</span> <span class="op">=</span> <span class="ident">pointer</span>.<span class="ident">grab_start_data</span>().<span class="ident">unwrap</span>();
                     <span class="ident">pointer</span>.<span class="ident">set_grab</span>(
@@ -984,6 +999,7 @@
                             <span class="ident">callback</span>.<span class="ident">clone</span>(),
                         ),
                         <span class="ident">serial</span>,
+                        <span class="number">0</span>,
                     );
                     <span class="kw">return</span>;
                 }
@@ -1048,5 +1064,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (21b4a9cfd 2022-01-27)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="smithay" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (88fb06a1f 2022-02-05)" ></div>
 </body></html>
